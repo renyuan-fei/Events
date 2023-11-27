@@ -1,0 +1,35 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="14">
+            <item index="0" class="java.lang.String" itemvalue="mysqlclient" />
+            <item index="1" class="java.lang.String" itemvalue="pywin32" />
+            <item index="2" class="java.lang.String" itemvalue="Automat" />
+            <item index="3" class="java.lang.String" itemvalue="cvxpy" />
+            <item index="4" class="java.lang.String" itemvalue="daal" />
+            <item index="5" class="java.lang.String" itemvalue="qdldl" />
+            <item index="6" class="java.lang.String" itemvalue="asgiref" />
+            <item index="7" class="java.lang.String" itemvalue="daal4py" />
+            <item index="8" class="java.lang.String" itemvalue="llvmlite" />
+            <item index="9" class="java.lang.String" itemvalue="twisted-iocpsupport" />
+            <item index="10" class="java.lang.String" itemvalue="tbb" />
+            <item index="11" class="java.lang.String" itemvalue="Django" />
+            <item index="12" class="java.lang.String" itemvalue="osqp" />
+            <item index="13" class="java.lang.String" itemvalue="PyDispatcher" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="finance.admin.island_audit_record" />
+          <option value="finance.admin.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
