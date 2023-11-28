@@ -7,16 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
       <PackageReference Include="MediatR" Version="12.2.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Common\Behaviours\" />
       <Folder Include="Common\Exceptions\" />
-      <Folder Include="Common\Interfaces\" />
       <Folder Include="Common\Mappings\" />
       <Folder Include="Common\Models\" />
       <Folder Include="Common\Security\" />
+      <Folder Include="CQRS\Activities\Commands\DeleteActivity\" />
     </ItemGroup>
 
     <ItemGroup>

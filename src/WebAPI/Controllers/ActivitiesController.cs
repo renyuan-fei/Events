@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Application.CQRS.Activities;
+using Application.CQRS.Activities.Commands.CreateActivity;
+using Application.CQRS.Activities.Commands.UpdateActivity;
+using Application.CQRS.Activities.Queries;
+using Application.CQRS.Activities.Queries.GetActivity;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 
 using Infrastructure.DatabaseContext;
+
+using MediatR;
 
 namespace WebAPI.Controllers
 {
@@ -19,22 +27,6 @@ namespace WebAPI.Controllers
   /// </summary>
   public class ActivitiesController : BaseController
   {
-    private readonly ApplicationDbContext          _context;
-    private readonly ILogger<ActivitiesController> _logger;
-
-    /// <summary>
-    /// Constructor For DI
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="logger"></param>
-    public ActivitiesController(
-        ApplicationDbContext          context,
-        ILogger<ActivitiesController> logger)
-    {
-      _context = context;
-      _logger = logger;
-    }
-
     // GET: api/Activities
     /// <summary>
     /// Get all activities
@@ -43,9 +35,8 @@ namespace WebAPI.Controllers
     [ HttpGet ]
     public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
     {
-      if (_context.Activities == null) { return NotFound(); }
-
-      return await _context.Activities.ToListAsync();
+      var result = await Mediator!.Send(new GetAllActivitiesQuery());
+      return Ok(result);
     }
 
     // GET: api/Activities/5
@@ -57,13 +48,8 @@ namespace WebAPI.Controllers
     [ HttpGet("{id}") ]
     public async Task<ActionResult<Activity>> GetActivity(Guid id)
     {
-      if (_context.Activities == null) { return NotFound(); }
-
-      var activity = await _context.Activities.FindAsync(id);
-
-      if (activity == null) { return NotFound(); }
-
-      return activity;
+      var result = await Mediator!.Send(new GetActivityByIdQuery { Id = id });
+      return Ok(result);
     }
 
     // PUT: api/Activities/5
@@ -77,18 +63,8 @@ namespace WebAPI.Controllers
     [ HttpPut("{id}") ]
     public async Task<IActionResult> PutActivity(Guid id, Activity activity)
     {
-      if (id != activity.Id) { return BadRequest(); }
-
-      _context.Entry(activity).State = EntityState.Modified;
-
-      try { await _context.SaveChangesAsync(); }
-      catch (DbUpdateConcurrencyException)
-      {
-        if (!ActivityExists(id)) { return NotFound(); }
-        else { throw; }
-      }
-
-      return NoContent();
+      await Mediator!.Send(new UpdateActivity { Id = id, Activity = activity });
+      return Ok();
     }
 
     // POST: api/Activities
@@ -101,15 +77,9 @@ namespace WebAPI.Controllers
     [ HttpPost ]
     public async Task<ActionResult<Activity>> PostActivity(Activity activity)
     {
-      if (_context.Activities == null)
-      {
-        return Problem("Entity set 'ApplicationDbContext.Activities'  is null.");
-      }
+      await Mediator!.Send(new CreateActivity { Activity = activity });
 
-      _context.Activities.Add(activity);
-      await _context.SaveChangesAsync();
-
-      return CreatedAtAction("GetActivity", new { id = activity.Id }, activity);
+      return Ok(activity);
     }
 
     // DELETE: api/Activities/5
@@ -121,21 +91,10 @@ namespace WebAPI.Controllers
     [ HttpDelete("{id}") ]
     public async Task<IActionResult> DeleteActivity(Guid id)
     {
-      if (_context.Activities == null) { return NotFound(); }
-
-      var activity = await _context.Activities.FindAsync(id);
-      if (activity == null) { return NotFound(); }
-
-      _context.Activities.Remove(activity);
-      await _context.SaveChangesAsync();
-
-      return NoContent();
+      throw new NotImplementedException();
     }
 
-    private bool ActivityExists(Guid id)
-    {
-      return (_context.Activities?.Any(e => e.Id == id)).GetValueOrDefault();
-    }
+    private bool ActivityExists(Guid id) { throw new NotImplementedException(); }
   }
 
 }

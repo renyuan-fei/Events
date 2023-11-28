@@ -1,3 +1,5 @@
+using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -10,5 +12,11 @@ namespace WebAPI.Controllers;
 [ ApiController ]
 public class BaseController : ControllerBase
 {
+  private IMediator? _mediator;
 
+  /// <summary>
+  /// Mediator instance
+  /// </summary>
+  protected IMediator? Mediator => _mediator ??=
+      HttpContext.RequestServices.GetService<IMediator>();
 }

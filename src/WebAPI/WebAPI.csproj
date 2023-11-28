@@ -29,6 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="ClientApp\src\features\store\" />
+      <Folder Include="ClientApp\src\services\" />
       <Folder Include="Filters\" />
       <Folder Include="Services\" />
       <Folder Include="wwwroot\" />
