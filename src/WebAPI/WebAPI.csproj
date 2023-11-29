@@ -29,8 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="ClientApp\src\app\hooks\" />
       <Folder Include="ClientApp\src\features\store\" />
-      <Folder Include="ClientApp\src\services\" />
+      <Folder Include="ClientApp\src\tests\" />
       <Folder Include="Filters\" />
       <Folder Include="Services\" />
       <Folder Include="wwwroot\" />
