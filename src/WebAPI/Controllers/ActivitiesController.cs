@@ -63,8 +63,8 @@ namespace WebAPI.Controllers
     [ HttpPut("{id}") ]
     public async Task<IActionResult> PutActivity(Guid id, Activity activity)
     {
-      await Mediator!.Send(new UpdateActivity { Id = id, Activity = activity });
-      return Ok();
+      var result = await Mediator!.Send(new UpdateActivityCommand { Id = id, Activity = activity });
+      return Ok(result);
     }
 
     // POST: api/Activities
@@ -77,9 +77,9 @@ namespace WebAPI.Controllers
     [ HttpPost ]
     public async Task<ActionResult<Activity>> PostActivity(Activity activity)
     {
-      await Mediator!.Send(new CreateActivity { Activity = activity });
+      var result = await Mediator!.Send(new CreateActivityCommand { Activity = activity });
 
-      return Ok(activity);
+      return Ok(result);
     }
 
     // DELETE: api/Activities/5
