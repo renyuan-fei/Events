@@ -1,5 +1,6 @@
 using System.Reflection;
 
+using Application;
 using Application.Common.Interfaces;
 using Application.CQRS.Activities.Queries;
 using Application.CQRS.Activities.Queries.GetActivity;
@@ -35,13 +36,10 @@ public static class ConfigureServiceExtension
     #region DI
     // ApplicationDbContext
     services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-    // MediaR
-    services.AddMediatR(cfg =>
-    {
-      cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-
-      cfg.RegisterServicesFromAssembly(typeof(GetAllActivitiesQueryHandler).Assembly);
-    });
+    // ApplicationDI
+    services.AddApplicationServices();
+    // AutoMapper
+    services.AddAutoMapper(typeof(Program));
     #endregion
 
     // Add database context

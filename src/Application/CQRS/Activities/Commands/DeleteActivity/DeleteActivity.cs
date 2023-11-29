@@ -9,30 +9,29 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.Activities.Commands.UpdateActivity;
+namespace Application.CQRS.Activities.Commands.DeleteActivity;
 
-public record UpdateActivityCommand : IRequest<Activity>
+public record DeleteActivityCommand : IRequest<Activity>
 {
-  public Guid     Id       { get; init; }
-  public Activity Activity { get; init; }
+  public Guid Id { get; init; }
 }
 
 public class
-    UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Activity>
+    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Activity>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly IMapper                               _mapper;
-  private readonly ILogger<UpdateActivityCommandHandler> _logger;
+  private readonly ILogger<DeleteActivityCommandHandler> _logger;
 
-  public UpdateActivityCommandHandler(IApplicationDbContext context, IMapper mapper, ILogger<UpdateActivityCommandHandler> logger)
+  public DeleteActivityCommandHandler(IMapper mapper, IApplicationDbContext context, ILogger<DeleteActivityCommandHandler> logger)
   {
-    _context = context;
     _mapper = mapper;
+    _context = context;
     _logger = logger;
   }
 
   public async Task<Activity> Handle(
-      UpdateActivityCommand request,
+      DeleteActivityCommand request,
       CancellationToken     cancellationToken)
   {
     var entity =
@@ -40,9 +39,7 @@ public class
 
     if (entity == null) return null!;
 
-    // 更新Activity
-    _mapper.Map(request.Activity, entity);
-
+    _context.Activities.Remove(entity);
     await _context.SaveChangesAsync(cancellationToken);
 
     return entity;
