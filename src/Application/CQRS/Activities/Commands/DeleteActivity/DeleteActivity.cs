@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
@@ -11,37 +12,43 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.DeleteActivity;
 
-public record DeleteActivityCommand : IRequest<Activity>
+public record DeleteActivityCommand : IRequest<Result>
 {
   public Guid Id { get; init; }
 }
 
 public class
-    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Activity>
+    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Result>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly IMapper                               _mapper;
   private readonly ILogger<DeleteActivityCommandHandler> _logger;
 
-  public DeleteActivityCommandHandler(IMapper mapper, IApplicationDbContext context, ILogger<DeleteActivityCommandHandler> logger)
+  public DeleteActivityCommandHandler(
+      IMapper                               mapper,
+      IApplicationDbContext                 context,
+      ILogger<DeleteActivityCommandHandler> logger)
   {
     _mapper = mapper;
     _context = context;
     _logger = logger;
   }
 
-  public async Task<Activity> Handle(
+  public async Task<Result> Handle(
       DeleteActivityCommand request,
       CancellationToken     cancellationToken)
   {
     var entity =
-        await _context.Activities.FindAsync(new object[] { request.Id }, cancellationToken);
+        await _context.Activities.FindAsync(new object[ ] { request.Id },
+                                            cancellationToken);
 
     if (entity == null) return null!;
 
     _context.Activities.Remove(entity);
-    await _context.SaveChangesAsync(cancellationToken);
+    var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-    return entity;
+    return result
+        ? Result.Success()
+        : Result.Failure(new[ ] { "Failed to delete activity" });
   }
 }

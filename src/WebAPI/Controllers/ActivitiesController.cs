@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Application.CQRS.Activities;
 using Application.CQRS.Activities.Commands.CreateActivity;
+using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries;
 using Application.CQRS.Activities.Queries.GetActivity;
@@ -36,6 +37,7 @@ namespace WebAPI.Controllers
     public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
     {
       var result = await Mediator!.Send(new GetAllActivitiesQuery());
+
       return Ok(result);
     }
 
@@ -49,6 +51,7 @@ namespace WebAPI.Controllers
     public async Task<ActionResult<Activity>> GetActivity(Guid id)
     {
       var result = await Mediator!.Send(new GetActivityByIdQuery { Id = id });
+
       return Ok(result);
     }
 
@@ -63,8 +66,13 @@ namespace WebAPI.Controllers
     [ HttpPut("{id}") ]
     public async Task<IActionResult> PutActivity(Guid id, Activity activity)
     {
-      var result = await Mediator!.Send(new UpdateActivityCommand { Id = id, Activity = activity });
-      return Ok(result);
+      var result =
+          await Mediator!.Send(new UpdateActivityCommand
+          {
+              Id = id, Activity = activity
+          });
+
+      return HandleCommandResult(result);
     }
 
     // POST: api/Activities
@@ -75,11 +83,12 @@ namespace WebAPI.Controllers
     /// <param name="activity"></param>
     /// <returns></returns>
     [ HttpPost ]
-    public async Task<ActionResult<Activity>> PostActivity(Activity activity)
+    public async Task<IActionResult> PostActivity(Activity activity)
     {
-      var result = await Mediator!.Send(new CreateActivityCommand { Activity = activity });
+      var result =
+          await Mediator!.Send(new CreateActivityCommand { Activity = activity });
 
-      return Ok(result);
+      return HandleCommandResult(result);
     }
 
     // DELETE: api/Activities/5
@@ -91,7 +100,9 @@ namespace WebAPI.Controllers
     [ HttpDelete("{id}") ]
     public async Task<IActionResult> DeleteActivity(Guid id)
     {
-      throw new NotImplementedException();
+      var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
+
+      return HandleCommandResult(result);
     }
 
     private bool ActivityExists(Guid id) { throw new NotImplementedException(); }

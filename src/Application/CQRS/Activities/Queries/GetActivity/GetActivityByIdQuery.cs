@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.common.Mappings;
 
 using AutoMapper;
 
@@ -11,13 +12,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-public record GetActivityByIdQuery : IRequest<Activity>
+public record GetActivityByIdQuery : IRequest<ActivityDto>
 {
   public Guid Id { get; init; }
 }
 
 public class
-    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, Activity>
+    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDto>
 {
   private readonly IApplicationDbContext                _context;
   private readonly IMapper                              _mapper;
@@ -30,10 +31,15 @@ public class
     _logger = logger;
   }
 
-  public async Task<Activity> Handle(
+  public async Task<ActivityDto> Handle(
       GetActivityByIdQuery request,
       CancellationToken    cancellationToken)
   {
-    return (await _context.Activities.FindAsync(new object[] { request.Id }, cancellationToken))!;
+    var result = await _context.Activities.FindAsync(new object[] { request.Id },
+      cancellationToken)!;
+
+    var activityDto = _mapper.Map<ActivityDto>(result);
+
+    return activityDto;
   }
 }

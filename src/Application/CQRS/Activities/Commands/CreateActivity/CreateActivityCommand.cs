@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
@@ -10,32 +11,37 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
 
-public record CreateActivityCommand : IRequest<Activity>
+public record CreateActivityCommand : IRequest<Result>
 {
   public Activity Activity { get; init; }
 }
 
-public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Activity>
+public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Result>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly IMapper                               _mapper;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
 
-  public CreateActivityCommandHandler(IApplicationDbContext context, IMapper mapper, ILogger<CreateActivityCommandHandler> logger)
+  public CreateActivityCommandHandler(
+      IApplicationDbContext                 context,
+      IMapper                               mapper,
+      ILogger<CreateActivityCommandHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
   }
 
-  public async Task<Activity> Handle(
-      CreateActivityCommand    request,
-      CancellationToken cancellationToken)
+  public async Task<Result> Handle(
+      CreateActivityCommand request,
+      CancellationToken     cancellationToken)
   {
     _context.Activities.Add(request.Activity);
 
-    await _context.SaveChangesAsync(cancellationToken);
+    var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-    return request.Activity;
+    return !result
+        ? Result.Failure(new[ ] { "Could not create Activity" })
+        : Result.Success();
   }
 }

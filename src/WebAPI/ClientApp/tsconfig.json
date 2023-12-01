@@ -26,6 +26,9 @@
       "@hooks/*": ["./src/app/hooks/*"],
       "@apis/*": ["./src/app/apis/*"],
       "@models/*": ["./src/app/models/*"],
+      "@ui/*": ["./src/app/ui/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@config/*": ["./src/app/config/*"],
     }
   },
   "include": ["src"],
