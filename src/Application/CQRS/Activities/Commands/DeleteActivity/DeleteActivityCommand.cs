@@ -1,6 +1,5 @@
 using Application.common.Exceptions;
 using Application.Common.Interfaces;
-using Application.common.Models;
 
 using AutoMapper;
 
@@ -8,7 +7,6 @@ using Domain.Entities;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -23,8 +21,8 @@ public class
     DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Unit>
 {
   private readonly IApplicationDbContext                 _context;
-  private readonly IMapper                               _mapper;
   private readonly ILogger<DeleteActivityCommandHandler> _logger;
+  private readonly IMapper                               _mapper;
 
   public DeleteActivityCommandHandler(
       IMapper                               mapper,

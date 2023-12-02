@@ -8,7 +8,7 @@ interface Props {
 }
 
 function ScrollTop(props: Props) {
-    const { children, window } = props;
+    const {children, window} = props;
     const trigger = useScrollTrigger({
         target: window ? window() : undefined,
         disableHysteresis: true,
@@ -32,7 +32,7 @@ function ScrollTop(props: Props) {
             <Box
                 onClick={handleClick}
                 role="presentation"
-                sx={{ position: 'fixed', bottom: 16, right: 16 }}
+                sx={{position: 'fixed', bottom: 16, right: 16}}
             >
                 {children}
             </Box>

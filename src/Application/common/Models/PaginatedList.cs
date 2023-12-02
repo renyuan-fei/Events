@@ -3,17 +3,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.common.Models;
 
 /// <summary>
-/// 表示分页数据的泛型类
+///   表示分页数据的泛型类
 /// </summary>
 /// <typeparam name="T">列表中元素的类型</typeparam>
 public class PaginatedList <T>
 {
-  public IReadOnlyCollection<T> Items      { get; }
-  public int                    PageNumber { get; }
-  public int                    TotalPages { get; }
-  public int                    TotalCount { get; }
-
-  public PaginatedList() {}
+  public PaginatedList() { }
 
   public PaginatedList(
       IReadOnlyCollection<T> items,
@@ -26,6 +21,11 @@ public class PaginatedList <T>
     TotalCount = count;
     Items = items;
   }
+
+  public IReadOnlyCollection<T> Items      { get; }
+  public int                    PageNumber { get; }
+  public int                    TotalPages { get; }
+  public int                    TotalCount { get; }
 
   public bool HasPreviousPage => PageNumber > 1;
 
@@ -45,5 +45,3 @@ public class PaginatedList <T>
     return new PaginatedList<T>(items, count, pageNumber, pageSize);
   }
 }
-
-

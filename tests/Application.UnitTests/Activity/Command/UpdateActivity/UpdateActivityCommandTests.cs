@@ -1,27 +1,15 @@
-using Application.common.Exceptions;
-using Application.Common.Interfaces;
-using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
-
-using AutoFixture;
-
-using FluentAssertions;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UnitTests.Activity.Command.UpdateActivity;
 
 public class UpdateActivityCommandTests
 {
-  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
-  private readonly Mock<IMapper>                               _mockMapper;
-  private readonly Mock<ILogger<UpdateActivityCommandHandler>> _mockLogger;
-
   private readonly IFixture _fixture;
 
-  private readonly UpdateActivityCommandHandler _handler;
+  private readonly UpdateActivityCommandHandler                _handler;
+  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
+  private readonly Mock<ILogger<UpdateActivityCommandHandler>> _mockLogger;
+  private readonly Mock<IMapper>                               _mockMapper;
 
   public UpdateActivityCommandTests()
   {

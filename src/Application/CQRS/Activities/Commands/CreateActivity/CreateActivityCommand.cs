@@ -1,6 +1,4 @@
-using Application.common.Exceptions;
 using Application.Common.Interfaces;
-using Application.common.Models;
 
 using AutoMapper;
 
@@ -22,8 +20,8 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     Unit>
 {
   private readonly IApplicationDbContext                 _context;
-  private readonly IMapper                               _mapper;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
+  private readonly IMapper                               _mapper;
 
   public CreateActivityCommandHandler(
       IApplicationDbContext                 context,

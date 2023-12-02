@@ -7,14 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace WebAPI.Filters;
 
 /// <summary>
-///
 /// </summary>
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
   private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
   /// <summary>
-  ///
   /// </summary>
   public ApiExceptionFilterAttribute()
   {
@@ -38,7 +36,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
   private void HandleException(ExceptionContext context)
   {
-    Type type = context.Exception.GetType();
+    var type = context.Exception.GetType();
 
     if (_exceptionHandlers.ContainsKey(type))
     {
@@ -87,7 +85,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
   {
     var exception = (NotFoundException)context.Exception;
 
-    var details = new ProblemDetails()
+    var details = new ProblemDetails
     {
         Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
         Title = "The specified resource was not found.",

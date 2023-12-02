@@ -1,6 +1,5 @@
 using Application.common.Exceptions;
 using Application.Common.Interfaces;
-using Application.common.Models;
 
 using AutoMapper;
 
@@ -23,8 +22,8 @@ public class
     UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Unit>
 {
   private readonly IApplicationDbContext                 _context;
-  private readonly IMapper                               _mapper;
   private readonly ILogger<UpdateActivityCommandHandler> _logger;
+  private readonly IMapper                               _mapper;
 
   public UpdateActivityCommandHandler(
       IApplicationDbContext                 context,

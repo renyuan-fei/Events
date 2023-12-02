@@ -2,7 +2,6 @@ using Application.common.DTO;
 using Application.common.Exceptions;
 using Application.Common.Interfaces;
 using Application.common.Mappings;
-using Application.common.Models;
 
 using AutoMapper;
 
@@ -10,7 +9,6 @@ using Domain.Entities;
 
 using MediatR;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
@@ -22,8 +20,8 @@ public class
         List<ActivityDto>>
 {
   private readonly IApplicationDbContext                 _context;
-  private readonly IMapper                               _mapper;
   private readonly ILogger<GetAllActivitiesQueryHandler> _logger;
+  private readonly IMapper                               _mapper;
 
   public GetAllActivitiesQueryHandler(
       IApplicationDbContext                 context,
@@ -48,6 +46,5 @@ public class
     _logger.LogError("Could not find activities");
 
     throw new NotFoundException(nameof(Activity));
-
   }
 }

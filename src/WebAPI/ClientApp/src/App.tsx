@@ -8,7 +8,7 @@ import {router} from "@config/Router.tsx";
 
 function App() {
     return (
-        <RouterProvider router={router} />
+        <RouterProvider router={router}/>
     )
 }
 

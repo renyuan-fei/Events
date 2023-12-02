@@ -1,5 +1,3 @@
-using Domain.Entities;
-
 namespace Application.common.DTO;
 
 public class ActivityDto

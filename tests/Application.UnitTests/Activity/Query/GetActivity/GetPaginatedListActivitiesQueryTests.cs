@@ -1,22 +1,15 @@
-using Application.Common.Interfaces;
-using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
-
-using AutoFixture;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UnitTests.Activity.Query.GetActivity;
 
 public class GetPaginatedListActivitiesQueryTests
 {
-  private readonly Mock<IApplicationDbContext>                           _mockDbContext;
-  private readonly Mock<IMapper>                                         _mockMapper;
-  private readonly Mock<ILogger<GetPaginatedListActivitiesQueryHandler>> _mockLogger;
-
   private readonly IFixture _fixture;
 
-  private readonly GetPaginatedListActivitiesQueryHandler _handler;
+  private readonly GetPaginatedListActivitiesQueryHandler                _handler;
+  private readonly Mock<IApplicationDbContext>                           _mockDbContext;
+  private readonly Mock<ILogger<GetPaginatedListActivitiesQueryHandler>> _mockLogger;
+  private readonly Mock<IMapper>                                         _mockMapper;
 
   public GetPaginatedListActivitiesQueryTests()
   {

@@ -1,16 +1,11 @@
-using System.Reflection;
-
 using Application;
 using Application.Common.Interfaces;
-using Application.CQRS.Activities.Queries;
-using Application.CQRS.Activities.Queries.GetActivity;
 
 using Domain.Identity;
 
 using FluentValidation.AspNetCore;
 
 using Infrastructure.DatabaseContext;
-using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -21,17 +16,17 @@ using WebAPI.Filters;
 namespace WebAPI.StartupExtensions;
 
 /// <summary>
-/// Configuration
+///   Configuration
 /// </summary>
 public static class ConfigureServiceExtension
 {
   /// <summary>
-  /// Configuration
+  ///   Configuration
   /// </summary>
   /// <param name="services"></param>
   /// <param name="configuration"></param>
   /// <returns>
-  /// All service collection
+  ///   All service collection
   /// </returns>
   [ Obsolete("Obsolete") ]
   public static IServiceCollection ConfigureServices(

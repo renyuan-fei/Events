@@ -1,8 +1,6 @@
 using Application.common.DTO;
 using Application.common.Exceptions;
 using Application.Common.Interfaces;
-using Application.common.Mappings;
-using Application.common.Models;
 
 using AutoMapper;
 
@@ -10,7 +8,6 @@ using Domain.Entities;
 
 using MediatR;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
@@ -24,8 +21,8 @@ public class
     GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDto>
 {
   private readonly IApplicationDbContext                _context;
-  private readonly IMapper                              _mapper;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
+  private readonly IMapper                              _mapper;
 
   public GetActivityByIdQueryHandler(
       IApplicationDbContext                context,

@@ -1,28 +1,15 @@
-using Application.common.Exceptions;
-using Application.Common.Interfaces;
 using Application.CQRS.Activities.Commands.DeleteActivity;
-
-using AutoFixture;
-
-using FluentAssertions;
-
-using IdentityModel;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UnitTests.Activity.Command.DeleteActivity;
 
 public class DeleteActivityCommandTests
 {
-  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
-  private readonly Mock<IMapper>                               _mockMapper;
-  private readonly Mock<ILogger<DeleteActivityCommandHandler>> _mockLogger;
-
   private readonly IFixture _fixture;
 
-  private readonly DeleteActivityCommandHandler _handler;
+  private readonly DeleteActivityCommandHandler                _handler;
+  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
+  private readonly Mock<ILogger<DeleteActivityCommandHandler>> _mockLogger;
+  private readonly Mock<IMapper>                               _mockMapper;
 
   public DeleteActivityCommandTests()
   {

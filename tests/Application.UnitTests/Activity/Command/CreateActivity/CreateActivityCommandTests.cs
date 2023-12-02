@@ -1,26 +1,15 @@
-using Application.common.Exceptions;
-using Application.Common.Interfaces;
 using Application.CQRS.Activities.Commands.CreateActivity;
-
-using AutoFixture;
-
-using FluentAssertions;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UnitTests.Activity.Command.CreateActivity;
 
 public class CreateActivityCommandTests
 {
-  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
-  private readonly Mock<IMapper>                               _mockMapper;
-  private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
-
   private readonly IFixture _fixture;
 
-  private readonly CreateActivityCommandHandler _handler;
+  private readonly CreateActivityCommandHandler                _handler;
+  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
+  private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
+  private readonly Mock<IMapper>                               _mockMapper;
 
   public CreateActivityCommandTests()
   {
@@ -40,14 +29,15 @@ public class CreateActivityCommandTests
                                                 _mockLogger.Object);
   }
 
-  [Fact]
+  [ Fact ]
   public async Task CreateActivityCommandHandler_ShouldCreateActivity()
   {
     // Arrange
     var activity = _fixture.Create<Domain.Entities.Activity>();
     var command = new CreateActivityCommand { Activity = activity };
 
-    _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+    _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(1);
 
     // Act
     var result = await _handler.Handle(command, CancellationToken.None);
@@ -56,9 +46,11 @@ public class CreateActivityCommandTests
     result.Should().Be(Unit.Value);
 
     // 验证 _context.Activities.Add 是否被正确调用
-    _mockDbContext.Verify(db => db.Activities.Add(It.IsAny<Domain.Entities.Activity>()), Times.Once());
+    _mockDbContext.Verify(db => db.Activities.Add(It.IsAny<Domain.Entities.Activity>()),
+                          Times.Once());
 
-    _mockDbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+    _mockDbContext.Verify(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()),
+                          Times.Once());
   }
 
   [ Fact ]

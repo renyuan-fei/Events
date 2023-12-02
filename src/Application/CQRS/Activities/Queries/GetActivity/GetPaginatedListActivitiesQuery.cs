@@ -25,8 +25,8 @@ public class
         PaginatedList<Activity>>
 {
   private readonly IApplicationDbContext                           _context;
-  private readonly IMapper                                         _mapper;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;
+  private readonly IMapper                                         _mapper;
 
   public GetPaginatedListActivitiesQueryHandler(
       IApplicationDbContext                           context,
@@ -49,11 +49,11 @@ public class
       var searchTerm = request.PaginatedListParams.SearchTerm.ToLower().Trim();
 
       query = query.Where(activity =>
-                              (activity.Title.ToLower().Contains(searchTerm))
-                           || (activity.Category.ToLower().Contains(searchTerm))
-                           || (activity.Description.ToLower().Contains(searchTerm))
-                           || (activity.City.ToLower().Contains(searchTerm))
-                           || (activity.Venue.ToLower().Contains(searchTerm)));
+                              activity.Title.ToLower().Contains(searchTerm)
+                           || activity.Category.ToLower().Contains(searchTerm)
+                           || activity.Description.ToLower().Contains(searchTerm)
+                           || activity.City.ToLower().Contains(searchTerm)
+                           || activity.Venue.ToLower().Contains(searchTerm));
     }
 
     // empty no found

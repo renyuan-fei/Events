@@ -4,7 +4,8 @@ using FluentValidation;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
 
-internal sealed class CreateActivityCommandValidator : AbstractValidator<CreateActivityCommand>
+internal sealed class
+    CreateActivityCommandValidator : AbstractValidator<CreateActivityCommand>
 {
   private readonly IApplicationDbContext _context;
 

@@ -8,9 +8,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import {createTheme, ThemeProvider} from "@mui/material";
 
-const theme = createTheme({
-
-});
+const theme = createTheme({});
 
 export function NavBar() {
     return (

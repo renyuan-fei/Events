@@ -1,26 +1,16 @@
 using Application.common.DTO;
-using Application.common.Exceptions;
-using Application.Common.Interfaces;
-using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
-
-using AutoFixture;
-
-using FluentAssertions;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UnitTests.Activity.Query.GetActivity;
 
 public class GetActivityByIdQueryTests
 {
-  private readonly Mock<IApplicationDbContext>                _mockDbContext;
-  private readonly Mock<IMapper>                              _mockMapper;
-  private readonly Mock<ILogger<GetActivityByIdQueryHandler>> _mockLogger;
-
   private readonly IFixture _fixture;
 
-  private readonly GetActivityByIdQueryHandler _handler;
+  private readonly GetActivityByIdQueryHandler                _handler;
+  private readonly Mock<IApplicationDbContext>                _mockDbContext;
+  private readonly Mock<ILogger<GetActivityByIdQueryHandler>> _mockLogger;
+  private readonly Mock<IMapper>                              _mockMapper;
 
   public GetActivityByIdQueryTests()
   {

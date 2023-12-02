@@ -4,7 +4,8 @@ using FluentValidation;
 
 namespace Application.CQRS.Activities.Commands.UpdateActivity;
 
-internal sealed class UpdateActivityCommandValidator : AbstractValidator<UpdateActivityCommand>
+internal sealed class
+    UpdateActivityCommandValidator : AbstractValidator<UpdateActivityCommand>
 {
   private readonly IApplicationDbContext _context;
 
@@ -30,4 +31,3 @@ internal sealed class UpdateActivityCommandValidator : AbstractValidator<UpdateA
         .NotEmpty();
   }
 }
-

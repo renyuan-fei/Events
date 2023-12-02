@@ -15,7 +15,7 @@ internal sealed class
     _context = context;
 
     RuleFor(request => request.PaginatedListParams)
-      .NotNull()
-      .WithMessage("PaginatedListParams cannot be null");
+        .NotNull()
+        .WithMessage("PaginatedListParams cannot be null");
   }
 }
