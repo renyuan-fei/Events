@@ -13,6 +13,8 @@ public class PaginatedList <T>
   public int                    TotalPages { get; }
   public int                    TotalCount { get; }
 
+  public PaginatedList() {}
+
   public PaginatedList(
       IReadOnlyCollection<T> items,
       int                    count,
@@ -43,3 +45,5 @@ public class PaginatedList <T>
     return new PaginatedList<T>(items, count, pageNumber, pageSize);
   }
 }
+
+

@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 
-
 public static class DependencyInjection
 {
   public static IServiceCollection AddApplicationServices(
@@ -27,9 +26,11 @@ public static class DependencyInjection
       // 注册 MediatR 处理程序
       cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
+      // 注册全局异常处理器
+      cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+
       // 应用 validators 验证器
       cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-
     });
 
     return services;

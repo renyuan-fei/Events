@@ -7,12 +7,16 @@ using Application.CQRS.Activities.Queries.GetActivity;
 
 using Domain.Identity;
 
+using FluentValidation.AspNetCore;
+
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
+using WebAPI.Filters;
 
 namespace WebAPI.StartupExtensions;
 
@@ -29,6 +33,7 @@ public static class ConfigureServiceExtension
   /// <returns>
   /// All service collection
   /// </returns>
+  [ Obsolete("Obsolete") ]
   public static IServiceCollection ConfigureServices(
       this IServiceCollection services,
       IConfiguration          configuration)
@@ -42,6 +47,11 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
+    services.AddControllersWithViews(options =>
+                                         options.Filters
+                                                .Add<ApiExceptionFilterAttribute>())
+            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+
     // Add database context
     services.AddDbContext<ApplicationDbContext>(options =>
     {
@@ -50,6 +60,7 @@ public static class ConfigureServiceExtension
     });
 
     // middleware
+
     #region Middleware
     services.AddControllers();
     services.AddEndpointsApiExplorer();

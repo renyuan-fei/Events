@@ -1,3 +1,4 @@
+using Application.common.Exceptions;
 using Application.Common.Interfaces;
 using Application.common.Models;
 
@@ -7,18 +8,19 @@ using Domain.Entities;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.DeleteActivity;
 
-public record DeleteActivityCommand : IRequest<Result>
+public record DeleteActivityCommand : IRequest<Unit>
 {
   public Guid Id { get; init; }
 }
 
-public class
-    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Result>
+internal sealed class
+    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Unit>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly IMapper                               _mapper;
@@ -34,7 +36,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<Result> Handle(
+  public async Task<Unit> Handle(
       DeleteActivityCommand request,
       CancellationToken     cancellationToken)
   {
@@ -42,13 +44,28 @@ public class
         await _context.Activities.FindAsync(new object[ ] { request.Id },
                                             cancellationToken);
 
-    if (entity == null) return null!;
+    if (entity == null)
+    {
+      _logger.LogError("Could not find activity with id {Id}", request.Id);
+
+      throw new NotFoundException(nameof(Activity), request.Id);
+    }
 
     _context.Activities.Remove(entity);
-    var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-    return result
-        ? Result.Success()
-        : Result.Failure(new[ ] { "Failed to delete activity" });
+    try
+    {
+      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
+
+      return result
+          ? Unit.Value
+          : throw new DbUpdateException($"Error deleting activity with id {request.Id}");
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
+
+      throw; // 重新抛出同一个异常
+    }
   }
 }

@@ -2,15 +2,17 @@ using Application.Common.Interfaces;
 
 using FluentValidation;
 
-namespace Application.CQRS.Activities.Commands.CreateActivity;
+namespace Application.CQRS.Activities.Commands.UpdateActivity;
 
-internal sealed class CreateActivityCommandValidator : AbstractValidator<CreateActivityCommand>
+internal sealed class UpdateActivityCommandValidator : AbstractValidator<UpdateActivityCommand>
 {
   private readonly IApplicationDbContext _context;
 
-  public CreateActivityCommandValidator(IApplicationDbContext context)
+  public UpdateActivityCommandValidator(IApplicationDbContext context)
   {
     _context = context;
+
+    RuleFor(id => id).NotEmpty();
 
     RuleFor(activity => activity.Activity.Title)
         .NotEmpty();
@@ -28,3 +30,4 @@ internal sealed class CreateActivityCommandValidator : AbstractValidator<CreateA
         .NotEmpty();
   }
 }
+

@@ -22,19 +22,4 @@ public class BaseController : ControllerBase
   protected IMediator? Mediator => _mediator ??=
       HttpContext.RequestServices.GetService<IMediator>();
 
-  /// <summary>
-  /// Used to handle the result of a MediatR command
-  /// </summary>
-  /// <param name="result"></param>
-  /// <returns></returns>
-  protected ActionResult HandleCommandResult(Result result)
-  {
-    if (result.Succeeded)
-      return Ok();
-
-    if (result.Errors.Any())
-      return BadRequest(result.Errors);
-
-    return NotFound();
-  }
 }

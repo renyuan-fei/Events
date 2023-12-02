@@ -1,3 +1,4 @@
+using Application.common.Exceptions;
 using Application.Common.Interfaces;
 using Application.common.Models;
 
@@ -12,14 +13,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.UpdateActivity;
 
-public record UpdateActivityCommand : IRequest<Result>
+public record UpdateActivityCommand : IRequest<Unit>
 {
   public Guid     Id       { get; init; }
   public Activity Activity { get; init; }
 }
 
-public class
-    UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Result>
+internal sealed class
+    UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Unit>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly IMapper                               _mapper;
@@ -35,7 +36,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<Result> Handle(
+  public async Task<Unit> Handle(
       UpdateActivityCommand request,
       CancellationToken     cancellationToken)
   {
@@ -43,15 +44,30 @@ public class
         await _context.Activities.FindAsync(new object[ ] { request.Id },
                                             cancellationToken);
 
-    if (entity == null) return null!;
+    if (entity == null)
+    {
+      _logger.LogError("Could not find activity with id {Id}", request.Id);
 
-    // 更新Activity
-    _mapper.Map(request.Activity, entity);
+      throw new NotFoundException(nameof(Activity), request.Id);
+    }
 
-    var result = await _context.SaveChangesAsync(cancellationToken) > 0;
+    try
+    {
+      // 更新实体
+      _mapper.Map(request.Activity, entity);
 
-    return result
-        ? Result.Success()
-        : Result.Failure(new[ ] { "Failed to update Activity" });
+      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
+
+      return result
+          ? Unit.Value
+          : throw new
+              DbUpdateException($"Could not update activity with id ${request.Id}");
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
+
+      throw;
+    }
   }
 }

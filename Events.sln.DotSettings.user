@@ -1,4 +1,20 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=135e263a_002Ddeb0_002D4db1_002Daeff_002D7129c44a7bc2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=135e263a_002Ddeb0_002D4db1_002Daeff_002D7129c44a7bc2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Project Location="/Users/frank/RiderProjects/Event" Presentation="&amp;lt;tests&amp;gt;" /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=20e14d53_002Decf8_002D4ec4_002Db89e_002D0f29e9d298e8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateActivityCommandHandler_ShouldCreateActivity" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::B5272EB6-3CDE-4A4F-83E1-C20ED543FEBF::net6.0::Application.UnitTests.Activity.Command.CreateActivity.CreateActivityCommandTests.CreateActivityCommandHandler_ShouldCreateActivity&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::B5272EB6-3CDE-4A4F-83E1-C20ED543FEBF::net6.0::Application.UnitTests.Activity.Command.CreateActivity.CreateActivityCommandTests.CreateActivityCommandHandler_ShouldThrowDbUpdateException&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=34bfc3d5_002D6438_002D42ab_002Dac1e_002Dd3aa57d11975/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateActivityCommandHandler_ShouldCreateActivity #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::B5272EB6-3CDE-4A4F-83E1-C20ED543FEBF::net6.0::Application.UnitTests.Activity.Command.CreateActivity.CreateActivityCommandTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a0d54787_002D4db0_002D433c_002D9d94_002Dde38c602aec1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CreateActivityCommandTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::B5272EB6-3CDE-4A4F-83E1-C20ED543FEBF::net6.0::Application.UnitTests.Activity.Command.CreateActivity.CreateActivityCommandTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

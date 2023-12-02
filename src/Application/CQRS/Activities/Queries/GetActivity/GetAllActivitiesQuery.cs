@@ -1,5 +1,8 @@
+using Application.common.DTO;
+using Application.common.Exceptions;
 using Application.Common.Interfaces;
 using Application.common.Mappings;
+using Application.common.Models;
 
 using AutoMapper;
 
@@ -14,7 +17,7 @@ namespace Application.CQRS.Activities.Queries.GetActivity;
 
 public record GetAllActivitiesQuery : IRequest<List<ActivityDto>>;
 
-public class
+internal sealed class
     GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery,
         List<ActivityDto>>
 {
@@ -36,8 +39,15 @@ public class
       GetAllActivitiesQuery request,
       CancellationToken     cancellationToken)
   {
-    return await
+    var entity = await
         _context.Activities
                 .ProjectToListAsync<ActivityDto>(_mapper.ConfigurationProvider);
+
+    if (entity.Any()) return entity;
+
+    _logger.LogError("Could not find activities");
+
+    throw new NotFoundException(nameof(Activity));
+
   }
 }

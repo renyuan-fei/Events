@@ -1,6 +1,8 @@
+using Domain.Entities;
+
 namespace Application.common.DTO;
 
-public struct ActivityDto
+public class ActivityDto
 {
   public Guid     Id          { get; set; }
   public string   Title       { get; set; }

@@ -72,7 +72,7 @@ namespace WebAPI.Controllers
               Id = id, Activity = activity
           });
 
-      return HandleCommandResult(result);
+      return Ok(result);
     }
 
     // POST: api/Activities
@@ -88,7 +88,7 @@ namespace WebAPI.Controllers
       var result =
           await Mediator!.Send(new CreateActivityCommand { Activity = activity });
 
-      return HandleCommandResult(result);
+      return Ok(result);
     }
 
     // DELETE: api/Activities/5
@@ -102,7 +102,7 @@ namespace WebAPI.Controllers
     {
       var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
 
-      return HandleCommandResult(result);
+      return Ok(result);
     }
 
     private bool ActivityExists(Guid id) { throw new NotImplementedException(); }

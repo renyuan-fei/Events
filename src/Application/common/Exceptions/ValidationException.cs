@@ -4,6 +4,8 @@ namespace Application.common.Exceptions;
 
 public class ValidationException : Exception
 {
+    public IDictionary<string, string[]> Errors { get; }
+
     public ValidationException()
         : base("One or more validation failures have occurred.")
     {
@@ -17,6 +19,4 @@ public class ValidationException : Exception
             .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
             .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
     }
-
-    public IDictionary<string, string[]> Errors { get; }
 }

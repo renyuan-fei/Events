@@ -1,3 +1,4 @@
+using Application.common.Exceptions;
 using Application.Common.Interfaces;
 using Application.common.Models;
 
@@ -7,16 +8,18 @@ using Domain.Entities;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
 
-public record CreateActivityCommand : IRequest<Result>
+public record CreateActivityCommand : IRequest<Unit>
 {
   public Activity Activity { get; init; }
 }
 
-public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Result>
+public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
+    Unit>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly IMapper                               _mapper;
@@ -32,16 +35,35 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     _logger = logger;
   }
 
-  public async Task<Result> Handle(
+  public async Task<Unit> Handle(
       CreateActivityCommand request,
       CancellationToken     cancellationToken)
   {
-    _context.Activities.Add(request.Activity);
+    var activity = new Activity
+    {
+        Title = request.Activity.Title,
+        Description = request.Activity.Description,
+        Date = request.Activity.Date,
+        Category = request.Activity.Category,
+        City = request.Activity.City,
+        Venue = request.Activity.Venue
+    };
 
-    var result = await _context.SaveChangesAsync(cancellationToken) > 0;
+    _context.Activities.Add(activity);
 
-    return !result
-        ? Result.Failure(new[ ] { "Could not create Activity" })
-        : Result.Success();
+    try
+    {
+      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
+
+      return result
+          ? Unit.Value
+          : throw new DbUpdateException("Could not create activity.");
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
+
+      throw;
+    }
   }
 }
