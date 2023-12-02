@@ -17,7 +17,7 @@ namespace Application.CQRS.Activities.Queries.GetActivity;
 
 public record GetAllActivitiesQuery : IRequest<List<ActivityDto>>;
 
-internal sealed class
+public class
     GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery,
         List<ActivityDto>>
 {

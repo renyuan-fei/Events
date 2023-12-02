@@ -19,7 +19,7 @@ public record UpdateActivityCommand : IRequest<Unit>
   public Activity Activity { get; init; }
 }
 
-internal sealed class
+public class
     UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Unit>
 {
   private readonly IApplicationDbContext                 _context;

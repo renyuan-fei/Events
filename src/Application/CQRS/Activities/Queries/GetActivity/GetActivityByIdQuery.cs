@@ -20,7 +20,7 @@ public record GetActivityByIdQuery : IRequest<ActivityDto>
   public Guid Id { get; init; }
 }
 
-internal sealed class
+public class
     GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDto>
 {
   private readonly IApplicationDbContext                _context;
@@ -42,7 +42,7 @@ internal sealed class
       CancellationToken    cancellationToken)
   {
     var entity = await _context.Activities.FindAsync(new object[ ] { request.Id },
-                                                     cancellationToken)!;
+                                                     cancellationToken);
 
     if (entity == null)
     {

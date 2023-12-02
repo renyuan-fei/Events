@@ -19,7 +19,7 @@ public record DeleteActivityCommand : IRequest<Unit>
   public Guid Id { get; init; }
 }
 
-internal sealed class
+public class
     DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Unit>
 {
   private readonly IApplicationDbContext                 _context;
@@ -65,7 +65,7 @@ internal sealed class
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
 
-      throw; // 重新抛出同一个异常
+      throw;
     }
   }
 }

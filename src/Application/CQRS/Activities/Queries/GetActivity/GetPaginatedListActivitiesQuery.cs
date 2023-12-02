@@ -19,7 +19,7 @@ public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<Activity>
   public PaginatedListParams PaginatedListParams { get; init; }
 }
 
-internal sealed class
+public class
     GetPaginatedListActivitiesQueryHandler :
         IRequestHandler<GetPaginatedListActivitiesQuery,
         PaginatedList<Activity>>
