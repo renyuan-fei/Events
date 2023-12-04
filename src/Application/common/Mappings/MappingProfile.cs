@@ -11,6 +11,6 @@ public class MappingProfile : Profile
   public MappingProfile()
   {
     CreateMap<Activity, Activity>();
-    CreateMap<Activity, ActivityDto>();
+    CreateMap<Activity, ActivityDTO>();
   }
 }

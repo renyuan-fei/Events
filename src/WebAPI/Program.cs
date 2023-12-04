@@ -1,6 +1,6 @@
-using Domain.Identity;
-
+using Infrastructure;
 using Infrastructure.DatabaseContext;
+using Infrastructure.Identity;
 using Infrastructure.Persistence;
 
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +25,7 @@ builder.Host.UseSerilog((
                         });
 
 builder.Services.ConfigureServices(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -38,6 +39,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -30,8 +30,15 @@ public static class DependencyInjection
       cfg.AddBehavior(typeof(IPipelineBehavior<,>),
                       typeof(UnhandledExceptionBehaviour<,>));
 
+      // 应用授权验证器
+      cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
+
       // 应用 validators 验证器
       cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+      // 应用 性能 验证验证器
+      cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+
     });
 
     return services;

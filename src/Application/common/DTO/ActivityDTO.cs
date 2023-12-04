@@ -1,6 +1,6 @@
 namespace Application.common.DTO;
 
-public class ActivityDto
+public class ActivityDTO
 {
   public Guid     Id          { get; set; }
   public string   Title       { get; set; }

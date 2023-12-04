@@ -2,84 +2,83 @@
 
 using Application.common.Exceptions;
 using Application.common.interfaces;
+using Application.common.Security;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace Application.common.Behaviours;
 
+/// <summary>
+/// Authorization for Role and Policy
+/// </summary>
+/// <typeparam name="TRequest"></typeparam>
+/// <typeparam name="TResponse"></typeparam>
 public class
     AuthorizationBehaviour <TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : notnull
 {
-  private readonly IIdentityService _identityService;
-  private readonly IUser            _user;
+  private readonly IIdentityService    _identityService;
+  private readonly ICurrentUserService _currentUser;
 
   public AuthorizationBehaviour(
-      IUser            user,
-      IIdentityService identityService)
+      ICurrentUserService currentUserService,
+      IIdentityService    identityService,
+      ICurrentUserService currentUser)
   {
-    _user = user;
     _identityService = identityService;
+    _currentUser = currentUser;
   }
 
+  /// <summary>
+  /// Handle the request
+  /// </summary>
+  /// <param name="request"></param>
+  /// <param name="next"></param>
+  /// <param name="cancellationToken"></param>
+  /// <returns></returns>
+  /// <exception cref="UnauthorizedAccessException"></exception>
+  /// <exception cref="ForbiddenAccessException"></exception>
   public async Task<TResponse> Handle(
       TRequest                          request,
       RequestHandlerDelegate<TResponse> next,
       CancellationToken                 cancellationToken)
   {
+    if (_currentUser.UserId == null) { throw new UnauthorizedAccessException(); }
+
     var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
 
-    if (authorizeAttributes.Any())
+    foreach (var attribute in authorizeAttributes)
     {
-      // Must be authenticated user
-      if (_user.Id == null) { throw new UnauthorizedAccessException(); }
-
       // Role-based authorization
-      var authorizeAttributesWithRoles =
-          authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
-
-      if (authorizeAttributesWithRoles.Any())
+      if (!string.IsNullOrWhiteSpace(attribute.Roles))
       {
-        var authorized = false;
+        var roles = attribute.Roles.Split(',').Select(r => r.Trim());
+        var authorizedInAnyRole = false;
 
-        foreach (var roles in
-                 authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+        foreach (var role in roles)
         {
-          foreach (var role in roles)
-          {
-            var isInRole = await _identityService.IsInRoleAsync(_user.Id, role.Trim());
+          if (!await _identityService.IsInRoleAsync(_currentUser.UserId.Value, role))
+            continue;
 
-            if (isInRole)
-            {
-              authorized = true;
+          authorizedInAnyRole = true;
 
-              break;
-            }
-          }
+          break;
         }
 
-        // Must be a member of at least one role in roles
-        if (!authorized) { throw new ForbiddenAccessException(); }
+        if (!authorizedInAnyRole) { throw new ForbiddenAccessException(); }
       }
 
       // Policy-based authorization
-      var authorizeAttributesWithPolicies =
-          authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
-
-      if (authorizeAttributesWithPolicies.Any())
+      if (!string.IsNullOrWhiteSpace(attribute.Policy)
+       && !await _identityService.AuthorizeAsync(_currentUser.UserId.Value,
+                                                 attribute.Policy))
       {
-        foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
-        {
-          var authorized = await _identityService.AuthorizeAsync(_user.Id, policy);
-
-          if (!authorized) { throw new ForbiddenAccessException(); }
-        }
+        throw new ForbiddenAccessException();
       }
     }
 
-    // User is authorized / authorization not required
     return await next();
   }
 }

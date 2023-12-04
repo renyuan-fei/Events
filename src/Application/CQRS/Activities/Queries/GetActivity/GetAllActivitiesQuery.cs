@@ -13,11 +13,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-public record GetAllActivitiesQuery : IRequest<List<ActivityDto>>;
+public record GetAllActivitiesQuery : IRequest<List<ActivityDTO>>;
 
 public class
     GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery,
-        List<ActivityDto>>
+        List<ActivityDTO>>
 {
   private readonly IApplicationDbContext                 _context;
   private readonly ILogger<GetAllActivitiesQueryHandler> _logger;
@@ -33,13 +33,13 @@ public class
     _logger = logger;
   }
 
-  public async Task<List<ActivityDto>> Handle(
+  public async Task<List<ActivityDTO>> Handle(
       GetAllActivitiesQuery request,
       CancellationToken     cancellationToken)
   {
     var entity = await
         _context.Activities
-                .ProjectToListAsync<ActivityDto>(_mapper.ConfigurationProvider);
+                .ProjectToListAsync<ActivityDTO>(_mapper.ConfigurationProvider);
 
     if (entity.Any()) return entity;
 

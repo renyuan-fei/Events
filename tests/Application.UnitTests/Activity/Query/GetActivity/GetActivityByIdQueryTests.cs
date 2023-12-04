@@ -33,7 +33,7 @@ public class GetActivityByIdQueryTests
   {
     // Arrange
     var activity = _fixture.Create<Domain.Entities.Activity>();
-    var activeDto = _fixture.Create<ActivityDto>();
+    var activeDto = _fixture.Create<ActivityDTO>();
     var id = Guid.NewGuid();
 
     var query = new GetActivityByIdQuery { Id = id };
@@ -43,7 +43,7 @@ public class GetActivityByIdQueryTests
                                                            .IsAny<CancellationToken>()))
                   .ReturnsAsync(activity);
 
-    _mockMapper.Setup(m => m.Map<ActivityDto>(It.IsAny<Domain.Entities.Activity>()))
+    _mockMapper.Setup(m => m.Map<ActivityDTO>(It.IsAny<Domain.Entities.Activity>()))
                .Returns(activeDto);
 
     // Act

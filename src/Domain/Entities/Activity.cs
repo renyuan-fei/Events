@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 
-public class Activity
+public class Activity : AuditableEntity
 {
   [ Key ]
   public Guid Id { get; set; } = Guid.NewGuid();

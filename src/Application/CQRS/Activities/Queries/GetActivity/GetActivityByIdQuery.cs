@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-public record GetActivityByIdQuery : IRequest<ActivityDto>
+public record GetActivityByIdQuery : IRequest<ActivityDTO>
 {
   public Guid Id { get; init; }
 }
 
 public class
-    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDto>
+    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDTO>
 {
   private readonly IApplicationDbContext                _context;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
@@ -34,7 +34,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<ActivityDto> Handle(
+  public async Task<ActivityDTO> Handle(
       GetActivityByIdQuery request,
       CancellationToken    cancellationToken)
   {
@@ -50,7 +50,7 @@ public class
 
     try
     {
-      var activityDto = _mapper.Map<ActivityDto>(entity);
+      var activityDto = _mapper.Map<ActivityDTO>(entity);
 
       return activityDto;
     }

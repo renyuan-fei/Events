@@ -1,17 +1,20 @@
-using Application;
-using Application.Common.Interfaces;
+using System.Text;
 
-using Domain.Identity;
+using Application;
+using Application.common.interfaces;
+using Application.Common.Interfaces;
 
 using FluentValidation.AspNetCore;
 
 using Infrastructure.DatabaseContext;
+using Infrastructure.Service;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 using WebAPI.Filters;
+using WebAPI.Services;
 
 namespace WebAPI.StartupExtensions;
 
@@ -34,18 +37,28 @@ public static class ConfigureServiceExtension
       IConfiguration          configuration)
   {
     #region DI
+    services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+
+    services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
     // ApplicationDbContext
     services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+
+    // Token
+    services.AddTransient<IJwtTokenService, JwtTokenService>();
+
     // ApplicationDI
     services.AddApplicationServices();
     // AutoMapper
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-    services.AddControllersWithViews(options =>
-                                         options.Filters
-                                                .Add<ApiExceptionFilterAttribute>())
-            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+    services.AddControllersWithViews();
+    // services.AddControllersWithViews(options =>
+    //                                      options.Filters
+    //                                             .Add<ApiExceptionFilterAttribute>())
+    //         .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
     // Add database context
     services.AddDbContext<ApplicationDbContext>(options =>
@@ -79,20 +92,32 @@ public static class ConfigureServiceExtension
       });
     });
 
-    // configuration for Identity
-    services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+    // configuration for authentication
+    services.AddAuthentication(options =>
             {
-              options.Password.RequiredLength = 5;
-              options.Password.RequireNonAlphanumeric = false;
-              options.Password.RequireUppercase = false;
-              options.Password.RequireLowercase = true;
-              options.Password.RequireDigit = true;
+              options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+              options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders()
-            .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext
-              , Guid>>()
-            .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
+            .AddJwtBearer(options =>
+            {
+              options.TokenValidationParameters =
+                  new TokenValidationParameters
+                  {
+                      ValidateAudience = true,
+                      ValidAudience = configuration["Jwt:Audience"],
+                      ValidateIssuer = true,
+                      ValidIssuer = configuration["Jwt:Issuer"],
+                      ValidateLifetime = true,
+                      ValidateIssuerSigningKey = true,
+                      IssuerSigningKey =
+                          new SymmetricSecurityKey(Encoding
+                                                   .UTF8.GetBytes(configuration
+                                                       ["Jwt:Key"]!))
+                  };
+            });
+
+    services.AddAuthorization(options => { });
 
     return services;
   }
