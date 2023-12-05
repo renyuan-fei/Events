@@ -1,3 +1,4 @@
+using Application.common.Security;
 using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers;
 /// <summary>
 ///   Activities controller
 /// </summary>
+[Authorize]
 public class ActivitiesController : BaseController
 {
   // GET: api/Activities

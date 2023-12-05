@@ -26,7 +26,7 @@ public class JwtTokenService : IJwtTokenService
   /// </summary>
   /// <param name="tokenDTO"></param>
   /// <returns></returns>
-  public AuthenticationResponse CreateToken(TokenDTO tokenDTO)
+  public AuthenticationDTO CreateToken(TokenDTO tokenDTO)
   {
     // expires in 10 minutes
     var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
@@ -79,7 +79,7 @@ public class JwtTokenService : IJwtTokenService
     var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
     // return the token
-    return new AuthenticationResponse
+    return new AuthenticationDTO
     {
         Token = token,
         DisplayName = tokenDTO.DisplayName,

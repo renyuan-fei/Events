@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 using Application.common.DTO;
 using Application.common.interfaces;
 
@@ -47,7 +49,7 @@ public class AccountController : BaseController
   /// <param name="registerDTO"></param>
   /// <returns></returns>
   [ HttpPost("register") ]
-  public async Task<ActionResult<AuthenticationResponse>> Register(
+  public async Task<ActionResult<AccountResponseDTO>> Register(
       [ FromBody ] RegisterDTO registerDTO)
   {
     if (!ModelState.IsValid) { return BadRequest(ModelState); }
@@ -71,7 +73,7 @@ public class AccountController : BaseController
   /// <param name="loginDTO"></param>
   /// <returns></returns>
   [ HttpPost("login") ]
-  public async Task<ActionResult<AuthenticationResponse>> Login(
+  public async Task<ActionResult<AccountResponseDTO>> Login(
       [ FromBody ] LoginDTO loginDTO)
   {
     if (!ModelState.IsValid) { return BadRequest(ModelState); }
@@ -91,23 +93,78 @@ public class AccountController : BaseController
 
   /// <summary>
   /// </summary>
-  /// <param name="tokenModel"></param>
   /// <returns></returns>
-  [ HttpPost("refresh-token") ]
-  public async Task<ActionResult<AuthenticationResponse>> RefreshToken(
-      [ FromBody ] TokenModel tokenModel)
+  [ HttpPost("refresh") ]
+  public async Task<IActionResult> GenerateNewAccessToken()
   {
-    var user =
-        await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshToken
-                                                        == tokenModel.RefreshToken);
+    // 从HTTP请求的Cookie中获取令牌
+    var jwtToken = Request.Cookies["JwtToken"];
+    var refreshToken = Request.Cookies["RefreshToken"];
 
-    if (user == null
-     || user.RefreshTokenExpirationDateTime <= DateTime.Now)
+    // 检查令牌是否为空
+    if (string.IsNullOrEmpty(jwtToken)
+     || string.IsNullOrEmpty(refreshToken))
     {
-      return BadRequest("Invalid refresh token.");
+      return BadRequest("Invalid token request");
     }
 
-    return await GenerateTokenResponse(user);
+    // 验证JWT令牌
+    ClaimsPrincipal? principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken);
+
+    // 检查JWT令牌是否无效
+    if (principal == null) { return BadRequest("Invalid JWT token"); }
+
+    // 从JWT令牌中获取用户信息
+    var email = principal.FindFirstValue(ClaimTypes.Email);
+
+    // 根据电子邮件获取用户
+    var user = await _userManager.FindByEmailAsync(email);
+
+    // 验证刷新令牌和过期时间
+    if (user == null
+     || user.RefreshToken != refreshToken
+     || user.RefreshTokenExpirationDateTime <= DateTime.Now)
+    {
+      return BadRequest("Invalid refresh token");
+    }
+
+    var data = new TokenDTO
+    {
+        DisplayName = user.DisplayName,
+        Email = user.Email,
+        UserName = user.UserName,
+        Id = user.Id,
+    };
+
+    // 生成新的JWT令牌
+    var token = _jwtTokenService.CreateToken(data);
+
+    // 更新用户的刷新令牌信息
+    user.RefreshToken = token.RefreshToken;
+    user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
+    await _userManager.UpdateAsync(user);
+
+    // 更新HTTP Only Cookie
+    var cookieOptions = new CookieOptions
+    {
+        HttpOnly = true,
+        Expires = DateTime.UtcNow.AddMinutes(60), // 设置合适的过期时间
+        Secure = true                             // 如果使用HTTPS，建议设置为true
+    };
+
+    Response.Cookies.Append("JwtToken", token.Token!, cookieOptions);
+
+    Response.Cookies.Append("RefreshToken",
+                            token.RefreshToken!,
+                            new CookieOptions
+                            {
+                                HttpOnly = true,
+                                Expires = token.RefreshTokenExpirationDateTime,
+                                Secure = true
+                            });
+
+    // 返回确认信息或空内容
+    return Ok(new { message = "Token refreshed successfully" });
   }
 
   /// <summary>
@@ -121,10 +178,10 @@ public class AccountController : BaseController
     return NoContent();
   }
 
-  async private Task<ActionResult<AuthenticationResponse>> GenerateTokenResponse(
+  async private Task<ActionResult<AccountResponseDTO>> GenerateTokenResponse(
       ApplicationUser user)
   {
-    var TokenDTO = new TokenDTO
+    var tokenDto = new TokenDTO
     {
         Id = user.Id,
         DisplayName = user.DisplayName,
@@ -132,11 +189,41 @@ public class AccountController : BaseController
         UserName = user.UserName
     };
 
-    var token = _jwtTokenService.CreateToken(TokenDTO);
+    var token = _jwtTokenService.CreateToken(tokenDto);
+
+    // 设置HTTP Only Cookie
+    var cookieOptions = new CookieOptions
+    {
+        HttpOnly = true,
+        Expires = DateTime.UtcNow.AddMinutes(60), // 设置合适的过期时间
+        Secure = true                             // 如果使用HTTPS，建议设置为true
+    };
+
+    // 将JWT Token写入Cookie
+    Response.Cookies.Append("JwtToken", token.Token!, cookieOptions);
+
+    // 可选：如果需要刷新令牌，也可以设置为另一个Cookie
+    Response.Cookies.Append("RefreshToken",
+                            token.RefreshToken!,
+                            new CookieOptions
+                            {
+                                HttpOnly = true,
+                                Expires = token.RefreshTokenExpirationDateTime,
+                                Secure = true // 如果使用HTTPS，建议设置为true
+                            });
+
+    // 更新用户刷新令牌信息
     user.RefreshToken = token.RefreshToken;
     user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
     await _userManager.UpdateAsync(user);
 
-    return Ok(token);
+    // 创建返回的DTO
+    var responseDto = new AccountResponseDTO
+    {
+        DisplayName = user.DisplayName, Email = user.Email,
+        // 可以添加其他必要的信息
+    };
+
+    return Ok(responseDto);
   }
 }

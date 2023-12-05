@@ -1,6 +1,6 @@
 namespace Application.common.DTO;
 
-public class AuthenticationResponse
+public class AuthenticationDTO
 {
   public string?  DisplayName  { get; set; } = string.Empty;
   public string?  Email        { get; set; } = string.Empty;
