@@ -88,5 +88,5 @@ public class ActivitiesController : BaseController
     return Ok(result);
   }
 
-  private bool ActivityExists(Guid id) { throw new NotImplementedException(); }
+  // private bool ActivityExists(Guid id) { throw new NotImplementedException(); }
 }

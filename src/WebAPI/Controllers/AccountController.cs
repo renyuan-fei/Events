@@ -15,6 +15,7 @@ namespace WebAPI.Controllers;
 [ AllowAnonymous ]
 public class AccountController : BaseController
 {
+  private readonly ICurrentUserService            _currentUserService;
   private readonly IIdentityService               _identityService;
   private readonly IJwtTokenService               _jwtTokenService;
   private readonly SignInManager<ApplicationUser> _signInManager;
@@ -26,16 +27,19 @@ public class AccountController : BaseController
   /// <param name="signInManager"></param>
   /// <param name="identityService"></param>
   /// <param name="jwtTokenService"></param>
+  /// <param name="currentUserService"></param>
   public AccountController(
       UserManager<ApplicationUser>   userManager,
       SignInManager<ApplicationUser> signInManager,
       IIdentityService               identityService,
-      IJwtTokenService               jwtTokenService)
+      IJwtTokenService               jwtTokenService,
+      ICurrentUserService            currentUserService)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _identityService = identityService;
     _jwtTokenService = jwtTokenService;
+    _currentUserService = currentUserService;
   }
 
   /// <summary>
@@ -52,7 +56,8 @@ public class AccountController : BaseController
     {
         UserName = registerDTO.Email,
         Email = registerDTO.Email,
-        DisplayName = registerDTO.DisplayName
+        DisplayName = registerDTO.DisplayName,
+        PhoneNumber = registerDTO.PhoneNumber
     };
 
     var result = await _userManager.CreateAsync(user, registerDTO.Password);
@@ -119,7 +124,15 @@ public class AccountController : BaseController
   async private Task<ActionResult<AuthenticationResponse>> GenerateTokenResponse(
       ApplicationUser user)
   {
-    var token = _jwtTokenService.CreateToken(user);
+    var TokenDTO = new TokenDTO
+    {
+        Id = user.Id,
+        DisplayName = user.DisplayName,
+        Email = user.Email,
+        UserName = user.UserName
+    };
+
+    var token = _jwtTokenService.CreateToken(TokenDTO);
     user.RefreshToken = token.RefreshToken;
     user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
     await _userManager.UpdateAsync(user);

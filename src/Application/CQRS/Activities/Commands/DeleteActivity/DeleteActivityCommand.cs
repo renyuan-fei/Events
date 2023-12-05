@@ -1,4 +1,3 @@
-using Application.common.Exceptions;
 using Application.Common.Interfaces;
 
 using AutoMapper;

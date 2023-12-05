@@ -10,7 +10,6 @@ using Infrastructure.DatabaseContext;
 using Infrastructure.Service;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using WebAPI.Filters;
@@ -37,9 +36,7 @@ public static class ConfigureServiceExtension
       IConfiguration          configuration)
   {
     #region DI
-    services.AddScoped<ICurrentUserService, CurrentUserService>();
-
-
+    // Current user service
     services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
     // ApplicationDbContext
@@ -54,18 +51,11 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-    services.AddControllersWithViews();
-    // services.AddControllersWithViews(options =>
-    //                                      options.Filters
-    //                                             .Add<ApiExceptionFilterAttribute>())
-    //         .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
-
-    // Add database context
-    services.AddDbContext<ApplicationDbContext>(options =>
-    {
-      options.UseSqlServer(configuration
-                               .GetConnectionString("DefaultConnection")!);
-    });
+    // services.AddControllersWithViews();
+    services.AddControllersWithViews(options =>
+                                         options.Filters
+                                                .Add<ApiExceptionFilterAttribute>())
+            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
     // middleware
 

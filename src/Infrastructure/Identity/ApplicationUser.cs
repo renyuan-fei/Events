@@ -1,12 +1,10 @@
-using Application.common.interfaces;
-
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Identity;
 
-public class ApplicationUser : IdentityUser<Guid>, IApplicationUser
+public class ApplicationUser : IdentityUser<Guid>
 {
-  public string? DisplayName  { get; set; }
+  public string  DisplayName  { get; set; }
   public string? Bio          { get; set; }
   public string? RefreshToken { get; set; }
 

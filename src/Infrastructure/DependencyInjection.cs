@@ -5,6 +5,7 @@ using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,24 @@ public static class DependencyInjection
       this IServiceCollection services,
       IConfiguration          configuration)
   {
+    // Add database context
+    if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+    {
+      services.AddDbContext<ApplicationDbContext>(options =>
+                                                      options
+                                                          .UseInMemoryDatabase("CleanArchitectureDb"));
+    }
+    else
+    {
+      services.AddDbContext<ApplicationDbContext>(options =>
+                                                      options.UseSqlServer(configuration
+                                                            .GetConnectionString("DefaultConnection"),
+                                                        b =>
+                                                            b.MigrationsAssembly(typeof
+                                                                    (ApplicationDbContext)
+                                                                .Assembly.FullName)));
+    }
+
     // configuration for Identity
     services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {

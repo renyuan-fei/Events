@@ -38,7 +38,6 @@ public static class DependencyInjection
 
       // 应用 性能 验证验证器
       cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-
     });
 
     return services;

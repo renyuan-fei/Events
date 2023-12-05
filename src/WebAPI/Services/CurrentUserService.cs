@@ -19,7 +19,6 @@ public class CurrentUserService : ICurrentUserService
   }
 
   /// <summary>
-  ///
   /// </summary>
   public Guid? UserId
   {

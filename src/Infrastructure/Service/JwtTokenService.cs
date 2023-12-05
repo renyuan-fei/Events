@@ -24,9 +24,9 @@ public class JwtTokenService : IJwtTokenService
 
   /// <summary>
   /// </summary>
-  /// <param name="user"></param>
+  /// <param name="tokenDTO"></param>
   /// <returns></returns>
-  public AuthenticationResponse CreateToken(IApplicationUser user)
+  public AuthenticationResponse CreateToken(TokenDTO tokenDTO)
   {
     // expires in 10 minutes
     var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
@@ -36,7 +36,7 @@ public class JwtTokenService : IJwtTokenService
     var claims = new Claim[ ]
     {
         //Subject (user id)
-        new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new(JwtRegisteredClaimNames.Sub, tokenDTO.Id.ToString()),
 
         //JWT unique ID
         new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -48,13 +48,13 @@ public class JwtTokenService : IJwtTokenService
 
         //Unique name identifier of the user (Email)
         new(ClaimTypes.NameIdentifier,
-            user.Email),
+            tokenDTO.Email),
 
         //Name of the user
-        new(ClaimTypes.Name, user.DisplayName),
+        new(ClaimTypes.Name, tokenDTO.DisplayName),
 
         //Name of the user
-        new(ClaimTypes.Email, user.Email)
+        new(ClaimTypes.Email, tokenDTO.Email)
     };
 
     // get Key from appsettings.json
@@ -82,8 +82,8 @@ public class JwtTokenService : IJwtTokenService
     return new AuthenticationResponse
     {
         Token = token,
-        DisplayName = user.DisplayName,
-        Email = user.Email,
+        DisplayName = tokenDTO.DisplayName,
+        Email = tokenDTO.Email,
         Expiration = expiration,
         RefreshToken = GenerateRefreshToken(),
         RefreshTokenExpirationDateTime =

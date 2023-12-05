@@ -1,17 +1,11 @@
 ﻿using System.Reflection;
 
-using Application.common.Exceptions;
-using Application.common.interfaces;
-using Application.common.Security;
-
 using MediatR;
-
-using System.Linq;
 
 namespace Application.common.Behaviours;
 
 /// <summary>
-/// Authorization for Role and Policy
+///   Authorization for Role and Policy
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
@@ -19,8 +13,8 @@ public class
     AuthorizationBehaviour <TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : notnull
 {
-  private readonly IIdentityService    _identityService;
   private readonly ICurrentUserService _currentUser;
+  private readonly IIdentityService    _identityService;
 
   public AuthorizationBehaviour(
       ICurrentUserService currentUserService,
@@ -32,7 +26,7 @@ where TRequest : notnull
   }
 
   /// <summary>
-  /// Handle the request
+  ///   Handle the request
   /// </summary>
   /// <param name="request"></param>
   /// <param name="next"></param>

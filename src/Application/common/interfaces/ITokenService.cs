@@ -6,7 +6,7 @@ namespace Application.common.interfaces;
 
 public interface IJwtTokenService
 {
-  AuthenticationResponse CreateToken(IApplicationUser user);
+  AuthenticationResponse CreateToken(TokenDTO tokenDTO);
 
   ClaimsPrincipal? GetPrincipalFromJwtToken(string? token);
 }

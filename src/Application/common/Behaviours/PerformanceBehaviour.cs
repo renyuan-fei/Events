@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.common.Behaviours;
 
 /// <summary>
-/// Logging the request that is Overrun
+///   Logging the request that is Overrun
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
@@ -15,10 +15,10 @@ public class
     PerformanceBehaviour <TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : notnull
 {
-  private readonly ILogger<TRequest> _logger;
-  private readonly Stopwatch         _timer = new Stopwatch();
-  private readonly ICurrentUserService          _currentUser;
-  private readonly IIdentityService  _identityService;
+  private readonly ICurrentUserService _currentUser;
+  private readonly IIdentityService    _identityService;
+  private readonly ILogger<TRequest>   _logger;
+  private readonly Stopwatch           _timer = new();
 
   public PerformanceBehaviour(
       ILogger<TRequest>   logger,
@@ -31,7 +31,7 @@ where TRequest : notnull
   }
 
   /// <summary>
-  /// Handle the request
+  ///   Handle the request
   /// </summary>
   /// <param name="request"></param>
   /// <param name="next"></param>
