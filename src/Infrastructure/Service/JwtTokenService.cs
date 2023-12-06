@@ -25,8 +25,9 @@ public class JwtTokenService : IJwtTokenService
   /// <summary>
   /// </summary>
   /// <param name="tokenDTO"></param>
+  /// <param name="isRefreshToken"></param>
   /// <returns></returns>
-  public AuthenticationDTO CreateToken(TokenDTO tokenDTO)
+  public AuthenticationDTO CreateToken(TokenDTO tokenDTO, bool isRefreshToken = false)
   {
     // expires in 10 minutes
     var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
@@ -79,16 +80,26 @@ public class JwtTokenService : IJwtTokenService
     var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
     // return the token
+    if (isRefreshToken)
+    {
+        return new AuthenticationDTO
+        {
+                Token = token,
+                Expiration = expiration,
+                RefreshTokenExpirationDateTime =
+                        DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
+                                                        ["RefreshToken:EXPIRATION_MINUTES"]))
+        };
+    }
+
     return new AuthenticationDTO
     {
-        Token = token,
-        DisplayName = tokenDTO.DisplayName,
-        Email = tokenDTO.Email,
-        Expiration = expiration,
-        RefreshToken = GenerateRefreshToken(),
-        RefreshTokenExpirationDateTime =
-            DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
-                                                        ["RefreshToken:EXPIRATION_MINUTES"]))
+            Token = token,
+            Expiration = expiration,
+            RefreshToken = GenerateRefreshToken(),
+            RefreshTokenExpirationDateTime =
+                    DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
+                                                                    ["RefreshToken:EXPIRATION_MINUTES"]))
     };
   }
 

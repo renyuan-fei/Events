@@ -1,4 +1,3 @@
-using Application.common.Security;
 using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
@@ -6,21 +5,26 @@ using Application.CQRS.Activities.Queries.GetActivity;
 
 using Domain.Entities;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
 /// <summary>
-///   Activities controller
+/// Represents a controller for handling HTTP requests related to Activity entities.
 /// </summary>
+
+// [Authorize(AuthenticationSchemes="Bearer")]
 [Authorize]
 public class ActivitiesController : BaseController
 {
   // GET: api/Activities
   /// <summary>
-  ///   Get all activities
+  /// Handles HTTP GET request to retrieve a list of all Activity entities.
   /// </summary>
-  /// <returns></returns>
+  /// <returns>
+  /// A task that represents the asynchronous operation. The task result contains an IActionResult with the list of all Activity entities.
+  /// </returns>
   [ HttpGet ]
   public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
   {
@@ -31,10 +35,12 @@ public class ActivitiesController : BaseController
 
   // GET: api/Activities/5
   /// <summary>
-  ///   Get a specific activity in the database by its ID
+  /// Handles HTTP GET request to retrieve a specific Activity entity by its ID.
   /// </summary>
-  /// <param name="id"></param>
-  /// <returns></returns>
+  /// <param name="id">The GUID identifier of the activity.</param>
+  /// <returns>
+  /// A task that represents the asynchronous operation. The task result contains an IActionResult with the specified Activity entity.
+  /// </returns>
   [ HttpGet("{id}") ]
   public async Task<ActionResult<Activity>> GetActivity(Guid id)
   {
@@ -46,11 +52,13 @@ public class ActivitiesController : BaseController
   // PUT: api/Activities/5
   // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
   /// <summary>
-  ///   Update the specified activity in the database
+  /// Handles HTTP PUT request to update a specified Activity entity.
   /// </summary>
-  /// <param name="id"></param>
-  /// <param name="activity"></param>
-  /// <returns></returns>
+  /// <param name="id">The GUID identifier of the activity.</param>
+  /// <param name="activity">The updated Activity entity.</param>
+  /// <returns>
+  /// A task that represents the asynchronous operation. The task result is an IActionResult representing the status of the operation.
+  /// </returns>
   [ HttpPut("{id}") ]
   public async Task<IActionResult> PutActivity(Guid id, Activity activity)
   {
@@ -63,10 +71,12 @@ public class ActivitiesController : BaseController
   // POST: api/Activities
   // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
   /// <summary>
-  ///   Add a new activity in the database
+  /// Handles HTTP POST request to create a new Activity entity.
   /// </summary>
-  /// <param name="activity"></param>
-  /// <returns></returns>
+  /// <param name="activity">The new Activity entity to create.</param>
+  /// <returns>
+  /// A task that represents the asynchronous operation. The task result is an IActionResult representing the status of the operation.
+  /// </returns>
   [ HttpPost ]
   public async Task<IActionResult> PostActivity(Activity activity)
   {
@@ -78,10 +88,12 @@ public class ActivitiesController : BaseController
 
   // DELETE: api/Activities/5
   /// <summary>
-  ///   Delete an activity in the database by its id
+  /// Handles HTTP DELETE request to delete a specified Activity entity.
   /// </summary>
-  /// <param name="id"></param>
-  /// <returns></returns>
+  /// <param name="id">The GUID identifier of the activity.</param>
+  /// <returns>
+  /// A task that represents the asynchronous operation. The task result is an IActionResult representing the status of the operation.
+  /// </returns>
   [ HttpDelete("{id}") ]
   public async Task<IActionResult> DeleteActivity(Guid id)
   {

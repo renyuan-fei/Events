@@ -6,7 +6,7 @@ namespace Application.common.interfaces;
 
 public interface IJwtTokenService
 {
-  AuthenticationDTO CreateToken(TokenDTO tokenDTO);
+  AuthenticationDTO CreateToken(TokenDTO tokenDTO, bool isRefresh = false);
 
   ClaimsPrincipal? GetPrincipalFromJwtToken(string? token);
 }

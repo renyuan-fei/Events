@@ -24,8 +24,8 @@ builder.Host.UseSerilog((
                               .ReadFrom.Services(services);
                         });
 
-builder.Services.ConfigureServices(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 

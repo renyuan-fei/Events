@@ -8,13 +8,12 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers;
 
 /// <summary>
+/// This class contains the account operations accessible by users. It extends from BaseController.
 /// </summary>
-[ AllowAnonymous ]
 public class AccountController : BaseController
 {
   private readonly ICurrentUserService            _currentUserService;
@@ -24,12 +23,13 @@ public class AccountController : BaseController
   private readonly UserManager<ApplicationUser>   _userManager;
 
   /// <summary>
+  /// This is the constructor method of the AccountController class. It contains all the dependency injections necessary for the account operations.
   /// </summary>
-  /// <param name="userManager"></param>
-  /// <param name="signInManager"></param>
-  /// <param name="identityService"></param>
-  /// <param name="jwtTokenService"></param>
-  /// <param name="currentUserService"></param>
+  /// <param name="userManager">UserManager class for managing instances of the IdentityUser class</param>
+  /// <param name="signInManager">SignInManager class for managing instances of the SignIn operations</param>
+  /// <param name="identityService">A service providing identity related utility methods</param>
+  /// <param name="jwtTokenService">A service for JWT token generation and validation</param>
+  /// <param name="currentUserService">A service for fetching the current authenticated user's details</param>
   public AccountController(
       UserManager<ApplicationUser>   userManager,
       SignInManager<ApplicationUser> signInManager,
@@ -45,9 +45,12 @@ public class AccountController : BaseController
   }
 
   /// <summary>
+  /// Register endpoint for creating new users.
   /// </summary>
-  /// <param name="registerDTO"></param>
-  /// <returns></returns>
+  /// <param name="registerDTO">Data Transfer Object containing the user's details for registration.</param>
+  /// <returns>
+  /// Returns an ActionResult instance of the AccountResponseDTO in JSON format.
+  /// </returns>
   [ HttpPost("register") ]
   public async Task<ActionResult<AccountResponseDTO>> Register(
       [ FromBody ] RegisterDTO registerDTO)
@@ -69,9 +72,12 @@ public class AccountController : BaseController
   }
 
   /// <summary>
+  /// Login endpoint for authenticating users.
   /// </summary>
-  /// <param name="loginDTO"></param>
-  /// <returns></returns>
+  /// <param name="loginDTO">Data Transfer Object containing the user's details for login.</param>
+  /// <returns>
+  /// Returns an ActionResult instance of the AccountResponseDTO in JSON format.
+  /// </returns>
   [ HttpPost("login") ]
   public async Task<ActionResult<AccountResponseDTO>> Login(
       [ FromBody ] LoginDTO loginDTO)
@@ -92,13 +98,17 @@ public class AccountController : BaseController
   }
 
   /// <summary>
+  /// Endpoint for generating a new access token.
   /// </summary>
-  /// <returns></returns>
+  /// <returns>
+  /// Returns a IActionResult, with HTTP 200 status code and a success message if the request was successful.
+  /// </returns>
   [ HttpPost("refresh") ]
-  public async Task<IActionResult> GenerateNewAccessToken()
+  public async Task<ActionResult<AccountResponseDTO>> GenerateNewAccessToken()
   {
     // 从HTTP请求的Cookie中获取令牌
-    var jwtToken = Request.Cookies["JwtToken"];
+    var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+    var jwtToken = authHeader?.StartsWith("bearer ") == true ? authHeader.Substring("Bearer ".Length).Trim() : null;
     var refreshToken = Request.Cookies["RefreshToken"];
 
     // 检查令牌是否为空
@@ -109,7 +119,7 @@ public class AccountController : BaseController
     }
 
     // 验证JWT令牌
-    ClaimsPrincipal? principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken);
+    var principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken);
 
     // 检查JWT令牌是否无效
     if (principal == null) { return BadRequest("Invalid JWT token"); }
@@ -136,48 +146,51 @@ public class AccountController : BaseController
         Id = user.Id,
     };
 
-    // 生成新的JWT令牌
-    var token = _jwtTokenService.CreateToken(data);
-
-    // 更新用户的刷新令牌信息
-    user.RefreshToken = token.RefreshToken;
-    user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
-    await _userManager.UpdateAsync(user);
+    // 生成新的Access令牌, 但不更新过期时间
+    var token = _jwtTokenService.CreateToken(data, isRefresh: true);
 
     // 更新HTTP Only Cookie
-    var cookieOptions = new CookieOptions
-    {
-        HttpOnly = true,
-        Expires = DateTime.UtcNow.AddMinutes(60), // 设置合适的过期时间
-        Secure = true                             // 如果使用HTTPS，建议设置为true
-    };
-
-    Response.Cookies.Append("JwtToken", token.Token!, cookieOptions);
-
-    Response.Cookies.Append("RefreshToken",
-                            token.RefreshToken!,
-                            new CookieOptions
-                            {
-                                HttpOnly = true,
-                                Expires = token.RefreshTokenExpirationDateTime,
-                                Secure = true
-                            });
 
     // 返回确认信息或空内容
-    return Ok(new { message = "Token refreshed successfully" });
+    return Ok(new AccountResponseDTO
+    {
+        DisplayName = user.DisplayName,
+        Email = user.Email,
+        Token = token.Token,
+        ExpirationDateTime = token.Expiration
+    });
   }
 
   /// <summary>
+  /// Logout endpoint for signing out the user.
   /// </summary>
-  /// <returns></returns>
+  /// <returns>
+  /// Returns an empty IActionResult with HTTP 204 status code.
+  /// </returns>
+  [ Authorize ]
   [ HttpGet("logout") ]
   public async Task<IActionResult> Logout()
   {
+    //Sign out the user from ASP.NET Core Authentication system.
     await _signInManager.SignOutAsync();
 
+    //Delete the refresh token cookie
+    Response.Cookies.Delete("RefreshToken");
+
+    //set Token and ExpirationDateTime to null in database
+
+
+    //Return NoContent Result (HTTP 204 Status Code)
     return NoContent();
   }
 
+  /// <summary>
+  /// Internal method for generating a response token.
+  /// </summary>
+  /// <param name="user">Instance of the ApplicationUser class</param>
+  /// <returns>
+  /// Returns an ActionResult instance of the AccountResponseDTO in JSON format.
+  /// </returns>
   async private Task<ActionResult<AccountResponseDTO>> GenerateTokenResponse(
       ApplicationUser user)
   {
@@ -189,39 +202,30 @@ public class AccountController : BaseController
         UserName = user.UserName
     };
 
+    // create JWT Token
     var token = _jwtTokenService.CreateToken(tokenDto);
 
-    // 设置HTTP Only Cookie
+    // set Refresh Token in Cookie
     var cookieOptions = new CookieOptions
     {
-        HttpOnly = true,
-        Expires = DateTime.UtcNow.AddMinutes(60), // 设置合适的过期时间
-        Secure = true                             // 如果使用HTTPS，建议设置为true
+        HttpOnly = true, Expires = token.RefreshTokenExpirationDateTime, Secure = true
     };
 
-    // 将JWT Token写入Cookie
-    Response.Cookies.Append("JwtToken", token.Token!, cookieOptions);
+    Response.Cookies.Append("RefreshToken", token.RefreshToken!, cookieOptions);
 
-    // 可选：如果需要刷新令牌，也可以设置为另一个Cookie
-    Response.Cookies.Append("RefreshToken",
-                            token.RefreshToken!,
-                            new CookieOptions
-                            {
-                                HttpOnly = true,
-                                Expires = token.RefreshTokenExpirationDateTime,
-                                Secure = true // 如果使用HTTPS，建议设置为true
-                            });
-
-    // 更新用户刷新令牌信息
+    // 舍 User's Refresh Token and Refresh Token Expiration DateTime'
     user.RefreshToken = token.RefreshToken;
     user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
+
+    // update user's refresh token and expiration date time'
     await _userManager.UpdateAsync(user);
 
-    // 创建返回的DTO
     var responseDto = new AccountResponseDTO
     {
-        DisplayName = user.DisplayName, Email = user.Email,
-        // 可以添加其他必要的信息
+        DisplayName = user.DisplayName,
+        Email = user.Email,
+        Token = token.Token,
+        ExpirationDateTime = token.Expiration
     };
 
     return Ok(responseDto);

@@ -31,7 +31,6 @@ public static class ConfigureServiceExtension
   /// <returns>
   ///   All service collection
   /// </returns>
-  [ Obsolete("Obsolete") ]
   public static IServiceCollection ConfigureServices(
       this IServiceCollection services,
       IConfiguration          configuration)
@@ -52,11 +51,11 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-    // services.AddControllersWithViews();
-    services.AddControllersWithViews(options =>
-                                         options.Filters
-                                                .Add<ApiExceptionFilterAttribute>())
-            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+    services.AddControllersWithViews();
+    // services.AddControllersWithViews(options =>
+    //                                      options.Filters
+    //                                             .Add<ApiExceptionFilterAttribute>())
+    //         .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
     // middleware
 
@@ -86,73 +85,31 @@ public static class ConfigureServiceExtension
     // configuration for authentication
     services.AddAuthentication(options =>
             {
-              // 设置默认身份验证方案为Cookie身份验证
-              options.DefaultAuthenticateScheme =
-                  CookieAuthenticationDefaults.AuthenticationScheme;
+              options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 
-              options.DefaultChallengeScheme =
-                  CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-              // 设置Cookie选项
-              options.Cookie.HttpOnly = true; // 设置Cookie为HttpOnly，提高安全性
-
-              options.Cookie.SecurePolicy =
-                  CookieSecurePolicy.Always; // 设置Cookie仅在HTTPS下有效
-
-              // 配置Cookie身份验证事件
-              options.Events = new CookieAuthenticationEvents
-              {
-                  // 当验证Cookie时触发
-                  OnValidatePrincipal = async context =>
-                  {
-                    // 从DI容器中获取JWT Token服务
-                    var jwtTokenService = context.HttpContext.RequestServices
-                                                 .GetRequiredService<IJwtTokenService>();
-
-                    // 从请求中获取名为"JwtToken"的Cookie
-                    var cookie = context.Request.Cookies["JwtToken"];
-
-                    // 如果Cookie不为空，则尝试验证Token
-                    if (!string.IsNullOrEmpty(cookie))
-                    {
-                      try
-                      {
-                        // 使用JWT服务从Token中获取ClaimsPrincipal
-                        var principal = jwtTokenService.GetPrincipalFromJwtToken(cookie);
-
-                        // 替换当前的用户身份为新的ClaimsPrincipal
-                        context.ReplacePrincipal(principal);
-
-                        // 设置ShouldRenew为true，表示身份验证需要刷新
-                        context.ShouldRenew = true;
-                      }
-                      catch
-                      {
-                        // 验证失败时拒绝用户身份
-                        context.RejectPrincipal();
-                      }
-                    }
-                  }
-              };
+              options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
               options.TokenValidationParameters =
-                  new TokenValidationParameters
+                  new TokenValidationParameters()
                   {
-                      ValidateAudience = true,
-                      ValidAudience = configuration["Jwt:Audience"],
                       ValidateIssuer = true,
-                      ValidIssuer = configuration["Jwt:Issuer"],
+                      ValidateAudience = true,
                       ValidateLifetime = true,
                       ValidateIssuerSigningKey = true,
+                      ValidIssuer = configuration["Jwt:Issuer"],
+                      ValidAudience = configuration["Jwt:Audience"],
                       IssuerSigningKey =
                           new SymmetricSecurityKey(Encoding
                                                    .UTF8.GetBytes(configuration
-                                                       ["Jwt:Key"]!))
+                                                            ["Jwt:Key"]!))
                   };
+
+              options.Events = new JwtBearerEvents
+              {
+
+              };
             });
 
     services.AddAuthorization(options => { });
