@@ -19,5 +19,5 @@ public class Activity : AuditableEntity
 
   public string Venue { get; set; }
 
-  // public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
+  public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
 }

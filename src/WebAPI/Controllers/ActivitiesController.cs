@@ -13,8 +13,6 @@ namespace WebAPI.Controllers;
 /// <summary>
 /// Represents a controller for handling HTTP requests related to Activity entities.
 /// </summary>
-
-// [Authorize(AuthenticationSchemes="Bearer")]
 [Authorize]
 public class ActivitiesController : BaseController
 {

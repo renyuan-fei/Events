@@ -14,4 +14,6 @@ public class ActivityAttendee : AuditableEntity
   ///   Don't reference it as ApplicationUser type, it's bad
   /// </summary>
   public Guid UserId { get; set; }
+
+  public Activity Activity { get; set; }
 }

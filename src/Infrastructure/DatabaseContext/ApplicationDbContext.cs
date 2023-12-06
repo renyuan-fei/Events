@@ -100,10 +100,15 @@ public class ApplicationDbContext :
     base.OnModelCreating(builder);
 
     builder.Entity<Activity>()
-           .ToTable("Activities");
+           .HasMany(e => e.Attendees)
+           .WithOne(e => e.Activity)
+           .HasForeignKey(e => e.Id);
 
     builder.Entity<ActivityAttendee>()
-           .ToTable("ActivityAttendees");
+          .HasOne(e => e.Activity)
+          .WithMany(e => e.Attendees)
+          .HasForeignKey(e => e.Id)
+          .OnDelete(DeleteBehavior.Cascade);
   }
 
   async private Task DispatchEvents(DomainEvent[ ] events)
