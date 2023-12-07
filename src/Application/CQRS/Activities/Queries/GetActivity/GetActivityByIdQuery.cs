@@ -1,4 +1,5 @@
 using Application.common.DTO;
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using AutoMapper;
@@ -7,6 +8,7 @@ using Domain.Entities;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
@@ -19,6 +21,7 @@ public record GetActivityByIdQuery : IRequest<ActivityDTO>
 public class
     GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDTO>
 {
+  private readonly IUserService                         _userService;
   private readonly IApplicationDbContext                _context;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
   private readonly IMapper                              _mapper;
@@ -26,19 +29,25 @@ public class
   public GetActivityByIdQueryHandler(
       IApplicationDbContext                context,
       IMapper                              mapper,
-      ILogger<GetActivityByIdQueryHandler> logger)
+      ILogger<GetActivityByIdQueryHandler> logger,
+      IUserService                         userService)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
+    _userService = userService;
   }
 
   public async Task<ActivityDTO> Handle(
       GetActivityByIdQuery request,
       CancellationToken    cancellationToken)
   {
-    var entity = await _context.Activities.FindAsync(new object[ ] { request.Id },
-                                                     cancellationToken);
+    var temp1 = _context.Activities;
+
+    var entity = await _context.Activities.Include(a => a.Attendees)
+                               .Where(a => a.Id == request.Id)
+                               .SingleOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+
 
     if (entity == null)
     {

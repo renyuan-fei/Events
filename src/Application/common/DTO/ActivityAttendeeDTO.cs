@@ -5,23 +5,26 @@ namespace Application.common.DTO;
 /// </summary>
 public class ActivityAttendeeDTO
 {
-  public Guid Id { get; init; }
+
+  /// <summary>
+  /// Gets or sets the unique identifier of the user.
+  /// </summary>
+  public Guid UserId { get; init; }
 
   /// <summary>
   /// Gets or sets a value indicating whether this instance is the host.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this instance is the host; otherwise, <c>false</c>.
+  /// A boolean value indicating whether this instance is the host.
+  /// If the value is <c>true</c>, it means this instance is the host.
+  /// If the value is <c>false</c>, it means this instance is not the host.
   /// </value>
   public bool IsHost { get; set; }
 
   /// <summary>
-  /// The display name of an object.
+  /// Gets or sets the display name.
   /// </summary>
-  /// <value>
-  /// A string representing the display name.
-  /// Can be null.
-  /// </value>
+  /// <value>The display name.</value>
   public string? DisplayName { get; set; }
 
   /// <summary>

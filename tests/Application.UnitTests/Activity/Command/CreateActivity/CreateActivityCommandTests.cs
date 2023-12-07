@@ -1,3 +1,4 @@
+using Application.common.Interfaces;
 using Application.CQRS.Activities.Commands.CreateActivity;
 
 namespace Application.UnitTests.Activity.Command.CreateActivity;
@@ -10,9 +11,11 @@ public class CreateActivityCommandTests
   private readonly Mock<IApplicationDbContext>                 _mockDbContext;
   private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
+  private readonly Mock<IUserService>                           _mockUserService;
 
-  public CreateActivityCommandTests()
+  public CreateActivityCommandTests(Mock<IUserService> mockUserService)
   {
+    _mockUserService = mockUserService;
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
     _mockDbContext = new Mock<IApplicationDbContext>();
@@ -26,7 +29,8 @@ public class CreateActivityCommandTests
 
     _handler = new CreateActivityCommandHandler(_mockDbContext.Object,
                                                 _mockMapper.Object,
-                                                _mockLogger.Object);
+                                                _mockLogger.Object,
+                                                _mockUserService.Object);
   }
 
   [ Fact ]
