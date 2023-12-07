@@ -1,8 +1,10 @@
 using Application.common.DTO;
 using Application.Common.Interfaces;
+using Application.common.Mappings;
 using Application.common.Models;
 
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 using MediatR;
 
@@ -12,15 +14,17 @@ namespace Application.CQRS.ActivityAttendee.Queries.GetActivityAttendeesWithPagi
 
 public record
     GetActivityAttendeesWithPaginationQuery : IRequest<
-        PaginatedList<ActivityAttendeeDTO>>
+    PaginatedList<ActivityAttendeeDTO>>
 {
-  //TODO
+  public Guid ActivityId { get; init; }
+
+  public PaginatedListParams PaginatedListParams { get; init; }
 }
 
 public class
     GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
-        GetActivityAttendeesWithPaginationQuery,
-        PaginatedList<ActivityAttendeeDTO>>
+    GetActivityAttendeesWithPaginationQuery,
+    PaginatedList<ActivityAttendeeDTO>>
 {
   private readonly IApplicationDbContext                                   _context;
   private readonly IMapper                                                 _mapper;
@@ -40,6 +44,21 @@ public class
       GetActivityAttendeesWithPaginationQuery request,
       CancellationToken                       cancellationToken)
   {
-    throw new NotImplementedException();
+    var query = _context.ActivityAttendees.Where(x => x.Id == request.ActivityId);
+
+    if (!query.Any())
+    {
+      _logger.LogError("Could not find any attendee with Activity Id {Id}",
+                       request.ActivityId);
+
+      throw new NotFoundException(nameof(ActivityAttendeeDTO), request.ActivityId);
+    }
+
+    var result = await query.OrderBy(attendee => attendee.LastModified)
+                            .ProjectTo<ActivityAttendeeDTO>(_mapper.ConfigurationProvider)
+                            .PaginatedListAsync(request.PaginatedListParams.PageNumber,
+                                                request.PaginatedListParams.PageSize);
+
+    return result;
   }
 }

@@ -1,3 +1,4 @@
+using Application.common.DTO;
 using Application.Common.Interfaces;
 using Application.common.Mappings;
 using Application.common.Models;
@@ -5,15 +6,13 @@ using Application.common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
-using Domain.Entities;
-
 using MediatR;
 
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<Activity>>
+public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<ActivityDTO>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
 }
@@ -21,7 +20,7 @@ public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<Activity>
 public class
     GetPaginatedListActivitiesQueryHandler :
         IRequestHandler<GetPaginatedListActivitiesQuery,
-        PaginatedList<Activity>>
+        PaginatedList<ActivityDTO>>
 {
   private readonly IApplicationDbContext                           _context;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;
@@ -37,7 +36,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<PaginatedList<Activity>> Handle(
+  public async Task<PaginatedList<ActivityDTO>> Handle(
       GetPaginatedListActivitiesQuery request,
       CancellationToken               cancellationToken)
   {
@@ -61,14 +60,14 @@ public class
       _logger.LogError("Could not find activities with search term {SearchTerm}",
                        request.PaginatedListParams.SearchTerm);
 
-      throw new NotFoundException(nameof(Activity),
-                                  request.PaginatedListParams.SearchTerm);
+      throw new NotFoundException(nameof(ActivityDTO),
+                                  request.PaginatedListParams.SearchTerm!);
     }
 
     var result = await query
                        .OrderBy(activity => activity.Title) // 或者其他排序方式
                        .ProjectTo<
-                           Activity>(_mapper.ConfigurationProvider) // 如果需要映射到 DTO
+                           ActivityDTO>(_mapper.ConfigurationProvider) // 如果需要映射到 DTO
                        .PaginatedListAsync(request.PaginatedListParams.PageNumber,
                                            request.PaginatedListParams.PageSize);
 

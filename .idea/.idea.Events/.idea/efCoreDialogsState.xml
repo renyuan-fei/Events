@@ -5,6 +5,7 @@
       <map>
         <entry key="Common:buildConfiguration" value="Debug" />
         <entry key="Common:efb6ef9a-3837-4478-b699-a9c974cdc2bf:dbContext" value="Infrastructure.DatabaseContext.ApplicationDbContext" />
+        <entry key="Common:enableDiagnosticLogging" value="false" />
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="Migrations" />
         <entry key="Common:useDefaultConnection" value="true" />

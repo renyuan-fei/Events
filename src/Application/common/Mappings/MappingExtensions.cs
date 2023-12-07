@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.common.Mappings;
 
 /// <summary>
-///   提供 IQueryable 的扩展方法，用于分页和投影（映射）操作
+/// Provides extension methods for IQueryable, for pagination and projection (mapping) operations.
 /// </summary>
 public static class MappingExtensions
 {
   /// <summary>
-  ///   将 IQueryable&lt;TDestination&gt; 转换为分页列表
+  /// Returns a paginated list of items from the given queryable data source.
   /// </summary>
-  /// <param name="queryable">要分页的查询</param>
-  /// <param name="pageNumber">当前页码</param>
-  /// <param name="pageSize">每页的大小</param>
-  /// <typeparam name="TDestination">分页列表中的元素类型。</typeparam>
-  /// <returns>分页后的列表</returns>
+  /// <typeparam name="TDestination">The type of the elements in the queryable.</typeparam>
+  /// <param name="queryable">The queryable data source.</param>
+  /// <param name="pageNumber">The page number of the items to retrieve.</param>
+  /// <param name="pageSize">The number of items per page.</param>
+  /// <returns>A task that represents the asynchronous operation. The task result contains a PaginatedList of type TDestination.</returns>
   public static Task<PaginatedList<TDestination>> PaginatedListAsync <TDestination>(
       this IQueryable<TDestination> queryable,
       int                           pageNumber,
@@ -31,12 +31,12 @@ public static class MappingExtensions
   }
 
   /// <summary>
-  ///   将 IQueryable 的结果使用 AutoMapper 映射到另一种类型
+  /// Maps the results of an IQueryable to another type using AutoMapper.
   /// </summary>
-  /// <param name="queryable">要映射的查询</param>
-  /// <param name="configuration">AutoMapper 配置提供者</param>
-  /// <typeparam name="TDestination">目标映射类型</typeparam>
-  /// <returns>映射后的数据列表</returns>
+  /// <param name="queryable">The query to be mapped.</param>
+  /// <param name="configuration">The AutoMapper configuration provider.</param>
+  /// <typeparam name="TDestination">The destination mapping type.</typeparam>
+  /// <returns>A list of mapped data.</returns>
   public static Task<List<TDestination>> ProjectToListAsync <TDestination>(
       this IQueryable        queryable,
       IConfigurationProvider configuration) where TDestination : class

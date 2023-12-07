@@ -12,26 +12,29 @@ using Microsoft.IdentityModel.Tokens;
 namespace Infrastructure.Service;
 
 /// <summary>
+/// Service for creating and validating JWT tokens.
 /// </summary>
 public class JwtTokenService : IJwtTokenService
 {
   private readonly IConfiguration _configuration;
 
   /// <summary>
+  /// Represents a service for managing JWT tokens.
   /// </summary>
-  /// <param name="configuration"></param>
+  /// <param name="configuration">The configuration object used to retrieve JWT settings.</param>
   public JwtTokenService(IConfiguration configuration) { _configuration = configuration; }
 
   /// <summary>
+  /// Creates a JWT token for the given token data.
   /// </summary>
-  /// <param name="tokenDTO"></param>
-  /// <param name="isRefreshToken"></param>
-  /// <returns></returns>
+  /// <param name="tokenDTO">The token data.</param>
+  /// <param name="isRefreshToken">Flag indicating whether the token is a refresh token.</param>
+  /// <returns>An instance of AuthenticationDTO containing the generated token and expiration details.</returns>
   public AuthenticationDTO CreateToken(TokenDTO tokenDTO, bool isRefreshToken = false)
   {
-    // expires in 10 minutes
-    var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
-                                                    ["JWTSettings:ExpirationMinutes"]));
+      // expires in 10 minutes
+      var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
+                                                                   ["Jwt:EXPIRATION_MINUTES"]));
 
     //create the JWT payload
     var claims = new Claim[ ]
@@ -103,6 +106,14 @@ public class JwtTokenService : IJwtTokenService
     };
   }
 
+  /// <summary>
+  /// Validates and retrieves the claims principal from a JWT token.
+  /// </summary>
+  /// <param name="token">The JWT token to be validated and processed.</param>
+  /// <returns>
+  /// Returns a ClaimsPrincipal representing the authenticated entity if the token is valid,
+  /// otherwise returns null.
+  /// </returns>
   public ClaimsPrincipal? GetPrincipalFromJwtToken(string? token)
   {
     var tokenValidationParameters = new TokenValidationParameters
@@ -141,6 +152,10 @@ public class JwtTokenService : IJwtTokenService
     return principal;
   }
 
+  /// <summary>
+  /// Generates a refresh token.
+  /// </summary>
+  /// <returns>A string containing the generated refresh token.</returns>
   private string GenerateRefreshToken()
   {
     var bytes = new byte[64];

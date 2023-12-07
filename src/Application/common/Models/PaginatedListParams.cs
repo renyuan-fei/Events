@@ -1,5 +1,8 @@
 namespace Application.common.Models;
 
+/// <summary>
+/// Represents the parameters for a paginated list.
+/// </summary>
 public class PaginatedListParams
 {
   public bool IsGoing { get; set; }

@@ -1,3 +1,4 @@
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using AutoMapper;
@@ -11,14 +12,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
 
+/// <summary>
+/// Represents the command for creating a new activity.
+/// </summary>
 public record CreateActivityCommand : IRequest<Unit>
 {
-  public Activity Activity { get; init; }
+  public Guid    CurrentUserId { get; init; }
+  public Activity Activity      { get; init; }
 }
 
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
     Unit>
 {
+  private readonly IUserService _userService;
   private readonly IApplicationDbContext                 _context;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
@@ -26,11 +32,13 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
   public CreateActivityCommandHandler(
       IApplicationDbContext                 context,
       IMapper                               mapper,
-      ILogger<CreateActivityCommandHandler> logger)
+      ILogger<CreateActivityCommandHandler> logger,
+      IUserService                          userService)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
+    _userService = userService;
   }
 
   public async Task<Unit> Handle(
@@ -44,8 +52,13 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
         Date = request.Activity.Date,
         Category = request.Activity.Category,
         City = request.Activity.City,
-        Venue = request.Activity.Venue
+        Venue = request.Activity.Venue,
+        Attendees = new List<Domain.Entities.ActivityAttendee>()
     };
+
+    _userService.GetUserInfoById(request.CurrentUserId);
+
+    AddUserAsHostIfValid(request.CurrentUserId, activity);
 
     _context.Activities.Add(activity);
 
@@ -63,5 +76,19 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
       throw;
     }
+  }
+
+  private void AddUserAsHostIfValid(Guid currentUserId, Activity activity)
+  {
+    var user = _userService.GetUserInfoById(currentUserId);
+
+    activity.Attendees.Add(new Domain.Entities.ActivityAttendee
+    {
+        Id = Guid.NewGuid(),
+        IsHost = true,
+        UserId = currentUserId,
+        DisplayName = user.DisplayName,
+        UserName = user.UserName
+    });
   }
 }

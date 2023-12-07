@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.common.Models;
 
 /// <summary>
-///   表示分页数据的泛型类
+/// Represents a generic class for paginated data.
 /// </summary>
-/// <typeparam name="T">列表中元素的类型</typeparam>
+/// <typeparam name="T">The type of elements in the list.</typeparam>
 public class PaginatedList <T>
 {
   public PaginatedList() { }

@@ -1,6 +1,8 @@
 using Application.common.DTO;
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Mappings;
+using Application.CQRS.ActivityAttendee.Queries;
 
 using AutoMapper;
 
@@ -8,6 +10,8 @@ using Domain.Entities;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
@@ -18,6 +22,7 @@ public class
     GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery,
         List<ActivityDTO>>
 {
+  private readonly IUserService _userService;
   private readonly IApplicationDbContext                 _context;
   private readonly ILogger<GetAllActivitiesQueryHandler> _logger;
   private readonly IMapper                               _mapper;
@@ -25,11 +30,14 @@ public class
   public GetAllActivitiesQueryHandler(
       IApplicationDbContext                 context,
       IMapper                               mapper,
-      ILogger<GetAllActivitiesQueryHandler> logger)
+      ILogger<GetAllActivitiesQueryHandler> logger,
+      IMediator                             mediator,
+      IUserService                          userService)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
+    _userService = userService;
   }
 
   public async Task<List<ActivityDTO>> Handle(

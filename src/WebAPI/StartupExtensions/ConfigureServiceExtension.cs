@@ -51,11 +51,11 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-    services.AddControllersWithViews();
-    // services.AddControllersWithViews(options =>
-    //                                      options.Filters
-    //                                             .Add<ApiExceptionFilterAttribute>())
-    //         .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+    // services.AddControllersWithViews();
+    services.AddControllersWithViews(options =>
+                                         options.Filters
+                                                .Add<ApiExceptionFilterAttribute>())
+            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
     // middleware
 

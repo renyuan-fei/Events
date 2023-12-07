@@ -1,7 +1,9 @@
 using Application.common.interfaces;
+using Application.common.Interfaces;
 
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
+using Infrastructure.Service;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,6 +19,13 @@ public static class DependencyInjection
       this IServiceCollection services,
       IConfiguration          configuration)
   {
+    #region DI
+    services.AddScoped<IDomainEventService, DomainEventService>();
+    services.AddTransient<IDateTime, DateTimeService>();
+    services.AddScoped<IUserService, UserService>();
+    #endregion
+
+
     // Add database context
     if (configuration.GetValue<bool>("UseInMemoryDatabase"))
     {

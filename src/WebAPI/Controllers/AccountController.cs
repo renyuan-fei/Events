@@ -106,9 +106,15 @@ public class AccountController : BaseController
   [ HttpPost("refresh") ]
   public async Task<ActionResult<AccountResponseDTO>> GenerateNewAccessToken()
   {
+    const string bearerPrefix = "Bearer ";
+
     // 从HTTP请求的Cookie中获取令牌
     var authHeader = Request.Headers["Authorization"].FirstOrDefault();
-    var jwtToken = authHeader?.StartsWith("bearer ") == true ? authHeader.Substring("Bearer ".Length).Trim() : null;
+
+    var jwtToken = authHeader?.StartsWith(bearerPrefix) == true
+        ? authHeader.Substring(bearerPrefix.Length).Trim()
+        : null;
+
     var refreshToken = Request.Cookies["RefreshToken"];
 
     // 检查令牌是否为空
@@ -178,7 +184,6 @@ public class AccountController : BaseController
     Response.Cookies.Delete("RefreshToken");
 
     //set Token and ExpirationDateTime to null in database
-
 
     //Return NoContent Result (HTTP 204 Status Code)
     return NoContent();

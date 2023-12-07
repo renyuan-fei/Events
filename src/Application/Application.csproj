@@ -16,6 +16,7 @@
     <ItemGroup>
         <Folder Include="Common\Behaviours\"/>
         <Folder Include="Common\Exceptions\"/>
+        <Folder Include="common\Helper\" />
         <Folder Include="Common\Mappings\"/>
         <Folder Include="Common\Models\"/>
         <Folder Include="Common\Security\"/>

@@ -1,3 +1,4 @@
+using Application.common.interfaces;
 using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
@@ -8,14 +9,27 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using WebAPI.Services;
+
 namespace WebAPI.Controllers;
 
 /// <summary>
 /// Represents a controller for handling HTTP requests related to Activity entities.
 /// </summary>
-[Authorize]
+[ Authorize ]
 public class ActivitiesController : BaseController
 {
+  private readonly ICurrentUserService _currentUserService;
+
+  /// <summary>
+  /// Initializes a new instance of the ActivitiesController class.
+  /// </summary>
+  /// <param name="currentUserService">The service for retrieving information about the current user.</param>
+  public ActivitiesController(ICurrentUserService currentUserService)
+  {
+    _currentUserService = currentUserService;
+  }
+
   // GET: api/Activities
   /// <summary>
   /// Handles HTTP GET request to retrieve a list of all Activity entities.
@@ -79,7 +93,11 @@ public class ActivitiesController : BaseController
   public async Task<IActionResult> PostActivity(Activity activity)
   {
     var result =
-        await Mediator!.Send(new CreateActivityCommand { Activity = activity });
+        await Mediator!.Send(new CreateActivityCommand
+        {
+            Activity = activity,
+            CurrentUserId = (Guid)_currentUserService.UserId!
+        });
 
     return Ok(result);
   }
