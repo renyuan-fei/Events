@@ -6,12 +6,13 @@ using AutoMapper;
 using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Service;
 
 public class UserService : IUserService
 {
-  private readonly IMapper _mapper;
+  private readonly IMapper                      _mapper;
   private readonly UserManager<ApplicationUser> _userManager;
 
   public UserService(IMapper mapper, UserManager<ApplicationUser> userManager)
@@ -20,13 +21,13 @@ public class UserService : IUserService
     _userManager = userManager;
   }
 
-  public UserInfoDTO GetUserInfoById(Guid userId)
+  public async Task<UserInfoDTO> GetUserInfoByIdAsync(Guid userId)
   {
-    var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+    var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
     var result = new UserInfoDTO
     {
-        UserName = user.UserName,
+        UserName = user!.UserName,
         Email = user.Email,
         DisplayName = user.DisplayName,
         Bio = user.Bio,
@@ -36,7 +37,13 @@ public class UserService : IUserService
     return result;
   }
 
-  public UserInfoDTO GetUserInfoByEmail(string email) { throw new NotImplementedException(); }
+  public Task<UserInfoDTO> GetUserInfoByEmailAsync(string email)
+  {
+    throw new NotImplementedException();
+  }
 
-  public UserInfoDTO GetUserInfoByPhoneNumber(string phoneNumber) { throw new NotImplementedException(); }
+  public Task<UserInfoDTO> GetUserInfoByPhoneNumberAsync(string phoneNumber)
+  {
+    throw new NotImplementedException();
+  }
 }

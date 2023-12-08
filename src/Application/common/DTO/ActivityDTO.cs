@@ -63,6 +63,10 @@ public class ActivityDTO
   /// </value>
   public string Venue { get; set; }
 
+  public string HostUsername { get; set; }
+
+  public bool   IsCancelled  { get; set; }
+
   /// <summary>
   /// Gets or sets the collection of attendees associated with the activity.
   /// </summary>

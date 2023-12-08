@@ -13,7 +13,7 @@ public interface IUserService
   /// <returns>
   /// The <see cref="UserInfoDTO"/> object containing the user information.
   /// </returns>
-  public UserInfoDTO GetUserInfoById(Guid userId);
+  public Task<UserInfoDTO> GetUserInfoByIdAsync(Guid userId);
 
   /// <summary>
   /// Retrieves the user information by email.
@@ -21,7 +21,7 @@ public interface IUserService
   /// <returns>
   /// The user information as a UserInfoDTO object.
   /// </returns>
-  public UserInfoDTO GetUserInfoByEmail(string email);
+  public Task<UserInfoDTO> GetUserInfoByEmailAsync(string email);
 
   /// <summary>
   /// Retrieves the user information associated with the given phone number.
@@ -29,5 +29,5 @@ public interface IUserService
   /// <returns>
   /// A <see cref="UserInfoDTO"/> object containing the user information.
   /// </returns>
-  public UserInfoDTO GetUserInfoByPhoneNumber(string phoneNumber);
+  public Task<UserInfoDTO> GetUserInfoByPhoneNumberAsync(string phoneNumber);
 }

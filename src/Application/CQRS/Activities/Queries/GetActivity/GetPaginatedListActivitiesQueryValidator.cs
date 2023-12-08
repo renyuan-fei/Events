@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-internal sealed class
+public class
     GetPaginatedListActivitiesQueryValidator : AbstractValidator<
         GetPaginatedListActivitiesQuery>
 {

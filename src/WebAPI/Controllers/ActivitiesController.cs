@@ -3,6 +3,7 @@ using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
+using Application.CQRS.ActivityAttendee.Commands.UpdateActivityAttendee;
 
 using Domain.Entities;
 
@@ -72,7 +73,7 @@ public class ActivitiesController : BaseController
   /// A task that represents the asynchronous operation. The task result is an IActionResult representing the status of the operation.
   /// </returns>
   [ HttpPut("{id}") ]
-  public async Task<IActionResult> PutActivity(Guid id, Activity activity)
+  public async Task<IActionResult> PutActivity(Guid id, [FromBody]Activity activity)
   {
     var result =
         await Mediator!.Send(new UpdateActivityCommand { Id = id, Activity = activity });
@@ -90,7 +91,7 @@ public class ActivitiesController : BaseController
   /// A task that represents the asynchronous operation. The task result is an IActionResult representing the status of the operation.
   /// </returns>
   [ HttpPost ]
-  public async Task<IActionResult> PostActivity(Activity activity)
+  public async Task<IActionResult> PostActivity([FromBody]Activity activity)
   {
     var result =
         await Mediator!.Send(new CreateActivityCommand
@@ -118,5 +119,21 @@ public class ActivitiesController : BaseController
     return Ok(result);
   }
 
+  /// <summary>
+  /// Updates the attendees for a specific activity.
+  /// </summary>
+  /// <param name="id">The ID of the activity.</param>
+  /// <returns>An IActionResult representing the status of the update.</returns>
+  [ HttpPut("{id}/attendees") ]
+  public async Task<IActionResult> UpdateActivityAttendees(Guid id)
+  {
+    var result = await Mediator!.Send(new UpdateActivityAttendeeCommand
+    {
+        Id = (Guid)_currentUserService.UserId!,
+        ActivityId = id
+    });
+
+    return Ok(result);
+  }
   // private bool ActivityExists(Guid id) { throw new NotImplementedException(); }
 }

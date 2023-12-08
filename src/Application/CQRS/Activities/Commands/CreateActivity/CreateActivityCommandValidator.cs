@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
 
-internal sealed class
+public class
     CreateActivityCommandValidator : AbstractValidator<CreateActivityCommand>
 {
   private readonly IApplicationDbContext _context;
@@ -14,18 +14,19 @@ internal sealed class
     _context = context;
 
     RuleFor(activity => activity.Activity.Title)
-        .NotEmpty();
+        .NotEmpty().WithMessage("Title is required.");
 
     RuleFor(activity => activity.Activity.Description)
-        .NotEmpty();
+        .NotEmpty().WithMessage("Description is required.");
+        ;
 
     RuleFor(activity => activity.Activity.Date)
-        .NotEmpty();
+        .NotEmpty().WithMessage("Date is required.");
 
     RuleFor(activity => activity.Activity.City)
-        .NotEmpty();
+        .NotEmpty().WithMessage("City is required.");
 
     RuleFor(activity => activity.Activity.Venue)
-        .NotEmpty();
+        .NotEmpty().WithMessage("Venue is required.");
   }
 }

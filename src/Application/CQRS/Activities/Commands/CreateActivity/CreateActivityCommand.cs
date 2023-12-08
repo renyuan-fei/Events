@@ -56,9 +56,18 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
         Attendees = new List<Domain.Entities.ActivityAttendee>()
     };
 
-    _userService.GetUserInfoById(request.CurrentUserId);
+    var user = await _userService.GetUserInfoByIdAsync(request.CurrentUserId);
 
-    AddUserAsHostIfValid(request.CurrentUserId, activity);
+    activity.Attendees.Add(new Domain.Entities.ActivityAttendee
+    {
+        Id = Guid.NewGuid(),
+        IsHost = true,
+        UserId = request.CurrentUserId,
+        DisplayName = user.DisplayName,
+        UserName = user.UserName
+    });
+
+    // AddUserAsHostIfValid(request.CurrentUserId, activity);
 
     _context.Activities.Add(activity);
 
@@ -76,19 +85,5 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
       throw;
     }
-  }
-
-  private void AddUserAsHostIfValid(Guid currentUserId, Activity activity)
-  {
-    var user = _userService.GetUserInfoById(currentUserId);
-
-    activity.Attendees.Add(new Domain.Entities.ActivityAttendee
-    {
-        Id = Guid.NewGuid(),
-        IsHost = true,
-        UserId = currentUserId,
-        DisplayName = user.DisplayName,
-        UserName = user.UserName
-    });
   }
 }
