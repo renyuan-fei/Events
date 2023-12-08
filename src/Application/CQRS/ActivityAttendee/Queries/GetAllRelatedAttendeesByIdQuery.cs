@@ -3,9 +3,6 @@ using Application.Common.Interfaces;
 using Application.common.Mappings;
 
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-
-using Domain.Entities;
 
 using MediatR;
 
@@ -23,8 +20,8 @@ public class
     GetAllRelatedAttendeesByIdQuery, List<ActivityAttendeeDTO>>
 {
   private readonly IApplicationDbContext                           _context;
-  private readonly IMapper                                         _mapper;
   private readonly ILogger<GetAllRelatedAttendeesByIdQueryHandler> _logger;
+  private readonly IMapper                                         _mapper;
 
   public GetAllRelatedAttendeesByIdQueryHandler(
       IApplicationDbContext                           context,
@@ -51,9 +48,9 @@ public class
     }
 
     var result = await query.OrderBy(attendee => attendee.LastModified)
-                            .ProjectToListAsync<ActivityAttendeeDTO>(_mapper.ConfigurationProvider);
+                            .ProjectToListAsync<
+                                ActivityAttendeeDTO>(_mapper.ConfigurationProvider);
 
     return result;
   }
 }
-

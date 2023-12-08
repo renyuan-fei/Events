@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.common.Models;
 
 /// <summary>
-/// Represents a generic class for paginated data.
+///   Represents a generic class for paginated data.
 /// </summary>
 /// <typeparam name="T">The type of elements in the list.</typeparam>
 public class PaginatedList <T>

@@ -6,7 +6,7 @@ namespace Application.common.Behaviours;
 
 public class
     UnhandledExceptionBehaviour <TRequest, TResponse> : IPipelineBehavior<TRequest,
-        TResponse> where TRequest : notnull
+    TResponse> where TRequest : notnull
 {
   private readonly ILogger<TRequest> _logger;
 

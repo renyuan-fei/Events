@@ -14,19 +14,25 @@ public class
     _context = context;
 
     RuleFor(activity => activity.Activity.Title)
-        .NotEmpty().WithMessage("Title is required.");
+        .NotEmpty()
+        .WithMessage("Title is required.");
 
     RuleFor(activity => activity.Activity.Description)
-        .NotEmpty().WithMessage("Description is required.");
-        ;
+        .NotEmpty()
+        .WithMessage("Description is required.");
+
+    ;
 
     RuleFor(activity => activity.Activity.Date)
-        .NotEmpty().WithMessage("Date is required.");
+        .NotEmpty()
+        .WithMessage("Date is required.");
 
     RuleFor(activity => activity.Activity.City)
-        .NotEmpty().WithMessage("City is required.");
+        .NotEmpty()
+        .WithMessage("City is required.");
 
     RuleFor(activity => activity.Activity.Venue)
-        .NotEmpty().WithMessage("Venue is required.");
+        .NotEmpty()
+        .WithMessage("Venue is required.");
   }
 }

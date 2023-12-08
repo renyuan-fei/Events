@@ -51,11 +51,17 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-    services.AddControllersWithViews();
-    // services.AddControllersWithViews(options =>
-    //                                      options.Filters
-    //                                             .Add<ApiExceptionFilterAttribute>())
-    //         .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+    {
+      services.AddControllersWithViews();
+    }
+    else
+    {
+      services.AddControllersWithViews(options =>
+                                           options.Filters
+                                                  .Add<ApiExceptionFilterAttribute>())
+              .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+    }
 
     // middleware
 
@@ -103,13 +109,10 @@ public static class ConfigureServiceExtension
                       IssuerSigningKey =
                           new SymmetricSecurityKey(Encoding
                                                    .UTF8.GetBytes(configuration
-                                                            ["Jwt:Key"]!))
+                                                       ["Jwt:Key"]!))
                   };
 
-              options.Events = new JwtBearerEvents
-              {
-
-              };
+              options.Events = new JwtBearerEvents { };
             });
 
     services.AddAuthorization(options => { });

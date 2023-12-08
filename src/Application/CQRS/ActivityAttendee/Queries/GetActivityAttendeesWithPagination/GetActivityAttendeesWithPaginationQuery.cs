@@ -27,8 +27,8 @@ public class
     PaginatedList<ActivityAttendeeDTO>>
 {
   private readonly IApplicationDbContext                                   _context;
-  private readonly IMapper                                                 _mapper;
   private readonly ILogger<GetActivityAttendeesWithPaginationQueryHandler> _logger;
+  private readonly IMapper                                                 _mapper;
 
   public GetActivityAttendeesWithPaginationQueryHandler(
       IApplicationDbContext                                   context,

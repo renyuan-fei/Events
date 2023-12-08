@@ -1,5 +1,4 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using AutoMapper;
@@ -42,8 +41,8 @@ public class
     var temp1 = _context.Activities;
 
     var entity = await _context.Activities.Include(a => a.Attendees)
-                               .SingleOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
-
+                               .SingleOrDefaultAsync(a => a.Id == request.Id,
+                                                     cancellationToken);
 
     if (entity == null)
     {

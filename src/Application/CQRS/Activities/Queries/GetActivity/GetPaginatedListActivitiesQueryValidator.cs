@@ -6,7 +6,7 @@ namespace Application.CQRS.Activities.Queries.GetActivity;
 
 public class
     GetPaginatedListActivitiesQueryValidator : AbstractValidator<
-        GetPaginatedListActivitiesQuery>
+    GetPaginatedListActivitiesQuery>
 {
   private readonly IApplicationDbContext _context;
 

@@ -3,8 +3,6 @@ using Application.Common.Interfaces;
 
 using AutoMapper;
 
-using Domain.Entities;
-
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +19,10 @@ public record UpdateActivityAttendeeCommand : IRequest<Unit>
 public class
     UpdateActivityAttendeeHandler : IRequestHandler<UpdateActivityAttendeeCommand, Unit>
 {
-  private readonly IUserService                           _userService;
   private readonly IApplicationDbContext                  _context;
-  private readonly IMapper                                _mapper;
   private readonly ILogger<UpdateActivityAttendeeHandler> _logger;
+  private readonly IMapper                                _mapper;
+  private readonly IUserService                           _userService;
 
   public UpdateActivityAttendeeHandler(
       IApplicationDbContext                  context,
@@ -69,7 +67,7 @@ public class
         };
 
         await _context.ActivityAttendees.AddAsync(newAttendee,
-                                                  cancellationToken: cancellationToken);
+                                                  cancellationToken);
       }
       else
       {
@@ -77,10 +75,7 @@ public class
         {
           activity.IsCancelled = !activity.IsCancelled;
         }
-        else
-        {
-          _context.ActivityAttendees.Remove(attendee);
-        }
+        else { _context.ActivityAttendees.Remove(attendee); }
       }
 
       var result = await _context.SaveChangesAsync(cancellationToken) > 0;

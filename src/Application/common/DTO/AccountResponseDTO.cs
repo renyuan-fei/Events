@@ -1,7 +1,7 @@
 namespace Application.common.DTO;
 
 /// <summary>
-/// Represents the response data for an account request.
+///   Represents the response data for an account request.
 /// </summary>
 public class AccountResponseDTO
 {
@@ -26,23 +26,23 @@ public class AccountResponseDTO
   public string? DisplayName { get; set; } = string.Empty;
 
   /// <summary>
-  /// Gets or sets the email address.
+  ///   Gets or sets the email address.
   /// </summary>
   /// <value>
-  /// The email address. This property can be null.
+  ///   The email address. This property can be null.
   /// </value>
-  public string? Email       { get; set; } = string.Empty;
+  public string? Email { get; set; } = string.Empty;
 
   /// <summary>
-  /// Gets or sets the token.
+  ///   Gets or sets the token.
   /// </summary>
   public string? Token { get; set; } = string.Empty;
 
   /// <summary>
-  /// Gets or sets the expiration date and time.
+  ///   Gets or sets the expiration date and time.
   /// </summary>
   /// <value>
-  /// The expiration date and time.
+  ///   The expiration date and time.
   /// </value>
   public DateTime ExpirationDateTime { get; set; } = DateTime.MinValue;
 }

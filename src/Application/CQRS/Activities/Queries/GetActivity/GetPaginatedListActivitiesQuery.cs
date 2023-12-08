@@ -19,8 +19,8 @@ public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<ActivityD
 
 public class
     GetPaginatedListActivitiesQueryHandler :
-        IRequestHandler<GetPaginatedListActivitiesQuery,
-        PaginatedList<ActivityDTO>>
+    IRequestHandler<GetPaginatedListActivitiesQuery,
+    PaginatedList<ActivityDTO>>
 {
   private readonly IApplicationDbContext                           _context;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;

@@ -30,7 +30,7 @@ public class ApplicationDbContext :
   /// <summary>
   /// Represents an instance of a DateTime object.
   /// </summary>
-  private readonly IDateTime           _dateTime;
+  private readonly IDateTime _dateTime;
 
   /// <summary>
   /// Represents a private readonly field of type IDomainEventService that is used for handling domain events.
@@ -89,7 +89,7 @@ public class ApplicationDbContext :
   /// <value>
   /// The activities.
   /// </value>
-  public DbSet<Activity>         Activities        => Set<Activity>();
+  public DbSet<Activity> Activities => Set<Activity>();
 
   /// <summary>
   /// Gets or sets the DbSet of <see cref="ActivityAttendee"/>.
@@ -115,6 +115,7 @@ public class ApplicationDbContext :
 
           entry.Entity.Created = _dateTime.Now;
           entry.Entity.CreatedBy = _currentUserService.UserId;
+
           break;
 
         case EntityState.Modified :
@@ -158,10 +159,10 @@ public class ApplicationDbContext :
            .HasForeignKey(e => e.Id);
 
     builder.Entity<ActivityAttendee>()
-          .HasOne(e => e.Activity)
-          .WithMany(e => e.Attendees)
-          .HasForeignKey(e => e.Id)
-          .OnDelete(DeleteBehavior.Cascade);
+           .HasOne(e => e.Activity)
+           .WithMany(e => e.Attendees)
+           .HasForeignKey(e => e.Id)
+           .OnDelete(DeleteBehavior.Cascade);
   }
 
   /// <summary>

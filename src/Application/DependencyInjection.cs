@@ -11,15 +11,22 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Application;
 
 /// <summary>
-/// Provides methods for adding application services to the <see cref="IServiceCollection"/>.
+///   Provides methods for adding application services to the
+///   <see cref="IServiceCollection" />.
 /// </summary>
 public static class DependencyInjection
 {
   /// <summary>
-  /// Extension method to add application services to the <see cref="IServiceCollection"/>.
+  ///   Extension method to add application services to the <see cref="IServiceCollection" />.
   /// </summary>
-  /// <param name="services">The <see cref="IServiceCollection"/> to add the application services to.</param>
-  /// <returns>The modified <see cref="IServiceCollection"/> with the application services added.</returns>
+  /// <param name="services">
+  ///   The <see cref="IServiceCollection" /> to add the application
+  ///   services to.
+  /// </param>
+  /// <returns>
+  ///   The modified <see cref="IServiceCollection" /> with the application services
+  ///   added.
+  /// </returns>
   public static IServiceCollection AddApplicationServices(
       this IServiceCollection services)
   {

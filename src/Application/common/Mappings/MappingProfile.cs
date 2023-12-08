@@ -6,11 +6,19 @@ using Domain.Entities;
 
 namespace Application.common.Mappings;
 
+/// <summary>
+///   The MappingProfile class is responsible for configuring object mappings using
+///   AutoMapper.
+/// </summary>
 public class MappingProfile : Profile
 {
+  /// <summary>
+  ///   AutoMapper profile for mapping entities to DTOs.
+  /// </summary>
   public MappingProfile()
   {
-    CreateMap<Activity, Activity>().ForMember(activity => activity.Id, opt => opt.Ignore());
+    CreateMap<Activity, Activity>()
+        .ForMember(activity => activity.Id, opt => opt.Ignore());
 
     CreateMap<Activity, ActivityDTO>()
         .ForMember(d => d.HostUsername,

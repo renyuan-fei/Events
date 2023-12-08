@@ -13,21 +13,21 @@ using Microsoft.Extensions.Logging;
 namespace Application.CQRS.Activities.Commands.CreateActivity;
 
 /// <summary>
-/// Represents the command for creating a new activity.
+///   Represents the command for creating a new activity.
 /// </summary>
 public record CreateActivityCommand : IRequest<Unit>
 {
-  public Guid    CurrentUserId { get; init; }
+  public Guid     CurrentUserId { get; init; }
   public Activity Activity      { get; init; }
 }
 
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
     Unit>
 {
-  private readonly IUserService _userService;
   private readonly IApplicationDbContext                 _context;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
+  private readonly IUserService                          _userService;
 
   public CreateActivityCommandHandler(
       IApplicationDbContext                 context,

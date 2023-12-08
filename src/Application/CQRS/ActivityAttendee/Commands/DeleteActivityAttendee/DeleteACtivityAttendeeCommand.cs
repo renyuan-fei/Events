@@ -2,8 +2,6 @@ using Application.Common.Interfaces;
 
 using AutoMapper;
 
-using Domain.Entities;
-
 using MediatR;
 
 using Microsoft.Extensions.Logging;
@@ -15,11 +13,12 @@ public record DeleteACtivityAttendeeCommand : IRequest<Unit>
   //TODO
 }
 
-public class DeleteACtivityAttendeeHandler : IRequestHandler<DeleteACtivityAttendeeCommand, Unit>
+public class
+    DeleteACtivityAttendeeHandler : IRequestHandler<DeleteACtivityAttendeeCommand, Unit>
 {
   private readonly IApplicationDbContext                  _context;
-  private readonly IMapper                                _mapper;
   private readonly ILogger<DeleteACtivityAttendeeHandler> _logger;
+  private readonly IMapper                                _mapper;
 
   public DeleteACtivityAttendeeHandler(
       IApplicationDbContext                  context,
@@ -33,13 +32,9 @@ public class DeleteACtivityAttendeeHandler : IRequestHandler<DeleteACtivityAtten
 
   public async Task<Unit> Handle(
       DeleteACtivityAttendeeCommand request,
-      CancellationToken      cancellationToken)
+      CancellationToken             cancellationToken)
   {
-    try
-    {
-      throw new NotImplementedException();
-
-    }
+    try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
@@ -48,4 +43,3 @@ public class DeleteACtivityAttendeeHandler : IRequestHandler<DeleteACtivityAtten
     }
   }
 }
-
