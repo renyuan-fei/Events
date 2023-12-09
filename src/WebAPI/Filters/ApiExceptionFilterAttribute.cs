@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 namespace WebAPI.Filters;
 
 /// <summary>
-/// Represents an API exception filter attribute that handles various exceptions.
+///   Represents an API exception filter attribute that handles various exceptions.
 /// </summary>
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
   private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
   /// <summary>
-  /// Represents an API exception filter attribute that handles various exceptions.
+  ///   Represents an API exception filter attribute that handles various exceptions.
   /// </summary>
   public ApiExceptionFilterAttribute()
   {
@@ -32,7 +32,6 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
   public override void OnException(ExceptionContext context)
   {
     HandleException(context);
-
 
     base.OnException(context);
   }

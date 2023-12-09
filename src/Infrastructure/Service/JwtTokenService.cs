@@ -14,13 +14,14 @@ namespace Infrastructure.Service;
 public class JwtTokenService : IJwtTokenService
 {
   private readonly IConfiguration _configuration;
+
   public JwtTokenService(IConfiguration configuration) { _configuration = configuration; }
 
   public AuthenticationDTO CreateToken(TokenDTO tokenDTO, bool isRefreshToken = false)
   {
-      // expires in 10 minutes
-      var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
-                                                                   ["Jwt:EXPIRATION_MINUTES"]));
+    // expires in 10 minutes
+    var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
+                                                    ["Jwt:EXPIRATION_MINUTES"]));
 
     //create the JWT payload
     var claims = new Claim[ ]
@@ -71,24 +72,24 @@ public class JwtTokenService : IJwtTokenService
     // return the token
     if (isRefreshToken)
     {
-        return new AuthenticationDTO
-        {
-                Token = token,
-                Expiration = expiration,
-                RefreshTokenExpirationDateTime =
-                        DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
-                                                        ["RefreshToken:EXPIRATION_MINUTES"]))
-        };
+      return new AuthenticationDTO
+      {
+          Token = token,
+          Expiration = expiration,
+          RefreshTokenExpirationDateTime =
+              DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
+                                                          ["RefreshToken:EXPIRATION_MINUTES"]))
+      };
     }
 
     return new AuthenticationDTO
     {
-            Token = token,
-            Expiration = expiration,
-            RefreshToken = GenerateRefreshToken(),
-            RefreshTokenExpirationDateTime =
-                    DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
-                                                                    ["RefreshToken:EXPIRATION_MINUTES"]))
+        Token = token,
+        Expiration = expiration,
+        RefreshToken = GenerateRefreshToken(),
+        RefreshTokenExpirationDateTime =
+            DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
+                                                        ["RefreshToken:EXPIRATION_MINUTES"]))
     };
   }
 
@@ -131,7 +132,7 @@ public class JwtTokenService : IJwtTokenService
   }
 
   /// <summary>
-  /// Generates a refresh token.
+  ///   Generates a refresh token.
   /// </summary>
   /// <returns>A string containing the generated refresh token.</returns>
   private string GenerateRefreshToken()

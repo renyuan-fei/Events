@@ -29,20 +29,21 @@ public class IdentityService : IIdentityService
   public async Task<string?> GetUserNameAsync(Guid userId)
   {
     var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+
     return user.UserName;
   }
 
   public async Task<(Result Result, Guid userId)> CreateUserAsync(
-      string userName, string password)
+      string userName,
+      string password)
   {
     var user = new ApplicationUser
     {
-        UserName = userName,
-        Email = userName,
-        DisplayName = userName // 或其他适当的默认值
+        UserName = userName, Email = userName, DisplayName = userName // 或其他适当的默认值
     };
 
     var result = await _userManager.CreateAsync(user, password);
+
     return (result.ToApplicationResult(), user.Id);
   }
 

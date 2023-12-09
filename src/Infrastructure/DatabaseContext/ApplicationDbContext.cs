@@ -16,44 +16,65 @@ using Microsoft.Extensions.Options;
 namespace Infrastructure.DatabaseContext;
 
 /// <summary>
-/// Represents the database context for the application. </summary>
+///   Represents the database context for the application.
+/// </summary>
 /// /
 public class ApplicationDbContext :
     IdentityDbContext<ApplicationUser, ApplicationRole, Guid>,
     IApplicationDbContext
 {
   /// <summary>
-  /// Represents a service that provides access to the current user information.
+  ///   Represents a service that provides access to the current user information.
   /// </summary>
   private readonly ICurrentUserService _currentUserService;
 
   /// <summary>
-  /// Represents an instance of a DateTime object.
+  ///   Represents an instance of a DateTime object.
   /// </summary>
   private readonly IDateTime _dateTime;
 
   /// <summary>
-  /// Represents a private readonly field of type IDomainEventService that is used for handling domain events.
+  ///   Represents a private readonly field of type IDomainEventService that is used for
+  ///   handling domain events.
   /// </summary>
   private readonly IDomainEventService _domainEventService;
 
   /// <summary>
-  /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
+  ///   Initializes a new instance of the <see cref="ApplicationDbContext" /> class.
   /// </summary>
-  /// <param name="options">The options for configuring the <see cref="ApplicationDbContext"/>.</param>
+  /// <param name="options">
+  ///   The options for configuring the <see cref="ApplicationDbContext" />
+  ///   .
+  /// </param>
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
       base(options)
   {
   }
 
   /// <summary>
-  /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
+  ///   Initializes a new instance of the <see cref="ApplicationDbContext" /> class.
   /// </summary>
-  /// <param name="options">The <see cref="DbContextOptions{ApplicationDbContext}"/> used to configure the context.</param>
-  /// <param name="operationalStoreOptions">The <see cref="IOptions{OperationalStoreOptions}"/> used to configure the operational store options.</param>
-  /// <param name="currentUserService">The <see cref="ICurrentUserService"/> used to access the current user information.</param>
-  /// <param name="dateTime">The <see cref="IDateTime"/> used to access the current date and time.</param>
-  /// <param name="domainEventService">The <see cref="IDomainEventService"/> used for handling domain events.</param>
+  /// <param name="options">
+  ///   The <see cref="DbContextOptions{ApplicationDbContext}" /> used to
+  ///   configure the context.
+  /// </param>
+  /// <param name="operationalStoreOptions">
+  ///   The
+  ///   <see cref="IOptions{OperationalStoreOptions}" /> used to configure the operational
+  ///   store options.
+  /// </param>
+  /// <param name="currentUserService">
+  ///   The <see cref="ICurrentUserService" /> used to access
+  ///   the current user information.
+  /// </param>
+  /// <param name="dateTime">
+  ///   The <see cref="IDateTime" /> used to access the current date and
+  ///   time.
+  /// </param>
+  /// <param name="domainEventService">
+  ///   The <see cref="IDomainEventService" /> used for handling
+  ///   domain events.
+  /// </param>
   public ApplicationDbContext(
       DbContextOptions<ApplicationDbContext> options,
       IOptions<OperationalStoreOptions>      operationalStoreOptions,
@@ -68,7 +89,7 @@ public class ApplicationDbContext :
   }
 
   /// <summary>
-  /// Initializes a new instance of the ApplicationDbContext class.
+  ///   Initializes a new instance of the ApplicationDbContext class.
   /// </summary>
   /// <param name="currentUserService">An implementation of the ICurrentUserService interface.</param>
   /// <param name="dateTime">An implementation of the IDateTime interface.</param>
@@ -84,26 +105,28 @@ public class ApplicationDbContext :
   }
 
   /// <summary>
-  /// Gets or sets the activities in the database.
+  ///   Gets or sets the activities in the database.
   /// </summary>
   /// <value>
-  /// The activities.
+  ///   The activities.
   /// </value>
   public DbSet<Activity> Activities => Set<Activity>();
 
   /// <summary>
-  /// Gets or sets the DbSet of <see cref="ActivityAttendee"/>.
+  ///   Gets or sets the DbSet of <see cref="ActivityAttendee" />.
   /// </summary>
-  /// <returns>The DbSet of <see cref="ActivityAttendee"/>.</returns>
+  /// <returns>The DbSet of <see cref="ActivityAttendee" />.</returns>
   public DbSet<ActivityAttendee> ActivityAttendees => Set<ActivityAttendee>();
 
   /// <summary>
-  /// Asynchronously saves changes to the database and performs additional operations
-  /// such as setting audit fields and dispatching domain events.
+  ///   Asynchronously saves changes to the database and performs additional operations
+  ///   such as setting audit fields and dispatching domain events.
   /// </summary>
   /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
-  /// <returns>A task that represents the asynchronous operation.
-  /// The task result contains the number of objects saved to the database.</returns>
+  /// <returns>
+  ///   A task that represents the asynchronous operation.
+  ///   The task result contains the number of objects saved to the database.
+  /// </returns>
   public async override Task<int> SaveChangesAsync(
       CancellationToken cancellationToken = new())
   {
@@ -145,8 +168,10 @@ public class ApplicationDbContext :
   }
 
   /// <summary>
-  /// This method is called by the framework when the model for a derived context has been initialized, but before the model has been locked down and used to initialize the context. It
-  /// allows you to further configure the model and its entities.
+  ///   This method is called by the framework when the model for a derived context has been
+  ///   initialized, but before the model has been locked down and used to initialize the
+  ///   context. It
+  ///   allows you to further configure the model and its entities.
   /// </summary>
   /// <param name="builder">The builder used to construct the model for this context.</param>
   protected override void OnModelCreating(ModelBuilder builder)
@@ -166,8 +191,8 @@ public class ApplicationDbContext :
   }
 
   /// <summary>
-  /// Dispatches the given domain events by setting their IsPublished property to true and
-  /// publishing them using the _domainEventService.
+  ///   Dispatches the given domain events by setting their IsPublished property to true and
+  ///   publishing them using the _domainEventService.
   /// </summary>
   /// <param name="events">The domain events to be dispatched.</param>
   /// <returns>A Task representing the asynchronous operation.</returns>
@@ -182,13 +207,14 @@ public class ApplicationDbContext :
 }
 
 /// <summary>
-/// Factory class for creating an instance of <see cref="ApplicationDbContext"/> for design-time scenarios.
+///   Factory class for creating an instance of <see cref="ApplicationDbContext" /> for
+///   design-time scenarios.
 /// </summary>
 public class
     ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
   /// <summary>
-  /// Creates a new instance of the ApplicationDbContext class.
+  ///   Creates a new instance of the ApplicationDbContext class.
   /// </summary>
   /// <param name="args">The arguments passed to the method.</param>
   /// <returns>A new instance of the ApplicationDbContext class.</returns>

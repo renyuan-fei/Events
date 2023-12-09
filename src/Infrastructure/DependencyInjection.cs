@@ -19,12 +19,12 @@ public static class DependencyInjection
       this IServiceCollection services,
       IConfiguration          configuration)
   {
+
     #region DI
     services.AddScoped<IDomainEventService, DomainEventService>();
     services.AddTransient<IDateTime, DateTimeService>();
     services.AddScoped<IUserService, UserService>();
     #endregion
-
 
     // Add database context
     if (configuration.GetValue<bool>("UseInMemoryDatabase"))
@@ -41,7 +41,8 @@ public static class DependencyInjection
                                                         b =>
                                                             b.MigrationsAssembly(typeof
                                                                     (ApplicationDbContext)
-                                                                .Assembly.FullName)));
+                                                                .Assembly
+                                                                .FullName)));
     }
 
     // configuration for Identity

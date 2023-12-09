@@ -9,7 +9,6 @@ using FluentValidation.AspNetCore;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Service;
 
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -98,7 +97,7 @@ public static class ConfigureServiceExtension
             .AddJwtBearer(options =>
             {
               options.TokenValidationParameters =
-                  new TokenValidationParameters()
+                  new TokenValidationParameters
                   {
                       ValidateIssuer = true,
                       ValidateAudience = true,
@@ -112,7 +111,7 @@ public static class ConfigureServiceExtension
                                                        ["Jwt:Key"]!))
                   };
 
-              options.Events = new JwtBearerEvents { };
+              options.Events = new JwtBearerEvents();
             });
 
     services.AddAuthorization(options => { });

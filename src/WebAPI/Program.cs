@@ -1,3 +1,5 @@
+using System.Configuration;
+
 using Infrastructure;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
@@ -55,12 +57,14 @@ using (var scope = app.Services.CreateScope())
 
   try
   {
+
     // Get all the services
     var context = services.GetRequiredService<ApplicationDbContext>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
     // Run the migrations
     await context.Database.MigrateAsync();
+
     // Use the seed data
     await Seed.SeedData(context, userManager);
   }
@@ -70,5 +74,7 @@ using (var scope = app.Services.CreateScope())
     logger.LogError(e, "An error occurred while migrating the database");
   }
 }
+
+
 
 app.Run();

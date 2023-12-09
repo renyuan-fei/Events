@@ -11,7 +11,7 @@ public class CreateActivityCommandTests
   private readonly Mock<IApplicationDbContext>                 _mockDbContext;
   private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
-  private readonly Mock<IUserService>                           _mockUserService;
+  private readonly Mock<IUserService>                          _mockUserService;
 
   public CreateActivityCommandTests(Mock<IUserService> mockUserService)
   {

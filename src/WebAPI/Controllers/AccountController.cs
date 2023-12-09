@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 /// <summary>
-/// This class contains the account operations accessible by users. It extends from BaseController.
+///   This class contains the account operations accessible by users. It extends from
+///   BaseController.
 /// </summary>
 public class AccountController : BaseController
 {
@@ -23,13 +24,23 @@ public class AccountController : BaseController
   private readonly UserManager<ApplicationUser>   _userManager;
 
   /// <summary>
-  /// This is the constructor method of the AccountController class. It contains all the dependency injections necessary for the account operations.
+  ///   This is the constructor method of the AccountController class. It contains all the
+  ///   dependency injections necessary for the account operations.
   /// </summary>
-  /// <param name="userManager">UserManager class for managing instances of the IdentityUser class</param>
-  /// <param name="signInManager">SignInManager class for managing instances of the SignIn operations</param>
+  /// <param name="userManager">
+  ///   UserManager class for managing instances of the IdentityUser
+  ///   class
+  /// </param>
+  /// <param name="signInManager">
+  ///   SignInManager class for managing instances of the SignIn
+  ///   operations
+  /// </param>
   /// <param name="identityService">A service providing identity related utility methods</param>
   /// <param name="jwtTokenService">A service for JWT token generation and validation</param>
-  /// <param name="currentUserService">A service for fetching the current authenticated user's details</param>
+  /// <param name="currentUserService">
+  ///   A service for fetching the current authenticated user's
+  ///   details
+  /// </param>
   public AccountController(
       UserManager<ApplicationUser>   userManager,
       SignInManager<ApplicationUser> signInManager,
@@ -45,11 +56,14 @@ public class AccountController : BaseController
   }
 
   /// <summary>
-  /// Register endpoint for creating new users.
+  ///   Register endpoint for creating new users.
   /// </summary>
-  /// <param name="registerDTO">Data Transfer Object containing the user's details for registration.</param>
+  /// <param name="registerDTO">
+  ///   Data Transfer Object containing the user's details for
+  ///   registration.
+  /// </param>
   /// <returns>
-  /// Returns an ActionResult instance of the AccountResponseDTO in JSON format.
+  ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   [ HttpPost("register") ]
   public async Task<ActionResult<AccountResponseDTO>> Register(
@@ -72,11 +86,11 @@ public class AccountController : BaseController
   }
 
   /// <summary>
-  /// Login endpoint for authenticating users.
+  ///   Login endpoint for authenticating users.
   /// </summary>
   /// <param name="loginDTO">Data Transfer Object containing the user's details for login.</param>
   /// <returns>
-  /// Returns an ActionResult instance of the AccountResponseDTO in JSON format.
+  ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   [ HttpPost("login") ]
   public async Task<ActionResult<AccountResponseDTO>> Login(
@@ -98,10 +112,11 @@ public class AccountController : BaseController
   }
 
   /// <summary>
-  /// Endpoint for generating a new access token.
+  ///   Endpoint for generating a new access token.
   /// </summary>
   /// <returns>
-  /// Returns a IActionResult, with HTTP 200 status code and a success message if the request was successful.
+  ///   Returns a IActionResult, with HTTP 200 status code and a success message if the request
+  ///   was successful.
   /// </returns>
   [ HttpPost("refresh") ]
   public async Task<ActionResult<AccountResponseDTO>> GenerateNewAccessToken()
@@ -149,11 +164,11 @@ public class AccountController : BaseController
         DisplayName = user.DisplayName,
         Email = user.Email,
         UserName = user.UserName,
-        Id = user.Id,
+        Id = user.Id
     };
 
     // 生成新的Access令牌, 但不更新过期时间
-    var token = _jwtTokenService.CreateToken(data, isRefresh: true);
+    var token = _jwtTokenService.CreateToken(data, true);
 
     // 更新HTTP Only Cookie
 
@@ -168,10 +183,10 @@ public class AccountController : BaseController
   }
 
   /// <summary>
-  /// Logout endpoint for signing out the user.
+  ///   Logout endpoint for signing out the user.
   /// </summary>
   /// <returns>
-  /// Returns an empty IActionResult with HTTP 204 status code.
+  ///   Returns an empty IActionResult with HTTP 204 status code.
   /// </returns>
   [ Authorize ]
   [ HttpGet("logout") ]
@@ -190,11 +205,11 @@ public class AccountController : BaseController
   }
 
   /// <summary>
-  /// Internal method for generating a response token.
+  ///   Internal method for generating a response token.
   /// </summary>
   /// <param name="user">Instance of the ApplicationUser class</param>
   /// <returns>
-  /// Returns an ActionResult instance of the AccountResponseDTO in JSON format.
+  ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   async private Task<ActionResult<AccountResponseDTO>> GenerateTokenResponse(
       ApplicationUser user)

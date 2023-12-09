@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Identity;
 namespace Infrastructure.Identity;
 
 /// <summary>
-/// Represents an application user.
+///   Represents an application user.
 /// </summary>
 public class ApplicationUser : IdentityUser<Guid>
 {
   /// <summary>
-  /// Gets or sets the display name.
+  ///   Gets or sets the display name.
   /// </summary>
-  public string  DisplayName  { get; set; }
+  public string DisplayName { get; set; }
 
   /// Summary: Gets or sets the biography of a person.
   /// Remarks: This property represents the biography of a person, which provides additional information about the person.
@@ -24,25 +24,26 @@ public class ApplicationUser : IdentityUser<Guid>
   /// @property string? Bio
   /// The biography of a person.
   /// /
-  public string? Bio          { get; set; }
+  public string? Bio { get; set; }
 
   /// <summary>
-  /// Gets or sets the refresh token for the authentication process.
+  ///   Gets or sets the refresh token for the authentication process.
   /// </summary>
   /// <remarks>
-  /// A refresh token is a unique string that is used to refresh an expired access token.
-  /// This property is nullable, meaning it can be assigned a null value if no refresh token is available.
+  ///   A refresh token is a unique string that is used to refresh an expired access token.
+  ///   This property is nullable, meaning it can be assigned a null value if no refresh token
+  ///   is available.
   /// </remarks>
   /// <value>
-  /// A string representing the refresh token.
+  ///   A string representing the refresh token.
   /// </value>
   public string? RefreshToken { get; set; }
 
   /// <summary>
-  /// Gets or sets the expiration date and time of the refresh token.
+  ///   Gets or sets the expiration date and time of the refresh token.
   /// </summary>
   /// <value>
-  /// The expiration date and time of the refresh token.
+  ///   The expiration date and time of the refresh token.
   /// </value>
   public DateTime RefreshTokenExpirationDateTime { get; set; }
   // public ICollection<ActivityAttendee> Activities  { get; set; }
