@@ -1,3 +1,4 @@
+using Application.common.DTO;
 using Application.common.Interfaces;
 using Application.CQRS.Activities.Commands.CreateActivity;
 
@@ -13,13 +14,13 @@ public class CreateActivityCommandTests
   private readonly Mock<IMapper>                               _mockMapper;
   private readonly Mock<IUserService>                          _mockUserService;
 
-  public CreateActivityCommandTests(Mock<IUserService> mockUserService)
+  public CreateActivityCommandTests()
   {
-    _mockUserService = mockUserService;
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
     _mockDbContext = new Mock<IApplicationDbContext>();
     _mockLogger = new Mock<ILogger<CreateActivityCommandHandler>>();
+    _mockUserService = new Mock<IUserService>();
 
     // 创建一个 DbSet<Activity> 的模拟对象
     var mockDbSet = new Mock<DbSet<Domain.Entities.Activity>>();
@@ -42,6 +43,8 @@ public class CreateActivityCommandTests
 
     _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
                   .ReturnsAsync(1);
+    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>())).ReturnsAsync(
+       _fixture.Create<UserInfoDTO>());
 
     // Act
     var result = await _handler.Handle(command, CancellationToken.None);
@@ -76,6 +79,9 @@ public class CreateActivityCommandTests
 
     _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
                   .ReturnsAsync(0);
+
+    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>())).ReturnsAsync(
+     _fixture.Create<UserInfoDTO>());
 
     // Act
     Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);

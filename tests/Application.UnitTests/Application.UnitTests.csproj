@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ActivityAttendee\Queries\GetActivityAttendeesWithPagination\"/>
+        <Folder Include="ActivityAttendee\Queries\" />
     </ItemGroup>
 
 </Project>
