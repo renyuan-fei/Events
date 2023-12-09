@@ -18,7 +18,8 @@ public class MappingProfile : Profile
   public MappingProfile()
   {
     CreateMap<Activity, Activity>()
-        .ForMember(activity => activity.Id, opt => opt.Ignore());
+        .ForMember(activity => activity.Id, opt => opt.Ignore())
+        .ForMember(activity => activity.Attendees, opt => opt.Ignore());
 
     CreateMap<Activity, ActivityDTO>()
         .ForMember(d => d.HostUsername,

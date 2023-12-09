@@ -29,7 +29,21 @@ Explain how to run the automated tests for this project.
 
 ## Deployment
 
-Add additional notes about how to deploy this project on a live system.
+- For Windows: The following will need to be executed from your terminal to create a 
+cert dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p Your_password123 dotnet dev-certs https --trust
+    - NOTE: When using PowerShell, replace %USERPROFILE% with $env:USERPROFILE.
+
+- FOR macOS: dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p 
+Your_password123 dotnet dev-certs https --trust
+
+- FOR Linux: dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p 
+Your_password123
+
+create .env variable for Docker
+``` sh
+chmod +x init.sh
+./init.sh
+```
 
 
 
@@ -60,7 +74,6 @@ This project is licensed under the [LICENSE.md](link to the license) you find in
 * Hat tip to anyone whose code was used
 * Inspiration
 * etc
-
 
 
 

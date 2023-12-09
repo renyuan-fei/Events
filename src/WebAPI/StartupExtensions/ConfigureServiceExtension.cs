@@ -10,6 +10,7 @@ using Infrastructure.DatabaseContext;
 using Infrastructure.Service;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;
 
 using WebAPI.Filters;
@@ -50,7 +51,8 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+
+    if(configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value == "Development")
     {
       services.AddControllersWithViews();
     }
@@ -60,7 +62,11 @@ public static class ConfigureServiceExtension
                                            options.Filters
                                                   .Add<ApiExceptionFilterAttribute>())
               .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+
+      services.AddDataProtection()
+              .ProtectKeysWithCertificate("thumbprint");
     }
+
 
     // middleware
 
@@ -115,6 +121,15 @@ public static class ConfigureServiceExtension
             });
 
     services.AddAuthorization(options => { });
+
+    services.AddHttpLogging(options =>
+    {
+      options.LoggingFields =
+          Microsoft.AspNetCore.HttpLogging.HttpLoggingFields
+                   .RequestProperties
+        | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields
+                   .ResponsePropertiesAndHeaders;
+    });
 
     return services;
   }
