@@ -3,6 +3,7 @@ using System.Text;
 using Application;
 using Application.common.interfaces;
 using Application.Common.Interfaces;
+using Application.common.Security;
 
 using FluentValidation.AspNetCore;
 
@@ -10,6 +11,7 @@ using Infrastructure.DatabaseContext;
 using Infrastructure.Service;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,18 +26,19 @@ namespace WebAPI.StartupExtensions;
 public static class ConfigureServiceExtension
 {
   /// <summary>
-  ///   Configuration
+  /// Configures the services for the application.
   /// </summary>
-  /// <param name="services"></param>
-  /// <param name="configuration"></param>
-  /// <returns>
-  ///   All service collection
-  /// </returns>
+  /// <param name="services">The service collection.</param>
+  /// <param name="configuration">The configuration to use.</param>
+  /// <returns>The modified service collection.</returns>
   public static IServiceCollection ConfigureServices(
       this IServiceCollection services,
       IConfiguration          configuration)
   {
     #region DI
+    //
+    services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+
     // Current user service
     services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
@@ -120,7 +123,13 @@ public static class ConfigureServiceExtension
               options.Events = new JwtBearerEvents();
             });
 
-    services.AddAuthorization(options => { });
+    services.AddAuthorization(opt =>
+    {
+      opt.AddPolicy("IsActivityHost", policy =>
+      {
+        policy.Requirements.Add(new IsHostRequirement());
+      });
+    });
 
     services.AddHttpLogging(options =>
     {

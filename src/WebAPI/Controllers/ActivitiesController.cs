@@ -76,6 +76,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result is an IActionResult
   ///   representing the status of the operation.
   /// </returns>
+  [ Authorize(Policy = "IsActivityHost" ) ]
   [ HttpPut("{id}") ]
   public async Task<IActionResult> PutActivity(Guid id, [ FromBody ] Activity activity)
   {

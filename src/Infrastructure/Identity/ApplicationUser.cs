@@ -1,3 +1,5 @@
+using Domain;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Identity;
@@ -46,8 +48,10 @@ public class ApplicationUser : IdentityUser<Guid>
   ///   The expiration date and time of the refresh token.
   /// </value>
   public DateTime RefreshTokenExpirationDateTime { get; set; }
+
+  public ICollection<Photo> Photos { get; set; }
+
   // public ICollection<ActivityAttendee> Activities  { get; set; }
-  // public ICollection<Photo>            Photos      { get; set; }
   // public ICollection<UserFollowing>    Followings  { get; set; }
   // public ICollection<UserFollowing>    Followers   { get; set; }
 }

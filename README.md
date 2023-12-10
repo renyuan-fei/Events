@@ -1,5 +1,12 @@
 # Events
-
+Seq
+```http request
+http://localhost:81
+```
+Back-End
+```http request
+https://localhost:7095
+```
 Briefly describe what this project does and the problem it solves.
 
 ## Getting Started
