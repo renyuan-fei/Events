@@ -51,13 +51,11 @@ public class
       var attendee = activity.Attendees.SingleOrDefault(a => a.UserId == request.Id);
       var attendeeInfo = await _userService.GetUserInfoByIdAsync(request.Id);
 
-      var hostUserId = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)!.Id;
+      var hostUserId = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)!.UserId;
       var hostUser = await _userService.GetUserInfoByIdAsync(hostUserId);
 
       if (attendee == null)
       {
-        var currentUser = await _userService.GetUserInfoByIdAsync(request.Id);
-
         var newAttendee = new Domain.Entities.ActivityAttendee
         {
             Activity = activity,

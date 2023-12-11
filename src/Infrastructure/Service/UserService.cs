@@ -27,6 +27,7 @@ public class UserService : IUserService
 
     var result = new UserInfoDTO
     {
+        Id = user.Id,
         UserName = user!.UserName,
         Email = user.Email,
         DisplayName = user.DisplayName,
