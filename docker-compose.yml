@@ -4,26 +4,26 @@ services:
   webapi:
     image: webapi                           # 使用的镜像名称
     platform: linux/amd64                   # 平台设置
-    build:                                  # 构建信息
+    build: # 构建信息
       context: .                            # 构建上下文目录
       dockerfile: src/WebAPI/Dockerfile     # Dockerfile 路径
-    environment:                            # 环境变量设置
+    environment: # 环境变量设置
       - "UseInMemoryDatabase=false"         # 设置是否使用内存数据库，此处为 false 表示不使用
       - "ConnectionStrings__DefaultConnection=Server=db;Database=Events;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true"# 数据库连接字符串，包括服务器名、数据库名、用户 ID 和密码
       - "ASPNETCORE_ENVIRONMENT=Development"# 设置 ASP.NET Core 运行环境 Development/Production
-#      - "ASPNETCORE_URLS=https://+:7095;http://+:5058"# 设置应用监听的 HTTP 和 HTTPS 端口(ASP.NET Core的端口)
+      #      - "ASPNETCORE_URLS=https://+:7095;http://+:5058"# 设置应用监听的 HTTP 和 HTTPS 端口(ASP.NET Core的端口)
       - "IdentityServer__Key__Type=Development"# 设置 IdentityServer 的密钥类型，此处为开发环境设置
       - "ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}"# Kestrel 服务器的默认证书密码
       - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx"# Kestrel 服务器使用的证书路径
       - "Serilog__WriteTo__2__Args__serverUrl=http://seq:5341"# Serilog 日志系统配置，设置 Seq 服务器的 URL
 
-    volumes:                                # 卷映射
+    volumes: # 卷映射
       - ~/.aspnet/https:/https:ro
       - data_protection_keys:/root/.aspnet/DataProtection-Keys
-    ports:                                  # 端口映射
+    ports: # 端口映射
       - "7095:7095"
       - "5058:5058"                         # http一般不使用
-    depends_on:                             # 依赖的服务
+    depends_on: # 依赖的服务
       - db
       - seq
     restart: unless-stopped                 # 重启策略
@@ -31,25 +31,25 @@ services:
   db:
     image: "mcr.microsoft.com/mssql/server:2022-latest"  # SQL Server 镜像
     platform: linux/amd64
-    environment:                            # SQL Server 环境变量
+    environment: # SQL Server 环境变量
       - "SA_PASSWORD=${DB_PASSWORD}"
       - "ACCEPT_EULA=Y"
-    volumes:                                # SQL Server 数据卷
+    volumes: # SQL Server 数据卷
       - SQL_Server:/var/opt/mssql
-    ports:                                  # SQL Server 端口映射
+    ports: # SQL Server 端口映射
       - "1433:1433"
 
   seq:
     image: datalust/seq                     # Seq 日志管理系统镜像
     container_name: seqLog                  # 容器名称
     restart: unless-stopped
-    environment:                            # Seq 环境变量
+    environment: # Seq 环境变量
       - ACCEPT_EULA=Y
       - SEQ_API_CANONICALURI=https://seq.example.com
       - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${SEQ_ADMIN_PASSWORD}
-    volumes:                                # Seq 数据卷
+    volumes: # Seq 数据卷
       - Seq:/data
-    ports:                                  # Seq 端口映射
+    ports: # Seq 端口映射
       - "81:80"
       - "5341:5341"
 

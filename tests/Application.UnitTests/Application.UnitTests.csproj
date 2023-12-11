@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ActivityAttendee\Queries\" />
+        <Folder Include="ActivityAttendee\Queries\"/>
     </ItemGroup>
 
 </Project>

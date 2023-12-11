@@ -33,24 +33,6 @@ public class ActivityAttendee : AuditableEntity
   /// <value>
   ///   The display name.
   /// </value>
-  public string DisplayName { get; set; }
-
-  /// <summary>
-  ///   Gets or sets the user name.
-  /// </summary>
-  /// <value>
-  ///   The user name.
-  /// </value>
-  public string UserName { get; set; }
-
-  /// <summary>
-  ///   Gets or sets the bio of a person.
-  /// </summary>
-  /// <value>
-  ///   The bio of a person.
-  /// </value>
-  public string Bio { get; set; } = "Hello World!";
-
   /// <summary>
   ///   Gets or sets the Activity property.
   /// </summary>

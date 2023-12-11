@@ -7,7 +7,7 @@ namespace Application.Common.Interfaces;
 /// <summary>
 ///   Represents the interface for the application database context.
 /// </summary>
-public interface IApplicationDbContext
+public interface IEventsDbContext
 {
   /// <summary>
   ///   Gets or sets the DbSet of activities.

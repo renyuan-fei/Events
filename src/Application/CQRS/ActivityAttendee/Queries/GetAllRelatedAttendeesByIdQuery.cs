@@ -19,12 +19,12 @@ public class
     GetAllRelatedAttendeesByIdQueryHandler : IRequestHandler<
     GetAllRelatedAttendeesByIdQuery, List<ActivityAttendeeDTO>>
 {
-  private readonly IApplicationDbContext                           _context;
+  private readonly IEventsDbContext                                _context;
   private readonly ILogger<GetAllRelatedAttendeesByIdQueryHandler> _logger;
   private readonly IMapper                                         _mapper;
 
   public GetAllRelatedAttendeesByIdQueryHandler(
-      IApplicationDbContext                           context,
+      IEventsDbContext                                context,
       IMapper                                         mapper,
       ILogger<GetAllRelatedAttendeesByIdQueryHandler> logger)
   {

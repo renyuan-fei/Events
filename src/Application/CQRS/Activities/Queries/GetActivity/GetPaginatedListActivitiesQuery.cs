@@ -22,18 +22,18 @@ public class
     IRequestHandler<GetPaginatedListActivitiesQuery,
     PaginatedList<ActivityDTO>>
 {
-  private readonly IApplicationDbContext                           _context;
+  private readonly IEventsDbContext                                _context;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;
   private readonly IMapper                                         _mapper;
 
   public GetPaginatedListActivitiesQueryHandler(
-      IApplicationDbContext                           context,
       IMapper                                         mapper,
-      ILogger<GetPaginatedListActivitiesQueryHandler> logger)
+      ILogger<GetPaginatedListActivitiesQueryHandler> logger,
+      IEventsDbContext                                context)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
+    _context = context;
   }
 
   public async Task<PaginatedList<ActivityDTO>> Handle(

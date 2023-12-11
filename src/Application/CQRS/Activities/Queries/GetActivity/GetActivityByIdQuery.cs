@@ -20,18 +20,18 @@ public record GetActivityByIdQuery : IRequest<ActivityDTO>
 public class
     GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDTO>
 {
-  private readonly IApplicationDbContext                _context;
+  private readonly IEventsDbContext _context;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
   private readonly IMapper                              _mapper;
 
   public GetActivityByIdQueryHandler(
-      IApplicationDbContext                context,
       IMapper                              mapper,
-      ILogger<GetActivityByIdQueryHandler> logger)
+      ILogger<GetActivityByIdQueryHandler> logger,
+      IEventsDbContext                     context)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
+    _context = context;
   }
 
   public async Task<ActivityDTO> Handle(

@@ -8,30 +8,30 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.ActivityAttendee.Commands.DeleteActivityAttendee;
 
-public record DeleteACtivityAttendeeCommand : IRequest<Unit>
+public record DeleteActivityAttendeeCommand : IRequest<Unit>
 {
   //TODO
 }
 
 public class
-    DeleteACtivityAttendeeHandler : IRequestHandler<DeleteACtivityAttendeeCommand, Unit>
+    DeleteActivityAttendeeHandler : IRequestHandler<DeleteActivityAttendeeCommand, Unit>
 {
-  private readonly IApplicationDbContext                  _context;
-  private readonly ILogger<DeleteACtivityAttendeeHandler> _logger;
+  private readonly IEventsDbContext                       _context;
+  private readonly ILogger<DeleteActivityAttendeeHandler> _logger;
   private readonly IMapper                                _mapper;
 
-  public DeleteACtivityAttendeeHandler(
-      IApplicationDbContext                  context,
+  public DeleteActivityAttendeeHandler(
       IMapper                                mapper,
-      ILogger<DeleteACtivityAttendeeHandler> logger)
+      IEventsDbContext                       context,
+      ILogger<DeleteActivityAttendeeHandler> logger)
   {
-    _context = context;
     _mapper = mapper;
+    _context = context;
     _logger = logger;
   }
 
   public async Task<Unit> Handle(
-      DeleteACtivityAttendeeCommand request,
+      DeleteActivityAttendeeCommand request,
       CancellationToken             cancellationToken)
   {
     try { throw new NotImplementedException(); }

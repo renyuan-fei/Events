@@ -2,6 +2,7 @@ using System.Text;
 
 using Application;
 using Application.common.interfaces;
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Security;
 
@@ -42,8 +43,9 @@ public static class ConfigureServiceExtension
     // Current user service
     services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
-    // ApplicationDbContext
-    services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+    // AppIdentityDbContext
+    services.AddScoped<IEventsDbContext, EventsDbContext>();
+    services.AddScoped<IAppIdentityDbContext, AppIdentityDbContext>();
 
     // Token
     services.AddTransient<IJwtTokenService, JwtTokenService>();

@@ -20,18 +20,18 @@ public record UpdateActivityCommand : IRequest<Unit>
 public class
     UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Unit>
 {
-  private readonly IApplicationDbContext                 _context;
+  private readonly IEventsDbContext                      _context;
   private readonly ILogger<UpdateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
 
   public UpdateActivityCommandHandler(
-      IApplicationDbContext                 context,
       IMapper                               mapper,
-      ILogger<UpdateActivityCommandHandler> logger)
+      ILogger<UpdateActivityCommandHandler> logger,
+      IEventsDbContext                      context)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
+    _context = context;
   }
 
   public async Task<Unit> Handle(

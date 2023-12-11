@@ -21,10 +21,7 @@ public class MappingProfile : Profile
         .ForMember(activity => activity.Id, opt => opt.Ignore())
         .ForMember(activity => activity.Attendees, opt => opt.Ignore());
 
-    CreateMap<Activity, ActivityDTO>()
-        .ForMember(d => d.HostUsername,
-                   o => o.MapFrom(s => s.Attendees
-                                        .FirstOrDefault(x => x.IsHost)!.UserName));
+    CreateMap<Activity, ActivityDTO>();
 
     CreateMap<ActivityAttendee, ActivityAttendeeDTO>();
     CreateMap<ActivityAttendee, UserInfoDTO>();

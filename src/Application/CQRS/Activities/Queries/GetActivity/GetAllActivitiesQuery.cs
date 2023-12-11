@@ -19,22 +19,22 @@ public class
     GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery,
     List<ActivityDTO>>
 {
-  private readonly IApplicationDbContext                 _context;
+  private readonly IEventsDbContext                      _context;
   private readonly ILogger<GetAllActivitiesQueryHandler> _logger;
   private readonly IMapper                               _mapper;
   private readonly IUserService                          _userService;
 
   public GetAllActivitiesQueryHandler(
-      IApplicationDbContext                 context,
       IMapper                               mapper,
       ILogger<GetAllActivitiesQueryHandler> logger,
       IMediator                             mediator,
-      IUserService                          userService)
+      IUserService                          userService,
+      IEventsDbContext                      context)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
     _userService = userService;
+    _context = context;
   }
 
   public async Task<List<ActivityDTO>> Handle(

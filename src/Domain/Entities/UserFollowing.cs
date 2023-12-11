@@ -1,8 +1,7 @@
-namespace Domain
+namespace Domain;
+
+public class UserFollowing : AuditableEntity
 {
-  public class UserFollowing
-  {
-    public Guid ObserverId   { get; set; }
-    public Guid TargetId     { get; set; }
-  }
+  public Guid ObserverId { get; set; }
+  public Guid TargetId   { get; set; }
 }

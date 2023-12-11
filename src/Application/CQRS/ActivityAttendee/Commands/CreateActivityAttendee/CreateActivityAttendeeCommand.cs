@@ -16,18 +16,18 @@ public record CreateActivityAttendeeCommand : IRequest<Unit>
 public class
     CreateActivityAttendeeHandler : IRequestHandler<CreateActivityAttendeeCommand, Unit>
 {
-  private readonly IApplicationDbContext                  _context;
+  private readonly IEventsDbContext                       _context;
   private readonly ILogger<CreateActivityAttendeeHandler> _logger;
   private readonly IMapper                                _mapper;
 
   public CreateActivityAttendeeHandler(
-      IApplicationDbContext                  context,
       IMapper                                mapper,
-      ILogger<CreateActivityAttendeeHandler> logger)
+      ILogger<CreateActivityAttendeeHandler> logger,
+      IEventsDbContext                       context)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
+    _context = context;
   }
 
   public async Task<Unit> Handle(

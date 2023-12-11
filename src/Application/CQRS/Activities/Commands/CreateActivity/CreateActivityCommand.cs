@@ -24,21 +24,21 @@ public record CreateActivityCommand : IRequest<Unit>
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
     Unit>
 {
-  private readonly IApplicationDbContext                 _context;
+  readonly         IEventsDbContext                      _context;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
   private readonly IUserService                          _userService;
 
   public CreateActivityCommandHandler(
-      IApplicationDbContext                 context,
       IMapper                               mapper,
       ILogger<CreateActivityCommandHandler> logger,
-      IUserService                          userService)
+      IUserService                          userService,
+      IEventsDbContext                      context)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
     _userService = userService;
+    _context = context;
   }
 
   public async Task<Unit> Handle(
@@ -63,8 +63,6 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
         Id = Guid.NewGuid(),
         IsHost = true,
         UserId = request.CurrentUserId,
-        DisplayName = user.DisplayName,
-        UserName = user.UserName
     });
 
     // AddUserAsHostIfValid(request.CurrentUserId, activity);

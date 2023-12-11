@@ -1,8 +1,11 @@
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using AutoMapper;
 
 using Domain.Entities;
+
+using Duende.IdentityServer.Services;
 
 using MediatR;
 
@@ -19,18 +22,18 @@ public record DeleteActivityCommand : IRequest<Unit>
 public class
     DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Unit>
 {
-  private readonly IApplicationDbContext                 _context;
+  private readonly IEventsDbContext                      _context;
   private readonly ILogger<DeleteActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
 
   public DeleteActivityCommandHandler(
       IMapper                               mapper,
-      IApplicationDbContext                 context,
-      ILogger<DeleteActivityCommandHandler> logger)
+      ILogger<DeleteActivityCommandHandler> logger,
+      IEventsDbContext                      context)
   {
     _mapper = mapper;
-    _context = context;
     _logger = logger;
+    _context = context;
   }
 
   public async Task<Unit> Handle(

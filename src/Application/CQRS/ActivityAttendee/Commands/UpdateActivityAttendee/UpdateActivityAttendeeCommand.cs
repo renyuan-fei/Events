@@ -19,13 +19,13 @@ public record UpdateActivityAttendeeCommand : IRequest<Unit>
 public class
     UpdateActivityAttendeeHandler : IRequestHandler<UpdateActivityAttendeeCommand, Unit>
 {
-  private readonly IApplicationDbContext                  _context;
+  private readonly IEventsDbContext                  _context;
   private readonly ILogger<UpdateActivityAttendeeHandler> _logger;
   private readonly IMapper                                _mapper;
   private readonly IUserService                           _userService;
 
   public UpdateActivityAttendeeHandler(
-      IApplicationDbContext                  context,
+      IEventsDbContext                  context,
       IMapper                                mapper,
       ILogger<UpdateActivityAttendeeHandler> logger,
       IUserService                           userService)
@@ -49,9 +49,10 @@ public class
       if (activity == null) { throw new Exception("Activity not found."); }
 
       var attendee = activity.Attendees.SingleOrDefault(a => a.UserId == request.Id);
+      var attendeeInfo = await _userService.GetUserInfoByIdAsync(request.Id);
 
-      var hostUser = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)
-                             .UserName;
+      var hostUserId = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)!.Id;
+      var hostUser = await _userService.GetUserInfoByIdAsync(hostUserId);
 
       if (attendee == null)
       {
@@ -60,8 +61,6 @@ public class
         var newAttendee = new Domain.Entities.ActivityAttendee
         {
             Activity = activity,
-            Bio = currentUser.Bio,
-            DisplayName = currentUser.DisplayName,
             UserId = request.Id,
             IsHost = false
         };
@@ -71,7 +70,7 @@ public class
       }
       else
       {
-        if (attendee.UserName == hostUser)
+        if (attendeeInfo.UserName == hostUser.UserName)
         {
           activity.IsCancelled = !activity.IsCancelled;
         }

@@ -8,7 +8,7 @@ public class GetActivityByIdQueryTests
   private readonly IFixture _fixture;
 
   private readonly GetActivityByIdQueryHandler                _handler;
-  private readonly Mock<IApplicationDbContext>                _mockDbContext;
+  private readonly Mock<IAppIdentityDbContext>                _mockDbContext;
   private readonly Mock<ILogger<GetActivityByIdQueryHandler>> _mockLogger;
   private readonly Mock<IMapper>                              _mockMapper;
 
@@ -16,7 +16,7 @@ public class GetActivityByIdQueryTests
   {
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
-    _mockDbContext = new Mock<IApplicationDbContext>();
+    _mockDbContext = new Mock<IAppIdentityDbContext>();
     _mockLogger = new Mock<ILogger<GetActivityByIdQueryHandler>>();
 
     var mockDbSet = new Mock<DbSet<Domain.Entities.Activity>>();

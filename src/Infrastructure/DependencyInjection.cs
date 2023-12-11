@@ -19,7 +19,6 @@ public static class DependencyInjection
       this IServiceCollection services,
       IConfiguration          configuration)
   {
-
     #region DI
     services.AddScoped<IDomainEventService, DomainEventService>();
     services.AddTransient<IDateTime, DateTimeService>();
@@ -29,18 +28,31 @@ public static class DependencyInjection
     // Add database context
     if (configuration.GetValue<bool>("UseInMemoryDatabase"))
     {
-      services.AddDbContext<ApplicationDbContext>(options =>
+      services.AddDbContext<EventsDbContext>(options =>
+                                                 options
+                                                     .UseInMemoryDatabase("Events"));
+
+      services.AddDbContext<AppIdentityDbContext>(options =>
                                                       options
-                                                          .UseInMemoryDatabase("CleanArchitectureDb"));
+                                                          .UseInMemoryDatabase("Identity"));
     }
     else
     {
-      services.AddDbContext<ApplicationDbContext>(options =>
+      services.AddDbContext<EventsDbContext>(options =>
+                                                 options.UseSqlServer(configuration
+                                                       .GetConnectionString("EventsConnection"),
+                                                   b =>
+                                                       b.MigrationsAssembly(typeof
+                                                               (EventsDbContext)
+                                                           .Assembly
+                                                           .FullName)));
+
+      services.AddDbContext<AppIdentityDbContext>(options =>
                                                       options.UseSqlServer(configuration
-                                                            .GetConnectionString("DefaultConnection"),
+                                                            .GetConnectionString("IdentityConnection"),
                                                         b =>
                                                             b.MigrationsAssembly(typeof
-                                                                    (ApplicationDbContext)
+                                                                    (AppIdentityDbContext)
                                                                 .Assembly
                                                                 .FullName)));
     }
@@ -54,11 +66,11 @@ public static class DependencyInjection
               options.Password.RequireLowercase = true;
               options.Password.RequireDigit = true;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<AppIdentityDbContext>()
             .AddDefaultTokenProviders()
-            .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext
+            .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppIdentityDbContext
               , Guid>>()
-            .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
+            .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, Guid>>();
 
     services.AddTransient<IIdentityService, IdentityService>();
 

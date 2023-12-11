@@ -8,9 +8,9 @@ public class
     GetPaginatedListActivitiesQueryValidator : AbstractValidator<
     GetPaginatedListActivitiesQuery>
 {
-  private readonly IApplicationDbContext _context;
+  private readonly IEventsDbContext _context;
 
-  public GetPaginatedListActivitiesQueryValidator(IApplicationDbContext context)
+  public GetPaginatedListActivitiesQueryValidator(IEventsDbContext context)
   {
     _context = context;
 

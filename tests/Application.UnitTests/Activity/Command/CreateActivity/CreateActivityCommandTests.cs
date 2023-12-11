@@ -9,7 +9,7 @@ public class CreateActivityCommandTests
   private readonly IFixture _fixture;
 
   private readonly CreateActivityCommandHandler                _handler;
-  private readonly Mock<IApplicationDbContext>                 _mockDbContext;
+  private readonly Mock<IAppIdentityDbContext>                 _mockDbContext;
   private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
   private readonly Mock<IUserService>                          _mockUserService;
@@ -18,7 +18,7 @@ public class CreateActivityCommandTests
   {
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
-    _mockDbContext = new Mock<IApplicationDbContext>();
+    _mockDbContext = new Mock<IAppIdentityDbContext>();
     _mockLogger = new Mock<ILogger<CreateActivityCommandHandler>>();
     _mockUserService = new Mock<IUserService>();
 
@@ -43,8 +43,9 @@ public class CreateActivityCommandTests
 
     _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
                   .ReturnsAsync(1);
-    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>())).ReturnsAsync(
-       _fixture.Create<UserInfoDTO>());
+
+    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(_fixture.Create<UserInfoDTO>());
 
     // Act
     var result = await _handler.Handle(command, CancellationToken.None);
@@ -80,8 +81,8 @@ public class CreateActivityCommandTests
     _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
                   .ReturnsAsync(0);
 
-    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>())).ReturnsAsync(
-     _fixture.Create<UserInfoDTO>());
+    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(_fixture.Create<UserInfoDTO>());
 
     // Act
     Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);

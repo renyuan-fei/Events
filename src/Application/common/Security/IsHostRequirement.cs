@@ -17,9 +17,9 @@ public class IsHostRequirement : IAuthorizationRequirement
 
 public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement>
 {
-  private readonly IApplicationDbContext _context;
+  private readonly IEventsDbContext _context;
   private readonly IHttpContextAccessor _httpContextAccessor;
-  public IsHostRequirementHandler(IApplicationDbContext context , IHttpContextAccessor httpContextAccessor)
+  public IsHostRequirementHandler(IEventsDbContext context , IHttpContextAccessor httpContextAccessor)
   {
     _context = context;
     _httpContextAccessor = httpContextAccessor;
@@ -35,10 +35,10 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement>
                                                     .SingleOrDefault(x => x.Key == "id").Value?.ToString()!);
 
     var attendee = _context.ActivityAttendees
-                             .AsNoTracking()
-                             .FirstOrDefaultAsync(x => x.UserId == userId && x.Activity.Id ==
-        activityId)
-                             .Result;
+                           .AsNoTracking()
+                           .FirstOrDefaultAsync(x => x.UserId == userId && x.Activity.Id ==
+                                                    activityId)
+                           .Result;
 
     if (attendee == null) return Task.CompletedTask;
 

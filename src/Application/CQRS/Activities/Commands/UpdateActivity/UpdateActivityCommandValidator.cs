@@ -7,9 +7,8 @@ namespace Application.CQRS.Activities.Commands.UpdateActivity;
 public class
     UpdateActivityCommandValidator : AbstractValidator<UpdateActivityCommand>
 {
-  private readonly IApplicationDbContext _context;
-
-  public UpdateActivityCommandValidator(IApplicationDbContext context)
+  private readonly IEventsDbContext _context;
+  public UpdateActivityCommandValidator(IEventsDbContext context)
   {
     _context = context;
 
