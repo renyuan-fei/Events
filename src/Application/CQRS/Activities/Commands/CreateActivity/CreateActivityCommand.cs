@@ -65,8 +65,6 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
         UserId = request.CurrentUserId,
     });
 
-    // AddUserAsHostIfValid(request.CurrentUserId, activity);
-
     _context.Activities.Add(activity);
 
     try

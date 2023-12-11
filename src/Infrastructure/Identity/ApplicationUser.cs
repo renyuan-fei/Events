@@ -26,7 +26,7 @@ public class ApplicationUser : IdentityUser<Guid>
   /// @property string? Bio
   /// The biography of a person.
   /// /
-  public string? Bio { get; set; }
+  public string? Bio { get; set; } = "Hello World!";
 
   /// <summary>
   ///   Gets or sets the refresh token for the authentication process.

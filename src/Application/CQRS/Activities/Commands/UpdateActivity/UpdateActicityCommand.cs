@@ -39,10 +39,9 @@ public class
       CancellationToken     cancellationToken)
   {
     var entity = await _context.Activities.Include(a => a.Attendees)
-                               .SingleOrDefaultAsync(a => a.Id == request.Id,
+                               .SingleOrDefaultAsync(activity =>
+                                                         activity.Id == request.Id,
                                                      cancellationToken);
-    // var entity =
-    //     await _context.Activities.SingleOrDefaultAsync(activity => activity.Id == request.Id, cancellationToken);
 
     if (entity == null)
     {
