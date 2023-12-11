@@ -6,6 +6,14 @@ namespace Application.common.DTO;
 public class UserInfoDTO
 {
   /// <summary>
+  /// Gets or sets the unique identifier for the property.
+  /// </summary>
+  /// <value>
+  /// The unique identifier.
+  /// </value>
+  public Guid Id { get; set; }
+
+  /// <summary>
   ///   Gets or sets the display name.
   /// </summary>
   /// <value>
