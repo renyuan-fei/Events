@@ -69,19 +69,32 @@ public class AccountController : BaseController
   public async Task<ActionResult<AccountResponseDTO>> Register(
       [ FromBody ] RegisterDTO registerDTO)
   {
-    if (!ModelState.IsValid) { return BadRequest(ModelState); }
-
-    var user = new ApplicationUser
+    if (!ModelState.IsValid)
     {
-        UserName = registerDTO.Email,
-        Email = registerDTO.Email,
-        DisplayName = registerDTO.DisplayName,
-        PhoneNumber = registerDTO.PhoneNumber
-    };
+      return BadRequest(ModelState);
+    }
 
-    var result = await _userManager.CreateAsync(user, registerDTO.Password);
-    if (!result.Succeeded) { return BadRequest(result.Errors); }
+    // 使用IdentityService的CreateUserAsync方法来创建用户
+    var (result, userId) = await _identityService.CreateUserAsync(
+     registerDTO.Email,
+     registerDTO.DisplayName,
+     registerDTO.PhoneNumber,
+     registerDTO.Password);
 
+    if (!result.Succeeded)
+    {
+      return BadRequest(result.Errors);
+    }
+
+    // 获取创建的用户
+    var user = await _userManager.FindByIdAsync(userId.ToString());
+
+    if (user == null)
+    {
+      return BadRequest("User creation succeeded but user not found.");
+    }
+
+    // 生成令牌响应
     return await GenerateTokenResponse(user);
   }
 

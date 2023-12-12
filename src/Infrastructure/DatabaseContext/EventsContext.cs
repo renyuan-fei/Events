@@ -1,6 +1,7 @@
 using Application.common.interfaces;
 using Application.Common.Interfaces;
 
+using Domain;
 using Domain.Common;
 using Domain.Entities;
 
@@ -114,6 +115,34 @@ public class EventsDbContext : DbContext, IEventsDbContext
   public DbSet<ActivityAttendee> ActivityAttendees => Set<ActivityAttendee>();
 
   /// <summary>
+  /// The property <see cref="Photos"/> represents the database set of photos.
+  /// </summary>
+  /// <remarks>
+  /// It is used to query and manipulate the photos data stored in the database.
+  /// </remarks>
+  /// <returns>
+  /// A <see cref="DbSet{TEntity}"/> of type <see cref="Photo"/>.
+  /// </returns>
+  public DbSet<Photo> Photos => Set<Photo>();
+
+  /// <summary>
+  /// Represents the property for accessing the UserFollowings table in the database.
+  /// </summary>
+  /// <remarks>
+  /// The UserFollowings property provides access to the UserFollowings table in the database.
+  /// </remarks>
+  /// <returns>
+  /// A DbSet of type UserFollowing that can be used to query and manipulate the UserFollowings table.
+  /// </returns>
+  public DbSet<UserFollowing> UserFollowings => Set<UserFollowing>();
+
+  /// <summary>
+  /// Gets or sets the collection of comments.
+  /// </summary>
+  /// <value>The collection of comments.</value>
+  public DbSet<Comment> Comments => Set<Comment>();
+
+  /// <summary>
   ///   Asynchronously saves changes to the database and performs additional operations
   ///   such as setting audit fields and dispatching domain events.
   /// </summary>
@@ -181,6 +210,16 @@ public class EventsDbContext : DbContext, IEventsDbContext
     builder.Entity<ActivityAttendee>()
            .HasOne(e => e.Activity)
            .WithMany(e => e.Attendees)
+           .HasForeignKey(e => e.Id)
+           .OnDelete(DeleteBehavior.Cascade);
+
+    builder.Entity<Photo>().ToTable("Photos");
+
+    builder.Entity<UserFollowing>().ToTable("UserFollowings");
+
+    builder.Entity<Comment>()
+           .HasOne(e => e.Activity)
+           .WithMany(e => e.Comments)
            .HasForeignKey(e => e.Id)
            .OnDelete(DeleteBehavior.Cascade);
   }

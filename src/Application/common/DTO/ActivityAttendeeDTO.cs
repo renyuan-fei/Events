@@ -43,12 +43,12 @@ public class ActivityAttendeeDTO
   ///   A string representing the bio of a person.
   /// </value>
   public string? Bio { get; set; }
-  //
-  // /// <summary>
-  // /// Gets or sets the image of an object.
-  // /// </summary>
-  // /// <value>
-  // /// The image as a string.
-  // /// </value>
-  // public string? Image { get; set; }
+
+  /// <summary>
+  /// Gets or sets the image of an object.
+  /// </summary>
+  /// <value>
+  /// The image as a string.
+  /// </value>
+  public string? Image { get; set; }
 }

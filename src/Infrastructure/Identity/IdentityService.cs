@@ -1,5 +1,9 @@
 using Application.common.interfaces;
+using Application.Common.Interfaces;
 using Application.common.Models;
+
+using Domain;
+using Domain.Entities;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,15 +19,18 @@ public class IdentityService : IIdentityService
       _userClaimsPrincipalFactory;
 
   private readonly UserManager<ApplicationUser> _userManager;
+  private readonly IEventsDbContext             _context;
 
   public IdentityService(
       UserManager<ApplicationUser>                 userManager,
       IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-      IAuthorizationService                        authorizationService)
+      IAuthorizationService                        authorizationService,
+      IEventsDbContext                             eventsDbContext)
   {
     _userManager = userManager;
     _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
     _authorizationService = authorizationService;
+    _context = eventsDbContext;
   }
 
   public async Task<string?> GetUserNameAsync(Guid userId)
@@ -43,6 +50,51 @@ public class IdentityService : IIdentityService
     };
 
     var result = await _userManager.CreateAsync(user, password);
+
+    return (result.ToApplicationResult(), user.Id);
+  }
+
+  public async Task<(Result Result, Guid userId)> CreateUserAsync(
+      string email,
+      string displayName,
+      string phoneNumber,
+      string password)
+  {
+    const string defaultImage = "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702453913/gyzjw6xpz9pzl0xg7de4.jpg";
+    const string defaultImagePublicId = "gyzjw6xpz9pzl0xg7de4";
+
+    var user = new ApplicationUser
+    {
+        UserName = email,
+        Email = email,
+        DisplayName = displayName,
+        PhoneNumber = phoneNumber
+    };
+
+    var result = await _userManager.CreateAsync(user, password);
+
+    // 首先检查用户是否成功创建
+    if (!result.Succeeded)
+    {
+      return (result.ToApplicationResult(), user.Id);
+    }
+
+    // 添加默认图片
+    _context.Photos.Add(new Photo
+    {
+        PublicId = defaultImagePublicId,
+        UserId = user.Id,
+        IsMain = true,
+        Url = defaultImage
+    });
+
+    // 保存DbContext的更改
+    var saveResult = await _context.SaveChangesAsync(new CancellationToken());
+
+    if (saveResult == 0)
+    {
+      throw new DbUpdateException("Could not save user with photo.");
+    }
 
     return (result.ToApplicationResult(), user.Id);
   }

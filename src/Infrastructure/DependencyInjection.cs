@@ -3,6 +3,7 @@ using Application.common.Interfaces;
 
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
+using Infrastructure.security;
 using Infrastructure.Service;
 
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,11 @@ public static class DependencyInjection
     services.AddScoped<IDomainEventService, DomainEventService>();
     services.AddTransient<IDateTime, DateTimeService>();
     services.AddScoped<IUserService, UserService>();
+    services.AddScoped<ICloudinaryService, CloudinaryService>();
     #endregion
+
+    services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
+
 
     // Add database context
     if (configuration.GetValue<bool>("UseInMemoryDatabase"))

@@ -3,6 +3,7 @@ using Application.common.Models;
 
 using AutoMapper;
 
+using Domain;
 using Domain.Entities;
 
 namespace Application.common.Mappings;
@@ -34,7 +35,8 @@ public class MappingProfile : Profile
     // for transfer user info to activity attendee
     // map userInfo's Id to ActivityAttendeeDTO's UserId
     CreateMap<UserInfoDTO, ActivityAttendeeDTO>()
-        .ForMember(attendee => attendee.UserId, opt => opt.MapFrom(dto => dto.Id));
+        .ForMember(attendee => attendee.UserId, opt => opt.MapFrom(dto => dto.Id))
+        .ForMember(attendee => attendee.Image, opt => opt.MapFrom(dto => dto.MainPhoto));
 
     // for transfer user info
     CreateMap<ActivityAttendee, UserInfoDTO>();
@@ -45,6 +47,9 @@ public class MappingProfile : Profile
           var mappedItems = context.Mapper.Map<List<ActivityDTO>>(src.Items);
           return new PaginatedList<ActivityDTO>(mappedItems, src.TotalCount, src.PageNumber, src.TotalPages);
         });
+
+    // for transfer photo
+    CreateMap<Photo, PhotoDTO>();
 
   }
 }

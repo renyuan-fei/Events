@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Domain;
 
 public class Photo : AuditableEntity
 {
-  public Guid   Id     { get; set; } = Guid.NewGuid();
+  [Key]
+  public string PublicId { get; set; }
+  public Guid UserId { get; set; }
   public string Url    { get; set; }
   public bool   IsMain { get; set; }
 }

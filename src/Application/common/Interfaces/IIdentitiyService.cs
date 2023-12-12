@@ -67,6 +67,25 @@ public interface IIdentityService
           password);
 
   /// <summary>
+  /// Creates a new user asynchronously.
+  /// </summary>
+  /// <param name="email">The email address of the user.</param>
+  /// <param name="displayName">The display name of the user.</param>
+  /// <param name="phoneNumber">The phone number of the user.</param>
+  /// <param name="password">The password for the user.</param>
+  /// <returns>
+  /// A task that represents the asynchronous operation.
+  /// The result of the task contains a tuple with the following information:
+  /// - Result: The result of the user creation operation. This indicates whether the user was successfully created or not.
+  /// - userId: The unique identifier of the newly created user.
+  /// </returns>
+  public Task<(Result Result, Guid userId)> CreateUserAsync(
+      string email,
+      string displayName,
+      string phoneNumber,
+      string password);
+
+  /// <summary>
   ///   Asynchronously deletes a user with the specified userId.
   /// </summary>
   /// <param name="userId">The unique identifier of the user to delete.</param>

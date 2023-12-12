@@ -11,8 +11,9 @@ public interface IUserService
   ///   Retrieves user information based on the user ID.
   /// </summary>
   /// <param name="userId">The unique identifier of the user.</param>
+  /// <param name="includePhotos"></param>
   /// <returns>The UserInfoDTO object containing the user information.</returns>
-  public Task<UserInfoDTO> GetUserInfoByIdAsync(Guid userId);
+  public Task<UserInfoDTO> GetUserInfoByIdAsync(Guid userId, bool includePhotos = false);
 
   /// <summary>
   ///   Retrieves information for a list of users based on their IDs asynchronously.
@@ -28,13 +29,23 @@ public interface IUserService
   ///   Retrieves the user information by email.
   /// </summary>
   /// <param name="email">The email of the user.</param>
+  /// <param name="includePhotos"></param>
   /// <returns>The user information as a UserInfoDTO object.</returns>
-  public Task<UserInfoDTO> GetUserInfoByEmailAsync(string email);
+  public Task<UserInfoDTO> GetUserInfoByEmailAsync(
+      string email,
+      bool   includePhotos = false);
 
   /// <summary>
   ///   Retrieves user information based on the given phone number.
   /// </summary>
   /// <param name="phoneNumber">The phone number of the user.</param>
+  /// <param name="includePhotos"></param>
   /// <returns>A Task containing the UserInfoDTO object representing the user information.</returns>
-  public Task<UserInfoDTO> GetUserInfoByPhoneNumberAsync(string phoneNumber);
+  public Task<UserInfoDTO> GetUserInfoByPhoneNumberAsync(
+      string phoneNumber,
+      bool   includePhotos = false);
+
+  public Task<bool> UpdateUserInfoAsync(Guid userId, UserInfoDTO userInfoDTO);
+
+  public Task<bool> SetMainPhotoAsync(Guid userId, Guid photoId);
 }
