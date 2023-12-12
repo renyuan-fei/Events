@@ -7,7 +7,7 @@ public class DeleteActivityCommandTests
   private readonly IFixture _fixture;
 
   private readonly DeleteActivityCommandHandler                _handler;
-  private readonly Mock<IAppIdentityDbContext>                 _mockDbContext;
+  private readonly Mock<IEventsDbContext>                      _mockDbContext;
   private readonly Mock<ILogger<DeleteActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
 
@@ -15,7 +15,7 @@ public class DeleteActivityCommandTests
   {
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
-    _mockDbContext = new Mock<IAppIdentityDbContext>();
+    _mockDbContext = new Mock<IEventsDbContext>();
     _mockLogger = new Mock<ILogger<DeleteActivityCommandHandler>>();
 
     var mockDbSet = new Mock<DbSet<Domain.Entities.Activity>>();
@@ -23,8 +23,8 @@ public class DeleteActivityCommandTests
 
     _handler =
         new DeleteActivityCommandHandler(_mockMapper.Object,
-                                         _mockDbContext.Object,
-                                         _mockLogger.Object);
+                                         _mockLogger.Object,
+                                         _mockDbContext.Object);
   }
 
   [ Fact ]

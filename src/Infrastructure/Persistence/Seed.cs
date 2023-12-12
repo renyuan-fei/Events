@@ -2,16 +2,11 @@ using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 
 namespace Infrastructure.Persistence;
 
-using System.Reflection;
-using System.IO;
-
 public static class Seed
 {
-
   public async static Task SeedData(
       AppIdentityDbContext         dbContext,
       UserManager<ApplicationUser> userManager)

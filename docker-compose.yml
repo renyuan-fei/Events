@@ -9,7 +9,8 @@ services:
       dockerfile: src/WebAPI/Dockerfile     # Dockerfile 路径
     environment: # 环境变量设置
       - "UseInMemoryDatabase=false"         # 设置是否使用内存数据库，此处为 false 表示不使用
-      - "ConnectionStrings__DefaultConnection=Server=db;Database=Events;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true"# 数据库连接字符串，包括服务器名、数据库名、用户 ID 和密码
+      - "ConnectionStrings__EventsConnection=Server=db;Database=Events;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true"# 数据库连接字符串，包括服务器名、数据库名、用户 ID 和密码
+      - "ConnectionStrings__IdentityConnection=Server=db;Database=Identity;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true"# 数据库连接字符串，包括服务器名、数据库名、用户 ID 和密码
       - "ASPNETCORE_ENVIRONMENT=Development"# 设置 ASP.NET Core 运行环境 Development/Production
       #      - "ASPNETCORE_URLS=https://+:7095;http://+:5058"# 设置应用监听的 HTTP 和 HTTPS 端口(ASP.NET Core的端口)
       - "IdentityServer__Key__Type=Development"# 设置 IdentityServer 的密钥类型，此处为开发环境设置

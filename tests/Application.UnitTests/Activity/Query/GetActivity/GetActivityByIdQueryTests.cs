@@ -1,4 +1,5 @@
 using Application.common.DTO;
+using Application.common.Interfaces;
 using Application.CQRS.Activities.Queries.GetActivity;
 
 namespace Application.UnitTests.Activity.Query.GetActivity;
@@ -8,24 +9,29 @@ public class GetActivityByIdQueryTests
   private readonly IFixture _fixture;
 
   private readonly GetActivityByIdQueryHandler                _handler;
-  private readonly Mock<IAppIdentityDbContext>                _mockDbContext;
+  private readonly Mock<IEventsDbContext>                     _mockDbContext;
   private readonly Mock<ILogger<GetActivityByIdQueryHandler>> _mockLogger;
   private readonly Mock<IMapper>                              _mockMapper;
+  private readonly Mock<IUserService>                         _mockUserService;
+
 
   public GetActivityByIdQueryTests()
   {
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
-    _mockDbContext = new Mock<IAppIdentityDbContext>();
+    _mockDbContext = new Mock<IEventsDbContext>();
     _mockLogger = new Mock<ILogger<GetActivityByIdQueryHandler>>();
+    _mockUserService = new Mock<IUserService>();
 
     var mockDbSet = new Mock<DbSet<Domain.Entities.Activity>>();
     _mockDbContext.Setup(db => db.Activities).Returns(mockDbSet.Object);
 
     _handler =
-        new GetActivityByIdQueryHandler(_mockDbContext.Object,
+        new GetActivityByIdQueryHandler(
                                         _mockMapper.Object,
-                                        _mockLogger.Object);
+                                        _mockLogger.Object,
+                                        _mockDbContext.Object,
+                                        _mockUserService.Object);
   }
 
   [ Fact ]

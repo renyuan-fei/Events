@@ -26,12 +26,12 @@ public class
     GetActivityAttendeesWithPaginationQuery,
     PaginatedList<ActivityAttendeeDTO>>
 {
-  private readonly IEventsDbContext                                   _context;
+  private readonly IEventsDbContext                                        _context;
   private readonly ILogger<GetActivityAttendeesWithPaginationQueryHandler> _logger;
   private readonly IMapper                                                 _mapper;
 
   public GetActivityAttendeesWithPaginationQueryHandler(
-      IEventsDbContext                                   context,
+      IEventsDbContext                                        context,
       IMapper                                                 mapper,
       ILogger<GetActivityAttendeesWithPaginationQueryHandler> logger)
   {

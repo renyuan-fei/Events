@@ -24,7 +24,7 @@ public record CreateActivityCommand : IRequest<Unit>
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
     Unit>
 {
-  readonly         IEventsDbContext                      _context;
+  private readonly IEventsDbContext                      _context;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
   private readonly IUserService                          _userService;
@@ -62,7 +62,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     {
         Id = Guid.NewGuid(),
         IsHost = true,
-        UserId = request.CurrentUserId,
+        UserId = request.CurrentUserId
     });
 
     _context.Activities.Add(activity);

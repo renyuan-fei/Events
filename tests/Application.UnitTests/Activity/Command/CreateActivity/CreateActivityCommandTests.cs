@@ -9,7 +9,7 @@ public class CreateActivityCommandTests
   private readonly IFixture _fixture;
 
   private readonly CreateActivityCommandHandler                _handler;
-  private readonly Mock<IAppIdentityDbContext>                 _mockDbContext;
+  private readonly Mock<IEventsDbContext>                 _mockDbContext;
   private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
   private readonly Mock<IUserService>                          _mockUserService;
@@ -18,7 +18,7 @@ public class CreateActivityCommandTests
   {
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
-    _mockDbContext = new Mock<IAppIdentityDbContext>();
+    _mockDbContext = new Mock<IEventsDbContext>();
     _mockLogger = new Mock<ILogger<CreateActivityCommandHandler>>();
     _mockUserService = new Mock<IUserService>();
 
@@ -28,10 +28,11 @@ public class CreateActivityCommandTests
     // 设置 _context.Activities 返回模拟对象
     _mockDbContext.Setup(db => db.Activities).Returns(mockDbSet.Object);
 
-    _handler = new CreateActivityCommandHandler(_mockDbContext.Object,
+    _handler = new CreateActivityCommandHandler(
                                                 _mockMapper.Object,
                                                 _mockLogger.Object,
-                                                _mockUserService.Object);
+                                                _mockUserService.Object,
+                                                _mockDbContext.Object);
   }
 
   [ Fact ]

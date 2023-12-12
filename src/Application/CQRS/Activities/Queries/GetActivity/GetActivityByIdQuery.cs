@@ -73,7 +73,7 @@ public class
                                                      u.Id == attendee.UserId);
 
                                         // map it to ActivityAttendeeDTO
-                                        var activityAttendeeDto =  _mapper
+                                        var activityAttendeeDto = _mapper
                                             .Map<ActivityAttendeeDTO>(userInfoDto);
 
                                         // set isHost property according to attendee.IsHost property

@@ -1,4 +1,5 @@
 using Application.common.interfaces;
+using Application.common.Models;
 using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
@@ -48,6 +49,27 @@ public class ActivitiesController : BaseController
     return Ok(result);
   }
 
+  /// <summary>
+  /// Retrieves a paginated list of activities.
+  /// </summary>
+  /// <param name="page">The page number to retrieve.</param>
+  /// <param name="paginatedListParams">The parameters for the paginated list.</param>
+  /// <returns>An ActionResult containing the paginated list of activities.</returns>
+  [ HttpGet("{page:int}/{searchTerm?}") ]
+  public async Task<ActionResult<IEnumerable<Activity>>> GetPaginatedListActivities(
+      int                               page,
+      [ FromQuery ] PaginatedListParams paginatedListParams)
+  {
+    paginatedListParams.PageNumber = page;
+
+    var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
+    {
+        PaginatedListParams = paginatedListParams
+    });
+
+    return Ok(result);
+  }
+
   // GET: api/Activities/5
   /// <summary>
   ///   Handles HTTP GET request to retrieve a specific Activity entity by its ID.
@@ -57,7 +79,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result contains an
   ///   IActionResult with the specified Activity entity.
   /// </returns>
-  [ HttpGet("{id}") ]
+  [ HttpGet("{id:guid}") ]
   public async Task<ActionResult<Activity>> GetActivity(Guid id)
   {
     var result = await Mediator!.Send(new GetActivityByIdQuery { Id = id });
@@ -77,7 +99,7 @@ public class ActivitiesController : BaseController
   ///   representing the status of the operation.
   /// </returns>
   [ Authorize(Policy = "IsActivityHost") ]
-  [ HttpPut("{id}") ]
+  [ HttpPut("{id:guid}") ]
   public async Task<IActionResult> PutActivity(Guid id, [ FromBody ] Activity activity)
   {
     var result =
@@ -118,7 +140,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result is an IActionResult
   ///   representing the status of the operation.
   /// </returns>
-  [ HttpDelete("{id}") ]
+  [ HttpDelete("{id:guid}") ]
   public async Task<IActionResult> DeleteActivity(Guid id)
   {
     var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
@@ -131,7 +153,7 @@ public class ActivitiesController : BaseController
   /// </summary>
   /// <param name="id">The ID of the activity.</param>
   /// <returns>An IActionResult representing the status of the update.</returns>
-  [ HttpPut("{id}/attendees") ]
+  [ HttpPut("{id:guid}/attendees") ]
   public async Task<IActionResult> UpdateActivityAttendees(Guid id)
   {
     var result = await Mediator!.Send(new UpdateActivityAttendeeCommand

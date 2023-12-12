@@ -1,5 +1,3 @@
-using System.Configuration;
-
 using Infrastructure;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
@@ -57,7 +55,6 @@ using (var scope = app.Services.CreateScope())
 
   try
   {
-
     // Get all the services
     var eventsContext = services.GetRequiredService<EventsDbContext>();
     var identityContext = services.GetRequiredService<AppIdentityDbContext>();
@@ -76,7 +73,5 @@ using (var scope = app.Services.CreateScope())
     logger.LogError(e, "An error occurred while migrating the database");
   }
 }
-
-
 
 app.Run();

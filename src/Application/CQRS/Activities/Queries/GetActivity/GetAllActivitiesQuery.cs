@@ -1,7 +1,6 @@
 using Application.common.DTO;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
-using Application.common.Mappings;
 
 using AutoMapper;
 
@@ -84,10 +83,12 @@ public class
                                      return activityAttendeeDto;
                                    })
                                    .ToList();
-      activitiesDto[i].HostUsername = activitiesDto[i].Attendees
-                                            .FirstOrDefault(a => a.IsHost)
-                                            ?.UserName
-                              ?? string.Empty;
+
+      activitiesDto[i].HostUsername = activitiesDto[i]
+                                      .Attendees
+                                      .FirstOrDefault(a => a.IsHost)
+                                      ?.UserName
+                                   ?? string.Empty;
     }
 
     return activitiesDto;

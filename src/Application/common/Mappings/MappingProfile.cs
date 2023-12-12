@@ -1,4 +1,5 @@
 using Application.common.DTO;
+using Application.common.Models;
 
 using AutoMapper;
 
@@ -37,5 +38,13 @@ public class MappingProfile : Profile
 
     // for transfer user info
     CreateMap<ActivityAttendee, UserInfoDTO>();
+
+    CreateMap<PaginatedList<Activity>, PaginatedList<ActivityDTO>>()
+        .ConvertUsing((src, dest, context) =>
+        {
+          var mappedItems = context.Mapper.Map<List<ActivityDTO>>(src.Items);
+          return new PaginatedList<ActivityDTO>(mappedItems, src.TotalCount, src.PageNumber, src.TotalPages);
+        });
+
   }
 }

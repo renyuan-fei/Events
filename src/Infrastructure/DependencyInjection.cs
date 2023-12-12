@@ -40,21 +40,21 @@ public static class DependencyInjection
     {
       services.AddDbContext<EventsDbContext>(options =>
                                                  options.UseSqlServer(configuration
-                                                       .GetConnectionString("EventsConnection"),
-                                                   b =>
-                                                       b.MigrationsAssembly(typeof
-                                                               (EventsDbContext)
-                                                           .Assembly
-                                                           .FullName)));
+                                                          .GetConnectionString("EventsConnection"),
+                                                      b =>
+                                                          b.MigrationsAssembly(typeof
+                                                                       (EventsDbContext)
+                                                                   .Assembly
+                                                                   .FullName)));
 
       services.AddDbContext<AppIdentityDbContext>(options =>
                                                       options.UseSqlServer(configuration
-                                                            .GetConnectionString("IdentityConnection"),
-                                                        b =>
-                                                            b.MigrationsAssembly(typeof
-                                                                    (AppIdentityDbContext)
-                                                                .Assembly
-                                                                .FullName)));
+                                                               .GetConnectionString("IdentityConnection"),
+                                                           b =>
+                                                               b.MigrationsAssembly(typeof
+                                                                            (AppIdentityDbContext)
+                                                                        .Assembly
+                                                                        .FullName)));
     }
 
     // configuration for Identity

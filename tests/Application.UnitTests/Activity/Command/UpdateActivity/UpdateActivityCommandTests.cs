@@ -7,7 +7,7 @@ public class UpdateActivityCommandTests
   private readonly IFixture _fixture;
 
   private readonly UpdateActivityCommandHandler                _handler;
-  private readonly Mock<IAppIdentityDbContext>                 _mockDbContext;
+  private readonly Mock<IEventsDbContext>                      _mockDbContext;
   private readonly Mock<ILogger<UpdateActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
 
@@ -15,16 +15,16 @@ public class UpdateActivityCommandTests
   {
     _fixture = new Fixture();
     _mockMapper = new Mock<IMapper>();
-    _mockDbContext = new Mock<IAppIdentityDbContext>();
+    _mockDbContext = new Mock<IEventsDbContext>();
     _mockLogger = new Mock<ILogger<UpdateActivityCommandHandler>>();
 
     var mockDbSet = new Mock<DbSet<Domain.Entities.Activity>>();
     _mockDbContext.Setup(db => db.Activities).Returns(mockDbSet.Object);
 
     _handler =
-        new UpdateActivityCommandHandler(_mockDbContext.Object,
-                                         _mockMapper.Object,
-                                         _mockLogger.Object);
+        new UpdateActivityCommandHandler(_mockMapper.Object,
+                                         _mockLogger.Object,
+                                         _mockDbContext.Object);
   }
 
   [ Fact ]

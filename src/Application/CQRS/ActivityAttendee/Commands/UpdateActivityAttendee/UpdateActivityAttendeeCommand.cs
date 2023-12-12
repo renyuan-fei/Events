@@ -19,13 +19,13 @@ public record UpdateActivityAttendeeCommand : IRequest<Unit>
 public class
     UpdateActivityAttendeeHandler : IRequestHandler<UpdateActivityAttendeeCommand, Unit>
 {
-  private readonly IEventsDbContext                  _context;
+  private readonly IEventsDbContext                       _context;
   private readonly ILogger<UpdateActivityAttendeeHandler> _logger;
   private readonly IMapper                                _mapper;
   private readonly IUserService                           _userService;
 
   public UpdateActivityAttendeeHandler(
-      IEventsDbContext                  context,
+      IEventsDbContext                       context,
       IMapper                                mapper,
       ILogger<UpdateActivityAttendeeHandler> logger,
       IUserService                           userService)
@@ -51,16 +51,16 @@ public class
       var attendee = activity.Attendees.SingleOrDefault(a => a.UserId == request.Id);
       var attendeeInfo = await _userService.GetUserInfoByIdAsync(request.Id);
 
-      var hostUserId = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)!.UserId;
+      var hostUserId = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)!
+                               .UserId;
+
       var hostUser = await _userService.GetUserInfoByIdAsync(hostUserId);
 
       if (attendee == null)
       {
         var newAttendee = new Domain.Entities.ActivityAttendee
         {
-            Activity = activity,
-            UserId = request.Id,
-            IsHost = false
+            Activity = activity, UserId = request.Id, IsHost = false
         };
 
         await _context.ActivityAttendees.AddAsync(newAttendee,

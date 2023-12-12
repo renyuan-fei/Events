@@ -14,6 +14,7 @@ using Infrastructure.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 
 using WebAPI.Filters;
@@ -27,7 +28,7 @@ namespace WebAPI.StartupExtensions;
 public static class ConfigureServiceExtension
 {
   /// <summary>
-  /// Configures the services for the application.
+  ///   Configures the services for the application.
   /// </summary>
   /// <param name="services">The service collection.</param>
   /// <param name="configuration">The configuration to use.</param>
@@ -56,8 +57,7 @@ public static class ConfigureServiceExtension
     services.AddAutoMapper(typeof(Program));
     #endregion
 
-
-    if(configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value == "Development")
+    if (configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value == "Development")
     {
       services.AddControllersWithViews();
     }
@@ -71,7 +71,6 @@ public static class ConfigureServiceExtension
       services.AddDataProtection()
               .ProtectKeysWithCertificate("thumbprint");
     }
-
 
     // middleware
 
@@ -127,19 +126,21 @@ public static class ConfigureServiceExtension
 
     services.AddAuthorization(opt =>
     {
-      opt.AddPolicy("IsActivityHost", policy =>
-      {
-        policy.Requirements.Add(new IsHostRequirement());
-      });
+      opt.AddPolicy("IsActivityHost",
+                    policy =>
+                    {
+                      policy.Requirements
+                            .Add(new IsHostRequirement());
+                    });
     });
 
     services.AddHttpLogging(options =>
     {
       options.LoggingFields =
-          Microsoft.AspNetCore.HttpLogging.HttpLoggingFields
-                   .RequestProperties
-        | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields
-                   .ResponsePropertiesAndHeaders;
+          HttpLoggingFields
+              .RequestProperties
+        | HttpLoggingFields
+              .ResponsePropertiesAndHeaders;
     });
 
     return services;

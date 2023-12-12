@@ -1,4 +1,3 @@
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using FluentValidation;
@@ -12,9 +11,9 @@ public class
 
   public CreateActivityCommandValidator(IEventsDbContext context)
   {
-      _context = context;
+    _context = context;
 
-      RuleFor(activity => activity.Activity.Title)
+    RuleFor(activity => activity.Activity.Title)
         .NotEmpty()
         .WithMessage("Title is required.");
 

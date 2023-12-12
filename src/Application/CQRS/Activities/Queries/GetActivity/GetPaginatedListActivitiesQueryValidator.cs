@@ -14,8 +14,8 @@ public class
   {
     _context = context;
 
-    RuleFor(request => request.PaginatedListParams)
-        .NotNull()
-        .WithMessage("PaginatedListParams cannot be null");
+    // RuleFor(request => request.PaginatedListParams)
+    //     .NotNull()
+    //     .WithMessage("PaginatedListParams cannot be null");
   }
 }

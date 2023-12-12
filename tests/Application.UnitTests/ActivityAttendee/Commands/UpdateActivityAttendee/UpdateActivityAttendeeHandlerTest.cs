@@ -5,7 +5,7 @@ namespace Application.UnitTests.ActivityAttendee.Commands.UpdateActivityAttendee
 
 public class UpdateActivityAttendeeHandlerTest
 {
-  private readonly Mock<IAppIdentityDbContext>                  _dbContextMock;
+  private readonly Mock<IEventsDbContext>                  _dbContextMock;
   private readonly Mock<ILogger<UpdateActivityAttendeeHandler>> _loggerMock;
   private readonly Mock<IMapper>                                _mapperMock;
 
@@ -14,7 +14,7 @@ public class UpdateActivityAttendeeHandlerTest
 
   public UpdateActivityAttendeeHandlerTest()
   {
-    _dbContextMock = new Mock<IAppIdentityDbContext>();
+    _dbContextMock = new Mock<IEventsDbContext>();
     _mapperMock = new Mock<IMapper>();
     _loggerMock = new Mock<ILogger<UpdateActivityAttendeeHandler>>();
     _userServiceMock = new Mock<IUserService>();
