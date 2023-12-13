@@ -45,10 +45,15 @@ public class MappingProfile : Profile
         .ConvertUsing((src, dest, context) =>
         {
           var mappedItems = context.Mapper.Map<List<ActivityDTO>>(src.Items);
-          return new PaginatedList<ActivityDTO>(mappedItems, src.TotalCount, src.PageNumber, src.TotalPages);
+
+          return new PaginatedList<ActivityDTO>(mappedItems,
+                                                src.TotalCount,
+                                                src.PageNumber,
+                                                src.TotalPages);
         });
 
     // for transfer photo
-    CreateMap<Photo, PhotoDTO>();
+    CreateMap<Photo, PhotoDTO>()
+        .ForMember(photo => photo.Id, opt => opt.MapFrom(photo => photo.PublicId));
   }
 }
