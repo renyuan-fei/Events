@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 using Application.common.DTO;
 using Application.common.interfaces;
+using Application.CQRS.Users.Command;
 using Application.CQRS.Users.Queries.GetUser;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,9 +36,23 @@ public class UsersController : BaseController
   [ HttpPost ]
   public void Post([ FromBody ] string value) { }
 
-  // PUT: api/Users/5
-  [ HttpPut("{id}") ]
-  public void Put(int id, [ FromBody ] string value) { }
+  [ Authorize ]
+  [ HttpPut ]
+  public async Task<IActionResult> Put([ FromBody ] UserDTO user)
+  {
+    if (ModelState.IsValid == false)
+    {
+      return BadRequest(ModelState);
+    }
+
+    var result = await Mediator!.Send(new UpdateUserCommand()
+    {
+        UserId = (Guid) _currentUserService.UserId!,
+        user = user
+    });
+
+    return Ok(result);
+  }
 
   // DELETE: api/Users/5
   [ HttpDelete("{id}") ]

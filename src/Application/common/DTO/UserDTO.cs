@@ -8,21 +8,18 @@ public class UserDTO
   /// <summary>
   ///   Gets or sets the display name.
   /// </summary>
+  /// <value>
+  ///   The display name.
+  /// </value>
   public string DisplayName { get; set; }
 
   /// <summary>
-  ///   Gets or sets the token.
+  ///   Gets or sets the bio of a person.
   /// </summary>
   /// <value>
-  ///   The token.
+  ///   The bio of the person.
   /// </value>
-  public string Token { get; set; }
-
-  /// <summary>
-  ///   Gets or sets the image property.
-  /// </summary>
-  /// <value>The image as a string.</value>
-  public string Image { get; set; }
+  public string Bio { get; set; }
 
   /// <summary>
   ///   Gets or sets the username.
@@ -30,5 +27,18 @@ public class UserDTO
   /// <value>
   ///   The username.
   /// </value>
-  public string Username { get; set; }
+  public string UserName { get; set; }
+
+  /// <summary>
+  ///   Gets or sets the email address.
+  /// </summary>
+  public string Email { get; set; }
+
+  /// <summary>
+  ///   Gets or sets the phone number.
+  /// </summary>
+  /// <value>
+  ///   The phone number.
+  /// </value>
+  public string PhoneNumber { get; set; }
 }

@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using Application.common.interfaces;
 using Application.common.Interfaces;
 
@@ -26,6 +28,9 @@ public static class DependencyInjection
     services.AddScoped<IUserService, UserService>();
     services.AddScoped<ICloudinaryService, CloudinaryService>();
     #endregion
+
+    // 读取该程序集中 所有关于 AutoMapper 的 配置文件 (继承Profile)
+    services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
     services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
 

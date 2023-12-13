@@ -116,14 +116,14 @@ public class UserService : IUserService
     throw new NotImplementedException();
   }
 
-  public async Task<bool> UpdateUserInfoAsync(Guid userId, UserInfoDTO userInfoDTO)
+  public async Task<bool> UpdateUserInfoAsync(Guid userId, UserDTO userDTO)
   {
     var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
-    if (user == null) { return false; }
+    if (user == null) { throw new NotFoundException($"User {userId} not found."); }
 
     // Use the AutoMapper to update the user details
-    _mapper.Map(userInfoDTO, user);
+    _mapper.Map(userDTO, user);
 
     // Store the updated user back into the persistence layer
     var result = await _userManager.UpdateAsync(user);

@@ -45,7 +45,7 @@ public interface IUserService
       string phoneNumber,
       bool   includePhotos = false);
 
-  public Task<bool> UpdateUserInfoAsync(Guid userId, UserInfoDTO userInfoDTO);
+  public Task<bool> UpdateUserInfoAsync(Guid userId, UserDTO userDTO);
 
   public Task<bool> SetMainPhotoAsync(Guid userId, Guid photoId);
 }
