@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.DeletePhoto;
 
-public record DeletePhoto : IRequest<Unit>
+public record DeletePhotoCommand : IRequest<Unit>
 {
   public Guid   UserId   { get; init; }
   public string PublicId { get; init; }
 }
 
-public class DeletePhotoHandler : IRequestHandler<DeletePhoto, Unit>
+public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Unit>
 {
   private readonly IEventsDbContext            _context;
   private readonly IMapper                     _mapper;
@@ -38,7 +38,7 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhoto, Unit>
   }
 
   public async Task<Unit> Handle(
-      DeletePhoto       request,
+      DeletePhotoCommand       request,
       CancellationToken cancellationToken)
   {
     try

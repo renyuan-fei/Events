@@ -45,4 +45,6 @@ public class AccountResponseDTO
   ///   The expiration date and time.
   /// </value>
   public DateTime ExpirationDateTime { get; set; } = DateTime.MinValue;
+
+  public string? Image { get; set; } = string.Empty;
 }

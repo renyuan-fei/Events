@@ -20,6 +20,9 @@
         <Folder Include="Common\Mappings\"/>
         <Folder Include="Common\Models\"/>
         <Folder Include="Common\Security\"/>
+        <Folder Include="CQRS\Users\Command\" />
+        <Folder Include="CQRS\Users\Queries\GetFollowerUser\" />
+        <Folder Include="CQRS\Users\Queries\GetFollowingUser\" />
     </ItemGroup>
 
     <ItemGroup>

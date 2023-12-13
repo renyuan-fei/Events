@@ -36,7 +36,7 @@ public class UserService : IUserService
 
   public async Task<UserInfoDTO> GetUserInfoByIdAsync(
       Guid userId,
-      bool includePhotos = false)
+      bool   includePhotos = false)
   {
 
     var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
@@ -97,7 +97,7 @@ public class UserService : IUserService
                     Bio = user.Bio,
                     PhoneNumber = user.PhoneNumber,
                     MainPhoto = _context.Photos.FirstOrDefault(p => p.UserId ==
-                        user.Id && p.IsMain == true)?.Url
+                        user.Id && p.IsMain == true)?.Url!
                 })
                 .ToList();
   }

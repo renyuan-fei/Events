@@ -39,6 +39,12 @@ where TRequest : notnull
       RequestHandlerDelegate<TResponse> next,
       CancellationToken                 cancellationToken)
   {
+    // if request has bypass authorization attribute, bypass authorization
+    var bypassAuth = request.GetType().GetCustomAttribute<BypassAuthorizationAttribute>()
+                  != null;
+
+    if (bypassAuth) { return await next(); }
+
     if (_currentUser.UserId == null) { throw new UnauthorizedAccessException(); }
 
     var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();

@@ -11,13 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.UpdatePhoto;
 
-public record UpdatePhoto : IRequest<Unit>
+public record UpdatePhotoCommand : IRequest<Unit>
 {
   public Guid   UserId   { get; init; }
   public string PublicId { get; init; }
 }
 
-public class UpdatePhotoHandler : IRequestHandler<UpdatePhoto, Unit>
+public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Unit>
 {
   private readonly IEventsDbContext            _context;
   private readonly IMapper                     _mapper;
@@ -34,7 +34,7 @@ public class UpdatePhotoHandler : IRequestHandler<UpdatePhoto, Unit>
   }
 
   public async Task<Unit> Handle(
-      UpdatePhoto       request,
+      UpdatePhotoCommand       request,
       CancellationToken cancellationToken)
   {
     try

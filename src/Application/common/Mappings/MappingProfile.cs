@@ -50,6 +50,5 @@ public class MappingProfile : Profile
 
     // for transfer photo
     CreateMap<Photo, PhotoDTO>();
-
   }
 }

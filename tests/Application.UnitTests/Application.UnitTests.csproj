@@ -33,6 +33,7 @@
 
     <ItemGroup>
         <Folder Include="ActivityAttendee\Queries\"/>
+        <Folder Include="Photos\Commands\CreatePhoto\" />
     </ItemGroup>
 
 </Project>

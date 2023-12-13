@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 using Application.common.DTO;
 using Application.common.interfaces;
+using Application.Common.Interfaces;
 
 using Infrastructure.Identity;
 
@@ -22,6 +23,7 @@ public class AccountController : BaseController
   private readonly IJwtTokenService               _jwtTokenService;
   private readonly SignInManager<ApplicationUser> _signInManager;
   private readonly UserManager<ApplicationUser>   _userManager;
+  private readonly IEventsDbContext               _eventsDbContext;
 
   /// <summary>
   ///   This is the constructor method of the AccountController class. It contains all the
@@ -46,13 +48,15 @@ public class AccountController : BaseController
       SignInManager<ApplicationUser> signInManager,
       IIdentityService               identityService,
       IJwtTokenService               jwtTokenService,
-      ICurrentUserService            currentUserService)
+      ICurrentUserService            currentUserService,
+      IEventsDbContext               eventsDbContext)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _identityService = identityService;
     _jwtTokenService = jwtTokenService;
     _currentUserService = currentUserService;
+    _eventsDbContext = eventsDbContext;
   }
 
   /// <summary>
@@ -69,22 +73,15 @@ public class AccountController : BaseController
   public async Task<ActionResult<AccountResponseDTO>> Register(
       [ FromBody ] RegisterDTO registerDTO)
   {
-    if (!ModelState.IsValid)
-    {
-      return BadRequest(ModelState);
-    }
+    if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
     // 使用IdentityService的CreateUserAsync方法来创建用户
-    var (result, userId) = await _identityService.CreateUserAsync(
-     registerDTO.Email,
-     registerDTO.DisplayName,
-     registerDTO.PhoneNumber,
-     registerDTO.Password);
+    var (result, userId) = await _identityService.CreateUserAsync(registerDTO.Email,
+      registerDTO.DisplayName,
+      registerDTO.PhoneNumber,
+      registerDTO.Password);
 
-    if (!result.Succeeded)
-    {
-      return BadRequest(result.Errors);
-    }
+    if (!result.Succeeded) { return BadRequest(result.Errors); }
 
     // 获取创建的用户
     var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -258,7 +255,11 @@ public class AccountController : BaseController
         DisplayName = user.DisplayName,
         Email = user.Email,
         Token = token.Token,
-        ExpirationDateTime = token.Expiration
+        ExpirationDateTime = token.Expiration,
+        Image = _eventsDbContext.Photos.FirstOrDefault(p => p.UserId == user.Id
+                                                        && p.IsMain
+                                                        == true)!
+                                .Url
     };
 
     return Ok(responseDto);

@@ -14,13 +14,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.CreatePhoto;
 
-public record CreatePhoto : IRequest<Unit>
+public record CreatePhotoCommand : IRequest<Unit>
 {
   public Guid      UserId { get; init; }
   public IFormFile File   { get; init; }
 }
 
-public class CreatePhotoHandler : IRequestHandler<CreatePhoto, Unit>
+public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Unit>
 {
   private readonly IEventsDbContext            _context;
   private readonly IMapper                     _mapper;
@@ -40,7 +40,7 @@ public class CreatePhotoHandler : IRequestHandler<CreatePhoto, Unit>
   }
 
   public async Task<Unit> Handle(
-      CreatePhoto       request,
+      CreatePhotoCommand       request,
       CancellationToken cancellationToken)
   {
     try

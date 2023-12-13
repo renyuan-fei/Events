@@ -9,7 +9,7 @@ public class CreateActivityCommandTests
   private readonly IFixture _fixture;
 
   private readonly CreateActivityCommandHandler                _handler;
-  private readonly Mock<IEventsDbContext>                 _mockDbContext;
+  private readonly Mock<IEventsDbContext>                      _mockDbContext;
   private readonly Mock<ILogger<CreateActivityCommandHandler>> _mockLogger;
   private readonly Mock<IMapper>                               _mockMapper;
   private readonly Mock<IUserService>                          _mockUserService;
@@ -28,8 +28,7 @@ public class CreateActivityCommandTests
     // 设置 _context.Activities 返回模拟对象
     _mockDbContext.Setup(db => db.Activities).Returns(mockDbSet.Object);
 
-    _handler = new CreateActivityCommandHandler(
-                                                _mockMapper.Object,
+    _handler = new CreateActivityCommandHandler(_mockMapper.Object,
                                                 _mockLogger.Object,
                                                 _mockUserService.Object,
                                                 _mockDbContext.Object);
@@ -45,7 +44,7 @@ public class CreateActivityCommandTests
     _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
                   .ReturnsAsync(1);
 
-    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>()))
+    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>(), false))
                     .ReturnsAsync(_fixture.Create<UserInfoDTO>());
 
     // Act
@@ -82,7 +81,7 @@ public class CreateActivityCommandTests
     _mockDbContext.Setup(db => db.SaveChangesAsync(It.IsAny<CancellationToken>()))
                   .ReturnsAsync(0);
 
-    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>()))
+    _mockUserService.Setup(us => us.GetUserInfoByIdAsync(It.IsAny<Guid>(), false))
                     .ReturnsAsync(_fixture.Create<UserInfoDTO>());
 
     // Act

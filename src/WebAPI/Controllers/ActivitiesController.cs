@@ -19,19 +19,13 @@ namespace WebAPI.Controllers;
 [ Authorize ]
 public class ActivitiesController : BaseController
 {
-  private readonly ICurrentUserService _currentUserService;
-
-  /// <summary>
-  ///   Initializes a new instance of the ActivitiesController class.
-  /// </summary>
-  /// <param name="currentUserService">
-  ///   The service for retrieving information about the current
-  ///   user.
-  /// </param>
-  public ActivitiesController(ICurrentUserService currentUserService)
-  {
-    _currentUserService = currentUserService;
-  }
+  //
+  // private readonly ICurrentUserService _currentUserService;
+  //
+  // public ActivitiesController(ICurrentUserService currentUserService)
+  // {
+  //   _currentUserService = currentUserService;
+  // }
 
   // GET: api/Activities
   /// <summary>
@@ -125,7 +119,7 @@ public class ActivitiesController : BaseController
         await Mediator!.Send(new CreateActivityCommand
         {
             Activity = activity,
-            CurrentUserId = (Guid)_currentUserService.UserId!
+            CurrentUserId = (Guid)CurrentUserService!.UserId!
         });
 
     return Ok(result);
@@ -158,11 +152,10 @@ public class ActivitiesController : BaseController
   {
     var result = await Mediator!.Send(new UpdateActivityAttendeeCommand
     {
-        Id = (Guid)_currentUserService.UserId!,
+        Id = (Guid)CurrentUserService!.UserId!,
         ActivityId = id
     });
 
     return Ok(result);
   }
-  // private bool ActivityExists(Guid id) { throw new NotImplementedException(); }
 }
