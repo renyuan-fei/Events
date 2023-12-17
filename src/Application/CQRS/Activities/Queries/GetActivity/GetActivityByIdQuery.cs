@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
+[BypassAuthorization]
 public record GetActivityByIdQuery : IRequest<ActivityDTO>
 {
   public Guid Id { get; init; }
@@ -93,7 +94,7 @@ public class
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error Mapping to DTO: {ExMessage}", ex.Message);
+      _logger.LogError(ex, "ErrorMessage Mapping to DTO: {ExMessage}", ex.Message);
 
       throw;
     }

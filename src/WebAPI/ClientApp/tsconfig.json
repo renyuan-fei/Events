@@ -43,6 +43,9 @@
       ],
       "@config/*": [
         "./src/app/config/*"
+      ],
+      "@assets/*": [
+        "./src/app/assets/*"
       ]
     }
   },

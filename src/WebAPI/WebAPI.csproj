@@ -32,9 +32,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="ClientApp\features\store\" />
         <Folder Include="ClientApp\src\app\hooks\"/>
-        <Folder Include="ClientApp\src\features\store\"/>
-        <Folder Include="ClientApp\src\tests\"/>
+        <Folder Include="ClientApp\tests\" />
         <Folder Include="wwwroot\"/>
     </ItemGroup>
 

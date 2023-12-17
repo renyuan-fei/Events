@@ -16,17 +16,8 @@ namespace WebAPI.Controllers;
 /// <summary>
 ///   Represents a controller for handling HTTP requests related to Activity entities.
 /// </summary>
-[ Authorize ]
 public class ActivitiesController : BaseController
 {
-  //
-  // private readonly ICurrentUserService _currentUserService;
-  //
-  // public ActivitiesController(ICurrentUserService currentUserService)
-  // {
-  //   _currentUserService = currentUserService;
-  // }
-
   // GET: api/Activities
   /// <summary>
   ///   Handles HTTP GET request to retrieve a list of all Activity entities.
@@ -92,6 +83,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result is an IActionResult
   ///   representing the status of the operation.
   /// </returns>
+  [ Authorize ]
   [ Authorize(Policy = "IsActivityHost") ]
   [ HttpPut("{id:guid}") ]
   public async Task<IActionResult> PutActivity(Guid id, [ FromBody ] Activity activity)
@@ -112,6 +104,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result is an IActionResult
   ///   representing the status of the operation.
   /// </returns>
+  [ Authorize ]
   [ HttpPost ]
   public async Task<IActionResult> PostActivity([ FromBody ] Activity activity)
   {
@@ -134,6 +127,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result is an IActionResult
   ///   representing the status of the operation.
   /// </returns>
+  [ Authorize ]
   [ HttpDelete("{id:guid}") ]
   public async Task<IActionResult> DeleteActivity(Guid id)
   {
@@ -147,6 +141,7 @@ public class ActivitiesController : BaseController
   /// </summary>
   /// <param name="id">The ID of the activity.</param>
   /// <returns>An IActionResult representing the status of the update.</returns>
+  [ Authorize ]
   [ HttpPut("{id:guid}/attendees") ]
   public async Task<IActionResult> UpdateActivityAttendees(Guid id)
   {

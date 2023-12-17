@@ -64,7 +64,7 @@ public class
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
 
       throw;
     }

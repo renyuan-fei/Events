@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
+[BypassAuthorization]
 public record GetAllActivitiesQuery : IRequest<List<ActivityDTO>>;
 
 public class

@@ -8,5 +8,7 @@ export interface Activity {
     Description: string
     City: string,
     Venue: string,
+    HostName: string,
+    IsCancelled: boolean,
     Attendees: Array<ActivityAttendee>,
 }

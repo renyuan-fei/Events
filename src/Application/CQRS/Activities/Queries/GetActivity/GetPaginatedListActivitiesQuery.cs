@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
+[BypassAuthorization]
 public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<ActivityDTO>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }

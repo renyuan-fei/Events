@@ -1,57 +1,51 @@
+// 在 NavBar.jsx 文件中
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import {createTheme, ThemeProvider} from "@mui/material";
+import SearchComponent from "@ui/Search.tsx";
+import Box from "@mui/material/Box";
+import {AuthLanguageControl} from "@ui/AuthLanguageControl.tsx";
+import {Logo} from "@ui/Logo.tsx";
 
-const theme = createTheme({});
+const APP_BAR_THEME = createTheme({
+    components: {
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'white',
+                    backgroundImage: 'none',
+                    boxShadow: 'none'
+                },
+            },
+        },
+    },
+});
 
 export function NavBar() {
     return (
-        <ThemeProvider theme={theme}><Box sx={{flexGrow: 1}}>
-            <AppBar position="fixed">
+        <ThemeProvider theme={APP_BAR_THEME}>
+            <AppBar position="fixed" color="inherit"
+                    sx={{
+                        padding: {
+                            xs: 1,
+                            sm: 1,
+                            md: 1,
+                            lg: 1,
+                        }
+                    }}>
                 <Toolbar>
 
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{mr: 2}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
+                    <Logo/>
 
-                    <Typography variant="h6" component="div" sx={{flexGrow: 0}}>
-                        Events
-                    </Typography>
+                    <Box sx={{flexGrow:2}}/>
 
-                    <Divider orientation="vertical" variant={"middle"} flexItem
-                             sx={{mx: 2, display: {xs: 'none', md: 'flex'}}}/>
+                    <SearchComponent/>
 
-                    <Box sx={{flexGrow: 0, display: 'flex', alignItems: 'center'}}>
-                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                            Activities
-                        </Button>
+                    <Box sx={{flexGrow: 80}}/>
 
-                        <Divider orientation="vertical" flexItem sx={{mx: 2}}
-                                 variant={"middle"}/>
-
-                        <Button variant={"contained"}
-                                sx={{my: 2, color: 'white', display: 'block'}}>
-                            Create Activity
-                        </Button>
-                    </Box>
-
-                    <Box sx={{flexGrow: 1}}/>
-
-                    <Button color="inherit">Login</Button>
+                    <AuthLanguageControl/>
                 </Toolbar>
             </AppBar>
-        </Box></ThemeProvider>
+        </ThemeProvider>
     );
 }

@@ -5,10 +5,15 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {router} from "@config/Router.tsx";
+import {QueryClientProvider} from "react-query";
+import {queryClient} from "@apis/queryClient.ts";
 
 function App() {
     return (
-        <RouterProvider router={router}/>
+        <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router}/>
+        </QueryClientProvider>
+
     )
 }
 

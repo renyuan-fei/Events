@@ -56,11 +56,11 @@ public class
 
       return result
           ? Unit.Value
-          : throw new DbUpdateException($"Error deleting activity with id {request.Id}");
+          : throw new DbUpdateException($"ErrorMessage deleting activity with id {request.Id}");
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
 
       throw;
     }

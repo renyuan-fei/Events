@@ -1,5 +1,8 @@
 export interface ActivityAttendee {
     Id: string,
     IsHost: boolean,
-    AppUser?: []
+    DisplayName: string,
+    UserName: string,
+    Bio : string,
+    Image : string
 }
