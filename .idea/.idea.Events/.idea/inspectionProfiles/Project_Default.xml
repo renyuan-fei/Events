@@ -31,5 +31,8 @@
         </list>
       </option>
     </inspection_tool>
+    <inspection_tool class="RequiredAttributes" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myAdditionalRequiredHtmlAttributes" value="activity" />
+    </inspection_tool>
   </profile>
 </component>
