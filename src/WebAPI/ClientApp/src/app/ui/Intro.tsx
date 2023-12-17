@@ -1,6 +1,7 @@
 import {Box, Button, Typography, useTheme} from '@mui/material';
 import {ImageComp} from "@ui/Image.tsx";
 import IntroImg from "@assets/introImg.png";
+
 export default function Intro() {
     const theme = useTheme();
     // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -47,10 +48,14 @@ export default function Intro() {
                         sx={{
                             fontSize: 16,
                             marginTop: theme.spacing(2),
-                            backgroundColor: '#3e8da0',
+                            backgroundColor: '#00798A',
                             borderRadius: 2,
                             width: 150,
                             height: 45,
+                            transition: 'none',
+                            '&:hover': {
+                                backgroundColor: '#3e8da0'
+                            }
                         }}>
                     Join Events
                 </Button>

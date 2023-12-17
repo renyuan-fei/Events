@@ -32,11 +32,11 @@
     "react-router-dom": "^6.19.0",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
-    "styled-components": "^6.1.1"
+    "styled-components": "^6.1.1",
+    "@react-buddy/ide-toolbox": "^2.4.0",
+    "@react-buddy/palette-mui": "^5.0.1"
   },
   "devDependencies": {
-    "@react-buddy/ide-toolbox": "^2.4.0",
-    "@react-buddy/palette-mui": "^5.0.1",
     "@tanstack/eslint-plugin-query": "^5.12.1",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",

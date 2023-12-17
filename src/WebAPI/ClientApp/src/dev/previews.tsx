@@ -1,22 +1,17 @@
 import {ComponentPreview, Previews} from "@react-buddy/ide-toolbox";
 import {PaletteTree} from "./palette";
-import {NavBar} from "@ui/NavBar.tsx";
-import SearchComponent from "@ui/Search.tsx";
-import {Logo} from "@ui/Logo.tsx";
+import Intro from "@ui/Intro.tsx";
+import App from "../App.tsx";
 import ActivityCard from "@ui/ActivityCard.tsx";
 
 const ComponentPreviews = () => {
     return (
         <Previews palette={<PaletteTree/>}>
-            <ComponentPreview path="/NavBar">
-                <NavBar/>
+            <ComponentPreview path="/Intro">
+                <Intro/>
             </ComponentPreview>
-            <ComponentPreview
-                path="/SearchComponent">
-                <SearchComponent/>
-            </ComponentPreview>
-            <ComponentPreview path="/Logo">
-                <Logo/>
+            <ComponentPreview path="/App">
+                <App/>
             </ComponentPreview>
             <ComponentPreview
                 path="/ActivityCard">

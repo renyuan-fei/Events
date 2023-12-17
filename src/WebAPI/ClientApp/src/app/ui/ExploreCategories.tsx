@@ -19,12 +19,14 @@ export default function ExploreCategories() {
 
     return (
         <Box sx={{
-            my: theme.spacing(10),
+            my: theme.spacing(5),
         }}>
             <Typography variant="h4" gutterBottom sx={{fontWeight: 700 }}>
                 Explore top categories
             </Typography>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid container spacing={2} justifyContent="center" sx={{
+                mt: theme.spacing(2),
+            }}>
                 {categories.map((category) => (
                     <Grid item key={category.name} xs={1.5}>
                         <Box
