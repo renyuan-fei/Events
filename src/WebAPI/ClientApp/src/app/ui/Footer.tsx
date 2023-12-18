@@ -24,6 +24,7 @@ function Footer() {
                         width: 150,
                         color: grey[50],
                         '&:hover': {
+                            borderColor: grey[50],
                             backgroundColor: grey[50],
                             color: grey[900],
                         },

@@ -1,7 +1,15 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import {useAppDispatch} from "@store/store.ts";
+import {setLogin} from "@features/commonSlice.ts";
 
 export function LoginButton() {
+    const dispatch = useAppDispatch()
+
+    function handleClick(): void {
+        dispatch(setLogin())
+    }
+
     return (
         <Box>
             <Button color="inherit" sx={{
@@ -13,7 +21,8 @@ export function LoginButton() {
                     color: '#3e8da0', // 悬停时的字体颜色
                     backgroundColor: 'transparent', // 保持背景透明或设置您希望的颜色
                 },
-            }}>
+            }}
+                    onClick={handleClick}>
                 Login
             </Button>
         </Box>

@@ -24,7 +24,7 @@
     /* Path */
     "paths": {
       "@features/*": [
-        "./src/features/*"
+        "./src/app/features/*"
       ],
       "@hooks/*": [
         "./src/app/hooks/*"
@@ -46,7 +46,10 @@
       ],
       "@assets/*": [
         "./src/app/assets/*"
-      ]
+      ],
+      "@store/*": [
+        "./src/app/store/*"
+      ],
     }
   },
   "include": [

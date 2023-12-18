@@ -3,6 +3,7 @@ import {PaletteTree} from "./palette";
 import Intro from "@ui/Intro.tsx";
 import App from "../App.tsx";
 import ActivityCard from "@ui/ActivityCard.tsx";
+import SignUpPopup from "@ui/SignUpModal.tsx";
 
 const ComponentPreviews = () => {
     return (
@@ -16,6 +17,10 @@ const ComponentPreviews = () => {
             <ComponentPreview
                 path="/ActivityCard">
                 <ActivityCard/>
+            </ComponentPreview>
+            <ComponentPreview
+                path="/SignUpPopup">
+                <SignUpPopup/>
             </ComponentPreview>
         </Previews>
     );
