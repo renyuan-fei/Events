@@ -1,41 +1,21 @@
-import {Box, Button, Typography, useTheme} from '@mui/material';
-import {ImageComp} from "@ui/Image.tsx";
-import IntroImg from "@assets/introImg.png";
+import {Button, Typography, useTheme, Grid} from '@mui/material';
+import IntroImg from '@assets/introImg.png';
+import {ImageComp} from "@ui/Image.tsx"; // 础保这个路径是正确的
 
 export default function Intro() {
     const theme = useTheme();
-    // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                my: theme.spacing(10),
-                [theme.breakpoints.down('sm')]: {
-                    flexDirection: 'column',
-                },
-            }}
-        >
-            <Box
-                sx={{
-                    maxWidth: '60%',
-                    [theme.breakpoints.down('sm')]: {
-                        maxWidth: '100%',
-                        textAlign: 'center',
-                        marginBottom: theme.spacing(2),
-                    },
-                }}
-            >
+        <Grid container spacing={2} alignItems="center" justifyContent="space-between" padding={5}>
+            <Grid item xs={12} sm={6} sx={{textAlign: {xs: 'center', sm: 'left'}}}>
                 <Typography variant="h3" component="h1" gutterBottom sx={{
                     fontWeight: 700,
-                    fontSize: 60,
+                    fontSize: {xs: '1.5rem', sm: '2.125rem', md: '3rem'},
                 }}>
                     The people platform—Where interests become friendships
                 </Typography>
-                <Typography variant="body1" gutterBottom sx={{
-                    fontSize: 23,
+                <Typography variant="body1" sx={{
+                    fontSize: {xs: '0.875rem', sm: '1rem'},
                 }}>
                     Whatever your interest, from hiking and reading to networking and
                     skill sharing,
@@ -43,37 +23,30 @@ export default function Intro() {
                     happening
                     every day—sign up to join the fun.
                 </Typography>
-
-                <Button variant="contained"
-                        sx={{
-                            fontSize: 16,
-                            marginTop: theme.spacing(2),
-                            backgroundColor: '#00798A',
-                            borderRadius: 2,
-                            width: 150,
-                            height: 45,
-                            transition: 'none',
-                            '&:hover': {
-                                backgroundColor: '#3e8da0'
-                            }
-                        }}>
+                <Button variant="contained" sx={{
+                    fontSize: 16,
+                    mt: theme.spacing(2),
+                    backgroundColor: '#00798A',
+                    borderRadius: 2,
+                    width: 150,
+                    height: 45,
+                    '&:hover': {
+                        backgroundColor: '#3e8da0',
+                    },
+                    '&:active': {
+                        transform: 'scale(0.9)',
+                    },
+                }}>
                     Join Events
                 </Button>
+            </Grid>
 
-            </Box>
-
-            <Box
-                sx={{
-                    flexShrink: 0,
-                    [theme.breakpoints.down('sm')]: {
-                        width: '80%',
-                    },
-                }}
-            >
+            <Grid item xs={12} sm={6}
+                  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}}>
                 <ImageComp Src={IntroImg} Alt={"mainPage"} Sx={{
-                    maxWidth: 600, maxHeight: 400
+                    maxWidth: 400, maxHeight: 400
                 }}/>
-            </Box>
-        </Box>
+            </Grid>
+        </Grid>
     );
 }

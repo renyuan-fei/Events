@@ -1,11 +1,10 @@
-// 在 NavBar.jsx 文件中
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import {createTheme, ThemeProvider} from "@mui/material";
+import { createTheme, Grid, ThemeProvider } from "@mui/material";
+// 确保导入正确的路径
+import { AuthLanguageControl } from "./AuthLanguageControl";
+import { Logo } from "./Logo";
 import SearchComponent from "@ui/Search.tsx";
-import Box from "@mui/material/Box";
-import {AuthLanguageControl} from "@ui/AuthLanguageControl.tsx";
-import {Logo} from "@ui/Logo.tsx";
 
 const APP_BAR_THEME = createTheme({
     components: {
@@ -14,7 +13,7 @@ const APP_BAR_THEME = createTheme({
                 root: {
                     backgroundColor: 'white',
                     backgroundImage: 'none',
-                    boxShadow: 'none'
+                    boxShadow: 'none',
                 },
             },
         },
@@ -27,23 +26,24 @@ export function NavBar() {
             <AppBar position="fixed" color="inherit"
                     sx={{
                         padding: {
-                            xs: 1,
-                            sm: 1,
-                            md: 1,
-                            lg: 1,
+                            xs: 2,
+                            sm: 2,
+                            md: 2,
+                            lg: 2,
                         }
                     }}>
                 <Toolbar>
-
-                    <Logo/>
-
-                    <Box sx={{flexGrow:2}}/>
-
-                    <SearchComponent/>
-
-                    <Box sx={{flexGrow: 80}}/>
-
-                    <AuthLanguageControl/>
+                    <Grid container alignItems="center" justifyContent="space-between">
+                        <Grid item xs={6} sm={4} md={2.5} lg={2.1}>
+                            <Logo />
+                        </Grid>
+                        <Grid item xs={12} sm={5} md={6.5} lg={7.7} order={{ xs: 3, sm: 2 }}>
+                            <SearchComponent />
+                        </Grid>
+                        <Grid item xs={6} sm={3} md={3} lg={1.2} order={{ xs: 2, sm: 3 }}>
+                            <AuthLanguageControl />
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
         </ThemeProvider>

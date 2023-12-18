@@ -12,7 +12,6 @@ function Footer() {
             backgroundColor: grey[900],
             color: 'white',
             padding: '2rem',
-            height: 520
         }}>
             <Container maxWidth={"xl"}>
                 <Box sx={{textAlign: 'center', paddingBottom: '2rem'}}>
@@ -36,7 +35,7 @@ function Footer() {
 
                 <Divider sx={{borderColor: grey[700], marginBottom: '1rem'}}/>
 
-                <Grid container spacing={5} justifyContent="space-around">
+                <Grid container spacing={5} justifyContent="space-around" direction={{ xs: 'column', sm: 'row' }}>
                     <Grid item>
                         <Typography variant="h6" gutterBottom>Your Account</Typography>
                         <Link href="#" color="inherit" underline="none">Sign up</Link>

@@ -12,8 +12,9 @@ function SearchComponent() {
                 p: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
-                width: 600,
+                width: { xs: '100%', sm: '300px', md: '400px', lg: '600px' },
                 height: 55,
+                marginTop: 1,
                 boxShadow: 'none',
                 border: '1px solid #e0e0e0',
                 borderRadius: 3,
@@ -22,6 +23,7 @@ function SearchComponent() {
                     boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)', // 悬停时的阴影效果
                 },
             }}
+
         >
 
             <InputBase

@@ -17,7 +17,7 @@ const theme = createTheme({
 export function Logo() {
     return (
         <ThemeProvider theme={theme}>
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' , width:150}}>
                 <Grid container spacing={2} alignItems="center">
                     <Grid item xs={6}>
                         <img src={LogoImg} alt={"Logo"} style={{ maxWidth: 80, maxHeight: 60 }} />

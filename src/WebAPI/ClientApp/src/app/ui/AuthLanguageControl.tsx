@@ -6,7 +6,7 @@ import {LoginButton} from "@ui/LoginButton.tsx";
 export function AuthLanguageControl() {
     return (
         <Box sx={{
-            width: 250,
+            width: { xs: '100%', sm: '200px', md: '200px', lg: '250px' },
             height: '100%', // 设置高度为100%，或者可以是具体的数值，比如`height: 120`
             display: 'flex', // 使用flex布局
             alignItems: 'center', // 上下居中

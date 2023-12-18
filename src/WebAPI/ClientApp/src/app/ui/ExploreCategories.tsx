@@ -18,17 +18,13 @@ export default function ExploreCategories() {
     const theme = useTheme();
 
     return (
-        <Box sx={{
-            my: theme.spacing(5),
-        }}>
-            <Typography variant="h4" gutterBottom sx={{fontWeight: 700 }}>
+        <Box sx={{ my: theme.spacing(5) }}>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
                 Explore top categories
             </Typography>
-            <Grid container spacing={2} justifyContent="center" sx={{
-                mt: theme.spacing(2),
-            }}>
+            <Grid container spacing={2} justifyContent="center">
                 {categories.map((category) => (
-                    <Grid item key={category.name} xs={1.5}>
+                    <Grid item key={category.name} xs={6} sm={6} md={3} lg={1.5}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -36,13 +32,13 @@ export default function ExploreCategories() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 height: 122,
-                                width: 155,
+                                width: {xs: '100%', sm: '100%', md: '100'},
                                 backgroundColor: '#97CAD114',
                                 borderRadius: 2.5,
                             }}
                         >
-                            <Icon sx={{color: category.color, paddingBottom:5}}>{category.icon}</Icon>
-                            <Typography variant="caption" sx={{fontWeight:700}}>{category.name}</Typography>
+                            <Icon sx={{ color: category.color, fontSize: 'large', mb: 1 }}>{category.icon}</Icon>
+                            <Typography variant="caption" sx={{ fontWeight: 700 }}>{category.name}</Typography>
                         </Box>
                     </Grid>
                 ))}
