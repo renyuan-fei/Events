@@ -24,7 +24,7 @@ export default function ActivityCard() {
                 <CardMedia
                     component="img"
                     height="220"
-                    image="/src/app/assets/activityTmp.png"
+                    image="https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702382852/cld-sample-3.jpg"
                     alt="Group picture"
                     sx={{borderRadius: 5}}
                 />

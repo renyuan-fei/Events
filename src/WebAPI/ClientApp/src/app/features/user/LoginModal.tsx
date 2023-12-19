@@ -16,7 +16,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import FacebookIcon from '@mui/icons-material/Facebook'; // 替换为正确的图标
 import GoogleIcon from '@mui/icons-material/Google'; // 替换为正确的图标
 import AppleIcon from '@mui/icons-material/Apple'; // 替换为正确的图标
-import LogoImg from "@assets/Logo.png";
+import LogoImg from "@assets/logo.png";
 import {useSelector} from "react-redux";
 import {RootState, useAppDispatch} from "@store/store.ts";
 import {setLogin, setSignUp} from "@features/commonSlice.ts";

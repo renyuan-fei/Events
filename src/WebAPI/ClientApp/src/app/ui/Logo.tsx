@@ -1,7 +1,7 @@
 import LogoImg from "@assets/logo.png";
 import Typography from "@mui/material/Typography";
-import { Grid, Box } from "@mui/material";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {Grid, Box, useMediaQuery} from "@mui/material";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 // 创建一个主题，其中包括自定义的字体
 const theme = createTheme({
@@ -15,20 +15,45 @@ const theme = createTheme({
 });
 
 export function Logo() {
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     return (
         <ThemeProvider theme={theme}>
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' , width:150}}>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={6}>
-                        <img src={LogoImg} alt={"Logo"} style={{ maxWidth: 80, maxHeight: 60 }} />
+            {isMobile ? <Box sx={{
+                    flexGrow: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: 80
+                }}>
+                    <Grid container spacing={6} alignItems="center">
+                        <Grid item xs={6}>
+                            <img src={LogoImg} alt={"Logo"}
+                                 style={{maxWidth: 50, maxHeight: 50}}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" component="div">
+                                Events
+                            </Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <Typography variant="h6" component="div">
-                            Events
-                        </Typography>
+                </Box> :
+                <Box sx={{
+                    flexGrow: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: 150
+                }}>
+                    <Grid container spacing={6} alignItems="center">
+                        <Grid item xs={6}>
+                            <img src={LogoImg} alt={"Logo"}
+                                 style={{maxWidth: 80, maxHeight: 80}}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" component="div">
+                                Events
+                            </Typography>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Box>
+                </Box>}
         </ThemeProvider>
     );
 }

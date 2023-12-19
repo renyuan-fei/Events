@@ -1,7 +1,7 @@
 import axios from "axios";
 import {Activity} from "@models/Activity.ts";
 
-const BaseUrl: String = "https://localhost:7095";
+const BaseUrl: string = "https://localhost:7095";
 
 export async function GetActivities({page = 1, searchTerm = []}: {
     page: number,
