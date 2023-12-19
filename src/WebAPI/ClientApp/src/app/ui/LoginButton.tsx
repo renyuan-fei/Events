@@ -13,7 +13,7 @@ export function LoginButton() {
     return (
         <Box>
             <Button color="inherit" sx={{
-                width: 120,
+                width: 110,
                 height: 50,
                 fontSize: 16,
                 transition: 'none', // 去除动画效果

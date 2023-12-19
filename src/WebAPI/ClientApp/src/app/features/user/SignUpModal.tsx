@@ -16,7 +16,7 @@ import {useSelector} from "react-redux";
 import {setLogin, setSignUp} from "@features/commonSlice.ts";
 import Box from "@mui/material/Box";
 import {ImageComp} from "@ui/Image.tsx"; // Replace with the correct ones
-import LogoImg from "@assets/Logo.png";
+import LogoImg from '@assets/logo.png';
 import {grey} from "@mui/material/colors";
 
 const brandColors = {

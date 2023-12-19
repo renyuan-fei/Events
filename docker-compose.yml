@@ -54,6 +54,15 @@ services:
       - "81:80"
       - "5341:5341"
 
+#  Client:
+#    image: clientapp
+#    build:
+#      context: .
+#      dockerfile: src/WebAPI/ClientApp/Dockerfile
+#    ports:
+#      - "5173:80"
+
+
 volumes:
   SQL_Server: { }                           # SQL Server 卷定义
   Seq: { }                                  # Seq 卷定义

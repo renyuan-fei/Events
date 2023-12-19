@@ -1,5 +1,5 @@
 import {Button, Typography, useTheme, Grid} from '@mui/material';
-import IntroImg from '@assets/introImg.png';
+import IntroImg from '@assets/IntroImg.png';
 import {ImageComp} from "@ui/Image.tsx"; // 础保这个路径是正确的
 
 export default function Intro() {
