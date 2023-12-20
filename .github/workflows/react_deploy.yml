@@ -35,6 +35,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: src/WebAPI/ClientApp/package-lock.json
       - name: Install dependencies
         run: npm install --legacy-peer-deps
         working-directory: src/WebAPI/ClientApp
@@ -47,7 +48,7 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           # Upload dist repository
-          path: './dist'
+          path: './src/WebAPI/ClientApp/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
