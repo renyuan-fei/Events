@@ -35,13 +35,13 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          cache-dependency-path: src/WebAPI/ClientApp/package-lock.json
+          cache-dependency-path: './src/WebAPI/ClientApp/package-lock.json'
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-        working-directory: src/WebAPI/ClientApp
+        working-directory: './src/WebAPI/ClientApp'
       - name: Build
         run: npm run build
-        working-directory: src/WebAPI/ClientApp
+        working-directory: './src/WebAPI/ClientApp'
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
