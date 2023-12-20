@@ -16,10 +16,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-[BypassAuthorization]
+[ BypassAuthorization ]
 public record GetPaginatedListActivitiesQuery : IRequest<PaginatedList<ActivityDTO>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
+  public FilterParams?       FilterParams        { get; init; }
 }
 
 public class
@@ -51,55 +52,43 @@ public class
     var query = _context.Activities.Include(activity => activity.Attendees).AsQueryable();
 
     // 添加基于新属性的过滤条件
-    if (!string.IsNullOrWhiteSpace(request.PaginatedListParams.Title))
+    if (!string.IsNullOrWhiteSpace(request.FilterParams.Title))
     {
       query = query.Where(activity =>
-                              activity.Title.Contains(request.PaginatedListParams.Title));
+                              activity.Title.Contains(request.FilterParams.Title));
     }
 
-    if (!string.IsNullOrWhiteSpace(request.PaginatedListParams.Category))
+    if (!string.IsNullOrWhiteSpace(request.FilterParams.Category))
     {
       query = query.Where(activity =>
-                              activity.Category.Contains(request.PaginatedListParams
+                              activity.Category.Contains(request.FilterParams
                                                              .Category));
     }
 
-    if (!string.IsNullOrWhiteSpace(request.PaginatedListParams.City))
+    if (!string.IsNullOrWhiteSpace(request.FilterParams.City))
     {
       query = query.Where(activity =>
-                              activity.City.Contains(request.PaginatedListParams.City));
+                              activity.City.Contains(request.FilterParams.City));
     }
 
-    if (!string.IsNullOrWhiteSpace(request.PaginatedListParams.Venue))
+    if (!string.IsNullOrWhiteSpace(request.FilterParams.Venue))
     {
       query = query.Where(activity =>
-                              activity.Venue.Contains(request.PaginatedListParams.Venue));
+                              activity.Venue.Contains(request.FilterParams.Venue));
     }
 
-    if (request.PaginatedListParams.StartDate.HasValue)
+    if (request.FilterParams.StartDate.HasValue)
     {
       query = query.Where(activity =>
                               activity.Date
-                           >= request.PaginatedListParams.StartDate.Value);
+                           >= request.FilterParams.StartDate.Value);
     }
 
-    if (request.PaginatedListParams.EndDate.HasValue)
+    if (request.FilterParams.EndDate.HasValue)
     {
       query = query.Where(activity =>
-                              activity.Date <= request.PaginatedListParams.EndDate.Value);
+                              activity.Date <= request.FilterParams.EndDate.Value);
     }
-
-    // if (!string.IsNullOrWhiteSpace(request.PaginatedListParams.SearchTerm))
-    // {
-    //   var searchTerm = request.PaginatedListParams.SearchTerm.ToLower().Trim();
-    //
-    //   query = query.Where(activity =>
-    //                           activity.Title.ToLower().Contains(searchTerm)
-    //                        || activity.Category.ToLower().Contains(searchTerm)
-    //                        || activity.Description.ToLower().Contains(searchTerm)
-    //                        || activity.City.ToLower().Contains(searchTerm)
-    //                        || activity.Venue.ToLower().Contains(searchTerm));
-    // }
 
     // empty no found
     if (!query.Any())

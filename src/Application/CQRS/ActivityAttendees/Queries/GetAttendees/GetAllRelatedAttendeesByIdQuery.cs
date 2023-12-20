@@ -37,7 +37,7 @@ public class
       GetAllRelatedAttendeesByIdQuery request,
       CancellationToken               cancellationToken)
   {
-    var query = _context.ActivityAttendees.Where(x => x.Id == request.ActivityId);
+    var query = _context.ActivityAttendees.Where(x => x.ActivityId == request.ActivityId);
 
     if (!query.Any())
     {

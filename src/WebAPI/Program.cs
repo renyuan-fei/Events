@@ -2,6 +2,7 @@ using Infrastructure;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
+using Infrastructure.SignalR;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Map the SignalR hubs
+app.MapHub<ChatHub>("/chat");
 
 // When running the application
 // Initialize the database.

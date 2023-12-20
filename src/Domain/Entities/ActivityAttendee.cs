@@ -40,4 +40,6 @@ public class ActivityAttendee : AuditableEntity
   ///   This property represents an activity.
   /// </remarks>
   public Activity Activity { get; set; }
+
+  public Guid ActivityId { get; set; }
 }

@@ -54,6 +54,21 @@ public class MappingProfile : Profile
 
     // for transfer photo
     CreateMap<Photo, PhotoDTO>()
-        .ForMember(photo => photo.Id, opt => opt.MapFrom(photo => photo.PublicId));
+        .ForMember(photoDTO => photoDTO.Id, opt => opt.MapFrom(photo => photo.PublicId));
+
+    CreateMap<Comment, CommentDTO>()
+        .ForMember(commentDTO => commentDTO.CreatedAt,
+                   opt => opt.MapFrom(comment => comment.Created))
+        .ForMember(commentDTO => commentDTO.UserId,
+                   opt => opt.MapFrom(comment =>
+                                          comment.CreatedBy))
+        .ForMember(commonDTO => commonDTO.Body,
+                   opt => opt.MapFrom(comment => comment.Body))
+        .ForMember(commonDTO => commonDTO.Id,
+                   opt => opt.MapFrom(comment => comment.Id))
+        .ForMember(commentDTO => commentDTO.Username,
+                   opt => opt.Ignore())
+        .ForMember(commentDTO => commentDTO.Image, opt => opt.Ignore())
+        .ForMember(commentDTO => commentDTO.DisplayName, opt => opt.Ignore());
   }
 }

@@ -28,7 +28,7 @@ namespace WebAPI.StartupExtensions;
 public static class ConfigureServiceExtension
 {
   /// <summary>
-  ///   Configures the services for the application.
+  /// Configures the services for the application.
   /// </summary>
   /// <param name="services">The service collection.</param>
   /// <param name="configuration">The configuration to use.</param>
@@ -121,7 +121,20 @@ public static class ConfigureServiceExtension
                                                        ["Jwt:Key"]!))
                   };
 
-              options.Events = new JwtBearerEvents();
+              options.Events = new JwtBearerEvents
+              {
+                  OnMessageReceived = context =>
+                  {
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                    {
+                      context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                  }
+              };
             });
 
     services.AddAuthorization(opt =>
@@ -132,6 +145,14 @@ public static class ConfigureServiceExtension
                       policy.Requirements
                             .Add(new IsHostRequirement());
                     });
+    });
+
+    // 添加 SignalR
+    services.AddSignalR(opt =>
+    {
+      opt.EnableDetailedErrors = true;
+      opt.KeepAliveInterval = TimeSpan.FromSeconds(10);
+      opt.HandshakeTimeout = TimeSpan.FromSeconds(10);
     });
 
     services.AddHttpLogging(options =>

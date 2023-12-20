@@ -39,17 +39,20 @@ public class ActivitiesController : BaseController
   /// </summary>
   /// <param name="page">The page number to retrieve.</param>
   /// <param name="paginatedListParams">The parameters for the paginated list.</param>
+  /// <param name="filterParams"></param>
   /// <returns>An ActionResult containing the paginated list of activities.</returns>
   [ HttpGet("{page:int}/{searchTerm?}") ]
   public async Task<ActionResult<IEnumerable<Activity>>> GetPaginatedListActivities(
       int                               page,
-      [ FromQuery ] PaginatedListParams paginatedListParams)
+      [ FromQuery ] PaginatedListParams paginatedListParams,
+      [ FromQuery ] FilterParams?       filterParams)
   {
     paginatedListParams.PageNumber = page;
 
     var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
     {
-        PaginatedListParams = paginatedListParams
+        PaginatedListParams = paginatedListParams,
+        FilterParams = filterParams
     });
 
     return Ok(result);
@@ -128,6 +131,7 @@ public class ActivitiesController : BaseController
   ///   representing the status of the operation.
   /// </returns>
   [ Authorize ]
+  [ Authorize(Policy = "IsActivityHost") ]
   [ HttpDelete("{id:guid}") ]
   public async Task<IActionResult> DeleteActivity(Guid id)
   {
@@ -142,6 +146,7 @@ public class ActivitiesController : BaseController
   /// <param name="id">The ID of the activity.</param>
   /// <returns>An IActionResult representing the status of the update.</returns>
   [ Authorize ]
+  [ Authorize(Policy = "IsActivityHost") ]
   [ HttpPut("{id:guid}/attendees") ]
   public async Task<IActionResult> UpdateActivityAttendees(Guid id)
   {

@@ -147,6 +147,7 @@ public class EventsDbContext : DbContext, IEventsDbContext
   ///   such as setting audit fields and dispatching domain events.
   /// </summary>
   /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
+  /// <exception cref="ArgumentOutOfRangeException"></exception>
   /// <returns>
   ///   A task that represents the asynchronous operation.
   ///   The task result contains the number of objects saved to the database.
@@ -204,24 +205,23 @@ public class EventsDbContext : DbContext, IEventsDbContext
 
     builder.Entity<Activity>()
            .HasMany(e => e.Attendees)
-           .WithOne(e => e.Activity)
-           .HasForeignKey(e => e.Id);
+           .WithOne(e => e.Activity);
 
     builder.Entity<ActivityAttendee>()
            .HasOne(e => e.Activity)
            .WithMany(e => e.Attendees)
-           .HasForeignKey(e => e.Id)
+           .HasForeignKey(e => e.ActivityId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+    builder.Entity<Comment>()
+           .HasOne(e => e.Activity)
+           .WithMany(e => e.Comments)
+           .HasForeignKey(e => e.ActivityId)
            .OnDelete(DeleteBehavior.Cascade);
 
     builder.Entity<Photo>().ToTable("Photos");
 
     builder.Entity<UserFollowing>().ToTable("UserFollowings");
-
-    builder.Entity<Comment>()
-           .HasOne(e => e.Activity)
-           .WithMany(e => e.Comments)
-           .HasForeignKey(e => e.Id)
-           .OnDelete(DeleteBehavior.Cascade);
   }
 
   /// <summary>
