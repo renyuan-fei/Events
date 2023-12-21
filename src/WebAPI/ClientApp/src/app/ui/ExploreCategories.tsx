@@ -1,6 +1,8 @@
 import {Grid, Typography, useTheme} from '@mui/material';
 import Icon from '@mui/material/Icon';
-import Box from "@mui/material/Box"; // 用于示例，您需要根据实际情况使用适当的图标
+import Box from "@mui/material/Box";
+import {useSelector} from "react-redux";
+import {RootState} from "@store/store.ts"; // 用于示例，您需要根据实际情况使用适当的图标
 
 // 假设的类别数据，您需要用实际的数据替换它
 const categories = [
@@ -16,10 +18,11 @@ const categories = [
 
 export default function ExploreCategories() {
     const theme = useTheme();
+    const isMobile = useSelector((state: RootState) => state.common.isMobile);
 
     return (
         <Box sx={{ my: theme.spacing(5) }}>
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
+            <Typography variant={isMobile ? "h5" : "h4"} gutterBottom sx={{ fontWeight: 700 }}>
                 Explore top categories
             </Typography>
             <Grid container spacing={2} justifyContent="center">

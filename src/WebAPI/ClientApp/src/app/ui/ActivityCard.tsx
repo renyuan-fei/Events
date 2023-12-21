@@ -6,7 +6,6 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import Box from '@mui/material/Box';
 import {CardActionArea, useTheme} from "@mui/material";
-// import tmpimg from "@assets/activityTmp.png";
 
 
 // @ts-ignore

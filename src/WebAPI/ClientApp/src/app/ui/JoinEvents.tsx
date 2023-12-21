@@ -1,9 +1,12 @@
 import {Box, Button, Typography, useTheme} from '@mui/material';
 import JoinEventsImg from "@assets/JoinEventsImg.png";
 import {ImageComp} from "@ui/Image.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
 
 export default function JoinEvents() {
     const theme = useTheme();
+    const isMobile = useSelector((state: RootState) => state.common.isMobile);
 
     return (
         <Box
@@ -57,8 +60,9 @@ export default function JoinEvents() {
                 </Button>
             </Box>
 
-            {/* 使用 display 属性在小屏幕上隐藏图片 */}
-            <Box>
+            <Box sx={{
+                display: isMobile? 'none' : 'flex',
+            }}>
                 <ImageComp Src={JoinEventsImg} Alt={"JoinEvents"} Sx={{
                     width: 500,
                     height: 250,

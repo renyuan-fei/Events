@@ -6,7 +6,7 @@ import {UpcomingActivitiesList} from "@ui/UpcomingActivitiesList.tsx";
 export default function MainPage() {
 
     return (
-        <Box>
+        <Box sx={{ width: '100%' }}>
             <Intro/>
             <UpcomingActivitiesList/>
             <JoinEvents/>

@@ -1,31 +1,16 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import {createTheme, Grid, ThemeProvider, useMediaQuery, useTheme} from "@mui/material";
+import {Grid, useMediaQuery, useTheme} from "@mui/material";
 // 确保导入正确的路径
 import {AuthLanguageControl} from "./AuthLanguageControl";
 import {Logo} from "./Logo";
 import SearchComponent from "@ui/Search.tsx";
-
-const APP_BAR_THEME = createTheme({
-    components: {
-        MuiAppBar: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: 'white',
-                    backgroundImage: 'none',
-                    boxShadow: 'none',
-                },
-            },
-        },
-    },
-});
 
 export function NavBar() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <ThemeProvider theme={APP_BAR_THEME}>
             <AppBar position="fixed" color="inherit"
                     sx={{
                         padding: {
@@ -33,6 +18,9 @@ export function NavBar() {
                             sm: 2,
                             md: 2,
                             lg: 2,
+                            backgroundColor: 'white',
+                            backgroundImage: 'none',
+                            boxShadow: 'none',
                         }
                     }}>
                 <Toolbar>
@@ -66,6 +54,5 @@ export function NavBar() {
                     </Grid>)}
                 </Toolbar>
             </AppBar>
-        </ThemeProvider>
     );
 }

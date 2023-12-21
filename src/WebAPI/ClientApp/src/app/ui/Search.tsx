@@ -13,7 +13,7 @@ function SearchComponent() {
                 display: 'flex',
                 alignItems: 'center',
                 width: { xs: '100%', sm: '300px', md: '400px', lg: '600px' },
-                height: 55,
+                height: {xs: 45, sm: 55},
                 marginTop: 1,
                 boxShadow: 'none',
                 border: '1px solid #e0e0e0',

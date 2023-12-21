@@ -11,7 +11,7 @@ export function UpcomingActivitiesList() {
             padding: theme.spacing(5),
         }}>
             <Typography variant={"h4"} gutterBottom sx={{
-                fontWeight: 800,
+                fontWeight: 700,
             }}>
                 Upcoming online events
             </Typography>

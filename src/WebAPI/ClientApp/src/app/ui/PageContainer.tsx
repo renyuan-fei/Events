@@ -7,7 +7,6 @@ interface ContainerProps {
 
 export function PageContainer({children}: ContainerProps) {
     return (
-        //maxWidth={false} sx={{ mt: 16, width: '100%', maxWidth: '1920px' }}
         <Container maxWidth={"xl"} sx={{
             mt: 20
         }}>

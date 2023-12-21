@@ -50,6 +50,9 @@
       "@store/*": [
         "./src/app/store/*"
       ],
+      "@types/*": [
+        "./src/app/types/*"
+      ]
     }
   },
   "include": [

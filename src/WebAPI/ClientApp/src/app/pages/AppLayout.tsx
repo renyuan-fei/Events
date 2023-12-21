@@ -6,6 +6,9 @@ import SignUpModal from "@features/user/SignUpModal.tsx";
 import LoginModal from "@features/user/LoginModal.tsx";
 
 export function AppLayout() {
+
+
+
     return (
         <>
             <NavBar/>

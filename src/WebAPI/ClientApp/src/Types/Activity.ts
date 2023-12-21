@@ -1,6 +1,6 @@
 import {ActivityAttendee} from "./ActivityAttendee.ts";
 
-export interface Activity {
+export type Activity = {
     Id: string,
     Title: string,
     Date: Date
