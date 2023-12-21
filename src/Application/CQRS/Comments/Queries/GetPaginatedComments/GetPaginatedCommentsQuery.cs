@@ -16,7 +16,7 @@ namespace Application.CQRS.Comments.Queries.GetPaginatedComments;
 public record GetPaginatedCommentsQuery : IRequest<PaginatedList<CommentDTO>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
-  public Guid                ActivityId          { get; init; }
+  public Guid                 ActivityId          { get; init; }
 }
 
 public class
@@ -50,7 +50,8 @@ public class
 
       if (!comments.Any())
       {
-        throw new NotFoundException(nameof(CommentDTO), request.ActivityId);
+        // throw new NotFoundException(nameof(CommentDTO), request.ActivityId);
+        return new PaginatedList<CommentDTO>();
       }
 
 

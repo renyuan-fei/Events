@@ -5,6 +5,6 @@ namespace Application.common.Models;
 /// </summary>
 public class PaginatedListParams
 {
-  public int PageNumber { get; set; }
+  public int PageNumber { get; set; } = 1;
   public int PageSize   { get; init; } = 10;
 }

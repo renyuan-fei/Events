@@ -98,8 +98,7 @@ public class
       throw new NotFoundException("No activities found.");
     }
 
-    PaginatedList<Activity>? activities =
-        await query.PaginatedListAsync(request.PaginatedListParams.PageNumber,
+    PaginatedList<Activity> activities = await query.PaginatedListAsync(request.PaginatedListParams.PageNumber,
                                        request.PaginatedListParams.PageSize);
 
     if (activities == null

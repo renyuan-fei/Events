@@ -58,7 +58,7 @@ public class MappingProfile : Profile
 
     CreateMap<Comment, CommentDTO>()
         .ForMember(commentDTO => commentDTO.CreatedAt,
-                   opt => opt.MapFrom(comment => comment.Created))
+                   opt => opt.MapFrom(comment => comment.Created.DateTime))
         .ForMember(commentDTO => commentDTO.UserId,
                    opt => opt.MapFrom(comment =>
                                           comment.CreatedBy))

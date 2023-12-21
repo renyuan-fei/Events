@@ -2,13 +2,13 @@ using Infrastructure;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
-using Infrastructure.SignalR;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using Serilog;
 
+using WebAPI.SignalR;
 using WebAPI.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);

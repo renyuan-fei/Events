@@ -50,7 +50,7 @@
       "@store/*": [
         "./src/app/store/*"
       ],
-      "@types/*": [
+      "@type/*": [
         "./src/app/types/*"
       ]
     }

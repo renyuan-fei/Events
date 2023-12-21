@@ -15,7 +15,7 @@ namespace Application.CQRS.Comments.commands.CreateComment;
 
 public record CreateCommentCommand : IRequest<CommentDTO>
 {
-  public string Body       { get; init; }
+  public string Body       { get; init; } = null!;
   public Guid   ActivityId { get; init; }
 }
 

@@ -10,7 +10,7 @@ using MediatR;
 
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.ActivityAttendee.Queries.GetActivityAttendeesWithPagination;
+namespace Application.CQRS.ActivityAttendees.Queries.GetActivityAttendeesWithPagination;
 
 public record
     GetActivityAttendeesWithPaginationQuery : IRequest<

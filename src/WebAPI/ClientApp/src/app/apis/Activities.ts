@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Activity} from "@models/Activity.ts";
+import {Activity} from "@type/Activity.ts";
 
 const BaseUrl: string = "https://localhost:7095";
 
