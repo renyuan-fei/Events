@@ -42,7 +42,7 @@ public class PaginatedList <T> : ICollection<T>
   public bool HasNextPage => PageNumber < TotalPages;
 
   public async static Task<PaginatedList<T>> CreateAsync(
-      IQueryable<T> source,
+      IQueryable<T>? source,
       int           pageNumber,
       int           pageSize)
   {

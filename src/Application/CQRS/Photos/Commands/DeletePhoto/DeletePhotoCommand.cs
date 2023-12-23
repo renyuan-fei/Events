@@ -38,11 +38,18 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Unit>
   }
 
   public async Task<Unit> Handle(
-      DeletePhotoCommand       request,
-      CancellationToken cancellationToken)
+      DeletePhotoCommand request,
+      CancellationToken  cancellationToken)
   {
+    const string DefaultImagePublicId = "gyzjw6xpz9pzl0xg7de4";
+
     try
     {
+      if (request.PublicId == DefaultImagePublicId)
+      {
+        throw new InvalidOperationException("You cannot delete the default image.");
+      }
+
       var photo =
           await _context.Photos.FirstOrDefaultAsync(p => p.UserId == request.UserId
                                                       && p.PublicId == request.PublicId,
@@ -57,6 +64,10 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Unit>
         throw new InvalidOperationException("Cannot delete main photo");
       }
 
+      var result = await _cloudinaryService.DeletePhoto(photo.PublicId);
+
+      if (!result) { throw new Exception("Could not delete photo from cloudinary"); }
+
       _context.Photos.Remove(photo);
 
       await _context.SaveChangesAsync(cancellationToken);
@@ -65,7 +76,9 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Unit>
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

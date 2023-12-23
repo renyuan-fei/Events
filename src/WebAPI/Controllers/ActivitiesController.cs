@@ -4,7 +4,7 @@ using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
-using Application.CQRS.ActivityAttendee.Commands.UpdateActivityAttendee;
+using Application.CQRS.ActivityAttendees.Commands.UpdateActivityAttendee;
 
 using Domain.Entities;
 
@@ -37,18 +37,14 @@ public class ActivitiesController : BaseController
   /// <summary>
   /// Retrieves a paginated list of activities.
   /// </summary>
-  /// <param name="page">The page number to retrieve.</param>
   /// <param name="paginatedListParams">The parameters for the paginated list.</param>
   /// <param name="filterParams"></param>
   /// <returns>An ActionResult containing the paginated list of activities.</returns>
-  [ HttpGet("{page:int}/{searchTerm?}") ]
+  [ HttpGet("{pageNumber:int}/{pageSize:int?}") ]
   public async Task<ActionResult<IEnumerable<Activity>>> GetPaginatedListActivities(
-      int                               page,
       [ FromQuery ] PaginatedListParams paginatedListParams,
       [ FromQuery ] FilterParams?       filterParams)
   {
-    paginatedListParams.PageNumber = page;
-
     var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
     {
         PaginatedListParams = paginatedListParams,
@@ -146,7 +142,6 @@ public class ActivitiesController : BaseController
   /// <param name="id">The ID of the activity.</param>
   /// <returns>An IActionResult representing the status of the update.</returns>
   [ Authorize ]
-  [ Authorize(Policy = "IsActivityHost") ]
   [ HttpPut("{id:guid}/attendees") ]
   public async Task<IActionResult> UpdateActivityAttendees(Guid id)
   {

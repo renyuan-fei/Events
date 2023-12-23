@@ -1,5 +1,6 @@
 using System.Security.Claims;
 
+using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.interfaces;
 using Application.Common.Interfaces;
@@ -9,6 +10,7 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers;
 
@@ -250,16 +252,18 @@ public class AccountController : BaseController
     // update user's refresh token and expiration date time'
     await _userManager.UpdateAsync(user);
 
+    var result = _eventsDbContext.Photos
+                                 .FirstOrDefaultAsync(p => p.UserId == user.Id
+                                                        && p.IsMain == true)
+                                 .Result;
+
     var responseDto = new AccountResponseDTO
     {
         DisplayName = user.DisplayName,
         Email = user.Email,
         Token = token.Token,
         ExpirationDateTime = token.Expiration,
-        Image = _eventsDbContext.Photos.FirstOrDefault(p => p.UserId == user.Id
-                                                        && p.IsMain
-                                                        == true)!
-                                .Url
+        Image = result != null ? result.Url : DefaultImage.DefaultImageUrl
     };
 
     return Ok(responseDto);

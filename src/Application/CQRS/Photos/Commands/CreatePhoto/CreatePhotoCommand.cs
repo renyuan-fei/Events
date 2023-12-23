@@ -40,16 +40,23 @@ public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Unit>
   }
 
   public async Task<Unit> Handle(
-      CreatePhotoCommand       request,
-      CancellationToken cancellationToken)
+      CreatePhotoCommand request,
+      CancellationToken  cancellationToken)
   {
     try
     {
       var photoUploadResult = await _cloudinaryService.UpLoadPhoto(request.File);
 
+      var isMainPhoto =
+          await _context.Photos.AnyAsync(p => p.UserId == request.UserId && p.IsMain,
+                                         cancellationToken: cancellationToken);
+
       var photo = new Photo
       {
-          Url = photoUploadResult!.Url, PublicId = photoUploadResult.PublicId, UserId = request.UserId
+          Url = photoUploadResult!.Url,
+          PublicId = photoUploadResult.PublicId,
+          UserId = request.UserId,
+          IsMain = !isMainPhoto
       };
 
       _context.Photos.Add(photo);
@@ -62,7 +69,9 @@ public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Unit>
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

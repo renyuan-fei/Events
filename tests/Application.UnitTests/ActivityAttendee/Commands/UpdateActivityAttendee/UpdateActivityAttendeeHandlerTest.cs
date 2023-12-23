@@ -1,5 +1,5 @@
 using Application.common.Interfaces;
-using Application.CQRS.ActivityAttendee.Commands.UpdateActivityAttendee;
+using Application.CQRS.ActivityAttendees.Commands.UpdateActivityAttendee;
 
 namespace Application.UnitTests.ActivityAttendee.Commands.UpdateActivityAttendee;
 

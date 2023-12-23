@@ -4,8 +4,9 @@ namespace Domain.Entities;
 
 public class UserFollowing : AuditableEntity
 {
-  [Key]
+  [ Key ]
   public Guid Id { get; set; }
-  public Guid ObserverId { get; set; }
-  public Guid TargetId   { get; set; }
+
+  public Guid FollowerId { get; set; }
+  public Guid FolloweeId { get; set; }
 }

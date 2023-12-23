@@ -53,8 +53,7 @@ public class MappingProfile : Profile
         });
 
     // for transfer photo
-    CreateMap<Photo, PhotoDTO>()
-        .ForMember(photoDTO => photoDTO.Id, opt => opt.MapFrom(photo => photo.PublicId));
+    CreateMap<Photo, PhotoDTO>();
 
     CreateMap<Comment, CommentDTO>()
         .ForMember(commentDTO => commentDTO.CreatedAt,
@@ -70,5 +69,11 @@ public class MappingProfile : Profile
                    opt => opt.Ignore())
         .ForMember(commentDTO => commentDTO.Image, opt => opt.Ignore())
         .ForMember(commentDTO => commentDTO.DisplayName, opt => opt.Ignore());
+
+    CreateMap<UserInfoDTO, FollowingDTO>()
+        .ForMember(followingDTO => followingDTO.Image,
+                   opt => opt.MapFrom(dto => dto.MainPhoto))
+        .ForMember(followingDTO => followingDTO.UserId,
+                   opt => opt.MapFrom(dto => dto.Id));
   }
 }

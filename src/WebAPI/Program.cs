@@ -69,7 +69,7 @@ using (var scope = app.Services.CreateScope())
     await identityContext.Database.MigrateAsync();
 
     // Use the seed data
-    await Seed.SeedData(identityContext, userManager);
+    await Seed.SeedData(identityContext,eventsContext,userManager);
   }
   catch (Exception e)
   {

@@ -23,6 +23,18 @@ public class UsersController : BaseController
     _currentUserService = currentUserService;
   }
 
+  [ HttpGet ]
+  public async Task<IActionResult> GetUser()
+  {
+    var result =
+        await Mediator!.Send(new GetUserQuery()
+        {
+            UserId = (Guid)CurrentUserService!.UserId!
+        });
+
+    return Ok(result);
+  }
+
   // GET: api/Users/5
   [ HttpGet("{id}") ]
   public async Task<IActionResult> GetUser(Guid id)
@@ -40,14 +52,11 @@ public class UsersController : BaseController
   [ HttpPut ]
   public async Task<IActionResult> Put([ FromBody ] UserDTO user)
   {
-    if (ModelState.IsValid == false)
-    {
-      return BadRequest(ModelState);
-    }
+    if (ModelState.IsValid == false) { return BadRequest(ModelState); }
 
     var result = await Mediator!.Send(new UpdateUserCommand()
     {
-        UserId = (Guid) _currentUserService.UserId!,
+        UserId = (Guid)_currentUserService.UserId!,
         user = user
     });
 

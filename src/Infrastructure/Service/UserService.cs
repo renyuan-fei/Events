@@ -1,8 +1,10 @@
+using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.Exceptions;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Mappings;
+using Application.common.Models;
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -36,9 +38,8 @@ public class UserService : IUserService
 
   public async Task<UserInfoDTO> GetUserInfoByIdAsync(
       Guid userId,
-      bool   includePhotos = false)
+      bool includePhotos = false)
   {
-
     var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
     if (user == null)
@@ -58,7 +59,8 @@ public class UserService : IUserService
     }
 
     var mainPhoto =
-        _context.Photos.FirstOrDefault(p => p.UserId == userId && p.IsMain == true)?.Url;
+        _context.Photos.FirstOrDefault(p => p.UserId == userId && p.IsMain == true)?.Url
+     ?? DefaultImage.DefaultImageUrl;
 
     var result = new UserInfoDTO
     {
@@ -81,39 +83,27 @@ public class UserService : IUserService
                                   .Where(u => userIds.Contains(u.Id))
                                   .ToListAsync();
 
-    if (users == null)
-    {
-      _logger.LogError("Users not found");
+    if (users.Count != 0)
+      return users.Select(user => new UserInfoDTO
+                  {
+                      Id = user.Id,
+                      UserName = user!.UserName,
+                      Email = user.Email,
+                      DisplayName = user.DisplayName,
+                      Bio = user.Bio,
+                      PhoneNumber = user.PhoneNumber,
+                      MainPhoto = (_context.Photos
+                                           .FirstOrDefault(p => p.UserId
+                                                            == user.Id
+                                                            && p.IsMain == true)
+                                           ?.Url
+                                ?? DefaultImage.DefaultImageUrl)
+                  })
+                  .ToList();
 
-      throw new NotFoundException("Users not found.");
-    }
+    _logger.LogError("Users not found");
 
-    return users.Select(user => new UserInfoDTO
-                {
-                    Id = user.Id,
-                    UserName = user!.UserName,
-                    Email = user.Email,
-                    DisplayName = user.DisplayName,
-                    Bio = user.Bio,
-                    PhoneNumber = user.PhoneNumber,
-                    MainPhoto = _context.Photos.FirstOrDefault(p => p.UserId ==
-                        user.Id && p.IsMain == true)?.Url!
-                })
-                .ToList();
-  }
-
-  public async Task<UserInfoDTO> GetUserInfoByEmailAsync(
-      string email,
-      bool   includePhotos = false)
-  {
-    throw new NotImplementedException();
-  }
-
-  public async Task<UserInfoDTO> GetUserInfoByPhoneNumberAsync(
-      string phoneNumber,
-      bool   includePhotos = false)
-  {
-    throw new NotImplementedException();
+    throw new NotFoundException("Users not found.");
   }
 
   public async Task<bool> UpdateUserInfoAsync(Guid userId, UserDTO userDTO)
@@ -128,7 +118,6 @@ public class UserService : IUserService
     // Store the updated user back into the persistence layer
     var result = await _userManager.UpdateAsync(user);
 
-    // If the update was successful, the result.Succeeded would be true.
     return result.Succeeded;
   }
 
@@ -136,20 +125,15 @@ public class UserService : IUserService
   {
     var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
-    if (user == null)
-    {
-      return false; // User not found, so return false
-    }
+    if (user == null) { return false; }
 
     var result = await _userManager.DeleteAsync(user);
 
-    // If the delete operation was successful,
-    // the result.Succeeded would be true.
     return result.Succeeded;
   }
 
-  public async Task<bool> SetMainPhotoAsync(Guid userId, Guid photoId)
+  public async Task<bool> IsUserExistsAsync(Guid userId)
   {
-    throw new NotImplementedException();
+    return await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId) != null;
   }
 }

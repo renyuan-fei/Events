@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.ActivityAttendee.Commands.UpdateActivityAttendee;
+namespace Application.CQRS.ActivityAttendees.Commands.UpdateActivityAttendee;
 
 public record UpdateActivityAttendeeCommand : IRequest<Unit>
 {

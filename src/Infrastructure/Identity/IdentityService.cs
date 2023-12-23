@@ -60,9 +60,6 @@ public class IdentityService : IIdentityService
       string phoneNumber,
       string password)
   {
-    const string defaultImage = "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702453913/gyzjw6xpz9pzl0xg7de4.jpg";
-    const string defaultImagePublicId = "gyzjw6xpz9pzl0xg7de4";
-
     var user = new ApplicationUser
     {
         UserName = email,
@@ -74,28 +71,6 @@ public class IdentityService : IIdentityService
     var result = await _userManager.CreateAsync(user, password);
 
     // 首先检查用户是否成功创建
-    if (!result.Succeeded)
-    {
-      return (result.ToApplicationResult(), user.Id);
-    }
-
-    // 添加默认图片
-    _context.Photos.Add(new Photo
-    {
-        PublicId = defaultImagePublicId,
-        UserId = user.Id,
-        IsMain = true,
-        Url = defaultImage
-    });
-
-    // 保存DbContext的更改
-    var saveResult = await _context.SaveChangesAsync(new CancellationToken());
-
-    if (saveResult == 0)
-    {
-      throw new DbUpdateException("Could not save user with photo.");
-    }
-
     return (result.ToApplicationResult(), user.Id);
   }
 

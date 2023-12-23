@@ -1,4 +1,5 @@
 using Application.common.DTO;
+using Application.common.Models;
 
 namespace Application.common.Interfaces;
 
@@ -25,27 +26,7 @@ public interface IUserService
   /// </returns>
   Task<List<UserInfoDTO>> GetUsersInfoByIdsAsync(List<Guid> userIds);
 
-  /// <summary>
-  ///   Retrieves the user information by email.
-  /// </summary>
-  /// <param name="email">The email of the user.</param>
-  /// <param name="includePhotos"></param>
-  /// <returns>The user information as a UserInfoDTO object.</returns>
-  public Task<UserInfoDTO> GetUserInfoByEmailAsync(
-      string email,
-      bool   includePhotos = false);
-
-  /// <summary>
-  ///   Retrieves user information based on the given phone number.
-  /// </summary>
-  /// <param name="phoneNumber">The phone number of the user.</param>
-  /// <param name="includePhotos"></param>
-  /// <returns>A Task containing the UserInfoDTO object representing the user information.</returns>
-  public Task<UserInfoDTO> GetUserInfoByPhoneNumberAsync(
-      string phoneNumber,
-      bool   includePhotos = false);
-
   public Task<bool> UpdateUserInfoAsync(Guid userId, UserDTO userDTO);
 
-  public Task<bool> SetMainPhotoAsync(Guid userId, Guid photoId);
+  public Task<bool> IsUserExistsAsync(Guid userId);
 }

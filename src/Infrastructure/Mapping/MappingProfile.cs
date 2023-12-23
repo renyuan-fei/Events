@@ -13,5 +13,7 @@ public class MappingProfile: Profile
     CreateMap<UserDTO, ApplicationUser>();
 
     CreateMap<ApplicationUser, UserInfoDTO>();
+
+    CreateMap<ApplicationUser, FollowingDTO>();
   }
 }
