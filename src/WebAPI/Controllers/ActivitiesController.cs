@@ -29,9 +29,7 @@ public class ActivitiesController : BaseController
   [ HttpGet ]
   public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
   {
-    var result = await Mediator!.Send(new GetAllActivitiesQuery());
-
-    return Ok(result);
+    return Ok();
   }
 
   /// <summary>
@@ -45,13 +43,7 @@ public class ActivitiesController : BaseController
       [ FromQuery ] PaginatedListParams paginatedListParams,
       [ FromQuery ] FilterParams?       filterParams)
   {
-    var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
-    {
-        PaginatedListParams = paginatedListParams,
-        FilterParams = filterParams
-    });
-
-    return Ok(result);
+    return Ok();
   }
 
   // GET: api/Activities/5
@@ -66,9 +58,7 @@ public class ActivitiesController : BaseController
   [ HttpGet("{id:guid}") ]
   public async Task<ActionResult<Activity>> GetActivity(Guid id)
   {
-    var result = await Mediator!.Send(new GetActivityByIdQuery { Id = id });
-
-    return Ok(result);
+    return Ok();
   }
 
   // PUT: api/Activities/5
@@ -87,10 +77,7 @@ public class ActivitiesController : BaseController
   [ HttpPut("{id:guid}") ]
   public async Task<IActionResult> PutActivity(Guid id, [ FromBody ] Activity activity)
   {
-    var result =
-        await Mediator!.Send(new UpdateActivityCommand { Id = id, Activity = activity });
-
-    return Ok(result);
+    return Ok();
   }
 
   // POST: api/Activities
@@ -107,14 +94,8 @@ public class ActivitiesController : BaseController
   [ HttpPost ]
   public async Task<IActionResult> PostActivity([ FromBody ] Activity activity)
   {
-    var result =
-        await Mediator!.Send(new CreateActivityCommand
-        {
-            Activity = activity,
-            CurrentUserId = (Guid)CurrentUserService!.UserId!
-        });
+    return Ok();
 
-    return Ok(result);
   }
 
   // DELETE: api/Activities/5
@@ -131,9 +112,8 @@ public class ActivitiesController : BaseController
   [ HttpDelete("{id:guid}") ]
   public async Task<IActionResult> DeleteActivity(Guid id)
   {
-    var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
+    return Ok();
 
-    return Ok(result);
   }
 
   /// <summary>
@@ -145,12 +125,7 @@ public class ActivitiesController : BaseController
   [ HttpPut("{id:guid}/attendees") ]
   public async Task<IActionResult> UpdateActivityAttendees(Guid id)
   {
-    var result = await Mediator!.Send(new UpdateActivityAttendeeCommand
-    {
-        Id = (Guid)CurrentUserService!.UserId!,
-        ActivityId = id
-    });
 
-    return Ok(result);
+    return Ok();
   }
 }

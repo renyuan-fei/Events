@@ -20,19 +20,19 @@ public class DomainEventService : IDomainEventService
     _mediator = mediator;
   }
 
-  public async Task Publish(DomainEvent domainEvent)
+  public async Task Publish(BaseEvent baseEvent)
   {
     _logger.LogInformation("Publishing domain event. Event - {event}",
-                           domainEvent.GetType().Name);
+                           baseEvent.GetType().Name);
 
-    await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
+    await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(baseEvent));
   }
 
-  private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
+  private INotification GetNotificationCorrespondingToDomainEvent(BaseEvent baseEvent)
   {
     return (INotification)Activator.CreateInstance(typeof(DomainEventNotification<>)
-                                                       .MakeGenericType(domainEvent
+                                                       .MakeGenericType(baseEvent
                                                            .GetType()),
-                                                   domainEvent)!;
+                                                   baseEvent)!;
   }
 }

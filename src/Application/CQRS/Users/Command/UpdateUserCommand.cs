@@ -41,11 +41,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
   {
     try
     {
-      var result = _userService.UpdateUserInfoAsync(request.UserId, request.user);
-
-      return result.Result
-          ? Unit.Value
-          : throw new DbUpdateException("Could not update user.");
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

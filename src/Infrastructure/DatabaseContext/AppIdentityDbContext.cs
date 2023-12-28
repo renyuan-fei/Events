@@ -12,7 +12,7 @@ namespace Infrastructure.DatabaseContext;
 /// </summary>
 /// /
 public class AppIdentityDbContext :
-    IdentityDbContext<ApplicationUser, ApplicationRole, Guid>,
+    IdentityDbContext<ApplicationUser, ApplicationRole, string>,
     IAppIdentityDbContext
 {
   public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) :

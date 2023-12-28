@@ -45,35 +45,9 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
       CreateActivityCommand request,
       CancellationToken     cancellationToken)
   {
-    var activity = new Activity
-    {
-        Title = request.Activity.Title,
-        Description = request.Activity.Description,
-        Date = request.Activity.Date,
-        Category = request.Activity.Category,
-        City = request.Activity.City,
-        Venue = request.Activity.Venue,
-        Attendees = new List<Domain.Entities.ActivityAttendee>()
-    };
-
-    var user = await _userService.GetUserInfoByIdAsync(request.CurrentUserId);
-
-    activity.Attendees.Add(new Domain.Entities.ActivityAttendee
-    {
-        Id = Guid.NewGuid(),
-        IsHost = true,
-        UserId = request.CurrentUserId
-    });
-
-    _context.Activities.Add(activity);
-
     try
     {
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      return result
-          ? Unit.Value
-          : throw new DbUpdateException("Could not create activity.");
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

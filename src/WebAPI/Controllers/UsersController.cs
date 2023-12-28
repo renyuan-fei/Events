@@ -26,22 +26,14 @@ public class UsersController : BaseController
   [ HttpGet ]
   public async Task<IActionResult> GetUser()
   {
-    var result =
-        await Mediator!.Send(new GetUserQuery()
-        {
-            UserId = (Guid)CurrentUserService!.UserId!
-        });
-
-    return Ok(result);
+    throw new NotImplementedException();
   }
 
   // GET: api/Users/5
   [ HttpGet("{id}") ]
   public async Task<IActionResult> GetUser(Guid id)
   {
-    var result = await Mediator!.Send(new GetUserQuery() { UserId = id });
-
-    return Ok(result);
+    throw new NotImplementedException();
   }
 
   // POST: api/Users
@@ -52,15 +44,7 @@ public class UsersController : BaseController
   [ HttpPut ]
   public async Task<IActionResult> Put([ FromBody ] UserDTO user)
   {
-    if (ModelState.IsValid == false) { return BadRequest(ModelState); }
-
-    var result = await Mediator!.Send(new UpdateUserCommand()
-    {
-        UserId = (Guid)_currentUserService.UserId!,
-        user = user
-    });
-
-    return Ok(result);
+    throw new NotImplementedException();
   }
 
   // DELETE: api/Users/5

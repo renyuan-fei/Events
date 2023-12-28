@@ -7,7 +7,7 @@ namespace Infrastructure.Identity;
 /// <summary>
 ///   Represents an application user.
 /// </summary>
-public class ApplicationUser : IdentityUser<Guid>
+public class ApplicationUser : IdentityUser<string>
 {
   /// <summary>
   ///   Gets or sets the display name.

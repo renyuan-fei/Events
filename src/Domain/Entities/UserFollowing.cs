@@ -2,11 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 
-public class UserFollowing : AuditableEntity
+public class UserFollowing : BaseAuditableEntity
 {
-  [ Key ]
-  public Guid Id { get; set; }
 
-  public Guid FollowerId { get; set; }
-  public Guid FolloweeId { get; set; }
 }

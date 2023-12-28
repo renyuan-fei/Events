@@ -45,34 +45,8 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Unit>
 
     try
     {
-      if (request.PublicId == DefaultImagePublicId)
-      {
-        throw new InvalidOperationException("You cannot delete the default image.");
-      }
+      throw new NotImplementedException();
 
-      var photo =
-          await _context.Photos.FirstOrDefaultAsync(p => p.UserId == request.UserId
-                                                      && p.PublicId == request.PublicId,
-                                                    cancellationToken: cancellationToken);
-
-      if (photo == null) { throw new Exception("Photo not found"); }
-
-      if (photo.IsMain)
-      {
-        _logger.LogError("Cannot delete main photo");
-
-        throw new InvalidOperationException("Cannot delete main photo");
-      }
-
-      var result = await _cloudinaryService.DeletePhoto(photo.PublicId);
-
-      if (!result) { throw new Exception("Could not delete photo from cloudinary"); }
-
-      _context.Photos.Remove(photo);
-
-      await _context.SaveChangesAsync(cancellationToken);
-
-      return Unit.Value;
     }
     catch (Exception ex)
     {

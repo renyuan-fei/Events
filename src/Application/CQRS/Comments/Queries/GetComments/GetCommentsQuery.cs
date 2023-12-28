@@ -43,33 +43,7 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
   {
     try
     {
-      var comments = _context.Comments.Where(x => x.ActivityId == request.ActivityId);
-
-      if (!comments.Any())
-      {
-        // throw new NotFoundException(nameof(CommentDTO), request.ActivityId);
-        return new List<CommentDTO>();
-      }
-
-      var result = await comments.OrderBy(comment => comment.LastModified)
-                                 .ProjectToListAsync<
-                                     CommentDTO>(_mapper.ConfigurationProvider);
-
-      var usersId = result.Select(commentDTO => commentDTO.UserId).Distinct().ToList();
-      var usersInfo = _userService.GetUsersInfoByIdsAsync(usersId).Result;
-
-      foreach (var t in result)
-      {
-        var user = usersInfo.FirstOrDefault(u => u.Id == t.UserId);
-
-        if (user == null) { throw new NotFoundException(nameof(UserDTO), t.UserId); }
-
-        t.Username = user.UserName;
-        t.DisplayName = user.DisplayName;
-        t.Image = user.MainPhoto;
-      }
-
-      return result;
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

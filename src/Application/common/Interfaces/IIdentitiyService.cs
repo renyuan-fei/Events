@@ -1,97 +1,56 @@
 using Application.common.Models;
 
-namespace Application.common.interfaces;
+namespace Application.common.Interfaces;
 
 /// <summary>
-///   Represents an identity service for managing user identities.
+/// Represents a service for managing user identity.
 /// </summary>
 public interface IIdentityService
 {
   /// <summary>
-  ///   Retrieves the user name asynchronously for the specified user ID.
+  /// Retrieves the username for a given user ID asynchronously.
   /// </summary>
-  /// <param name="userId">The GUID representing the user ID.</param>
+  /// <param name="userId">The ID of the user.</param>
   /// <returns>
-  ///   A task that represents the asynchronous operation. The task result contains the
-  ///   user name as a nullable string. If the user name is not found, null is returned.
+  /// A <see cref="Task{TResult}"/> representing the asynchronous operation.
+  /// The task result contains the username as a string, or null if the user ID is invalid or the username is not available.
   /// </returns>
-  /// <remarks>
-  ///   This method asynchronously fetches the user name from the database based on the
-  ///   provided user ID. If the user name is found, it is returned as a string. If the user
-  ///   name is not found
-  ///   , null is returned.
-  /// </remarks>
-  Task<string?> GetUserNameAsync(Guid userId);
+  Task<string?> GetUserNameAsync(string userId);
 
   /// <summary>
-  ///   Determines whether the user with the specified id is in the given role asynchronously.
+  /// Checks whether a user with the specified user ID is in the given role asynchronously.
   /// </summary>
-  /// <param name="userId">The unique identifier of the user.</param>
-  /// <param name="role">The role name to check.</param>
-  /// <returns>
-  ///   A task that represents the asynchronous operation. The task result contains a boolean
-  ///   value
-  ///   indicating whether the user is in the given role.
-  /// </returns>
-  Task<bool> IsInRoleAsync(Guid userId, string role);
+  /// <param name="userId">The ID of the user to check.</param>
+  /// <param name="role">The role to check.</param>
+  /// <returns>A task that represents the asynchronous operation.
+  /// The task result contains a boolean value indicating if the user is in the specified role.</returns>
+  Task<bool> IsInRoleAsync(string userId, string role);
 
   /// <summary>
-  ///   Authorizes the specified user against the given policy.
+  /// Authorizes the user with the specified user ID against the given policy name asynchronously.
   /// </summary>
-  /// <param name="userId">The unique identifier of the user.</param>
+  /// <param name="userId">The identifier of the user to authorize.</param>
   /// <param name="policyName">The name of the policy to authorize against.</param>
   /// <returns>
-  ///   Returns a task that represents the asynchronous authorization operation. The
-  ///   task result is true if the user is authorized; otherwise, false.
+  /// A task representing the asynchronous operation. The task result contains a boolean value indicating
+  /// whether the user is authorized to access the resources protected by the specified policy.
   /// </returns>
-  Task<bool> AuthorizeAsync(Guid userId, string policyName);
+  Task<bool> AuthorizeAsync(string userId, string policyName);
 
   /// <summary>
-  ///   Creates a new user asynchronously.
+  /// Creates a new user asynchronously with the specified username and password.
   /// </summary>
-  /// <param name="userName">The username of the user.</param>
-  /// <param name="password">The password of the user.</param>
-  /// <returns>
-  ///   A task that represents the asynchronous operation. The task result contains a
-  ///   tuple with an enumeration Result value and the user ID as a Guid.
-  /// </returns>
-  /// <remarks>
-  ///   The <paramref name="userName" /> parameter should contain a valid username. It must not
-  ///   be null or empty.
-  ///   The <paramref name="password" /> parameter should contain a valid password. It must not
-  ///   be null or empty.
-  /// </remarks>
-  Task<(Result Result, Guid userId)> CreateUserAsync(
-      string userName,
-      string
-          password);
+  /// <param name="userName">The username for the new user.</param>
+  /// <param name="password">The password for the new user.</param>
+  /// <returns>A task that represents the asynchronous operation. The task result contains
+  /// a <see cref="Result"/> indicating the success or failure of the operation,
+  /// and a string representing the user ID if the operation succeeds.</returns>
+  Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
 
   /// <summary>
-  /// Creates a new user asynchronously.
+  /// Deletes a user asynchronously given a userId.
   /// </summary>
-  /// <param name="email">The email address of the user.</param>
-  /// <param name="displayName">The display name of the user.</param>
-  /// <param name="phoneNumber">The phone number of the user.</param>
-  /// <param name="password">The password for the user.</param>
-  /// <returns>
-  /// A task that represents the asynchronous operation.
-  /// The result of the task contains a tuple with the following information:
-  /// - Result: The result of the user creation operation. This indicates whether the user was successfully created or not.
-  /// - userId: The unique identifier of the newly created user.
-  /// </returns>
-  public Task<(Result Result, Guid userId)> CreateUserAsync(
-      string email,
-      string displayName,
-      string phoneNumber,
-      string password);
-
-  /// <summary>
-  ///   Asynchronously deletes a user with the specified userId.
-  /// </summary>
-  /// <param name="userId">The unique identifier of the user to delete.</param>
-  /// <returns>
-  ///   A task representing the asynchronous operation. The result of the task will
-  ///   contain a Result object indicating the success or failure of the delete operation.
-  /// </returns>
-  Task<Result> DeleteUserAsync(Guid userId);
+  /// <param name="userId">The identifier of the user to delete.</param>
+  /// <returns>A task representing the asynchronous operation. The task will complete with a Result object indicating the success or failure of the deletion.</returns>
+  Task<Result> DeleteUserAsync(string userId);
 }

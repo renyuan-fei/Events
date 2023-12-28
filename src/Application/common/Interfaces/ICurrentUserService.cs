@@ -17,5 +17,5 @@ public interface ICurrentUserService
   /// <remarks>
   ///   This property is of type <see cref="System.Guid" /> and can also be null.
   /// </remarks>
-  Guid? UserId { get; }
+  string? Id { get; }
 }

@@ -43,40 +43,6 @@ public class
       CreateCommentCommand request,
       CancellationToken    cancellationToken)
   {
-    try
-    {
-      var activity =
-          await _context.Activities.FindAsync(new object?[ ] { request.ActivityId },
-                                              cancellationToken: cancellationToken);
-
-      if (activity == null)
-      {
-        throw new NotFoundException(nameof(Activity), request.ActivityId);
-      }
-
-      var comments = new Comment() { Body = request.Body, Activity = activity };
-
-      activity.Comments.Add(comments);
-
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      var commentDTO = _mapper.Map<CommentDTO>(comments);
-
-      var user = _userService.GetUserInfoByIdAsync(commentDTO.UserId).Result;
-
-      commentDTO.Username = user.UserName;
-      commentDTO.DisplayName = user.DisplayName;
-      commentDTO.Image = user.MainPhoto;
-
-      return result
-          ? commentDTO
-          : throw new DbUpdateException();
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
-
-      throw;
-    }
+    throw new NotImplementedException();
   }
 }

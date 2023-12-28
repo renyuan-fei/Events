@@ -5,12 +5,14 @@ using Application.common.Interfaces;
 
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
+using Infrastructure.Interceptors;
 using Infrastructure.security;
 using Infrastructure.Service;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +29,9 @@ public static class DependencyInjection
     services.AddTransient<IDateTime, DateTimeService>();
     services.AddScoped<IUserService, UserService>();
     services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+    services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+    services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
     #endregion
 
     // 读取该程序集中 所有关于 AutoMapper 的 配置文件 (继承Profile)
@@ -79,8 +84,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AppIdentityDbContext>()
             .AddDefaultTokenProviders()
             .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppIdentityDbContext
-              , Guid>>()
-            .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, Guid>>();
+              , string>>()
+            .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, string>>();
 
     services.AddTransient<IIdentityService, IdentityService>();
 

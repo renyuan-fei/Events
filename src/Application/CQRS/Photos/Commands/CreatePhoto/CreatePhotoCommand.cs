@@ -45,27 +45,7 @@ public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Unit>
   {
     try
     {
-      var photoUploadResult = await _cloudinaryService.UpLoadPhoto(request.File);
-
-      var isMainPhoto =
-          await _context.Photos.AnyAsync(p => p.UserId == request.UserId && p.IsMain,
-                                         cancellationToken: cancellationToken);
-
-      var photo = new Photo
-      {
-          Url = photoUploadResult!.Url,
-          PublicId = photoUploadResult.PublicId,
-          UserId = request.UserId,
-          IsMain = !isMainPhoto
-      };
-
-      _context.Photos.Add(photo);
-
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      return result
-          ? Unit.Value
-          : throw new DbUpdateException("Could not save changes.");
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

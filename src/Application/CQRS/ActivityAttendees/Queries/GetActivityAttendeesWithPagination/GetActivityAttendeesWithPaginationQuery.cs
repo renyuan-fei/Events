@@ -44,21 +44,6 @@ public class
       GetActivityAttendeesWithPaginationQuery request,
       CancellationToken                       cancellationToken)
   {
-    var query = _context.ActivityAttendees.Where(x => x.ActivityId == request.ActivityId);
-
-    if (!query.Any())
-    {
-      _logger.LogError("Could not find any attendee with Activity Id {Id}",
-                       request.ActivityId);
-
-      throw new NotFoundException(nameof(ActivityAttendeeDTO), request.ActivityId);
-    }
-
-    var result = await query.OrderBy(attendee => attendee.LastModified)
-                            .ProjectTo<ActivityAttendeeDTO>(_mapper.ConfigurationProvider)
-                            .PaginatedListAsync(request.PaginatedListParams.PageNumber,
-                                                request.PaginatedListParams.PageSize);
-
-    return result;
+    throw new NotImplementedException();
   }
 }

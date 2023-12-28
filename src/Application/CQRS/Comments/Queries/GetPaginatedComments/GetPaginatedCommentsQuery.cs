@@ -46,34 +46,7 @@ public class
   {
     try
     {
-      var comments = _context.Comments.Where(x => x.ActivityId == request.ActivityId);
-
-      if (!comments.Any())
-      {
-        // throw new NotFoundException(nameof(CommentDTO), request.ActivityId);
-        return new PaginatedList<CommentDTO>();
-      }
-
-
-      var result = await comments.OrderBy(comment => comment.LastModified)
-                                 .ProjectTo<CommentDTO>(_mapper.ConfigurationProvider)
-                                 .PaginatedListAsync(request.PaginatedListParams
-                                                         .PageNumber,
-                                                     request.PaginatedListParams
-                                                         .PageSize);
-
-      var usersId = result.Select(commentDTO => commentDTO.UserId).Distinct().ToList();
-      var usersInfo = _userService.GetUsersInfoByIdsAsync(usersId).Result;
-
-      for (var i = 0; i < result.Count; i++)
-      {
-        result[i].Username = usersInfo[i].UserName;
-        result[i].DisplayName = usersInfo[i].DisplayName;
-        result[i].Image = usersInfo[i].MainPhoto;
-      }
-
-      return result;
-    }
+      throw new NotImplementedException();    }
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);

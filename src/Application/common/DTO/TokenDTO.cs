@@ -11,7 +11,7 @@ public class TokenDTO
   /// <value>
   ///   A <see cref="Guid" /> representing the property Id.
   /// </value>
-  public Guid Id { get; set; }
+  public string Id { get; set; }
 
   /// <summary>
   ///   Gets or sets the username of a user.

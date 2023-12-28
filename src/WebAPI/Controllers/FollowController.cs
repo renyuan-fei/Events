@@ -29,14 +29,7 @@ namespace WebAPI.Controllers
     [ HttpGet("Follower") ]
     public async Task<List<FollowingDTO>> GetFollower()
     {
-      var result = await Mediator!.Send(new GetFollowing()
-      {
-          UserId =
-              (Guid)CurrentUserService!.UserId!,
-          IsFollowing = true,
-      });
-
-      return result;
+      throw new NotImplementedException();
     }
 
     /// <summary>
@@ -46,28 +39,14 @@ namespace WebAPI.Controllers
     [ HttpGet("Followee") ]
     public async Task<List<FollowingDTO>> GetFollowee()
     {
-      var result = await Mediator!.Send(new GetFollowing()
-      {
-          UserId =
-              (Guid)CurrentUserService!.UserId!,
-          IsFollowing = false,
-      });
-
-      return result;
+      throw new NotImplementedException();
     }
 
     // PUT: api/Follow/5
     [ HttpPut("{id:guid}") ]
     public async Task<Unit> UpdateFollowing(Guid id)
     {
-      var result = await Mediator!.Send(new UpdateFollowerCommand()
-      {
-          UserId =
-              (Guid)CurrentUserService!.UserId!,
-          FolloweeId = id
-      });
-
-      return result;
+      throw new NotImplementedException();
     }
   }
 

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.interfaces;
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using Infrastructure.Identity;
@@ -77,21 +78,13 @@ public class AccountController : BaseController
   {
     if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-    // 使用IdentityService的CreateUserAsync方法来创建用户
-    var (result, userId) = await _identityService.CreateUserAsync(registerDTO.Email,
-      registerDTO.DisplayName,
-      registerDTO.PhoneNumber,
-      registerDTO.Password);
-
-    if (!result.Succeeded) { return BadRequest(result.Errors); }
-
-    // 获取创建的用户
-    var user = await _userManager.FindByIdAsync(userId.ToString());
-
-    if (user == null)
+    var user = new ApplicationUser
     {
-      return BadRequest("User creation succeeded but user not found.");
-    }
+        UserName = registerDTO.DisplayName,
+        Email = registerDTO.Email,
+        DisplayName = registerDTO.DisplayName,
+        PhoneNumber = registerDTO.PhoneNumber
+    };
 
     // 生成令牌响应
     return await GenerateTokenResponse(user);
@@ -252,10 +245,6 @@ public class AccountController : BaseController
     // update user's refresh token and expiration date time'
     await _userManager.UpdateAsync(user);
 
-    var result = _eventsDbContext.Photos
-                                 .FirstOrDefaultAsync(p => p.UserId == user.Id
-                                                        && p.IsMain == true)
-                                 .Result;
 
     var responseDto = new AccountResponseDTO
     {
@@ -263,7 +252,6 @@ public class AccountController : BaseController
         Email = user.Email,
         Token = token.Token,
         ExpirationDateTime = token.Expiration,
-        Image = result != null ? result.Url : DefaultImage.DefaultImageUrl
     };
 
     return Ok(responseDto);

@@ -10,7 +10,7 @@ public interface IDomainEventService
   /// <summary>
   ///   Publishes the given domain event asynchronously.
   /// </summary>
-  /// <param name="domainEvent">The domain event to be published.</param>
+  /// <param name="baseEvent">The domain event to be published.</param>
   /// <returns>A task representing the asynchronous publication of the domain event.</returns>
-  Task Publish(DomainEvent domainEvent);
+  Task Publish(BaseEvent baseEvent);
 }

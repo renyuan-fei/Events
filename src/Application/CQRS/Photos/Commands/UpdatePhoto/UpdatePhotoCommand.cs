@@ -39,35 +39,7 @@ public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Unit>
   {
     try
     {
-      var photo =
-          await _context.Photos.FirstOrDefaultAsync(x => x.UserId == request.UserId
-                                                      && x.PublicId == request.PublicId,
-                                                    cancellationToken: cancellationToken);
-
-      if (photo == null)
-      {
-        _logger.LogError("Photo not found");
-
-        throw new NotFoundException("Photo not found");
-      }
-
-      if (photo.IsMain) { return Unit.Value; }
-
-      photo.IsMain = true;
-
-      var originalMainPhoto =
-          await _context.Photos.FirstOrDefaultAsync(x => x.UserId == photo.UserId
-                                                      && x.IsMain,
-                                                    cancellationToken: cancellationToken);
-
-      originalMainPhoto!.IsMain = false;
-
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      return result
-          ? Unit.Value
-          : throw new DbUpdateException("Could not save changes.");
-    }
+      throw new NotImplementedException();    }
     catch (Exception ex)
     {
       _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);

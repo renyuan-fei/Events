@@ -43,54 +43,9 @@ public class
       GetActivityByIdQuery request,
       CancellationToken    cancellationToken)
   {
-    var activity = await _context.Activities.Include(a => a.Attendees)
-                                 .SingleOrDefaultAsync(a => a.Id == request.Id,
-                                                       cancellationToken);
-
-    if (activity == null)
-    {
-      _logger.LogError("Could not find activity with id {Id}", request.Id);
-
-      throw new NotFoundException(nameof(Activity), request.Id);
-    }
-
     try
     {
-      // get all user id from activity attendees list
-      var userIds = activity.Attendees.Select(a => a.UserId).Distinct().ToList();
-
-      // get all user info from user service by user id list
-      var usersInfo = await _userService.GetUsersInfoByIdsAsync(userIds);
-
-      // map user info to activity attendees
-      var activityDto = _mapper.Map<ActivityDTO>(activity);
-
-      // map userInfo to activity attendee
-      activityDto.Attendees = activity.Attendees.Select(attendee =>
-                                      {
-                                        // find user info by id for usersInfo list
-                                        var userInfoDto =
-                                            usersInfo.FirstOrDefault(u =>
-                                                     u.Id == attendee.UserId);
-
-                                        // map it to ActivityAttendeeDTO
-                                        var activityAttendeeDto = _mapper
-                                            .Map<ActivityAttendeeDTO>(userInfoDto);
-
-                                        // set isHost property according to attendee.IsHost property
-                                        activityAttendeeDto.IsHost = attendee.IsHost;
-
-                                        return activityAttendeeDto;
-                                      })
-                                      .ToList();
-
-      // set host username
-      activityDto.HostUsername = activityDto.Attendees
-                                            .FirstOrDefault(a => a.IsHost)
-                                            ?.UserName
-                              ?? string.Empty;
-
-      return activityDto;
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

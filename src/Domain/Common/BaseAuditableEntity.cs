@@ -3,7 +3,7 @@ namespace Domain.Common;
 /// <summary>
 ///   Represents an auditable entity in the system.
 /// </summary>
-public abstract class AuditableEntity
+public abstract class BaseAuditableEntity : BaseEntity
 {
   /// <summary>
   ///   Gets or sets the date and time when the property was created.
@@ -20,7 +20,7 @@ public abstract class AuditableEntity
   ///   A <see cref="System.Guid" /> representing the unique identifier of the user
   ///   who created this object. Returns null if no user is associated with the creation.
   /// </value>
-  public Guid? CreatedBy { get; set; }
+  public string? CreatedBy { get; set; }
 
   /// <summary>
   ///   Gets or sets the last modified date and time.
@@ -36,5 +36,5 @@ public abstract class AuditableEntity
   /// <value>
   ///   The last user who modified the property. Returns null if no user has modified it.
   /// </value>
-  public Guid? LastModifiedBy { get; set; }
+  public string? LastModifiedBy { get; set; }
 }

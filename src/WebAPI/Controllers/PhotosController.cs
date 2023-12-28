@@ -20,13 +20,6 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class PhotosController : BaseController
 {
-  // private readonly ICurrentUserService _currentUserService;
-  //
-  // public PhotosController(ICurrentUserService currentUserService)
-  // {
-  //   _currentUserService = currentUserService;
-  // }
-
   // POST: api/Photo
   /// <summary>
   /// Uploads a photo.
@@ -42,13 +35,7 @@ public class PhotosController : BaseController
   [ HttpPost ]
   public async Task<IActionResult> UpLoadPhoto([ FromForm ] IFormFile file)
   {
-    var result = await Mediator!.Send(new CreatePhotoCommand
-    {
-        File = file,
-        UserId = (Guid)CurrentUserService!.UserId!
-    });
-
-    return Ok(result);
+    throw new NotImplementedException();
   }
 
   // PUT: api/Photo/5
@@ -60,13 +47,7 @@ public class PhotosController : BaseController
   [ HttpPut("{id}") ]
   public async Task<IActionResult> UpdatePhoto(string id)
   {
-    var result = await Mediator!.Send(new UpdatePhotoCommand()
-    {
-        PublicId = id,
-        UserId = (Guid)CurrentUserService!.UserId!
-    });
-
-    return Ok(result);
+    throw new NotImplementedException();
   }
 
   // DELETE: api/Photo/5
@@ -78,13 +59,7 @@ public class PhotosController : BaseController
   [ HttpDelete("{id}") ]
   public async Task<IActionResult> DeletePhoto(string id)
   {
-    var result =
-        await Mediator!.Send(new DeletePhotoCommand
-        {
-            PublicId = id,
-            UserId = (Guid)CurrentUserService!.UserId!
-        });
+    throw new NotImplementedException();
 
-    return Ok(result);
   }
 }

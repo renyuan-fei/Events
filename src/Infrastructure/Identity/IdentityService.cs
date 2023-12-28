@@ -1,9 +1,6 @@
 using Application.common.interfaces;
-using Application.Common.Interfaces;
+using Application.common.Interfaces;
 using Application.common.Models;
-
-using Domain;
-using Domain.Entities;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,75 +10,49 @@ namespace Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
-  private readonly IAuthorizationService _authorizationService;
+  private readonly UserManager<ApplicationUser> _userManager;
 
   private readonly IUserClaimsPrincipalFactory<ApplicationUser>
       _userClaimsPrincipalFactory;
 
-  private readonly UserManager<ApplicationUser> _userManager;
-  private readonly IEventsDbContext             _context;
+  private readonly IAuthorizationService _authorizationService;
 
   public IdentityService(
       UserManager<ApplicationUser>                 userManager,
       IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-      IAuthorizationService                        authorizationService,
-      IEventsDbContext                             eventsDbContext)
+      IAuthorizationService                        authorizationService)
   {
     _userManager = userManager;
     _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
     _authorizationService = authorizationService;
-    _context = eventsDbContext;
   }
 
-  public async Task<string?> GetUserNameAsync(Guid userId)
+  public async Task<string?> GetUserNameAsync(string userId)
   {
     var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
     return user.UserName;
   }
 
-  public async Task<(Result Result, Guid userId)> CreateUserAsync(
+  public async Task<(Result Result, string UserId)> CreateUserAsync(
       string userName,
       string password)
   {
-    var user = new ApplicationUser
-    {
-        UserName = userName, Email = userName, DisplayName = userName // 或其他适当的默认值
-    };
+    var user = new ApplicationUser { UserName = userName, Email = userName, };
 
     var result = await _userManager.CreateAsync(user, password);
 
     return (result.ToApplicationResult(), user.Id);
   }
 
-  public async Task<(Result Result, Guid userId)> CreateUserAsync(
-      string email,
-      string displayName,
-      string phoneNumber,
-      string password)
-  {
-    var user = new ApplicationUser
-    {
-        UserName = email,
-        Email = email,
-        DisplayName = displayName,
-        PhoneNumber = phoneNumber
-    };
-
-    var result = await _userManager.CreateAsync(user, password);
-
-    // 首先检查用户是否成功创建
-    return (result.ToApplicationResult(), user.Id);
-  }
-
-  public async Task<bool> IsInRoleAsync(Guid userId, string role)
+  public async Task<bool> IsInRoleAsync(string userId, string role)
   {
     var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
     return user != null && await _userManager.IsInRoleAsync(user, role);
   }
 
-  public async Task<bool> AuthorizeAsync(Guid userId, string policyName)
+  public async Task<bool> AuthorizeAsync(string userId, string policyName)
   {
     var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
@@ -94,7 +65,7 @@ public class IdentityService : IIdentityService
     return result.Succeeded;
   }
 
-  public async Task<Result> DeleteUserAsync(Guid userId)
+  public async Task<Result> DeleteUserAsync(string userId)
   {
     var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 

@@ -26,7 +26,6 @@
         <Folder Include="CQRS\Users\Command\UpdateUser\" />
         <Folder Include="CQRS\Users\Queries\GetFollowerUser\" />
         <Folder Include="CQRS\Users\Queries\GetFollowingUser\" />
-        <Folder Include="Specifications\" />
     </ItemGroup>
 
     <ItemGroup>

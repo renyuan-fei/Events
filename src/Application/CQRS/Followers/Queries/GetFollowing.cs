@@ -43,21 +43,7 @@ public class GetPaginatedFolloweeHandler : IRequestHandler<GetFollowing,
   {
     try
     {
-      var usersId = _context.UserFollowings
-                            .Where(x => (request.IsFollowing
-                                            ? x.FollowerId
-                                            : x.FolloweeId)
-                                     == request
-                                            .UserId)
-                            .Distinct()
-                            .Select(x => request.IsFollowing
-                                        ? x.FollowerId
-                                        : x.FolloweeId)
-                            .ToList();
-
-      var following = await _userService.GetUsersInfoByIdsAsync(usersId);
-
-      return _mapper.Map<List<FollowingDTO>>(following);
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

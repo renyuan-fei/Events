@@ -41,8 +41,7 @@ public class GetUserHandler : IRequestHandler<GetUserQuery, UserInfoDTO>
   {
     try
     {
-      return await _userService
-          .GetUserInfoByIdAsync(request.UserId, includePhotos: true);
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

@@ -37,26 +37,9 @@ public class
       DeleteActivityCommand request,
       CancellationToken     cancellationToken)
   {
-    var entity =
-        await _context.Activities.FindAsync(new object[ ] { request.Id },
-                                            cancellationToken);
-
-    if (entity == null)
-    {
-      _logger.LogError("Could not find activity with id {Id}", request.Id);
-
-      throw new NotFoundException(nameof(Activity), request.Id);
-    }
-
-    _context.Activities.Remove(entity);
-
     try
     {
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      return result
-          ? Unit.Value
-          : throw new DbUpdateException($"ErrorMessage deleting activity with id {request.Id}");
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

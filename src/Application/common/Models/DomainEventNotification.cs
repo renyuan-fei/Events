@@ -9,7 +9,7 @@ namespace Application.common.Models;
 /// </summary>
 /// <typeparam name="TDomainEvent">The type of domain event.</typeparam>
 public class DomainEventNotification <TDomainEvent> : INotification
-where TDomainEvent : DomainEvent
+where TDomainEvent : BaseEvent
 {
   public DomainEventNotification(TDomainEvent domainEvent) { DomainEvent = domainEvent; }
 

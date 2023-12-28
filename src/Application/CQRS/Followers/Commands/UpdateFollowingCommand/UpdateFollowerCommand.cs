@@ -43,51 +43,7 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
   {
     try
     {
-      var following =
-          await _context.UserFollowings.FirstOrDefaultAsync(x =>
-                                                                  x.FollowerId
-                                                               == request.UserId
-                                                               && x.FolloweeId
-                                                               == request.FolloweeId,
-                                                              cancellationToken:
-                                                              cancellationToken);
-
-      if (following != null)
-      {
-        _context.UserFollowings.Remove(following);
-
-        _logger.LogInformation("Following removed");
-      }
-      else
-      {
-        var isFollowerExists = await _userService.IsUserExistsAsync(request.UserId);
-        var isFolloweeExists = await _userService.IsUserExistsAsync(request.FolloweeId);
-
-        if (!isFollowerExists)
-        {
-          throw new NotFoundException($"Observer {request.UserId} not found.");
-        }
-
-        if (!isFolloweeExists)
-        {
-          throw new NotFoundException($"Target {request.FolloweeId} not found.");
-        }
-
-        var newFollowing = new UserFollowing
-        {
-            FolloweeId = request.FolloweeId, FollowerId = request.UserId
-        };
-
-        _context.UserFollowings.Add(newFollowing);
-      }
-
-      var result = await _context.SaveChangesAsync(cancellationToken: cancellationToken)
-                 > 0;
-
-      return result
-          ? Unit.Value
-          : throw new DbUpdateException();
-    }
+      throw new NotImplementedException();    }
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);

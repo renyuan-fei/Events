@@ -42,44 +42,7 @@ public class
   {
     try
     {
-      var activity = await _context.Activities.Include(a => a.Attendees)
-                                   .SingleOrDefaultAsync(a => a.Id == request.ActivityId,
-                                                         cancellationToken);
-
-      if (activity == null) { throw new Exception("Activity not found."); }
-
-      var attendee = activity.Attendees.SingleOrDefault(a => a.UserId == request.Id);
-      var attendeeInfo = await _userService.GetUserInfoByIdAsync(request.Id);
-
-      var hostUserId = activity.Attendees.FirstOrDefault(attendee => attendee.IsHost)!
-                               .UserId;
-
-      var hostUser = await _userService.GetUserInfoByIdAsync(hostUserId);
-
-      if (attendee == null)
-      {
-        var newAttendee = new Domain.Entities.ActivityAttendee
-        {
-            Activity = activity, UserId = request.Id, IsHost = false
-        };
-
-        await _context.ActivityAttendees.AddAsync(newAttendee,
-                                                  cancellationToken);
-      }
-      else
-      {
-        if (attendeeInfo.UserName == hostUser.UserName)
-        {
-          activity.IsCancelled = !activity.IsCancelled;
-        }
-        else { _context.ActivityAttendees.Remove(attendee); }
-      }
-
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      return result
-          ? Unit.Value
-          : throw new Exception("Could not update activity attendee.");
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {

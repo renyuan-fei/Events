@@ -38,29 +38,9 @@ public class
       UpdateActivityCommand request,
       CancellationToken     cancellationToken)
   {
-    var entity = await _context.Activities.Include(a => a.Attendees)
-                               .SingleOrDefaultAsync(activity =>
-                                                         activity.Id == request.Id,
-                                                     cancellationToken);
-
-    if (entity == null)
-    {
-      _logger.LogError("Could not find activity with id {Id}", request.Id);
-
-      throw new NotFoundException(nameof(Activity), request.Id);
-    }
-
     try
     {
-      // 更新实体
-      _mapper.Map(request.Activity, entity);
-
-      var result = await _context.SaveChangesAsync(cancellationToken) > 0;
-
-      return result
-          ? Unit.Value
-          : throw new
-              DbUpdateException($"Could not update activity with id ${request.Id}");
+      throw new NotImplementedException();
     }
     catch (Exception ex)
     {
