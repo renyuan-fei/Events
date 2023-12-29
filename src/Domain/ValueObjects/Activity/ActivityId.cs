@@ -1,6 +1,6 @@
 namespace Domain.ValueObjects.Activity;
 
-public record ActivityId(Guid Value)
+public record ActivityId(string Value)
 {
-  public static ActivityId New() => new(Guid.NewGuid());
+  public static ActivityId New() => new(Guid.NewGuid().ToString());
 }

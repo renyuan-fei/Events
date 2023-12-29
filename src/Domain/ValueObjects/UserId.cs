@@ -1,6 +1,6 @@
 namespace Domain.ValueObjects;
 
-public record UserId(Guid Value)
+public record UserId(string Value)
 {
-  public static UserId Create(Guid value) => new(value);
+  public static UserId Create(string value) => new(value);
 }

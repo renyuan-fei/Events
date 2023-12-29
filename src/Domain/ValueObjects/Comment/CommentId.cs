@@ -1,6 +1,6 @@
-namespace Domain.ValueObjects;
+namespace Domain.ValueObjects.Comment;
 
-public record CommentId(Guid Value)
+public record CommentId(string Value)
 {
-  public static CommentId New() => new(Guid.NewGuid());
+  public static CommentId New() => new(Guid.NewGuid().ToString());
 }
