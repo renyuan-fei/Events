@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configuration;
 
-public class UserFollowingConfiguration : IEntityTypeConfiguration<UserFollowing>
+public class FollowingConfiguration : IEntityTypeConfiguration<Following>
 {
-  public void Configure(EntityTypeBuilder<UserFollowing> builder)
+  public void Configure(EntityTypeBuilder<Following> builder)
   {
 
   }

@@ -1,4 +1,5 @@
 using Domain.Common;
+using Domain.Common.Contracts;
 
 using MediatR;
 
@@ -37,7 +38,7 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
     if (context == null) return;
 
     var entities = context.ChangeTracker
-                          .Entries<BaseEntity>()
+                          .Entries<IBaseEntity>()
                           .Where(e => e.Entity.DomainEvents.Any())
                           .Select(e => e.Entity);
 

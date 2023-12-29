@@ -1,6 +1,7 @@
 using Application.common.interfaces;
 
 using Domain.Common;
+using Domain.Common.Contracts;
 
 using Infrastructure.Service;
 
@@ -46,7 +47,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
   {
     if (context == null) return;
 
-    foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
+    foreach (var entry in context.ChangeTracker.Entries<IBaseAuditableEntity>())
     {
       if (entry.State == EntityState.Added)
       {

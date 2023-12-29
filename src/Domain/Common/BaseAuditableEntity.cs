@@ -3,7 +3,7 @@ namespace Domain.Common;
 /// <summary>
 ///   Represents an auditable entity in the system.
 /// </summary>
-public abstract class BaseAuditableEntity : BaseEntity
+public abstract class BaseAuditableEntity<TEntityId> : BaseEntity<TEntityId>
 {
   /// <summary>
   ///   Gets or sets the date and time when the property was created.

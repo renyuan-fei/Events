@@ -50,9 +50,9 @@ public class EventsDbContext : DbContext, IEventsDbContext
 
   public DbSet<ActivityAttendee> ActivityAttendees => Set<ActivityAttendee>();
 
-  public DbSet<Photo> Photos => Set<Photo>();
+  public DbSet<Photo>     Photos     => Set<Photo>();
 
-  public DbSet<UserFollowing> UserFollowings => Set<UserFollowing>();
+  public DbSet<Following> Followings => Set<Following>();
 
   public DbSet<Comment> Comments => Set<Comment>();
 }

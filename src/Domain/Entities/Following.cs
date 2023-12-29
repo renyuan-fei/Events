@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
 using Domain.ValueObjects;
-using Domain.ValueObjects.Activity;
+using Domain.ValueObjects.Following;
 
 namespace Domain.Entities;
 
-public class Activity : BaseAuditableEntity<ActivityId>
+public class Following : BaseAuditableEntity<FollowingId>
 {
 
 }
