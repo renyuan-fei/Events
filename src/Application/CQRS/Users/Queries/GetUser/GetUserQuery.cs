@@ -23,16 +23,13 @@ public class GetUserHandler : IRequestHandler<GetUserQuery, UserInfoDTO>
 {
   private readonly IMapper                 _mapper;
   private readonly ILogger<GetUserHandler> _logger;
-  private readonly IUserService            _userService;
 
   public GetUserHandler(
       IMapper                 mapper,
-      ILogger<GetUserHandler> logger,
-      IUserService            userService)
+      ILogger<GetUserHandler> logger)
   {
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<UserInfoDTO> Handle(

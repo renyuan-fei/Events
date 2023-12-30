@@ -25,18 +25,15 @@ public class
   private readonly IEventsDbContext                     _context;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
   private readonly IMapper                              _mapper;
-  private readonly IUserService                         _userService;
 
   public GetActivityByIdQueryHandler(
       IMapper                              mapper,
       ILogger<GetActivityByIdQueryHandler> logger,
-      IEventsDbContext                     context,
-      IUserService                         userService)
+      IEventsDbContext                     context)
   {
     _mapper = mapper;
     _logger = logger;
     _context = context;
-    _userService = userService;
   }
 
   public async Task<ActivityDTO> Handle(

@@ -22,18 +22,15 @@ public class
   private readonly IEventsDbContext                       _context;
   private readonly ILogger<UpdateActivityAttendeeHandler> _logger;
   private readonly IMapper                                _mapper;
-  private readonly IUserService                           _userService;
 
   public UpdateActivityAttendeeHandler(
       IEventsDbContext                       context,
       IMapper                                mapper,
-      ILogger<UpdateActivityAttendeeHandler> logger,
-      IUserService                           userService)
+      ILogger<UpdateActivityAttendeeHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<Unit> Handle(

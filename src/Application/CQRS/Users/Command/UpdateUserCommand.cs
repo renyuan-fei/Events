@@ -23,16 +23,14 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
 {
   private readonly IMapper                           _mapper;
   private readonly ILogger<UpdateUserCommandHandler> _logger;
-  private readonly IUserService                      _userService;
 
   public UpdateUserCommandHandler(
       IMapper                           mapper,
-      ILogger<UpdateUserCommandHandler> logger,
-      IUserService                      userService)
+      ILogger<UpdateUserCommandHandler> logger
+      )
   {
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<Unit> Handle(

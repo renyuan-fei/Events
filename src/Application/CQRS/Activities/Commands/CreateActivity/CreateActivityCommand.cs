@@ -27,17 +27,14 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
   private readonly IEventsDbContext                      _context;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
-  private readonly IUserService                          _userService;
 
   public CreateActivityCommandHandler(
       IMapper                               mapper,
       ILogger<CreateActivityCommandHandler> logger,
-      IUserService                          userService,
       IEventsDbContext                      context)
   {
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
     _context = context;
   }
 

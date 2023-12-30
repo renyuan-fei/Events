@@ -23,18 +23,15 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
   private readonly IEventsDbContext                      _context;
   private readonly IMapper                               _mapper;
   private readonly ILogger<CreateFollowerCommandHandler> _logger;
-  private readonly IUserService                          _userService;
 
   public CreateFollowerCommandHandler(
       IEventsDbContext                      context,
       IMapper                               mapper,
-      ILogger<CreateFollowerCommandHandler> logger,
-      IUserService                          userService)
+      ILogger<CreateFollowerCommandHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<Unit> Handle(

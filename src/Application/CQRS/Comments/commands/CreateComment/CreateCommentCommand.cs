@@ -25,18 +25,15 @@ public class
   private readonly IEventsDbContext                     _context;
   private readonly IMapper                              _mapper;
   private readonly ILogger<CreateCommentCommandHandler> _logger;
-  private readonly IUserService                         _userService;
 
   public CreateCommentCommandHandler(
       IEventsDbContext                     context,
       IMapper                              mapper,
-      ILogger<CreateCommentCommandHandler> logger,
-      IUserService                         userService)
+      ILogger<CreateCommentCommandHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<CommentDTO> Handle(

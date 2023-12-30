@@ -6,9 +6,12 @@ using Application.Common.Interfaces;
 
 using Ardalis.GuardClauses;
 
+using Domain.Repositories;
+
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 using Infrastructure.Interceptors;
+using Infrastructure.Repositories;
 using Infrastructure.security;
 using Infrastructure.Service;
 
@@ -28,15 +31,28 @@ public static class DependencyInjection
       IConfiguration          configuration)
   {
     #region DI
+
+    // DbContext
     services.AddScoped<IEventsDbContext>(provider => provider
                                              .GetRequiredService<EventsDbContext>());
 
+    services.AddScoped<IAppIdentityDbContext>(provider => provider
+                                             .GetRequiredService<AppIdentityDbContext>());
+
+    // services
     services.AddTransient<IDateTimeService, DateTimeService>();
-    services.AddScoped<IUserService, UserService>();
     services.AddScoped<ICloudinaryService, CloudinaryService>();
 
+    // interceptor
     services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
     services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+
+    // repository
+    services.AddScoped<IActivityRepository, ActivityRepository>();
+    services.AddScoped<IAttendeeRepository, AttendeeRepository>();
+    services.AddScoped<IFollowingRepository, FollowingRepository>();
+    services.AddScoped<IPhotoRepository, PhotoRepository>();
+    services.AddScoped<IUserRepository, UserRepository>();
     #endregion
 
     // read and config all mapping settings that inherit from Class Profile
@@ -68,20 +84,23 @@ public static class DependencyInjection
       Guard.Against.Null(identityDbConnection,
                          message: "Connection string 'IdentityConnection' not found.");
 
-
       services.AddDbContext<EventsDbContext>((sp, options) =>
       {
         options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
-        options.UseSqlServer(eventsDbConnection, b =>
+        options.UseSqlServer(eventsDbConnection,
+                             b =>
                                  b.MigrationsAssembly(typeof(EventsDbContext)
                                                       .Assembly
                                                       .FullName));
       });
 
-      services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityDbConnection,
-                                                    b =>
-                                                        b.MigrationsAssembly(typeof(AppIdentityDbContext)
+      services.AddDbContext<AppIdentityDbContext>(options =>
+                                                      options
+                                                          .UseSqlServer(identityDbConnection,
+                                                            b =>
+                                                                b.MigrationsAssembly(typeof
+                                                                        (AppIdentityDbContext)
                                                                     .Assembly
                                                                     .FullName)));
     }

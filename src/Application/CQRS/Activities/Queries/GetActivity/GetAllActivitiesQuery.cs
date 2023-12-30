@@ -23,18 +23,15 @@ public class
   private readonly IEventsDbContext                      _context;
   private readonly ILogger<GetAllActivitiesQueryHandler> _logger;
   private readonly IMapper                               _mapper;
-  private readonly IUserService                          _userService;
 
   public GetAllActivitiesQueryHandler(
       IMapper                               mapper,
       ILogger<GetAllActivitiesQueryHandler> logger,
       IMediator                             mediator,
-      IUserService                          userService,
       IEventsDbContext                      context)
   {
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
     _context = context;
   }
 

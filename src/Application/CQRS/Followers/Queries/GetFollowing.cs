@@ -23,18 +23,15 @@ public class GetPaginatedFolloweeHandler : IRequestHandler<GetFollowing,
   private readonly IEventsDbContext                     _context;
   private readonly IMapper                              _mapper;
   private readonly ILogger<GetPaginatedFolloweeHandler> _logger;
-  private readonly IUserService                         _userService;
 
   public GetPaginatedFolloweeHandler(
       IEventsDbContext                     context,
       IMapper                              mapper,
-      ILogger<GetPaginatedFolloweeHandler> logger,
-      IUserService                         userService)
+      ILogger<GetPaginatedFolloweeHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<List<FollowingDTO>> Handle(

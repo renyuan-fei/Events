@@ -26,18 +26,15 @@ public class
   private readonly IEventsDbContext                          _context;
   private readonly IMapper                                   _mapper;
   private readonly ILogger<GetPaginatedCommentsQueryHandler> _logger;
-  private readonly IUserService                              _userService;
 
   public GetPaginatedCommentsQueryHandler(
       IEventsDbContext                          context,
       IMapper                                   mapper,
-      ILogger<GetPaginatedCommentsQueryHandler> logger,
-      IUserService                              userService)
+      ILogger<GetPaginatedCommentsQueryHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<PaginatedList<CommentDTO>> Handle(

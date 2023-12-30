@@ -23,18 +23,15 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
   private readonly IEventsDbContext                 _context;
   private readonly IMapper                          _mapper;
   private readonly ILogger<GetCommentsQueryHandler> _logger;
-  private readonly IUserService                     _userService;
 
   public GetCommentsQueryHandler(
       IEventsDbContext                 context,
       IMapper                          mapper,
-      ILogger<GetCommentsQueryHandler> logger,
-      IUserService                     userService)
+      ILogger<GetCommentsQueryHandler> logger)
   {
     _context = context;
     _mapper = mapper;
     _logger = logger;
-    _userService = userService;
   }
 
   public async Task<List<CommentDTO>> Handle(

@@ -31,18 +31,15 @@ public class
   private readonly IEventsDbContext                                _context;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;
   private readonly IMapper                                         _mapper;
-  private readonly IUserService                                    _userService;
 
   public GetPaginatedListActivitiesQueryHandler(
       IMapper                                         mapper,
       ILogger<GetPaginatedListActivitiesQueryHandler> logger,
-      IEventsDbContext                                context,
-      IUserService                                    userService)
+      IEventsDbContext                                context)
   {
     _mapper = mapper;
     _logger = logger;
     _context = context;
-    _userService = userService;
   }
 
   public async Task<PaginatedList<ActivityDTO>> Handle(
