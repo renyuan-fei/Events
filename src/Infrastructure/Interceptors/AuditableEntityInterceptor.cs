@@ -14,11 +14,11 @@ namespace Infrastructure.Interceptors;
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
   private readonly ICurrentUserService _user;
-  private readonly DateTimeService     _dateTime;
+  private readonly IDateTimeService     _dateTime;
 
   public AuditableEntityInterceptor(
       ICurrentUserService user,
-      DateTimeService     dateTime)
+      IDateTimeService     dateTime)
   {
     _user = user;
     _dateTime = dateTime;

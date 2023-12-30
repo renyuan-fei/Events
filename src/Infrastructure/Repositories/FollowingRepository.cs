@@ -1,6 +1,6 @@
 namespace Infrastructure.Repositories;
 
-public interface IActivity
+public class FollowingRepository
 {
   
 }

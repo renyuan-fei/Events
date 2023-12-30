@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using Application.common.interfaces;
 using Application.Common.Interfaces;
 
@@ -12,47 +14,22 @@ namespace Infrastructure.DatabaseContext;
 
 public class EventsDbContext : DbContext, IEventsDbContext
 {
-  private readonly ICurrentUserService _currentUserService;
-
-  private readonly IDateTime _dateTime;
-
-  private readonly IDomainEventService _domainEventService;
-
-  public EventsDbContext(DbContextOptions<EventsDbContext> options) :
-      base(options)
-  {
-  }
-
-  public EventsDbContext(
-      DbContextOptions<EventsDbContext> options,
-      IOptions<OperationalStoreOptions> operationalStoreOptions,
-      ICurrentUserService               currentUserService,
-      IDateTime                         dateTime,
-      IDomainEventService               domainEventService) :
-      base(options)
-  {
-    _currentUserService = currentUserService;
-    _dateTime = dateTime;
-    _domainEventService = domainEventService;
-  }
-
-  public EventsDbContext(
-      ICurrentUserService currentUserService,
-      IDateTime           dateTime,
-      IDomainEventService domainEventService)
-  {
-    _currentUserService = currentUserService;
-    _dateTime = dateTime;
-    _domainEventService = domainEventService;
-  }
+  public EventsDbContext(DbContextOptions<EventsDbContext> options) : base(options) { }
 
   public DbSet<Activity> Activities => Set<Activity>();
 
-  public DbSet<ActivityAttendee> ActivityAttendees => Set<ActivityAttendee>();
+  public DbSet<Attendee> ActivityAttendees => Set<Attendee>();
 
   public DbSet<Photo>     Photos     => Set<Photo>();
 
   public DbSet<Following> Followings => Set<Following>();
 
   public DbSet<Comment> Comments => Set<Comment>();
+
+  protected override void OnModelCreating(ModelBuilder builder)
+  {
+    builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+    base.OnModelCreating(builder);
+  }
 }

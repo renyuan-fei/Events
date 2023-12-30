@@ -12,9 +12,9 @@ public abstract class BaseEntity <TEntityId>
   protected BaseEntity()
   {
   }
+
   public TEntityId Id { get; set; }
 
-  // public int Id { get; set; }
 
   private readonly List<BaseEvent> _domainEvents = new();
 

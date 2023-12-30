@@ -2,6 +2,9 @@ using System.Reflection;
 
 using Application.common.interfaces;
 using Application.common.Interfaces;
+using Application.Common.Interfaces;
+
+using Ardalis.GuardClauses;
 
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
@@ -25,8 +28,10 @@ public static class DependencyInjection
       IConfiguration          configuration)
   {
     #region DI
-    services.AddScoped<IDomainEventService, DomainEventService>();
-    services.AddTransient<IDateTime, DateTimeService>();
+    services.AddScoped<IEventsDbContext>(provider => provider
+                                             .GetRequiredService<EventsDbContext>());
+
+    services.AddTransient<IDateTimeService, DateTimeService>();
     services.AddScoped<IUserService, UserService>();
     services.AddScoped<ICloudinaryService, CloudinaryService>();
 
@@ -34,11 +39,11 @@ public static class DependencyInjection
     services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
     #endregion
 
-    // 读取该程序集中 所有关于 AutoMapper 的 配置文件 (继承Profile)
+    // read and config all mapping settings that inherit from Class Profile
     services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+    // read configuration of Cloudinary from appsettings.json
     services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
-
 
     // Add database context
     if (configuration.GetValue<bool>("UseInMemoryDatabase"))
@@ -53,23 +58,32 @@ public static class DependencyInjection
     }
     else
     {
-      services.AddDbContext<EventsDbContext>(options =>
-                                                 options.UseSqlServer(configuration
-                                                          .GetConnectionString("EventsConnection"),
-                                                      b =>
-                                                          b.MigrationsAssembly(typeof
-                                                                       (EventsDbContext)
-                                                                   .Assembly
-                                                                   .FullName)));
+      var eventsDbConnection = configuration.GetConnectionString("EventsConnection");
 
-      services.AddDbContext<AppIdentityDbContext>(options =>
-                                                      options.UseSqlServer(configuration
-                                                               .GetConnectionString("IdentityConnection"),
-                                                           b =>
-                                                               b.MigrationsAssembly(typeof
-                                                                            (AppIdentityDbContext)
-                                                                        .Assembly
-                                                                        .FullName)));
+      Guard.Against.Null(eventsDbConnection,
+                         message: "Connection string 'EventsConnection' not found.");
+
+      var identityDbConnection = configuration.GetConnectionString("IdentityConnection");
+
+      Guard.Against.Null(identityDbConnection,
+                         message: "Connection string 'IdentityConnection' not found.");
+
+
+      services.AddDbContext<EventsDbContext>((sp, options) =>
+      {
+        options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+
+        options.UseSqlServer(eventsDbConnection, b =>
+                                 b.MigrationsAssembly(typeof(EventsDbContext)
+                                                      .Assembly
+                                                      .FullName));
+      });
+
+      services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityDbConnection,
+                                                    b =>
+                                                        b.MigrationsAssembly(typeof(AppIdentityDbContext)
+                                                                    .Assembly
+                                                                    .FullName)));
     }
 
     // configuration for Identity

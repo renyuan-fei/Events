@@ -37,6 +37,4 @@ public class AuthenticationDTO
   ///   The refresh token expiration date and time.
   /// </value>
   public DateTime RefreshTokenExpirationDateTime { get; set; }
-
-  public string MainPhoto { get; set; } = string.Empty;
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
+using NotFoundException = Application.common.Exceptions.NotFoundException;
+
 namespace WebAPI.Filters;
 
 /// <summary>

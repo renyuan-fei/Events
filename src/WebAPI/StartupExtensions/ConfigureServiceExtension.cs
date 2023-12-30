@@ -38,7 +38,6 @@ public static class ConfigureServiceExtension
       IConfiguration          configuration)
   {
     #region DI
-    //
     services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
     // Current user service

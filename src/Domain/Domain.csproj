@@ -11,8 +11,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Enums\"/>
-        <Folder Include="Events\"/>
+        <Folder Include="Events\Attendee\" />
+        <Folder Include="Events\Comment\" />
+        <Folder Include="Events\Following\" />
+        <Folder Include="Events\Photo\" />
         <Folder Include="Exceptions\"/>
     </ItemGroup>
 

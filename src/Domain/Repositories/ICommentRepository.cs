@@ -1,6 +1,6 @@
 namespace Infrastructure.Repositories;
 
-public class UserFollowingRepository
+public interface ICommentRepository
 {
   
 }
