@@ -53,7 +53,7 @@ public class Activity : BaseAuditableEntity<ActivityId>
     var newActivity =  new Activity(ActivityId.New(), title, date, category, description, address,
         false);
 
-    newActivity.AddDomainEvent(new CreateActivityDomainEvent(newActivity.Id));
+    newActivity.AddDomainEvent(new ActivityCreatedDomainEvent(newActivity.Id));
 
     return newActivity;
   }
@@ -69,26 +69,6 @@ public class Activity : BaseAuditableEntity<ActivityId>
   }
 
   public Activity Cancel(ActivityId id)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Activity AddAttendee(ActivityId id, Attendee attendee)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Activity RemoveAttendee(ActivityId id, Attendee attendee)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Activity AddComment(ActivityId id, Comment comment)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Activity RemoveComment(ActivityId id, Comment comment)
   {
     throw new NotImplementedException();
   }

@@ -20,4 +20,14 @@ public class Attendee : BaseAuditableEntity<ActivityAttendeeId>
 
   public ActivityId ActivityId { get; private set; }
   public Activity   Activity   { get; private set; }
+
+  public Attendee AddAttendee(ActivityId id, Attendee attendee)
+  {
+    throw new NotImplementedException();
+  }
+
+  public Attendee RemoveAttendee(ActivityId id, Attendee attendee)
+  {
+    throw new NotImplementedException();
+  }
 }
