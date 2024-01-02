@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
 
@@ -17,14 +18,20 @@ public class AttendeeConfiguration : IEntityTypeConfiguration<Attendee>
 
     builder.Property(attendee => attendee.Id)
            .HasConversion(attendeeId => attendeeId.Value,
-                          value => new ActivityAttendeeId(value));
+                          value => new AttendeeId(value));
 
     builder.Property(attendee => attendee.ActivityId)
            .HasConversion(id => id.Value,                // 将 ActivityId 转换为基础数据类型
                           value => new ActivityId(value) // 将基础数据类型转换为 ActivityId
                          );
 
-    builder.OwnsOne(attendee => attendee.Identity);
+    builder.OwnsOne(attendee => attendee.Identity,
+                    navigationBuilder =>
+                    {
+                      navigationBuilder.Property(identity => identity.UserId)
+                                       .HasConversion(userId => userId.Value, value =>
+                          new UserId(value));
+                    });
 
     builder.HasOne(attendee => attendee.Activity)
            .WithMany(attendees => attendees.Attendees)

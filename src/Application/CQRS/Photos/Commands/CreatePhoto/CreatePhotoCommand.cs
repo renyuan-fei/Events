@@ -1,10 +1,12 @@
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
 using Domain;
 using Domain.Entities;
+using Domain.ValueObjects;
 
 using MediatR;
 
@@ -14,38 +16,33 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.CreatePhoto;
 
-public record CreatePhotoCommand : IRequest<Unit>
+public record CreatePhotoCommand : IRequest<Result>
 {
-  public Guid      UserId { get; init; }
+  public string      UserId { get; init; }
   public IFormFile File   { get; init; }
 }
 
-public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Unit>
+public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Result>
 {
-  private readonly IEventsDbContext            _context;
-  private readonly IMapper                     _mapper;
+  private readonly IPhotoService _photoService;
   private readonly ILogger<CreatePhotoHandler> _logger;
-  private readonly ICloudinaryService          _cloudinaryService;
 
   public CreatePhotoHandler(
-      IEventsDbContext            context,
-      IMapper                     mapper,
       ILogger<CreatePhotoHandler> logger,
-      ICloudinaryService          cloudinaryService)
+      IPhotoService               photoService)
   {
-    _context = context;
-    _mapper = mapper;
     _logger = logger;
-    _cloudinaryService = cloudinaryService;
+    _photoService = photoService;
   }
 
-  public async Task<Unit> Handle(
+  public async Task<Result> Handle(
       CreatePhotoCommand request,
       CancellationToken  cancellationToken)
   {
+
     try
     {
-      throw new NotImplementedException();
+      return await _photoService.AddPhotoAsync(request.File, new UserId(request.UserId));
     }
     catch (Exception ex)
     {

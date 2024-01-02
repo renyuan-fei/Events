@@ -1,8 +1,11 @@
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
 using Domain.Entities;
+using Domain.ValueObjects;
 
 using MediatR;
 
@@ -11,38 +14,41 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.UpdatePhoto;
 
-public record UpdatePhotoCommand : IRequest<Unit>
+public record UpdatePhotoCommand : IRequest<Result>
 {
-  public Guid   UserId   { get; init; }
+  public string   UserId   { get; init; }
   public string PublicId { get; init; }
 }
 
-public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Unit>
+public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Result>
 {
-  private readonly IEventsDbContext            _context;
-  private readonly IMapper                     _mapper;
+  private readonly IPhotoService               _photoService;
   private readonly ILogger<UpdatePhotoHandler> _logger;
 
   public UpdatePhotoHandler(
       IEventsDbContext            context,
       IMapper                     mapper,
-      ILogger<UpdatePhotoHandler> logger)
+      ILogger<UpdatePhotoHandler> logger,
+      IPhotoService               photoService)
   {
-    _context = context;
-    _mapper = mapper;
     _logger = logger;
+    _photoService = photoService;
   }
 
-  public async Task<Unit> Handle(
-      UpdatePhotoCommand       request,
-      CancellationToken cancellationToken)
+  public async Task<Result> Handle(
+      UpdatePhotoCommand request,
+      CancellationToken  cancellationToken)
   {
     try
     {
-      throw new NotImplementedException();    }
+      return await _photoService.UpdatePhotoAsync(request.PublicId, new UserId(request
+          .UserId));
+    }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

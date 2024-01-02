@@ -3,7 +3,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for user information.
 /// </summary>
-public class UserInfoDTO
+public class UserProfileDTO
 {
   /// <summary>
   ///   Gets or sets the unique identifier for the property.

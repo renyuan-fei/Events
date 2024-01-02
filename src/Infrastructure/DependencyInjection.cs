@@ -39,9 +39,18 @@ public static class DependencyInjection
     services.AddScoped<IAppIdentityDbContext>(provider => provider
                                              .GetRequiredService<AppIdentityDbContext>());
 
+    // unit of work
+    services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
+
+    // transaction manager
+    services.AddScoped<ITransactionManager, TransactionManager>();
+
+
     // services
     services.AddTransient<IDateTimeService, DateTimeService>();
     services.AddScoped<ICloudinaryService, CloudinaryService>();
+    services.AddScoped<IPhotoService, PhotoService>();
+    services.AddScoped<IUserService, UserService>();
 
     // interceptor
     services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
@@ -52,7 +61,6 @@ public static class DependencyInjection
     services.AddScoped<IAttendeeRepository, AttendeeRepository>();
     services.AddScoped<IFollowingRepository, FollowingRepository>();
     services.AddScoped<IPhotoRepository, PhotoRepository>();
-    services.AddScoped<IUserRepository, UserRepository>();
     #endregion
 
     // read and config all mapping settings that inherit from Class Profile

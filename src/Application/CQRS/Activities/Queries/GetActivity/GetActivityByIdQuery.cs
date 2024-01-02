@@ -1,3 +1,4 @@
+using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
@@ -5,6 +6,9 @@ using Application.Common.Interfaces;
 using AutoMapper;
 
 using Domain.Entities;
+using Domain.Repositories;
+using Domain.ValueObjects;
+using Domain.ValueObjects.Activity;
 
 using MediatR;
 
@@ -13,36 +17,94 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
-[BypassAuthorization]
-public record GetActivityByIdQuery : IRequest<ActivityDTO>
+[ BypassAuthorization ]
+public record GetActivityByIdQuery : IRequest<ActivityWithAttendeeDTO>
 {
-  public Guid Id { get; init; }
+  public string Id { get; init; }
 }
 
 public class
-    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery, ActivityDTO>
+    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery,
+    ActivityWithAttendeeDTO>
 {
-  private readonly IEventsDbContext                     _context;
+  private readonly IUserService                         _userService;
+  private readonly IPhotoRepository                     _photoRepository;
+  private readonly IActivityRepository                  _activityRepository;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
   private readonly IMapper                              _mapper;
 
   public GetActivityByIdQueryHandler(
       IMapper                              mapper,
       ILogger<GetActivityByIdQueryHandler> logger,
-      IEventsDbContext                     context)
+      IActivityRepository                  activityRepository,
+      IPhotoRepository                     photoRepository,
+      IUserService                         userService)
   {
     _mapper = mapper;
     _logger = logger;
-    _context = context;
+    _activityRepository = activityRepository;
+    _photoRepository = photoRepository;
+    _userService = userService;
   }
 
-  public async Task<ActivityDTO> Handle(
+  public async Task<ActivityWithAttendeeDTO> Handle(
       GetActivityByIdQuery request,
       CancellationToken    cancellationToken)
   {
     try
     {
-      throw new NotImplementedException();
+      var activityTask =
+          _activityRepository
+              .GetActivityWithAttendeesByIdAsync(new ActivityId(request.Id),
+                                                 cancellationToken);
+
+      var userIdsTask =
+          activityTask.ContinueWith(t => t.Result?.Attendees.Select(a => a.Identity.UserId.Value)
+                                          .ToList(),
+                                    TaskContinuationOptions.OnlyOnRanToCompletion);
+
+      await Task.WhenAll(activityTask, userIdsTask);
+
+      var activityWithAttendees = activityTask.Result;
+
+      Guard.Against.Null(activityWithAttendees,
+                         $"Activity with Id {request.Id} not found");
+
+      var userIds = userIdsTask.Result;
+
+      Guard.Against.Null(userIds, message: "Could not get user ids");
+
+      var usersTask = _userService.GetUsersByIdsAsync(userIds);
+
+      var mainPhotosTask = _photoRepository.GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)),
+                                          cancellationToken);
+
+      await Task.WhenAll(usersTask, mainPhotosTask);
+
+      var users = usersTask.Result.ToList();
+      var userDictionary = users.ToDictionary(u => u.Id, u => u);
+      var mainPhotos = mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
+
+      var result = _mapper.Map<ActivityWithAttendeeDTO>(activityWithAttendees);
+
+      result.HostUsername = users.FirstOrDefault(user => user.Id == activityWithAttendees.Attendees
+                                                     .FirstOrDefault(attendee => attendee.Identity.IsHost)
+                                                     ?.Identity.UserId.Value)!.UserName;
+
+      foreach (var attendee in result.Attendees)
+      {
+        attendee.Image = mainPhotos.TryGetValue(attendee.UserId, out var photo)
+            ? photo.Details.Url
+            : DefaultImage.DefaultImageUrl;
+
+        if (!userDictionary.TryGetValue(attendee.UserId, out var userDTO)) continue;
+
+        attendee.DisplayName = userDTO.DisplayName;
+        attendee.UserName = userDTO.UserName;
+        attendee.Bio = userDTO.Bio;
+      }
+
+      return result;
     }
     catch (Exception ex)
     {

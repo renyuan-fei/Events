@@ -1,3 +1,6 @@
+using System.Linq;
+using System.Threading.Tasks;
+
 using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.common.Models;
@@ -35,10 +38,18 @@ public class IdentityService : IIdentityService
   }
 
   public async Task<(Result Result, string UserId)> CreateUserAsync(
-      string userName,
-      string password)
+      string email,
+      string password,
+      string displayName,
+      string phoneNumber)
   {
-    var user = new ApplicationUser { UserName = userName, Email = userName, };
+    var user = new ApplicationUser
+    {
+        UserName = email,
+        Email = email,
+        DisplayName = displayName,
+        PhoneNumber = phoneNumber
+    };
 
     var result = await _userManager.CreateAsync(user, password);
 

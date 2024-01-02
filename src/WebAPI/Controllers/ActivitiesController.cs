@@ -1,10 +1,10 @@
+using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Models;
 using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
-using Application.CQRS.ActivityAttendees.Commands.UpdateActivityAttendee;
 
 using Domain.Entities;
 
@@ -27,10 +27,7 @@ public class ActivitiesController : BaseController
   ///   IActionResult with the list of all Activity entities.
   /// </returns>
   [ HttpGet ]
-  public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
-  {
-    return Ok();
-  }
+  public async Task<ActionResult<IEnumerable<Activity>>> GetActivities() { return Ok(); }
 
   /// <summary>
   /// Retrieves a paginated list of activities.
@@ -43,7 +40,13 @@ public class ActivitiesController : BaseController
       [ FromQuery ] PaginatedListParams paginatedListParams,
       [ FromQuery ] FilterParams?       filterParams)
   {
-    return Ok();
+    var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
+    {
+        PaginatedListParams = paginatedListParams,
+        FilterParams = filterParams
+    });
+
+    return Ok(result);
   }
 
   // GET: api/Activities/5
@@ -55,10 +58,12 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result contains an
   ///   IActionResult with the specified Activity entity.
   /// </returns>
-  [ HttpGet("{id:guid}") ]
-  public async Task<ActionResult<Activity>> GetActivity(Guid id)
+  [ HttpGet("{id}") ]
+  public async Task<ActionResult<Activity>> GetActivity(string id)
   {
-    return Ok();
+    var result = await Mediator!.Send(new GetActivityByIdQuery { Id = id });
+
+    return Ok(result);
   }
 
   // PUT: api/Activities/5
@@ -92,10 +97,15 @@ public class ActivitiesController : BaseController
   /// </returns>
   [ Authorize ]
   [ HttpPost ]
-  public async Task<IActionResult> PostActivity([ FromBody ] Activity activity)
+  public async Task<IActionResult> PostActivity([ FromBody ] ActivityDTO activity)
   {
-    return Ok();
+    var result = await Mediator!.Send(new CreateActivityCommand
+    {
+        ActivityDTO = activity,
+        CurrentUserId = CurrentUserService!.Id!
+    });
 
+    return Ok(result);
   }
 
   // DELETE: api/Activities/5
@@ -110,11 +120,7 @@ public class ActivitiesController : BaseController
   [ Authorize ]
   [ Authorize(Policy = "IsActivityHost") ]
   [ HttpDelete("{id:guid}") ]
-  public async Task<IActionResult> DeleteActivity(Guid id)
-  {
-    return Ok();
-
-  }
+  public async Task<IActionResult> DeleteActivity(Guid id) { return Ok(); }
 
   /// <summary>
   ///   Updates the attendees for a specific activity.
@@ -123,9 +129,5 @@ public class ActivitiesController : BaseController
   /// <returns>An IActionResult representing the status of the update.</returns>
   [ Authorize ]
   [ HttpPut("{id:guid}/attendees") ]
-  public async Task<IActionResult> UpdateActivityAttendees(Guid id)
-  {
-
-    return Ok();
-  }
+  public async Task<IActionResult> UpdateActivityAttendees(Guid id) { return Ok(); }
 }

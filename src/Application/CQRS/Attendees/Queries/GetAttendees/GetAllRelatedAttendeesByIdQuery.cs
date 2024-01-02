@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.ActivityAttendee.Queries;
 
-public record GetAllRelatedAttendeesByIdQuery : IRequest<List<ActivityAttendeeDTO>>
+public record GetAllRelatedAttendeesByIdQuery : IRequest<List<AttendeeDTO>>
 {
   public Guid ActivityId { get; init; }
 }
 
 public class
     GetAllRelatedAttendeesByIdQueryHandler : IRequestHandler<
-    GetAllRelatedAttendeesByIdQuery, List<ActivityAttendeeDTO>>
+    GetAllRelatedAttendeesByIdQuery, List<AttendeeDTO>>
 {
   private readonly IEventsDbContext                                _context;
   private readonly ILogger<GetAllRelatedAttendeesByIdQueryHandler> _logger;
@@ -33,7 +33,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<List<ActivityAttendeeDTO>> Handle(
+  public async Task<List<AttendeeDTO>> Handle(
       GetAllRelatedAttendeesByIdQuery request,
       CancellationToken               cancellationToken)
   {

@@ -14,11 +14,11 @@ using Microsoft.Extensions.Logging;
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
 [ BypassAuthorization ]
-public record GetAllActivitiesQuery : IRequest<List<ActivityDTO>>;
+public record GetAllActivitiesQuery : IRequest<List<ActivityWithAttendeeDTO>>;
 
 public class
     GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery,
-    List<ActivityDTO>>
+    List<ActivityWithAttendeeDTO>>
 {
   private readonly IEventsDbContext                      _context;
   private readonly ILogger<GetAllActivitiesQueryHandler> _logger;
@@ -35,7 +35,7 @@ public class
     _context = context;
   }
 
-  public async Task<List<ActivityDTO>> Handle(
+  public async Task<List<ActivityWithAttendeeDTO>> Handle(
       GetAllActivitiesQuery request,
       CancellationToken     cancellationToken)
   {

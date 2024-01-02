@@ -5,6 +5,8 @@ namespace Application.common.DTO;
 /// </summary>
 public class UserDTO
 {
+  public string Id { get; init; }
+
   /// <summary>
   ///   Gets or sets the display name.
   /// </summary>

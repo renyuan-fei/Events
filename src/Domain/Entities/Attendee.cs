@@ -1,33 +1,39 @@
+using Domain.Events.Attendee;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
 
 namespace Domain.Entities;
 
-public class Attendee : BaseAuditableEntity<ActivityAttendeeId>
+public class Attendee : BaseAuditableEntity<AttendeeId>
 {
-  private Attendee(AttendeeIdentity identity, ActivityId activityId, Activity activity)
+  private Attendee(
+      AttendeeId       id,
+      AttendeeIdentity identity,
+      ActivityId       activityId,
+      Activity         activity)
   {
+    Id = id;
     Identity = identity;
     ActivityId = activityId;
     Activity = activity;
   }
 
-  private Attendee() {
-  }
+  private Attendee() { }
 
-  public AttendeeIdentity   Identity { get; private set; }
+  public AttendeeIdentity Identity { get; private set; }
 
   public ActivityId ActivityId { get; private set; }
   public Activity   Activity   { get; private set; }
 
-  public Attendee AddAttendee(ActivityId id, Attendee attendee)
+  public static Attendee Create(
+      UserId     userId,
+      bool       isHost,
+      ActivityId activityId,
+      Activity   activity)
   {
-    throw new NotImplementedException();
-  }
+    var attendeeIdentity = AttendeeIdentity.Create(userId, isHost);
 
-  public Attendee RemoveAttendee(ActivityId id, Attendee attendee)
-  {
-    throw new NotImplementedException();
+    return new Attendee(AttendeeId.New(), attendeeIdentity, activityId, activity);
   }
 }

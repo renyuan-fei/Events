@@ -1,37 +1,33 @@
 using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using MediatR;
-
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.ActivityAttendee.Commands.DeleteActivityAttendee;
+namespace Application.CQRS.Attendees.Commands.CreateAttendee;
 
-public record DeleteActivityAttendeeCommand : IRequest<Unit>
+public record CreateAttendeeCommand : IRequest<Unit>
 {
   //TODO
 }
 
 public class
-    DeleteActivityAttendeeHandler : IRequestHandler<DeleteActivityAttendeeCommand, Unit>
+    CreateActivityAttendeeHandler : IRequestHandler<CreateAttendeeCommand, Unit>
 {
   private readonly IEventsDbContext                       _context;
-  private readonly ILogger<DeleteActivityAttendeeHandler> _logger;
+  private readonly ILogger<CreateActivityAttendeeHandler> _logger;
   private readonly IMapper                                _mapper;
 
-  public DeleteActivityAttendeeHandler(
+  public CreateActivityAttendeeHandler(
       IMapper                                mapper,
-      IEventsDbContext                       context,
-      ILogger<DeleteActivityAttendeeHandler> logger)
+      ILogger<CreateActivityAttendeeHandler> logger,
+      IEventsDbContext                       context)
   {
     _mapper = mapper;
-    _context = context;
     _logger = logger;
+    _context = context;
   }
 
   public async Task<Unit> Handle(
-      DeleteActivityAttendeeCommand request,
+      CreateAttendeeCommand request,
       CancellationToken             cancellationToken)
   {
     try { throw new NotImplementedException(); }

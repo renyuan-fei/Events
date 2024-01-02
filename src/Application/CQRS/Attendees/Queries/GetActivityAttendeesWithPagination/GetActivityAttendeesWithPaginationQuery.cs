@@ -14,7 +14,7 @@ namespace Application.CQRS.ActivityAttendees.Queries.GetActivityAttendeesWithPag
 
 public record
     GetActivityAttendeesWithPaginationQuery : IRequest<
-    PaginatedList<ActivityAttendeeDTO>>
+    PaginatedList<AttendeeDTO>>
 {
   public Guid ActivityId { get; init; }
 
@@ -24,7 +24,7 @@ public record
 public class
     GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
     GetActivityAttendeesWithPaginationQuery,
-    PaginatedList<ActivityAttendeeDTO>>
+    PaginatedList<AttendeeDTO>>
 {
   private readonly IEventsDbContext                                        _context;
   private readonly ILogger<GetActivityAttendeesWithPaginationQueryHandler> _logger;
@@ -40,7 +40,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<PaginatedList<ActivityAttendeeDTO>> Handle(
+  public async Task<PaginatedList<AttendeeDTO>> Handle(
       GetActivityAttendeesWithPaginationQuery request,
       CancellationToken                       cancellationToken)
   {

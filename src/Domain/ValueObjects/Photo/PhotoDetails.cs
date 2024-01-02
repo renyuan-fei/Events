@@ -2,13 +2,18 @@ namespace Domain.ValueObjects.Photo;
 
 public class PhotoDetails : ValueObject
 {
-  public PhotoDetails() { }
+  private PhotoDetails() { }
 
-  public PhotoDetails(string publicId, string url, bool isMain)
+  private PhotoDetails(string publicId, string url, bool isMain)
   {
     PublicId = publicId;
     Url = url;
     IsMain = isMain;
+  }
+
+  public static PhotoDetails Create(string publicId, string url, bool isMain)
+  {
+    return new PhotoDetails(publicId, url, isMain);
   }
 
   public string PublicId { get; private set; }

@@ -14,12 +14,12 @@ namespace Application.CQRS.Users.Queries.GetUser;
 
 // Used for bypassing authorization behavior checks.
 [BypassAuthorization]
-public record GetUserQuery : IRequest<UserInfoDTO>
+public record GetUserQuery : IRequest<UserProfileDTO>
 {
   public Guid UserId { get; init; }
 }
 
-public class GetUserHandler : IRequestHandler<GetUserQuery, UserInfoDTO>
+public class GetUserHandler : IRequestHandler<GetUserQuery, UserProfileDTO>
 {
   private readonly IMapper                 _mapper;
   private readonly ILogger<GetUserHandler> _logger;
@@ -32,7 +32,7 @@ public class GetUserHandler : IRequestHandler<GetUserQuery, UserInfoDTO>
     _logger = logger;
   }
 
-  public async Task<UserInfoDTO> Handle(
+  public async Task<UserProfileDTO> Handle(
       GetUserQuery           request,
       CancellationToken cancellationToken)
   {

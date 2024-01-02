@@ -1,9 +1,11 @@
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
 using Domain.Entities;
+using Domain.ValueObjects;
 
 using MediatR;
 
@@ -12,41 +14,34 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.DeletePhoto;
 
-public record DeletePhotoCommand : IRequest<Unit>
+public record DeletePhotoCommand : IRequest<Result>
 {
-  public Guid   UserId   { get; init; }
+  public string UserId   { get; init; }
   public string PublicId { get; init; }
 }
 
-public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Unit>
+public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Result>
 {
-  private readonly IEventsDbContext            _context;
-  private readonly IMapper                     _mapper;
+  private readonly IPhotoService               _photoService;
   private readonly ILogger<DeletePhotoHandler> _logger;
-  private readonly ICloudinaryService          _cloudinaryService;
 
   public DeletePhotoHandler(
-      IEventsDbContext            context,
-      IMapper                     mapper,
       ILogger<DeletePhotoHandler> logger,
-      ICloudinaryService          cloudinaryService)
+      IPhotoService               photoService)
   {
-    _context = context;
-    _mapper = mapper;
     _logger = logger;
-    _cloudinaryService = cloudinaryService;
+    _photoService = photoService;
   }
 
-  public async Task<Unit> Handle(
+  public async Task<Result> Handle(
       DeletePhotoCommand request,
       CancellationToken  cancellationToken)
   {
-    const string DefaultImagePublicId = "gyzjw6xpz9pzl0xg7de4";
-
     try
     {
-      throw new NotImplementedException();
-
+      return await _photoService.RemovePhotoAsync(request.PublicId,
+                                                  new UserId(request
+                                                      .UserId));
     }
     catch (Exception ex)
     {

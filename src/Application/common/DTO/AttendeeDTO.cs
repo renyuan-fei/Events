@@ -3,12 +3,12 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for an activity attendee.
 /// </summary>
-public class ActivityAttendeeDTO
+public class AttendeeDTO
 {
   /// <summary>
   ///   Gets or sets the unique identifier of the user.
   /// </summary>
-  public Guid UserId { get; init; }
+  public string UserId { get; init; }
 
   /// <summary>
   ///   Gets or sets a value indicating whether this instance is the host.

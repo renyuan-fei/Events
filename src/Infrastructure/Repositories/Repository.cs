@@ -1,4 +1,6 @@
-using Application.Common.Interfaces;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Domain.Common;
 
@@ -8,29 +10,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public abstract class Repository <TEntity, TEntityId>
+public abstract class Repository<TEntity, TEntityId>
 where TEntity : BaseEntity<TEntityId>
 where TEntityId : class
 {
   protected readonly EventsDbContext DbContext;
 
-  protected Repository(EventsDbContext dbContext) { DbContext = dbContext; }
-
-  async protected Task AddAsync(TEntity entity)
+  protected Repository(EventsDbContext dbContext)
   {
-    await DbContext.AddAsync(entity);
+    DbContext = dbContext;
   }
 
-  protected Task Delete(TEntity entity)
+  public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+  {
+    await DbContext.AddAsync(entity, cancellationToken);
+  }
+
+  public void Remove(TEntity entity)
   {
     DbContext.Remove(entity);
-
-    return Task.CompletedTask;
   }
 
-  async protected Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default)
+  public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
   {
-    return await DbContext.Set<TEntity>().FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
+    return await DbContext.Set<TEntity>().ToListAsync(cancellationToken);
   }
 
+  public async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default)
+  {
+    return await DbContext.Set<TEntity>().FindAsync(new object[] { id }, cancellationToken);
+  }
 }

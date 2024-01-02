@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using Domain.Events.Comment;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.Comment;
@@ -9,12 +10,11 @@ namespace Domain.Entities;
 
 public class Comment : BaseAuditableEntity<CommentId>
 {
-  private Comment(UserId userId,string body, ActivityId activityId, Activity activity)
+  private Comment(UserId userId,string body, ActivityId activityId)
   {
     UserId = userId;
     Body = body;
     ActivityId = activityId;
-    Activity = activity;
   }
 
   private Comment() { }
@@ -24,13 +24,15 @@ public class Comment : BaseAuditableEntity<CommentId>
   public ActivityId ActivityId { get; private set; }
   public Activity   Activity   { get; private set; }
 
-  public Activity AddComment(ActivityId id, UserId userId, Comment comment)
+  public void AddComment(ActivityId id, UserId userId, string body)
   {
-    throw new NotImplementedException();
+    var newComment = new Comment(userId, body, id);
+
+    AddDomainEvent(new CommentCreateDomainEvent(newComment));
   }
 
-  public Activity RemoveComment(ActivityId id, Comment comment)
+  public void RemoveComment(ActivityId id, CommentId commentId)
   {
-    throw new NotImplementedException();
+    AddDomainEvent(new CommentDeletedDomainEvent(id,commentId));
   }
 }

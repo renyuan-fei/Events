@@ -1,3 +1,5 @@
+using System;
+
 using Domain;
 
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +11,8 @@ namespace Infrastructure.Identity;
 /// </summary>
 public class ApplicationUser : IdentityUser<string>
 {
+  public string Id { get; set; } = Guid.NewGuid().ToString();
+
   /// <summary>
   ///   Gets or sets the display name.
   /// </summary>

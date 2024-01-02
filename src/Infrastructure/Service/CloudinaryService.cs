@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 using Application.common.DTO;
 using Application.common.Interfaces;
 
@@ -24,7 +27,7 @@ public class CloudinaryService : ICloudinaryService
     _cloudinary = new Cloudinary(account);
   }
 
-  public async Task<PhotoUploadDTO?> UpLoadPhoto(IFormFile file)
+  public async Task<PhotoUploadDTO?> UpLoadPhotoAsync(IFormFile file)
   {
     if (file.Length <= 0) return null;
 
@@ -47,7 +50,7 @@ public class CloudinaryService : ICloudinaryService
     };
   }
 
-  public async Task<bool> DeletePhoto(string publicId)
+  public async Task<bool> DeletePhotoAsync(string publicId)
   {
     var deleteParams = new DeletionParams(publicId);
     var result = await _cloudinary.DestroyAsync(deleteParams);

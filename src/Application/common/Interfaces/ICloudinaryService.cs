@@ -6,7 +6,7 @@ namespace Application.common.Interfaces;
 
 public interface ICloudinaryService
 {
-  Task<PhotoUploadDTO?> UpLoadPhoto(IFormFile file);
+  Task<PhotoUploadDTO?> UpLoadPhotoAsync(IFormFile file);
 
-  Task<bool> DeletePhoto(string publicId);
+  Task<bool> DeletePhotoAsync(string publicId);
 }

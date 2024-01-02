@@ -1,6 +1,7 @@
 using System.Reflection;
 
 using Application.common.interfaces;
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
 using Domain.Entities;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.DatabaseContext;
 
-public class EventsDbContext : DbContext, IEventsDbContext
+public class EventsDbContext : DbContext, IEventsDbContext, IUnitOfWork
 {
   public EventsDbContext(DbContextOptions<EventsDbContext> options) : base(options) { }
 

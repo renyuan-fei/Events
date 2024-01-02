@@ -4,7 +4,10 @@ namespace Domain.Events.Activity;
 
 public sealed class  ActivityCreatedDomainEvent : BaseEvent
 {
-  public ActivityId Id { get; private set; }
+  public ActivityId ActivityId { get; private set; }
 
-  public ActivityCreatedDomainEvent(ActivityId id) { Id = id; }
+  public ActivityCreatedDomainEvent(ActivityId activityId)
+  {
+    ActivityId = activityId;
+  }
 }

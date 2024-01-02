@@ -40,12 +40,18 @@ public interface IIdentityService
   /// <summary>
   /// Creates a new user asynchronously with the specified username and password.
   /// </summary>
-  /// <param name="userName">The username for the new user.</param>
+  /// <param name="email"></param>
   /// <param name="password">The password for the new user.</param>
+  /// <param name="displayName"></param>
+  /// <param name="phoneNumber"></param>
   /// <returns>A task that represents the asynchronous operation. The task result contains
   /// a <see cref="Result"/> indicating the success or failure of the operation,
   /// and a string representing the user ID if the operation succeeds.</returns>
-  Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
+  public Task<(Result Result, string UserId)> CreateUserAsync(
+      string email,
+      string password,
+      string displayName,
+      string phoneNumber);
 
   /// <summary>
   /// Deletes a user asynchronously given a userId.

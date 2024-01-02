@@ -30,7 +30,10 @@ public class Result
   ///   Creates a success result.
   /// </summary>
   /// <returns>A success result.</returns>
-  public static Result Success() { return new Result(true, Array.Empty<string>()); }
+  public static Result Success()
+  {
+    return new Result(true, Array.Empty<string>());
+  }
 
   /// <summary>
   ///   Create a Result instance indicating failure with specified errors.

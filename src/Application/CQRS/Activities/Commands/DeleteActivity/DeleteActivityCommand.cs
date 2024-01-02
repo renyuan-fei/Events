@@ -1,8 +1,12 @@
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
 using Domain.Entities;
+using Domain.Repositories;
+using Domain.ValueObjects.Activity;
 
 using MediatR;
 
@@ -11,39 +15,59 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.DeleteActivity;
 
-public record DeleteActivityCommand : IRequest<Unit>
+public record DeleteActivityCommand : IRequest<Result>
 {
-  public Guid Id { get; init; }
+  public string Id { get; init; }
 }
 
 public class
-    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Unit>
+    DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Result>
 {
-  private readonly IEventsDbContext                      _context;
+  private readonly IUnitOfWork                           _unitOfWork;
+  private readonly IActivityRepository                   _activityRepository;
   private readonly ILogger<DeleteActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
 
   public DeleteActivityCommandHandler(
       IMapper                               mapper,
       ILogger<DeleteActivityCommandHandler> logger,
-      IEventsDbContext                      context)
+      IActivityRepository                   activityRepository,
+      IUnitOfWork                           unitOfWork)
   {
     _mapper = mapper;
     _logger = logger;
-    _context = context;
+    _activityRepository = activityRepository;
+    _unitOfWork = unitOfWork;
   }
 
-  public async Task<Unit> Handle(
+  public async Task<Result> Handle(
       DeleteActivityCommand request,
       CancellationToken     cancellationToken)
   {
     try
     {
-      throw new NotImplementedException();
+      var activity =
+          await _activityRepository.GetByIdAsync(new ActivityId(request.Id),
+                                                 cancellationToken);
+
+      Guard.Against.Null(activity, nameof(activity));
+
+      _activityRepository.Remove(activity);
+
+      var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
+
+      return result
+          ? Result.Success()
+          : Result.Failure(new[ ]
+          {
+              "There was an error saving activity data to the database"
+          });
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

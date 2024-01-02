@@ -1,9 +1,11 @@
+using Domain.Common.Contracts;
+
 namespace Domain.Common;
 
 /// <summary>
 ///   Represents an auditable entity in the system.
 /// </summary>
-public abstract class BaseAuditableEntity<TEntityId> : BaseEntity<TEntityId>
+public abstract class BaseAuditableEntity<TEntityId> : BaseEntity<TEntityId>, IBaseAuditableEntity
 {
   /// <summary>
   ///   Gets or sets the date and time when the property was created.

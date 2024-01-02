@@ -1,23 +1,17 @@
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.ActivityAttendees.Commands.UpdateActivityAttendee;
+namespace Application.CQRS.Attendees.Commands.UpdateAttendee;
 
-public record UpdateActivityAttendeeCommand : IRequest<Unit>
+public record UpdateAttendeeCommand : IRequest<Unit>
 {
   public Guid Id         { get; init; }
   public Guid ActivityId { get; init; }
 }
 
 public class
-    UpdateActivityAttendeeHandler : IRequestHandler<UpdateActivityAttendeeCommand, Unit>
+    UpdateActivityAttendeeHandler : IRequestHandler<UpdateAttendeeCommand, Unit>
 {
   private readonly IEventsDbContext                       _context;
   private readonly ILogger<UpdateActivityAttendeeHandler> _logger;
@@ -34,7 +28,7 @@ public class
   }
 
   public async Task<Unit> Handle(
-      UpdateActivityAttendeeCommand request,
+      UpdateAttendeeCommand request,
       CancellationToken             cancellationToken)
   {
     try

@@ -10,9 +10,11 @@ public class MappingProfile: Profile
 {
   public MappingProfile()
   {
-    CreateMap<UserDTO, ApplicationUser>();
+    CreateMap<UpdateUserDTO, ApplicationUser>();
 
-    CreateMap<ApplicationUser, UserInfoDTO>();
+    CreateMap<ApplicationUser, UserDTO>();
+
+    CreateMap<ApplicationUser, UserProfileDTO>();
 
     CreateMap<ApplicationUser, FollowingDTO>();
   }

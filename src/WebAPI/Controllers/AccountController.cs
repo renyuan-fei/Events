@@ -26,7 +26,6 @@ public class AccountController : BaseController
   private readonly IJwtTokenService               _jwtTokenService;
   private readonly SignInManager<ApplicationUser> _signInManager;
   private readonly UserManager<ApplicationUser>   _userManager;
-  private readonly IEventsDbContext               _eventsDbContext;
 
   /// <summary>
   ///   This is the constructor method of the AccountController class. It contains all the
@@ -51,15 +50,13 @@ public class AccountController : BaseController
       SignInManager<ApplicationUser> signInManager,
       IIdentityService               identityService,
       IJwtTokenService               jwtTokenService,
-      ICurrentUserService            currentUserService,
-      IEventsDbContext               eventsDbContext)
+      ICurrentUserService            currentUserService)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _identityService = identityService;
     _jwtTokenService = jwtTokenService;
     _currentUserService = currentUserService;
-    _eventsDbContext = eventsDbContext;
   }
 
   /// <summary>
@@ -80,14 +77,18 @@ public class AccountController : BaseController
 
     var user = new ApplicationUser
     {
-        UserName = registerDTO.DisplayName,
+        UserName = registerDTO.Email,
         Email = registerDTO.Email,
         DisplayName = registerDTO.DisplayName,
         PhoneNumber = registerDTO.PhoneNumber
     };
 
-    // 生成令牌响应
+    var result = await _userManager.CreateAsync(user, registerDTO.Password);
+
+    if (!result.Succeeded) { return BadRequest(result.Errors); }
+
     return await GenerateTokenResponse(user);
+
   }
 
   /// <summary>

@@ -2,8 +2,23 @@ namespace Domain.ValueObjects.Activity;
 
 public class Address : ValueObject
 {
-  public string City  { get; private set; }
-  public string Venue { get; private set; }
+  private Address() { }
+
+  private Address(string city, string venue)
+  {
+    City = city;
+    Venue = venue;
+  }
+
+  public static Address From(string city, string venue)
+  {
+    var address = new Address { City = city, Venue = venue };
+
+    return address;
+  }
+
+  public string City  { get; set; }
+  public string Venue { get; set; }
 
   protected override IEnumerable<object> GetEqualityComponents()
   {

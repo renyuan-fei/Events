@@ -1,4 +1,7 @@
+using System;
+
 using Domain.Entities;
+using Domain.Enums;
 using Domain.ValueObjects.Activity;
 
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +19,14 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
 
     builder.Property(activity => activity.Id)
            .HasConversion(activityId => activityId.Value, value => new ActivityId(value));
+
+    builder.Property(activity => activity.Category)
+           .HasConversion(category => category.ToString(),
+                          categoryString => Enum.Parse<Category>(categoryString));
+
+    builder.Property(activity => activity.Status)
+           .HasConversion(status => status.ToString(),
+                          statusString => Enum.Parse<ActivityStatus>(statusString));
 
     builder.OwnsOne(activity => activity.Location);
   }

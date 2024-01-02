@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.Comment;
 
@@ -18,6 +19,9 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     builder.Property(comment => comment.Id)
            .HasConversion(commentId => commentId.Value,
                           commentId => new CommentId(commentId));
+
+    builder.Property(comment => comment.UserId)
+           .HasConversion(userId => userId.Value, userId => new UserId(userId));
 
     builder.Property(comment => comment.ActivityId)
            .HasConversion(activityId => activityId.Value,

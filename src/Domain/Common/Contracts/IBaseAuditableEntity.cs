@@ -2,11 +2,11 @@ namespace Domain.Common.Contracts;
 
 public interface IBaseAuditableEntity
 {
-  DateTime Created { get; set; }
+  DateTimeOffset Created { get; set; }
 
   string? CreatedBy { get; set; }
 
-  DateTime? LastModified { get; set; }
+  DateTimeOffset LastModified { get; set; }
 
   string? LastModifiedBy { get; set; }
 }

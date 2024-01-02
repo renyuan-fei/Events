@@ -1,9 +1,15 @@
+using Application.common.DTO;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Models;
 
 using AutoMapper;
 
 using Domain.Entities;
+using Domain.Enums;
+using Domain.Repositories;
+using Domain.ValueObjects;
+using Domain.ValueObjects.Activity;
 
 using MediatR;
 
@@ -15,40 +21,66 @@ namespace Application.CQRS.Activities.Commands.CreateActivity;
 /// <summary>
 ///   Represents the command for creating a new activity.
 /// </summary>
-public record CreateActivityCommand : IRequest<Unit>
+public record CreateActivityCommand : IRequest<Result>
 {
-  public Guid     CurrentUserId { get; init; }
-  public Activity Activity      { get; init; }
+  public string      CurrentUserId { get; init; }
+  public ActivityDTO ActivityDTO   { get; init; }
 }
 
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
-    Unit>
+    Result>
 {
-  private readonly IEventsDbContext                      _context;
+  private readonly IActivityRepository                   _activityRepository;
+  private readonly IUnitOfWork                           _unitOfWork;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
 
   public CreateActivityCommandHandler(
       IMapper                               mapper,
       ILogger<CreateActivityCommandHandler> logger,
-      IEventsDbContext                      context)
+      IActivityRepository                   activityRepository,
+      IUnitOfWork                           unitOfWork)
   {
     _mapper = mapper;
     _logger = logger;
-    _context = context;
+    _activityRepository = activityRepository;
+    _unitOfWork = unitOfWork;
   }
 
-  public async Task<Unit> Handle(
+  public async Task<Result> Handle(
       CreateActivityCommand request,
       CancellationToken     cancellationToken)
   {
     try
     {
-      throw new NotImplementedException();
+      var activity = Activity.Create(request.ActivityDTO.Title,
+                                     request.ActivityDTO.Date,
+                                     Enum.Parse<Category>(request.ActivityDTO.Category),
+                                     request.ActivityDTO.Description,
+                                     Address.From(request.ActivityDTO.City,
+                                                  request.ActivityDTO.Venue));
+
+      var attendee = Attendee.Create(new UserId(request.CurrentUserId),
+                                     true,
+                                     activity
+                                         .Id,
+                                     activity);
+
+      activity.AddAttendee(attendee);
+
+      await _activityRepository.AddAsync(activity, cancellationToken);
+
+      var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
+
+      return result
+          ? Result.Success()
+          : Result.Failure(new[ ] { "There was an error saving activity data to the database" });
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "Error occurred while saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }
