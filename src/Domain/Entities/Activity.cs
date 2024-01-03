@@ -69,6 +69,12 @@ public class Activity : BaseAuditableEntity<ActivityId>
 
   public void Update(Activity updatedActivity)
   {
+    Title = updatedActivity.Title;
+    Date = updatedActivity.Date;
+    Category = updatedActivity.Category;
+    Description = updatedActivity.Description;
+    Location = updatedActivity.Location;
+
     AddDomainEvent(new ActivityUpdatedDomainEvent(updatedActivity));
   }
 

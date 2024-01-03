@@ -38,17 +38,18 @@ public class ActivitiesController : BaseController
   /// <returns>An ActionResult containing the paginated list of activities.</returns>
   [ HttpGet("{pageNumber:int}/{pageSize:int?}") ]
   public async Task<ActionResult<IEnumerable<Activity>>> GetPaginatedListActivities(
-      int           pageNumber,
-      int?          pageSize,
+      int                         pageNumber,
+      int?                        pageSize,
       [ FromQuery ] FilterParams? filterParams)
   {
     var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
     {
-        PaginatedListParams = new PaginatedListParams()
-        {
-            PageNumber = pageNumber,
-            PageSize   = pageSize ?? 10,
-        },
+        PaginatedListParams =
+            new PaginatedListParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize ?? 10,
+            },
         FilterParams = filterParams
     });
 
@@ -84,11 +85,18 @@ public class ActivitiesController : BaseController
   ///   representing the status of the operation.
   /// </returns>
   [ Authorize ]
-  [ Authorize(Policy = "IsActivityHost") ]
-  [ HttpPut("{id:guid}") ]
-  public async Task<IActionResult> PutActivity(Guid id, [ FromBody ] Activity activity)
+  // [ Authorize(Policy = "IsActivityHost") ]
+  [ HttpPut("{id}") ]
+  public async Task<IActionResult> PutActivity(
+      string                   id,
+      [ FromBody ] ActivityDTO activity)
   {
-    return Ok();
+    var result = await Mediator!.Send(new UpdateActivityCommand
+    {
+        Id = id, Activity = activity
+    });
+
+    return Ok(result);
   }
 
   // POST: api/Activities
