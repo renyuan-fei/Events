@@ -1,4 +1,6 @@
+using Application.common.Constant;
 using Application.common.DTO;
+using Application.common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Mappings;
@@ -10,11 +12,14 @@ using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
+using Domain.ValueObjects;
 
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
+using static System.Enum;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
@@ -31,6 +36,8 @@ public class
     IRequestHandler<GetPaginatedListActivitiesQuery,
     PaginatedList<ActivityWithAttendeeDTO>>
 {
+  private readonly IUserService                                    _userService;
+  private readonly IPhotoRepository                                _photoRepository;
   private readonly IActivityRepository                             _activityRepository;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;
   private readonly IMapper                                         _mapper;
@@ -38,11 +45,15 @@ public class
   public GetPaginatedListActivitiesQueryHandler(
       IMapper                                         mapper,
       ILogger<GetPaginatedListActivitiesQueryHandler> logger,
-      IActivityRepository                             activityRepository)
+      IActivityRepository                             activityRepository,
+      IUserService                                    userService,
+      IPhotoRepository                                photoRepository)
   {
     _mapper = mapper;
     _logger = logger;
     _activityRepository = activityRepository;
+    _userService = userService;
+    _photoRepository = photoRepository;
   }
 
   public async Task<PaginatedList<ActivityWithAttendeeDTO>> Handle(
@@ -53,55 +64,37 @@ public class
     {
       var query = _activityRepository.GetAllActivitiesWithAttendeesQueryable();
 
-      // 添加基于新属性的过滤条件
-      if (!string.IsNullOrWhiteSpace(request.FilterParams.Title))
-      {
-        query = query.Where(activity =>
-                                activity.Title.Contains(request.FilterParams.Title));
-      }
+      query = ApplyFilters(query, request.FilterParams);
 
-      if (!string.IsNullOrWhiteSpace(request.FilterParams.Category))
-      {
-        if (Enum.TryParse<Category>(request.FilterParams.Category, out var categoryEnum))
-        {
-          query = query.Where(activity => activity.Category == categoryEnum);
-        }
-      }
+      var paginatedActivitiesDto = await query.ProjectTo<ActivityWithAttendeeDTO>(_mapper.ConfigurationProvider)
+                                              .PaginatedListAsync(request.PaginatedListParams.PageNumber, request.PaginatedListParams.PageSize);
 
-      if (!string.IsNullOrWhiteSpace(request.FilterParams.City))
-      {
-        query = query.Where(activity =>
-                                activity.Location.City
-                                        .Contains(request.FilterParams.City));
-      }
+      Guard.Against.NullOrEmpty(paginatedActivitiesDto.Items);
 
-      if (!string.IsNullOrWhiteSpace(request.FilterParams.Venue))
-      {
-        query = query.Where(activity =>
-                                activity.Location.Venue.Contains(request.FilterParams
-                                    .Venue));
-      }
+      var userIds = paginatedActivitiesDto
+                    .Items.SelectMany(activity => activity.Attendees.Select(attendee => attendee.UserId))
+                    .Distinct()
+                    .ToList();
 
-      if (request.FilterParams.StartDate.HasValue)
-      {
-        query = query.Where(activity =>
-                                activity.Date
-                             >= request.FilterParams.StartDate.Value);
-      }
+      var usersTask = _userService.GetUsersByIdsAsync(userIds);
 
-      if (request.FilterParams.EndDate.HasValue)
-      {
-        query = query.Where(activity =>
-                                activity.Date <= request.FilterParams.EndDate.Value);
-      }
+      var mainPhotosTask = _photoRepository.GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)),
+                                          cancellationToken);
 
-      var paginatedActivities = await PaginatedList<Activity>.CreateAsync(query,
-        request.PaginatedListParams.PageNumber,
-        request.PaginatedListParams.PageSize);
+      await Task.WhenAll(usersTask, mainPhotosTask);
 
-      Guard.Against.NullOrEmpty(paginatedActivities.Items);
+      var usersDictionary = usersTask.Result.ToDictionary(user => user.Id, user => user);
+      var photosDictionary = mainPhotosTask.Result.ToDictionary(photo => photo.UserId.Value, photo => photo);
 
-      return _mapper.Map<PaginatedList<ActivityWithAttendeeDTO>>(paginatedActivities);
+      // 填充每个活动的参与者信息
+      var filledActivities = paginatedActivitiesDto.Items.Select(activity =>
+          ActivityHelper.FillWithPhotoAndUserDetail(activity, usersDictionary, photosDictionary))
+          .ToList();
+
+      // 重新创建分页结果
+      return new PaginatedList<ActivityWithAttendeeDTO>(
+                                                        filledActivities, paginatedActivitiesDto.TotalCount,
+                                                        request.PaginatedListParams.PageNumber, request.PaginatedListParams.PageSize);
     }
     catch (Exception ex)
     {
@@ -109,5 +102,34 @@ public class
 
       throw;
     }
+  }
+
+  private static IQueryable<Activity> ApplyFilters(
+      IQueryable<Activity> query,
+      FilterParams?        filterParams)
+  {
+    if (filterParams == null) return query;
+
+    Category? categoryEnum = null;
+
+    if (!string.IsNullOrWhiteSpace(filterParams.Category))
+    {
+      TryParse<Category>(filterParams.Category, out var parsedCategory);
+      categoryEnum = parsedCategory;
+    }
+
+    return query
+           .Where(activity => string.IsNullOrWhiteSpace(filterParams.Title) ||
+                              activity.Title.Contains(filterParams.Title))
+           .Where(activity => categoryEnum == null ||
+                              activity.Category == categoryEnum)
+           .Where(activity => string.IsNullOrWhiteSpace(filterParams.City) ||
+                              activity.Location.City.Contains(filterParams.City))
+           .Where(activity => string.IsNullOrWhiteSpace(filterParams.Venue) ||
+                              activity.Location.Venue.Contains(filterParams.Venue))
+           .Where(activity => !filterParams.StartDate.HasValue ||
+                              activity.Date >= filterParams.StartDate.Value)
+           .Where(activity => !filterParams.EndDate.HasValue ||
+                              activity.Date <= filterParams.EndDate.Value);
   }
 }

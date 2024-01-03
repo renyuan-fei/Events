@@ -32,17 +32,23 @@ public class ActivitiesController : BaseController
   /// <summary>
   /// Retrieves a paginated list of activities.
   /// </summary>
-  /// <param name="paginatedListParams">The parameters for the paginated list.</param>
+  /// <param name="pageSize"></param>
   /// <param name="filterParams"></param>
+  /// <param name="pageNumber"></param>
   /// <returns>An ActionResult containing the paginated list of activities.</returns>
   [ HttpGet("{pageNumber:int}/{pageSize:int?}") ]
   public async Task<ActionResult<IEnumerable<Activity>>> GetPaginatedListActivities(
-      [ FromQuery ] PaginatedListParams paginatedListParams,
-      [ FromQuery ] FilterParams?       filterParams)
+      int           pageNumber,
+      int?          pageSize,
+      [ FromQuery ] FilterParams? filterParams)
   {
     var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
     {
-        PaginatedListParams = paginatedListParams,
+        PaginatedListParams = new PaginatedListParams()
+        {
+            PageNumber = pageNumber,
+            PageSize   = pageSize ?? 10,
+        },
         FilterParams = filterParams
     });
 

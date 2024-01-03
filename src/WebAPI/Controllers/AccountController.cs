@@ -83,6 +83,11 @@ public class AccountController : BaseController
         PhoneNumber = registerDTO.PhoneNumber
     };
 
+    if (await _userManager.FindByEmailAsync(registerDTO.Email) != null)
+    {
+      return BadRequest("Email is already taken.");
+    }
+
     var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
     if (!result.Succeeded) { return BadRequest(result.Errors); }
@@ -102,17 +107,30 @@ public class AccountController : BaseController
   public async Task<ActionResult<AccountResponseDTO>> Login(
       [ FromBody ] LoginDTO loginDTO)
   {
-    if (!ModelState.IsValid) { return BadRequest(ModelState); }
+    if (!ModelState.IsValid)
+    {
+      return BadRequest(ModelState);
+    }
 
-    var result =
-        await _signInManager.PasswordSignInAsync(loginDTO.Email,
-                                                 loginDTO.Password,
-                                                 false,
-                                                 false);
+    var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
 
-    if (!result.Succeeded) { return Unauthorized("Invalid login attempt."); }
+    if (!result.Succeeded)
+    {
+      return Unauthorized("Invalid login attempt.");
+    }
 
     var user = await _userManager.FindByEmailAsync(loginDTO.Email);
+    if (user == null)
+    {
+      // 用户不存在
+      return Unauthorized("User not found.");
+    }
+
+    // 确保所有必要的用户信息都存在
+    if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.UserName))
+    {
+      return Unauthorized("User information is incomplete.");
+    }
 
     return await GenerateTokenResponse(user);
   }

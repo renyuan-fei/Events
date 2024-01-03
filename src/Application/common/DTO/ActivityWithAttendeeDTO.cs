@@ -11,7 +11,7 @@ public class ActivityWithAttendeeDTO
   /// <value>
   ///   The unique identifier for the property.
   /// </value>
-  public Guid Id { get; set; }
+  public string Id { get; set; }
 
   /// <summary>
   ///   Gets or sets the title of the property.

@@ -9,10 +9,8 @@ namespace Infrastructure.Identity;
 /// <summary>
 ///   Represents an application user.
 /// </summary>
-public class ApplicationUser : IdentityUser<string>
+public class ApplicationUser : IdentityUser
 {
-  public string Id { get; set; } = Guid.NewGuid().ToString();
-
   /// <summary>
   ///   Gets or sets the display name.
   /// </summary>

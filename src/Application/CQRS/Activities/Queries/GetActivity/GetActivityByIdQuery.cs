@@ -1,5 +1,6 @@
 using Application.common.Constant;
 using Application.common.DTO;
+using Application.common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
@@ -81,28 +82,13 @@ public class
 
       await Task.WhenAll(usersTask, mainPhotosTask);
 
-      var users = usersTask.Result.ToList();
-      var userDictionary = users.ToDictionary(u => u.Id, u => u);
-      var mainPhotos = mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
+      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id, u => u);;
+      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
 
       var result = _mapper.Map<ActivityWithAttendeeDTO>(activityWithAttendees);
 
-      result.HostUsername = users.FirstOrDefault(user => user.Id == activityWithAttendees.Attendees
-                                                     .FirstOrDefault(attendee => attendee.Identity.IsHost)
-                                                     ?.Identity.UserId.Value)!.UserName;
-
-      foreach (var attendee in result.Attendees)
-      {
-        attendee.Image = mainPhotos.TryGetValue(attendee.UserId, out var photo)
-            ? photo.Details.Url
-            : DefaultImage.DefaultImageUrl;
-
-        if (!userDictionary.TryGetValue(attendee.UserId, out var userDTO)) continue;
-
-        attendee.DisplayName = userDTO.DisplayName;
-        attendee.UserName = userDTO.UserName;
-        attendee.Bio = userDTO.Bio;
-      }
+      result = ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary,
+          photosDictionary);
 
       return result;
     }
