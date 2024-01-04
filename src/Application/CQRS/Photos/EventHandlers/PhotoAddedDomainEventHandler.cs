@@ -1,8 +1,4 @@
-using Application.common.Interfaces;
-using Application.common.Models;
-
 using Domain.Events.Photo;
-using Domain.Repositories;
 
 using Microsoft.Extensions.Logging;
 

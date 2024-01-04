@@ -4,8 +4,6 @@ using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
-using Ardalis.GuardClauses;
-
 using Domain.Repositories;
 
 using Infrastructure.DatabaseContext;
@@ -31,20 +29,19 @@ public static class DependencyInjection
       IConfiguration          configuration)
   {
     #region DI
-
     // DbContext
     services.AddScoped<IEventsDbContext>(provider => provider
                                              .GetRequiredService<EventsDbContext>());
 
     services.AddScoped<IAppIdentityDbContext>(provider => provider
-                                             .GetRequiredService<AppIdentityDbContext>());
+                                                  .GetRequiredService<
+                                                      AppIdentityDbContext>());
 
     // unit of work
     services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 
     // transaction manager
     services.AddScoped<ITransactionManager, TransactionManager>();
-
 
     // services
     services.AddTransient<IDateTimeService, DateTimeService>();
@@ -106,11 +103,11 @@ public static class DependencyInjection
       services.AddDbContext<AppIdentityDbContext>(options =>
                                                       options
                                                           .UseSqlServer(identityDbConnection,
-                                                            b =>
-                                                                b.MigrationsAssembly(typeof
-                                                                        (AppIdentityDbContext)
-                                                                    .Assembly
-                                                                    .FullName)));
+                                                               b =>
+                                                                   b.MigrationsAssembly(typeof
+                                                                                (AppIdentityDbContext)
+                                                                            .Assembly
+                                                                            .FullName)));
     }
 
     // configuration for Identity

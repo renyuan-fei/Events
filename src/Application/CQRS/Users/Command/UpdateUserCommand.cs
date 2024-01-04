@@ -1,14 +1,5 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
-using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using Domain.Entities;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Users.Command;
@@ -21,8 +12,8 @@ public record UpdateUserCommand : IRequest<Unit>
 
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
 {
-  private readonly IMapper                           _mapper;
   private readonly ILogger<UpdateUserCommandHandler> _logger;
+  private readonly IMapper                           _mapper;
 
   public UpdateUserCommandHandler(
       IMapper                           mapper,
@@ -37,13 +28,12 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
       UpdateUserCommand request,
       CancellationToken cancellationToken)
   {
-    try
-    {
-      throw new NotImplementedException();
-    }
+    try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

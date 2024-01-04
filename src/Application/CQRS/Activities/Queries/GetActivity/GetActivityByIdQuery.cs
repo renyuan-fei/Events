@@ -1,19 +1,11 @@
-using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.Helpers;
 using Application.common.Interfaces;
-using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
@@ -28,11 +20,11 @@ public class
     GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery,
     ActivityWithAttendeeDTO>
 {
-  private readonly IUserService                         _userService;
-  private readonly IPhotoRepository                     _photoRepository;
   private readonly IActivityRepository                  _activityRepository;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
   private readonly IMapper                              _mapper;
+  private readonly IPhotoRepository                     _photoRepository;
+  private readonly IUserService                         _userService;
 
   public GetActivityByIdQueryHandler(
       IMapper                              mapper,
@@ -60,7 +52,8 @@ public class
                                                  cancellationToken);
 
       var userIdsTask =
-          activityTask.ContinueWith(t => t.Result?.Attendees.Select(a => a.Identity.UserId.Value)
+          activityTask.ContinueWith(t => t.Result?.Attendees
+                                          .Select(a => a.Identity.UserId.Value)
                                           .ToList(),
                                     TaskContinuationOptions.OnlyOnRanToCompletion);
 
@@ -77,18 +70,24 @@ public class
 
       var usersTask = _userService.GetUsersByIdsAsync(userIds);
 
-      var mainPhotosTask = _photoRepository.GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)),
+      var mainPhotosTask =
+          _photoRepository
+              .GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)),
                                           cancellationToken);
 
       await Task.WhenAll(usersTask, mainPhotosTask);
 
-      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id, u => u);;
-      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
+      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id, u => u);
+      ;
+
+      var photosDictionary =
+          mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
 
       var result = _mapper.Map<ActivityWithAttendeeDTO>(activityWithAttendees);
 
-      result = ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary,
-          photosDictionary);
+      result = ActivityHelper.FillWithPhotoAndUserDetail(result,
+                                                         usersDictionary,
+                                                         photosDictionary);
 
       return result;
     }

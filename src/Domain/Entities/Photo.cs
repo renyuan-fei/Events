@@ -1,4 +1,3 @@
-using Domain.Events.Photo;
 using Domain.ValueObjects.Photo;
 
 namespace Domain.Entities;
@@ -20,7 +19,7 @@ public class Photo : BaseAuditableEntity<PhotoId>
   public static Photo Add(string publicId, string url, bool isMain, UserId userId)
   {
     var details = PhotoDetails.Create(publicId, url, isMain);
-    var photo = new Photo(PhotoId.New(),details, userId);
+    var photo = new Photo(PhotoId.New(), details, userId);
 
     return photo;
   }

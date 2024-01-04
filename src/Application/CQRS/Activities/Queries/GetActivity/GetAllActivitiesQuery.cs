@@ -1,14 +1,6 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using Domain.Entities;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;

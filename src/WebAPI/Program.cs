@@ -1,4 +1,3 @@
-using Infrastructure;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
@@ -69,7 +68,7 @@ using (var scope = app.Services.CreateScope())
     await identityContext.Database.MigrateAsync();
 
     // Use the seed data
-    await Seed.SeedData(identityContext,eventsContext,userManager);
+    await Seed.SeedData(identityContext, eventsContext, userManager);
   }
   catch (Exception e)
   {

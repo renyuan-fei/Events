@@ -12,7 +12,7 @@ function SearchComponent() {
                 p: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
-                width: { xs: '100%', sm: '300px', md: '400px', lg: '600px' },
+                width: {xs: '100%', sm: '300px', md: '400px', lg: '600px'},
                 height: {xs: 45, sm: 55},
                 marginTop: 1,
                 boxShadow: 'none',
@@ -27,20 +27,20 @@ function SearchComponent() {
         >
 
             <InputBase
-                sx={{ ml: 1, flex: 1 }}
+                sx={{ml: 1, flex: 1}}
                 placeholder="Search events"
-                inputProps={{ 'aria-label': 'search events' }}
+                inputProps={{'aria-label': 'search events'}}
             />
 
-            <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+            <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
 
             <InputBase
-                sx={{ ml: 1, flex: 1 }}
+                sx={{ml: 1, flex: 1}}
                 placeholder="Neighborhood, city or zip"
-                inputProps={{ 'aria-label': 'search google maps' }}
+                inputProps={{'aria-label': 'search google maps'}}
             />
 
-            <Divider sx={{ m: 0.5 }} orientation={"vertical"} flexItem />
+            <Divider sx={{m: 0.5}} orientation={"vertical"} flexItem/>
 
             <IconButton
                 type="submit"
@@ -60,7 +60,7 @@ function SearchComponent() {
                 }}
                 aria-label="search"
             >
-                <SearchIcon />
+                <SearchIcon/>
             </IconButton>
 
         </Box>

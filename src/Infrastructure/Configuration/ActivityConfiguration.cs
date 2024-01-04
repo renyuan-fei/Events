@@ -1,5 +1,3 @@
-using System;
-
 using Domain.Entities;
 using Domain.Enums;
 using Domain.ValueObjects.Activity;
@@ -28,6 +26,14 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
            .HasConversion(status => status.ToString(),
                           statusString => Enum.Parse<ActivityStatus>(statusString));
 
-    builder.OwnsOne(activity => activity.Location);
+    builder.OwnsOne(activity => activity.Location,
+                    navigationBuilder =>
+                    {
+                      navigationBuilder.Property(location => location.City)
+                                       .HasColumnName("City");
+
+                      navigationBuilder.Property(location => location.Venue)
+                                       .HasColumnName("Venue");
+                    });
   }
 }

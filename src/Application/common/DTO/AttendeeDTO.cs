@@ -45,10 +45,10 @@ public class AttendeeDTO
   public string? Bio { get; set; }
 
   /// <summary>
-  /// Gets or sets the image of an object.
+  ///   Gets or sets the image of an object.
   /// </summary>
   /// <value>
-  /// The image as a string.
+  ///   The image as a string.
   /// </value>
   public string? Image { get; set; }
 }

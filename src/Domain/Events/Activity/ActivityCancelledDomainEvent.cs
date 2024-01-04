@@ -4,7 +4,7 @@ namespace Domain.Events.Activity;
 
 public sealed class ActivityCanceledDomainEvent : BaseEvent
 {
-  public ActivityId ActivityId { get; init; }
-
   public ActivityCanceledDomainEvent(ActivityId id) { ActivityId = id; }
+
+  public ActivityId ActivityId { get; init; }
 }

@@ -1,17 +1,11 @@
 using Application.common.DTO;
 using Application.common.Interfaces;
-using Application.Common.Interfaces;
 using Application.common.Models;
-
-using AutoMapper;
 
 using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects.Activity;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.UpdateActivity;
@@ -25,10 +19,10 @@ public record UpdateActivityCommand : IRequest<Result>
 public class
     UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Result>
 {
-  private readonly IUnitOfWork                           _unitOfWork;
   private readonly IActivityRepository                   _activityRepository;
   private readonly ILogger<UpdateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
+  private readonly IUnitOfWork                           _unitOfWork;
 
   public UpdateActivityCommandHandler(
       IMapper                               mapper,
@@ -60,7 +54,7 @@ public class
 
       return result
           ? Result.Success()
-          : Result.Failure(new []{"Could not update activity."});
+          : Result.Failure(new[ ] { "Could not update activity." });
     }
     catch (Exception ex)
     {

@@ -21,16 +21,19 @@ public class AttendeeConfiguration : IEntityTypeConfiguration<Attendee>
                           value => new AttendeeId(value));
 
     builder.Property(attendee => attendee.ActivityId)
-           .HasConversion(id => id.Value,                // 将 ActivityId 转换为基础数据类型
-                          value => new ActivityId(value) // 将基础数据类型转换为 ActivityId
-                         );
+           .HasConversion(id => id.Value,
+                          value => new ActivityId(value));
 
     builder.OwnsOne(attendee => attendee.Identity,
                     navigationBuilder =>
                     {
                       navigationBuilder.Property(identity => identity.UserId)
-                                       .HasConversion(userId => userId.Value, value =>
-                          new UserId(value));
+                                       .HasConversion(userId => userId.Value,
+                                                      value => new UserId(value))
+                                       .HasColumnName("UserId"); // 指定映射到的列名
+
+                      navigationBuilder.Property(identity => identity.IsHost)
+                                       .HasColumnName("IsHost"); // 指定映射到的列名
                     });
 
     builder.HasOne(attendee => attendee.Activity)

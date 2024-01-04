@@ -1,13 +1,6 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Application.common.interfaces;
 
-using Domain.Common;
 using Domain.Common.Contracts;
-
-using Infrastructure.Service;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -17,12 +10,12 @@ namespace Infrastructure.Interceptors;
 
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
+  private readonly IDateTimeService    _dateTime;
   private readonly ICurrentUserService _user;
-  private readonly IDateTimeService     _dateTime;
 
   public AuditableEntityInterceptor(
       ICurrentUserService user,
-      IDateTimeService     dateTime)
+      IDateTimeService    dateTime)
   {
     _user = user;
     _dateTime = dateTime;
@@ -72,10 +65,12 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
 public static class Extensions
 {
-  public static bool HasChangedOwnedEntities(this EntityEntry entry) =>
-      entry.References.Any(r =>
-                               r.TargetEntry != null
-                            && r.TargetEntry.Metadata.IsOwned()
-                            && (r.TargetEntry.State == EntityState.Added
-                             || r.TargetEntry.State == EntityState.Modified));
+  public static bool HasChangedOwnedEntities(this EntityEntry entry)
+  {
+    return entry.References.Any(r =>
+                                    r.TargetEntry != null
+                                 && r.TargetEntry.Metadata.IsOwned()
+                                 && (r.TargetEntry.State == EntityState.Added
+                                  || r.TargetEntry.State == EntityState.Modified));
+  }
 }

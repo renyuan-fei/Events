@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Application.common.DTO;
 using Application.common.interfaces;
-using Application.CQRS.Users.Command;
-using Application.CQRS.Users.Queries.GetUser;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -24,10 +16,7 @@ public class UsersController : BaseController
   }
 
   [ HttpGet ]
-  public async Task<IActionResult> GetUser()
-  {
-    throw new NotImplementedException();
-  }
+  public async Task<IActionResult> GetUser() { throw new NotImplementedException(); }
 
   // GET: api/Users/5
   [ HttpGet("{id}") ]

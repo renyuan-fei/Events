@@ -1,6 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {useDispatch} from 'react-redux'
-import userReducer from'@features/user/userSlice';
+import userReducer from '@features/user/userSlice';
 import commonReducer from '@features/commonSlice';
 
 const store = configureStore({

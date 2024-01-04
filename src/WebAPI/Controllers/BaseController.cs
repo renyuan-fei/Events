@@ -1,7 +1,5 @@
 using Application.common.interfaces;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -13,12 +11,12 @@ namespace WebAPI.Controllers;
 [ ApiController ]
 public class BaseController : ControllerBase
 {
+  private ICurrentUserService? _currentUserService;
+
   /// <summary>
   ///   Represents an instance of the mediator used for handling communication between objects.
   /// </summary>
   private IMediator? _mediator;
-
-  private ICurrentUserService? _currentUserService;
 
   /// <summary>
   ///   Gets the Mediator instance.
@@ -31,7 +29,8 @@ public class BaseController : ControllerBase
       HttpContext.RequestServices.GetService<IMediator>();
 
   /// <summary>
-  /// Represents the current user service used to retrieve information about the currently authenticated user.
+  ///   Represents the current user service used to retrieve information about the currently
+  ///   authenticated user.
   /// </summary>
   protected ICurrentUserService? CurrentUserService => _currentUserService ??=
       HttpContext.RequestServices.GetService<ICurrentUserService>();

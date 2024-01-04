@@ -3,8 +3,6 @@ using Application.common.Interfaces;
 
 using AutoMapper;
 
-using Domain.Repositories;
-
 using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Identity;
@@ -15,9 +13,9 @@ namespace Infrastructure.Service;
 
 public class UserService : IUserService
 {
+  private readonly ILogger<UserService>         _logger;
   private readonly IMapper                      _mapper;
   private readonly UserManager<ApplicationUser> _userManager;
-  private readonly ILogger<UserService>         _logger;
 
   public UserService(
       UserManager<ApplicationUser> userManager,
@@ -33,6 +31,7 @@ public class UserService : IUserService
   {
     var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
     Guard.Against.Null(user, message: $"User with Id {userId} not found.");
+
     return _mapper.Map<UserDTO>(user);
   }
 
@@ -40,6 +39,7 @@ public class UserService : IUserService
   {
     var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
     Guard.Against.Null(user, message: $"User with Email {email} not found.");
+
     return _mapper.Map<UserDTO>(user);
   }
 
@@ -51,7 +51,7 @@ public class UserService : IUserService
   public async Task<IEnumerable<UserDTO>> GetUsersByIdsAsync(IEnumerable<string> userIds)
   {
     var enumerable = userIds.ToList();
-    Guard.Against.NullOrEmpty(enumerable, message:"User IDs list is null or empty.");
+    Guard.Against.NullOrEmpty(enumerable, message: "User IDs list is null or empty.");
 
     try
     {
@@ -64,6 +64,7 @@ public class UserService : IUserService
     catch (Exception ex)
     {
       _logger.LogError(ex, "ErrorMessage Mapping to DTO: {ExMessage}", ex.Message);
+
       throw new ApplicationException("An error occurred while retrieving users.", ex);
     }
   }

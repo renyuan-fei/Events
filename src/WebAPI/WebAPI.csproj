@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ClientApp\tests\" />
+        <Folder Include="ClientApp\tests\"/>
         <Folder Include="wwwroot\"/>
     </ItemGroup>
 

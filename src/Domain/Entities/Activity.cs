@@ -1,12 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
-using Domain.Enums;
 using Domain.Events.Activity;
 using Domain.Events.Attendee;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
-
-using Microsoft.AspNetCore.Http;
 
 namespace Domain.Entities;
 

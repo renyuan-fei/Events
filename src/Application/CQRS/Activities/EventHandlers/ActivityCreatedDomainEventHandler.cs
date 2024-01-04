@@ -4,7 +4,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.EventHandlers;
 
-public class ActivityCreatedDomainEventHandler : INotificationHandler<ActivityCreatedDomainEvent>
+public class
+    ActivityCreatedDomainEventHandler : INotificationHandler<ActivityCreatedDomainEvent>
 {
   private readonly ILogger<ActivityCreatedDomainEventHandler> _logger;
 
@@ -15,12 +16,11 @@ public class ActivityCreatedDomainEventHandler : INotificationHandler<ActivityCr
   }
 
   public Task Handle(
-      ActivityCreatedDomainEvent                 notification,
-      CancellationToken cancellationToken)
+      ActivityCreatedDomainEvent notification,
+      CancellationToken          cancellationToken)
   {
     _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
 
     return Task.CompletedTask;
   }
 }
-

@@ -28,12 +28,14 @@ public class
 
   public async Task<Unit> Handle(
       DeleteAttendeeCommand request,
-      CancellationToken             cancellationToken)
+      CancellationToken     cancellationToken)
   {
     try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

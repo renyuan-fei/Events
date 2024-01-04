@@ -2,8 +2,6 @@
 
 using Application.common.Interfaces;
 
-using MediatR;
-
 using Microsoft.Extensions.Logging;
 
 namespace Application.common.Behaviours;
@@ -12,15 +10,15 @@ public class
     PerformanceBehaviour <TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : notnull
 {
-  private readonly Stopwatch         _timer;
-  private readonly ILogger<TRequest> _logger;
-  private readonly ICurrentUserService             _user;
-  private readonly IIdentityService  _identityService;
+  private readonly IIdentityService    _identityService;
+  private readonly ILogger<TRequest>   _logger;
+  private readonly Stopwatch           _timer;
+  private readonly ICurrentUserService _user;
 
   public PerformanceBehaviour(
-      ILogger<TRequest> logger,
-      ICurrentUserService             user,
-      IIdentityService  identityService)
+      ILogger<TRequest>   logger,
+      ICurrentUserService user,
+      IIdentityService    identityService)
   {
     _timer = new Stopwatch();
 

@@ -1,5 +1,3 @@
-using Domain.Events.Attendee;
-using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
 

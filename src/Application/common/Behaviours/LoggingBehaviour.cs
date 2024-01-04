@@ -9,14 +9,14 @@ namespace Application.common.Behaviours;
 public class LoggingBehaviour <TRequest> : IRequestPreProcessor<TRequest>
 where TRequest : notnull
 {
-  private readonly ILogger          _logger;
-  private readonly ICurrentUserService            _user;
-  private readonly IIdentityService _identityService;
+  private readonly IIdentityService    _identityService;
+  private readonly ILogger             _logger;
+  private readonly ICurrentUserService _user;
 
   public LoggingBehaviour(
-      ILogger<TRequest> logger,
-      ICurrentUserService             user,
-      IIdentityService  identityService)
+      ILogger<TRequest>   logger,
+      ICurrentUserService user,
+      IIdentityService    identityService)
   {
     _logger = logger;
     _user = user;
@@ -27,7 +27,7 @@ where TRequest : notnull
   {
     var requestName = typeof(TRequest).Name;
     var userId = _user.Id ?? string.Empty;
-    string? userName = string.Empty;
+    var userName = string.Empty;
 
     if (!string.IsNullOrEmpty(userId))
     {

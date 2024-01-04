@@ -12,7 +12,7 @@ export default function JoinEvents() {
         <Box
             sx={{
                 display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' }, // 响应式布局方向
+                flexDirection: {xs: 'column', sm: 'row'}, // 响应式布局方向
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: theme.spacing(5),
@@ -42,13 +42,15 @@ export default function JoinEvents() {
                         fontSize: '0.875rem', // 小屏幕上减小正文字体大小
                     },
                 }}>
-                    People use Events to meet new people, learn new things, find support, get out of their
-                    comfort zones, and pursue their passions, together. Membership is free.
+                    People use Events to meet new people, learn new things, find support,
+                    get out of their
+                    comfort zones, and pursue their passions, together. Membership is
+                    free.
                 </Typography>
                 <Button variant="contained" color="secondary" sx={{
                     marginTop: theme.spacing(2),
                     backgroundColor: '#e32359',
-                    width: { xs: '100%', sm: 192 },
+                    width: {xs: '100%', sm: 192},
                     height: 48,
                     fontWeight: 700,
                     borderRadius: 3,
@@ -61,7 +63,7 @@ export default function JoinEvents() {
             </Box>
 
             <Box sx={{
-                display: isMobile? 'none' : 'flex',
+                display: isMobile ? 'none' : 'flex',
             }}>
                 <ImageComp Src={JoinEventsImg} Alt={"JoinEvents"} Sx={{
                     width: 500,

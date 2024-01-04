@@ -1,5 +1,5 @@
-import { createTheme } from '@mui/material/styles';
-import { red, green, blue } from '@mui/material/colors';
+import {createTheme} from '@mui/material/styles';
+import {blue, green, red} from '@mui/material/colors';
 
 declare module '@mui/material/styles' {
     interface Theme {
@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
             info: string;
         };
     }
+
     interface ThemeOptions {
         status?: {
             danger?: string;

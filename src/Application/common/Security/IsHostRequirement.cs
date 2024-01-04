@@ -1,10 +1,7 @@
-using System.Security.Claims;
-
 using Application.Common.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.common.Security;
 

@@ -6,7 +6,7 @@ using Infrastructure.Identity;
 
 namespace Infrastructure.Mapping;
 
-public class MappingProfile: Profile
+public class MappingProfile : Profile
 {
   public MappingProfile()
   {

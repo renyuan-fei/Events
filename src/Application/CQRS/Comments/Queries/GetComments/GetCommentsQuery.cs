@@ -1,13 +1,5 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
-using Application.common.Mappings;
-
-using AutoMapper;
-
-using Domain.Entities;
-
-using MediatR;
 
 using Microsoft.Extensions.Logging;
 
@@ -21,8 +13,8 @@ public record GetCommentsQuery : IRequest<List<CommentDTO>>
 public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<CommentDTO>>
 {
   private readonly IEventsDbContext                 _context;
-  private readonly IMapper                          _mapper;
   private readonly ILogger<GetCommentsQueryHandler> _logger;
+  private readonly IMapper                          _mapper;
 
   public GetCommentsQueryHandler(
       IEventsDbContext                 context,
@@ -38,10 +30,7 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
       GetCommentsQuery  request,
       CancellationToken cancellationToken)
   {
-    try
-    {
-      throw new NotImplementedException();
-    }
+    try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);

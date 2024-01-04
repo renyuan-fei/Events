@@ -8,7 +8,6 @@ import LoginModal from "@features/user/LoginModal.tsx";
 export function AppLayout() {
 
 
-
     return (
         <>
             <NavBar/>

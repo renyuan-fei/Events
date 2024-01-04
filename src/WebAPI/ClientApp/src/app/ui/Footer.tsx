@@ -1,4 +1,4 @@
-import {Box, Button, Grid, Typography, Link, Divider} from '@mui/material';
+import {Box, Button, Divider, Grid, Link, Typography} from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import YouTubeIcon from '@mui/icons-material/YouTube';
@@ -36,7 +36,8 @@ function Footer() {
 
                 <Divider sx={{borderColor: grey[700], marginBottom: '1rem'}}/>
 
-                <Grid container spacing={5} justifyContent="space-around" direction={{ xs: 'column', sm: 'row' }}>
+                <Grid container spacing={5} justifyContent="space-around"
+                      direction={{xs: 'column', sm: 'row'}}>
                     <Grid item>
                         <Typography variant="h6" gutterBottom>Your Account</Typography>
                         <Link href="#" color="inherit" underline="none">Sign up</Link>

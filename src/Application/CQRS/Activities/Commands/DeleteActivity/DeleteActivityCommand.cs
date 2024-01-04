@@ -1,16 +1,9 @@
 using Application.common.Interfaces;
-using Application.Common.Interfaces;
 using Application.common.Models;
 
-using AutoMapper;
-
-using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects.Activity;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.DeleteActivity;
@@ -23,10 +16,10 @@ public record DeleteActivityCommand : IRequest<Result>
 public class
     DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand, Result>
 {
-  private readonly IUnitOfWork                           _unitOfWork;
   private readonly IActivityRepository                   _activityRepository;
   private readonly ILogger<DeleteActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
+  private readonly IUnitOfWork                           _unitOfWork;
 
   public DeleteActivityCommandHandler(
       IMapper                               mapper,

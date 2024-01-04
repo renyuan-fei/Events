@@ -14,7 +14,7 @@ export default function ActivityCard() {
 
     return (
         <Card sx={{
-            maxWidth: { xs: '100%', sm: 345 },
+            maxWidth: {xs: '100%', sm: 345},
             margin: theme.spacing(2),
             borderRadius: 5
         }}
@@ -36,8 +36,7 @@ export default function ActivityCard() {
                             sx={{
                                 wordWrap: 'break-word',
                                 overflow: 'hidden',
-                                '&:hover': {
-                                }
+                                '&:hover': {}
                             }}
                         >
                             {"Lizardfffffffffffffffffffffffffffff"}

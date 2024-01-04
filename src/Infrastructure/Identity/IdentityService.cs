@@ -1,7 +1,3 @@
-using System.Linq;
-using System.Threading.Tasks;
-
-using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.common.Models;
 
@@ -13,12 +9,12 @@ namespace Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
-  private readonly UserManager<ApplicationUser> _userManager;
+  private readonly IAuthorizationService _authorizationService;
 
   private readonly IUserClaimsPrincipalFactory<ApplicationUser>
       _userClaimsPrincipalFactory;
 
-  private readonly IAuthorizationService _authorizationService;
+  private readonly UserManager<ApplicationUser> _userManager;
 
   public IdentityService(
       UserManager<ApplicationUser>                 userManager,

@@ -1,15 +1,8 @@
 using Application.common.Interfaces;
-using Application.Common.Interfaces;
 using Application.common.Models;
 
-using AutoMapper;
-
-using Domain.Entities;
 using Domain.ValueObjects;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.DeletePhoto;
@@ -22,8 +15,8 @@ public record DeletePhotoCommand : IRequest<Result>
 
 public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Result>
 {
-  private readonly IPhotoService               _photoService;
   private readonly ILogger<DeletePhotoHandler> _logger;
+  private readonly IPhotoService               _photoService;
 
   public DeletePhotoHandler(
       ILogger<DeletePhotoHandler> logger,

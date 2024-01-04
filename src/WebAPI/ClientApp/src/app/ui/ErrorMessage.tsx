@@ -1,4 +1,4 @@
-export function ErrorMessage({Error} : {Error: Error}) {
+export function ErrorMessage({Error}: { Error: Error }) {
     return (
         <div>
             Some thing wrong

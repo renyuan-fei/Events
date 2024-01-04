@@ -1,7 +1,5 @@
 using Application.Common.Interfaces;
 
-using FluentValidation;
-
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
 public class

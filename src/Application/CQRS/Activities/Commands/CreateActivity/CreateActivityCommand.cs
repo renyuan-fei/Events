@@ -1,9 +1,6 @@
 using Application.common.DTO;
 using Application.common.Interfaces;
-using Application.Common.Interfaces;
 using Application.common.Models;
-
-using AutoMapper;
 
 using Domain.Entities;
 using Domain.Enums;
@@ -11,9 +8,6 @@ using Domain.Repositories;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
@@ -31,9 +25,9 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     Result>
 {
   private readonly IActivityRepository                   _activityRepository;
-  private readonly IUnitOfWork                           _unitOfWork;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
   private readonly IMapper                               _mapper;
+  private readonly IUnitOfWork                           _unitOfWork;
 
   public CreateActivityCommandHandler(
       IMapper                               mapper,
@@ -74,7 +68,10 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
       return result
           ? Result.Success()
-          : Result.Failure(new[ ] { "There was an error saving activity data to the database" });
+          : Result.Failure(new[ ]
+          {
+              "There was an error saving activity data to the database"
+          });
     }
     catch (Exception ex)
     {

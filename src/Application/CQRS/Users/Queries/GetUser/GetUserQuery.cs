@@ -1,19 +1,11 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
-using Application.Common.Interfaces;
-
-using AutoMapper;
-
-using Domain.Entities;
-
-using MediatR;
 
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Users.Queries.GetUser;
 
 // Used for bypassing authorization behavior checks.
-[BypassAuthorization]
+[ BypassAuthorization ]
 public record GetUserQuery : IRequest<UserProfileDTO>
 {
   public Guid UserId { get; init; }
@@ -21,8 +13,8 @@ public record GetUserQuery : IRequest<UserProfileDTO>
 
 public class GetUserHandler : IRequestHandler<GetUserQuery, UserProfileDTO>
 {
-  private readonly IMapper                 _mapper;
   private readonly ILogger<GetUserHandler> _logger;
+  private readonly IMapper                 _mapper;
 
   public GetUserHandler(
       IMapper                 mapper,
@@ -33,16 +25,15 @@ public class GetUserHandler : IRequestHandler<GetUserQuery, UserProfileDTO>
   }
 
   public async Task<UserProfileDTO> Handle(
-      GetUserQuery           request,
+      GetUserQuery      request,
       CancellationToken cancellationToken)
   {
-    try
-    {
-      throw new NotImplementedException();
-    }
+    try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "ErrorMessage saving to the database: {ExMessage}",
+                       ex.Message);
 
       throw;
     }

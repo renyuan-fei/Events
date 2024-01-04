@@ -11,48 +11,48 @@ export function NavBar() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-            <AppBar position="fixed" color="inherit"
-                    sx={{
-                        padding: {
-                            xs: 2,
-                            sm: 2,
-                            md: 2,
-                            lg: 2,
-                            backgroundColor: 'white',
-                            backgroundImage: 'none',
-                            boxShadow: 'none',
-                        }
-                    }}>
-                <Toolbar>
-                    {isMobile ? (
-                        <Grid container alignItems="center"
-                              justifyContent="space-between">
-                            <Grid item xs={6} sm={4} md={2.5} lg={2.1}>
-                                <Logo/>
-                            </Grid>
-                            <Grid item xs={12} sm={5} md={6.5} lg={7.7}
-                                  order={{xs: 3, sm: 2}}>
-                                <SearchComponent/>
-                            </Grid>
-                            <Grid item xs={6} sm={3} md={3} lg={1.2}
-                                  order={{xs: 2, sm: 3}}>
-                                <AuthLanguageControl/>
-                            </Grid>
-                        </Grid>
-                    ) : (<Grid container alignItems="center"
-                               justifyContent="space-between">
-                        <Grid item xs={6} sm={4} md={2.5} lg={1.7}>
+        <AppBar position="fixed" color="inherit"
+                sx={{
+                    padding: {
+                        xs: 2,
+                        sm: 2,
+                        md: 2,
+                        lg: 2,
+                        backgroundColor: 'white',
+                        backgroundImage: 'none',
+                        boxShadow: 'none',
+                    }
+                }}>
+            <Toolbar>
+                {isMobile ? (
+                    <Grid container alignItems="center"
+                          justifyContent="space-between">
+                        <Grid item xs={6} sm={4} md={2.5} lg={2.1}>
                             <Logo/>
                         </Grid>
-                        <Grid item xs={12} sm={5} md={6.5} lg={8.8}
+                        <Grid item xs={12} sm={5} md={6.5} lg={7.7}
                               order={{xs: 3, sm: 2}}>
                             <SearchComponent/>
                         </Grid>
-                        <Grid item xs={6} sm={3} md={3} lg={1.5} order={{xs: 2, sm: 3}}>
+                        <Grid item xs={6} sm={3} md={3} lg={1.2}
+                              order={{xs: 2, sm: 3}}>
                             <AuthLanguageControl/>
                         </Grid>
-                    </Grid>)}
-                </Toolbar>
-            </AppBar>
+                    </Grid>
+                ) : (<Grid container alignItems="center"
+                           justifyContent="space-between">
+                    <Grid item xs={6} sm={4} md={2.5} lg={1.7}>
+                        <Logo/>
+                    </Grid>
+                    <Grid item xs={12} sm={5} md={6.5} lg={8.8}
+                          order={{xs: 3, sm: 2}}>
+                        <SearchComponent/>
+                    </Grid>
+                    <Grid item xs={6} sm={3} md={3} lg={1.5} order={{xs: 2, sm: 3}}>
+                        <AuthLanguageControl/>
+                    </Grid>
+                </Grid>)}
+            </Toolbar>
+        </AppBar>
     );
 }

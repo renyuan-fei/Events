@@ -10,14 +10,14 @@ namespace Application.CQRS.Attendees.EventHandlers;
 public class
     AttendeeAddedDomainEventHandler : INotificationHandler<AttendeeAddedDomainEvent>
 {
-  private readonly IAttendeeRepository                        _attendeeRepository;
-  private readonly IUnitOfWork                                _unitOfWork;
+  private readonly IAttendeeRepository                      _attendeeRepository;
   private readonly ILogger<AttendeeAddedDomainEventHandler> _logger;
+  private readonly IUnitOfWork                              _unitOfWork;
 
   public AttendeeAddedDomainEventHandler(
       ILogger<AttendeeAddedDomainEventHandler> logger,
-      IAttendeeRepository                        attendeeRepository,
-      IUnitOfWork                                unitOfWork)
+      IAttendeeRepository                      attendeeRepository,
+      IUnitOfWork                              unitOfWork)
   {
     _logger = logger;
     _attendeeRepository = attendeeRepository;
@@ -26,7 +26,7 @@ public class
 
   public async Task Handle(
       AttendeeAddedDomainEvent notification,
-      CancellationToken         cancellationToken)
+      CancellationToken        cancellationToken)
   {
     try
 

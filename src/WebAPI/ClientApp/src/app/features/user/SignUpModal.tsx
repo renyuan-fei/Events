@@ -1,10 +1,11 @@
 import {
+    Button,
     Dialog,
     DialogContent,
     DialogTitle,
-    Button,
+    IconButton,
     Typography,
-    IconButton, useTheme,
+    useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FacebookIcon from '@mui/icons-material/Facebook'; // These are placeholder icons
@@ -85,13 +86,13 @@ function SignUpModal() {
                 <Box
                     component={"form"}
                     sx={{
-                    pt: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                }}>
+                        pt: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                    }}>
                     <Button
                         startIcon={<FacebookIcon style={{color: brandColors.facebook}}/>}
                         fullWidth

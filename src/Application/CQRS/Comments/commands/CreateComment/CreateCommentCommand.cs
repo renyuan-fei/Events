@@ -1,14 +1,6 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using Domain.Entities;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Comments.commands.CreateComment;
@@ -23,8 +15,8 @@ public class
     CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommentDTO>
 {
   private readonly IEventsDbContext                     _context;
-  private readonly IMapper                              _mapper;
   private readonly ILogger<CreateCommentCommandHandler> _logger;
+  private readonly IMapper                              _mapper;
 
   public CreateCommentCommandHandler(
       IEventsDbContext                     context,

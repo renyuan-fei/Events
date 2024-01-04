@@ -1,17 +1,14 @@
 using System.Security.Claims;
 
-using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Interfaces;
-using Application.Common.Interfaces;
 
 using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers;
 
@@ -93,7 +90,6 @@ public class AccountController : BaseController
     if (!result.Succeeded) { return BadRequest(result.Errors); }
 
     return await GenerateTokenResponse(user);
-
   }
 
   /// <summary>
@@ -107,19 +103,18 @@ public class AccountController : BaseController
   public async Task<ActionResult<AccountResponseDTO>> Login(
       [ FromBody ] LoginDTO loginDTO)
   {
-    if (!ModelState.IsValid)
-    {
-      return BadRequest(ModelState);
-    }
+    if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-    var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
+    var result =
+        await _signInManager.PasswordSignInAsync(loginDTO.Email,
+                                                 loginDTO.Password,
+                                                 false,
+                                                 false);
 
-    if (!result.Succeeded)
-    {
-      return Unauthorized("Invalid login attempt.");
-    }
+    if (!result.Succeeded) { return Unauthorized("Invalid login attempt."); }
 
     var user = await _userManager.FindByEmailAsync(loginDTO.Email);
+
     if (user == null)
     {
       // 用户不存在
@@ -127,7 +122,8 @@ public class AccountController : BaseController
     }
 
     // 确保所有必要的用户信息都存在
-    if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.UserName))
+    if (string.IsNullOrEmpty(user.Email)
+     || string.IsNullOrEmpty(user.UserName))
     {
       return Unauthorized("User information is incomplete.");
     }
@@ -264,13 +260,12 @@ public class AccountController : BaseController
     // update user's refresh token and expiration date time'
     await _userManager.UpdateAsync(user);
 
-
     var responseDto = new AccountResponseDTO
     {
         DisplayName = user.DisplayName,
         Email = user.Email,
         Token = token.Token,
-        ExpirationDateTime = token.Expiration,
+        ExpirationDateTime = token.Expiration
     };
 
     return Ok(responseDto);

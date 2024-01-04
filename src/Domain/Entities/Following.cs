@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
 using Domain.Events.Following;
-using Domain.ValueObjects;
 using Domain.ValueObjects.Following;
 
 namespace Domain.Entities;

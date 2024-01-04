@@ -1,11 +1,5 @@
 using Application.common.DTO;
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
-using Application.common.Models;
-
-using AutoMapper;
-
-using MediatR;
 
 using Microsoft.Extensions.Logging;
 
@@ -21,8 +15,8 @@ public class GetPaginatedFolloweeHandler : IRequestHandler<GetFollowing,
     List<FollowingDTO>>
 {
   private readonly IEventsDbContext                     _context;
-  private readonly IMapper                              _mapper;
   private readonly ILogger<GetPaginatedFolloweeHandler> _logger;
+  private readonly IMapper                              _mapper;
 
   public GetPaginatedFolloweeHandler(
       IEventsDbContext                     context,
@@ -38,10 +32,7 @@ public class GetPaginatedFolloweeHandler : IRequestHandler<GetFollowing,
       GetFollowing      request,
       CancellationToken cancellationToken)
   {
-    try
-    {
-      throw new NotImplementedException();
-    }
+    try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);

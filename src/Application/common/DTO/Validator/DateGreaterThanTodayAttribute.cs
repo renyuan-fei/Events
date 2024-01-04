@@ -1,12 +1,14 @@
-using System;
 using System.ComponentModel.DataAnnotations;
+
 using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
 
 namespace Application.common.DTO.Validator;
 
 public class DateGreaterThanTodayAttribute : ValidationAttribute
 {
-  protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+  protected override ValidationResult IsValid(
+      object            value,
+      ValidationContext validationContext)
   {
     switch (value)
     {
@@ -19,7 +21,8 @@ public class DateGreaterThanTodayAttribute : ValidationAttribute
         // if value is date and time not greater than today, return an error message
         if (dateTime < DateTime.Now.AddDays(1))
         {
-          return new ValidationResult(ErrorMessage ?? "Date must be at least one day after the current date.");
+          return new ValidationResult(ErrorMessage
+                                   ?? "Date must be at least one day after the current date.");
         }
 
         break;

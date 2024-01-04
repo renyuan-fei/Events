@@ -6,9 +6,8 @@ using Infrastructure.DatabaseContext;
 
 namespace Infrastructure.Repositories;
 
-public class FollowingRepository : Repository<Following, FollowingId> , IFollowingRepository
+public class FollowingRepository : Repository<Following, FollowingId>,
+                                   IFollowingRepository
 {
-  public FollowingRepository(EventsDbContext dbContext) : base(dbContext)
-  {
-  }
+  public FollowingRepository(EventsDbContext dbContext) : base(dbContext) { }
 }

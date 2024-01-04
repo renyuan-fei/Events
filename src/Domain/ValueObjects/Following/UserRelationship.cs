@@ -2,8 +2,7 @@ namespace Domain.ValueObjects.Following;
 
 public class UserRelationship : ValueObject
 {
-  public UserRelationship() {
-  }
+  public UserRelationship() { }
 
   public UserRelationship(UserId followerId, UserId followeeId)
   {
@@ -11,8 +10,8 @@ public class UserRelationship : ValueObject
     FolloweeId = followeeId;
   }
 
-  public UserId FollowerId { get; private set; }
-  public UserId FolloweeId { get; private set; }
+  public UserId FollowerId { get; }
+  public UserId FolloweeId { get; }
 
   protected override IEnumerable<object> GetEqualityComponents()
   {

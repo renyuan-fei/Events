@@ -7,9 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.GuardClauses" Version="4.3.0" />
-        <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
-        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="Ardalis.GuardClauses" Version="4.3.0"/>
         <PackageReference Include="AutoMapper" Version="10.1.1"/>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1"/>
@@ -22,11 +20,11 @@
         <Folder Include="Common\Mappings\"/>
         <Folder Include="Common\Models\"/>
         <Folder Include="Common\Security\"/>
-        <Folder Include="CQRS\Comments\commands\DeleteComment\" />
-        <Folder Include="CQRS\Comments\commands\UpdateComment\" />
-        <Folder Include="CQRS\Users\Command\UpdateUser\" />
-        <Folder Include="CQRS\Users\Queries\GetFollowerUser\" />
-        <Folder Include="CQRS\Users\Queries\GetFollowingUser\" />
+        <Folder Include="CQRS\Comments\commands\DeleteComment\"/>
+        <Folder Include="CQRS\Comments\commands\UpdateComment\"/>
+        <Folder Include="CQRS\Users\Command\UpdateUser\"/>
+        <Folder Include="CQRS\Users\Queries\GetFollowerUser\"/>
+        <Folder Include="CQRS\Users\Queries\GetFollowingUser\"/>
     </ItemGroup>
 
     <ItemGroup>

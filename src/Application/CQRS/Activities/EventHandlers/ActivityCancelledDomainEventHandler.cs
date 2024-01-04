@@ -4,7 +4,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.EventHandlers;
 
-public class ActivityCancelledDomainEventHandler : INotificationHandler<ActivityCanceledDomainEvent>
+public class
+    ActivityCancelledDomainEventHandler : INotificationHandler<
+    ActivityCanceledDomainEvent>
 {
   private readonly ILogger<ActivityCancelledDomainEventHandler> _logger;
 
@@ -15,12 +17,11 @@ public class ActivityCancelledDomainEventHandler : INotificationHandler<Activity
   }
 
   public Task Handle(
-      ActivityCanceledDomainEvent                 notification,
-      CancellationToken cancellationToken)
+      ActivityCanceledDomainEvent notification,
+      CancellationToken           cancellationToken)
   {
     _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
 
     return Task.CompletedTask;
   }
 }
-

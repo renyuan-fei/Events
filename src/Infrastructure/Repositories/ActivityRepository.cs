@@ -1,9 +1,3 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Application.common.Models;
-
 using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects.Activity;

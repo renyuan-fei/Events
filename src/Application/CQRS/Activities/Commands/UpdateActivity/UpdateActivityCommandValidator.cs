@@ -1,7 +1,5 @@
 using Application.Common.Interfaces;
 
-using FluentValidation;
-
 namespace Application.CQRS.Activities.Commands.UpdateActivity;
 
 public class
@@ -9,9 +7,5 @@ public class
 {
   private readonly IEventsDbContext _context;
 
-  public UpdateActivityCommandValidator(IEventsDbContext context)
-  {
-    _context = context;
-
-  }
+  public UpdateActivityCommandValidator(IEventsDbContext context) { _context = context; }
 }

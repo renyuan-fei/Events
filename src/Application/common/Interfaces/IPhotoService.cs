@@ -1,6 +1,5 @@
 using Application.common.Models;
 
-using Domain.Entities;
 using Domain.ValueObjects;
 
 using Microsoft.AspNetCore.Http;

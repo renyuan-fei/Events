@@ -5,9 +5,7 @@ using Infrastructure.DatabaseContext;
 
 namespace Infrastructure.Repositories;
 
-public class CommentRepository : Repository<Comment,CommentId>, ICommentRepository
+public class CommentRepository : Repository<Comment, CommentId>, ICommentRepository
 {
-  public CommentRepository(EventsDbContext dbContext) : base(dbContext)
-  {
-  }
+  public CommentRepository(EventsDbContext dbContext) : base(dbContext) { }
 }

@@ -1,6 +1,6 @@
 import LogoImg from "@assets/logo.png";
 import Typography from "@mui/material/Typography";
-import {Grid, Box, useMediaQuery} from "@mui/material";
+import {Box, Grid, useMediaQuery} from "@mui/material";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 // 创建一个主题，其中包括自定义的字体

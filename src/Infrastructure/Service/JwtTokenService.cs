@@ -1,4 +1,3 @@
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -28,7 +27,7 @@ public class JwtTokenService : IJwtTokenService
     var claims = new Claim[ ]
     {
         //Subject (user id)
-        new(JwtRegisteredClaimNames.Sub, tokenDTO.Id.ToString()),
+        new(JwtRegisteredClaimNames.Sub, tokenDTO.Id),
 
         //JWT unique ID
         new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

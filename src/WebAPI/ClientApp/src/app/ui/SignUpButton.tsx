@@ -44,7 +44,7 @@ function SignupButton() {
                 backgroundColor: '#3e8da0'
             }
         }}
-        onClick={handleClick}
+                onClick={handleClick}
         >
             Sign up
         </Button>

@@ -1,5 +1,3 @@
-using System.Linq;
-
 using Application.common.Models;
 
 using Microsoft.AspNetCore.Identity;

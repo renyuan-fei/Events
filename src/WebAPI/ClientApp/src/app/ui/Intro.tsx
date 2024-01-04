@@ -1,4 +1,4 @@
-import {Button, Typography, useTheme, Grid, Box} from '@mui/material';
+import {Box, Button, Grid, Typography, useTheme} from '@mui/material';
 import IntroImg from '@assets/IntroImg.png';
 import {ImageComp} from "@ui/Image.tsx";
 import {useSelector} from "react-redux";
@@ -10,7 +10,7 @@ export default function Intro() {
 
     return (
         <Box sx={{padding: isMobile ? theme.spacing(2) : theme.spacing(5)}}>
-            <Grid container  alignItems="center"
+            <Grid container alignItems="center"
                   justifyContent="space-between">
                 <Grid item xs={12} sm={6} sx={{textAlign: {xs: 'center', sm: 'left'}}}>
                     <Typography variant="h3" component="h1" gutterBottom sx={{

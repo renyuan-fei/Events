@@ -1,10 +1,5 @@
 using Application.common.DTO;
 using Application.Common.Interfaces;
-using Application.common.Mappings;
-
-using AutoMapper;
-
-using MediatR;
 
 using Microsoft.Extensions.Logging;
 

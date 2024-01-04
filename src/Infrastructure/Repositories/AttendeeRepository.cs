@@ -1,9 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 using Domain.Entities;
 using Domain.Repositories;
-using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
 
 using Infrastructure.DatabaseContext;

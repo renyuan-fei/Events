@@ -10,15 +10,15 @@ public class Address : ValueObject
     Venue = venue;
   }
 
+  public string City  { get; set; }
+  public string Venue { get; set; }
+
   public static Address From(string city, string venue)
   {
     var address = new Address { City = city, Venue = venue };
 
     return address;
   }
-
-  public string City  { get; set; }
-  public string Venue { get; set; }
 
   protected override IEnumerable<object> GetEqualityComponents()
   {

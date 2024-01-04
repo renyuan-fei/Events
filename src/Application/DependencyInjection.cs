@@ -2,10 +2,6 @@ using System.Reflection;
 
 using Application.common.Behaviours;
 
-using FluentValidation;
-
-using MediatR;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;

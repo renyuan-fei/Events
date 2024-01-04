@@ -2,20 +2,18 @@
 
 using Application.common.Interfaces;
 
-using MediatR;
-
 namespace Application.common.Behaviours;
 
 public class
     AuthorizationBehaviour <TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : notnull
 {
-  private readonly ICurrentUserService            _user;
-  private readonly IIdentityService _identityService;
+  private readonly IIdentityService    _identityService;
+  private readonly ICurrentUserService _user;
 
   public AuthorizationBehaviour(
-      ICurrentUserService           user,
-      IIdentityService identityService)
+      ICurrentUserService user,
+      IIdentityService    identityService)
   {
     _user = user;
     _identityService = identityService;
@@ -69,7 +67,8 @@ where TRequest : notnull
     var authorizeAttributesWithPolicies =
         attributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
 
-    var attributesWithPolicies = authorizeAttributesWithPolicies as AuthorizeAttribute[ ] ?? authorizeAttributesWithPolicies.ToArray();
+    var attributesWithPolicies = authorizeAttributesWithPolicies as AuthorizeAttribute[ ]
+                              ?? authorizeAttributesWithPolicies.ToArray();
 
     if (!attributesWithPolicies.Any()) return await next();
 

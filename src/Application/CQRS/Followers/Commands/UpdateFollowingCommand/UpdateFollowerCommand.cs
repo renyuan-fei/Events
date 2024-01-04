@@ -1,13 +1,5 @@
-using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
-using AutoMapper;
-
-using Domain.Entities;
-
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Followers.Commands.UpdateFollowingCommand;
@@ -21,8 +13,8 @@ public record UpdateFollowerCommand : IRequest<Unit>
 public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerCommand, Unit>
 {
   private readonly IEventsDbContext                      _context;
-  private readonly IMapper                               _mapper;
   private readonly ILogger<CreateFollowerCommandHandler> _logger;
+  private readonly IMapper                               _mapper;
 
   public CreateFollowerCommandHandler(
       IEventsDbContext                      context,
@@ -38,9 +30,7 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
       UpdateFollowerCommand request,
       CancellationToken     cancellationToken)
   {
-    try
-    {
-      throw new NotImplementedException();    }
+    try { throw new NotImplementedException(); }
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);

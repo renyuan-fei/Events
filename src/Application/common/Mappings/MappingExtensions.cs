@@ -1,10 +1,5 @@
 using Application.common.Models;
 
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-
-using Microsoft.EntityFrameworkCore;
-
 namespace Application.common.Mappings;
 
 /// <summary>

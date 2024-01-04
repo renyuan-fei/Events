@@ -1,12 +1,6 @@
 using Application.common.DTO;
 using Application.Common.Interfaces;
-using Application.common.Mappings;
 using Application.common.Models;
-
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-
-using MediatR;
 
 using Microsoft.Extensions.Logging;
 

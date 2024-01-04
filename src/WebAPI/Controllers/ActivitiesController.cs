@@ -1,12 +1,8 @@
 using Application.common.DTO;
-using Application.common.interfaces;
 using Application.common.Models;
 using Application.CQRS.Activities.Commands.CreateActivity;
-using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
-
-using Domain.Entities;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +26,7 @@ public class ActivitiesController : BaseController
   public async Task<ActionResult<IEnumerable<Activity>>> GetActivities() { return Ok(); }
 
   /// <summary>
-  /// Retrieves a paginated list of activities.
+  ///   Retrieves a paginated list of activities.
   /// </summary>
   /// <param name="pageSize"></param>
   /// <param name="filterParams"></param>
@@ -45,10 +41,9 @@ public class ActivitiesController : BaseController
     var result = await Mediator!.Send(new GetPaginatedListActivitiesQuery
     {
         PaginatedListParams =
-            new PaginatedListParams()
+            new PaginatedListParams
             {
-                PageNumber = pageNumber,
-                PageSize = pageSize ?? 10,
+                PageNumber = pageNumber, PageSize = pageSize ?? 10
             },
         FilterParams = filterParams
     });

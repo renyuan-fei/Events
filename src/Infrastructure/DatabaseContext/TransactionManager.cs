@@ -8,8 +8,8 @@ namespace Infrastructure.DatabaseContext;
 public class TransactionManager : ITransactionManager
 {
   private readonly EventsDbContext             _dbContext;
-  private          IDbContextTransaction?      _currentTransaction;
   private readonly ILogger<TransactionManager> _logger;
+  private          IDbContextTransaction?      _currentTransaction;
 
   public TransactionManager(EventsDbContext dbContext, ILogger<TransactionManager> logger)
   {
@@ -19,10 +19,7 @@ public class TransactionManager : ITransactionManager
 
   public async Task BeginTransactionAsync()
   {
-    if (_currentTransaction != null)
-    {
-      return;
-    }
+    if (_currentTransaction != null) { return; }
 
     _logger.LogInformation("Starting a new transaction");
     _currentTransaction = await _dbContext.Database.BeginTransactionAsync();
@@ -44,6 +41,7 @@ public class TransactionManager : ITransactionManager
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error committing transaction");
+
       throw;
     }
     finally
@@ -68,6 +66,7 @@ public class TransactionManager : ITransactionManager
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error rolling back transaction");
+
       throw;
     }
     finally

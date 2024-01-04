@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 using Application.common.DTO;
 using Application.common.Interfaces;
 
@@ -41,10 +38,13 @@ public class CloudinaryService : ICloudinaryService
 
     var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-    if (uploadResult.Error != null) { throw new Exception(uploadResult.Error
-        .Message); }
+    if (uploadResult.Error != null)
+    {
+      throw new Exception(uploadResult.Error
+                                      .Message);
+    }
 
-    return new PhotoUploadDTO()
+    return new PhotoUploadDTO
     {
         PublicId = uploadResult.PublicId, Url = uploadResult.SecureUrl.ToString()
     };

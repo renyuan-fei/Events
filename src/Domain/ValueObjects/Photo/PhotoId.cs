@@ -2,5 +2,5 @@ namespace Domain.ValueObjects.Photo;
 
 public record PhotoId(string Value)
 {
-  public static PhotoId New() => new PhotoId(Guid.NewGuid().ToString());
+  public static PhotoId New() { return new PhotoId(Guid.NewGuid().ToString()); }
 }

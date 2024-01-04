@@ -1,15 +1,16 @@
 import {
+    Button,
+    Checkbox,
     Dialog,
     DialogContent,
     DialogTitle,
-    Button,
-    IconButton,
-    Typography,
-    TextField,
-    Checkbox,
+    Divider,
     FormControlLabel,
+    IconButton,
     Link,
-    Divider, useTheme
+    TextField,
+    Typography,
+    useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';

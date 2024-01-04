@@ -11,14 +11,14 @@ public class PhotoDetails : ValueObject
     IsMain = isMain;
   }
 
+  public string PublicId { get; }
+  public string Url      { get; }
+  public bool   IsMain   { get; }
+
   public static PhotoDetails Create(string publicId, string url, bool isMain)
   {
     return new PhotoDetails(publicId, url, isMain);
   }
-
-  public string PublicId { get; private set; }
-  public string Url      { get; private set; }
-  public bool   IsMain   { get; private set; }
 
   protected override IEnumerable<object> GetEqualityComponents()
   {

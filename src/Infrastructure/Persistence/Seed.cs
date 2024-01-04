@@ -1,6 +1,3 @@
-using System.Threading.Tasks;
-
-
 using Infrastructure.DatabaseContext;
 using Infrastructure.Identity;
 
@@ -12,9 +9,8 @@ public static class Seed
 {
   public async static Task SeedData(
       AppIdentityDbContext         dbContext,
-      EventsDbContext             eventsDbContext,
+      EventsDbContext              eventsDbContext,
       UserManager<ApplicationUser> userManager)
   {
-
   }
 }
