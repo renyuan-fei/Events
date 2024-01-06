@@ -11,7 +11,7 @@ public class FollowingDTO
   /// <value>
   ///   The user identifier.
   /// </value>
-  public Guid UserId { get; init; }
+  public string UserId { get; init; }
 
   /// <summary>
   ///   Gets or sets the display name.
@@ -26,6 +26,8 @@ public class FollowingDTO
   /// </summary>
   /// <value>The username as a string value, or null if not specified.</value>
   public string? UserName { get; set; }
+
+  public string? Bio { get; set; }
 
   /// <summary>
   ///   Gets or sets the image.

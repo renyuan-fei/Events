@@ -1,3 +1,4 @@
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.common.Models;
 
@@ -43,7 +44,7 @@ public class
           await _activityRepository.GetByIdAsync(new ActivityId(request.Id),
                                                  cancellationToken);
 
-      Guard.Against.Null(activity, nameof(activity));
+      GuardValidation.AgainstNull(activity, nameof(activity));
 
       _activityRepository.Remove(activity);
 

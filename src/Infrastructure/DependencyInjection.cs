@@ -1,5 +1,6 @@
 using System.Reflection;
 
+using Application.Common.Helpers;
 using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
@@ -81,12 +82,12 @@ public static class DependencyInjection
     {
       var eventsDbConnection = configuration.GetConnectionString("EventsConnection");
 
-      Guard.Against.Null(eventsDbConnection,
+      GuardValidation.AgainstNull(eventsDbConnection,
                          message: "Connection string 'EventsConnection' not found.");
 
       var identityDbConnection = configuration.GetConnectionString("IdentityConnection");
 
-      Guard.Against.Null(identityDbConnection,
+      GuardValidation.AgainstNull(identityDbConnection,
                          message: "Connection string 'IdentityConnection' not found.");
 
       services.AddDbContext<EventsDbContext>((sp, options) =>

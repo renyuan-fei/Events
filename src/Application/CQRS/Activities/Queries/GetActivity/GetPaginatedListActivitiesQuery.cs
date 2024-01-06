@@ -1,5 +1,6 @@
 using Application.common.DTO;
 using Application.common.Helpers;
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.common.Mappings;
 using Application.common.Models;
@@ -58,15 +59,17 @@ public class
 
       query = ApplyFilters(query, request.FilterParams);
 
+      var pageNumber = request.PaginatedListParams.PageNumber;
+      var pageSize = request.PaginatedListParams.PageSize;
+
       var paginatedActivitiesDto = await query
                                          .ProjectTo<
                                              ActivityWithAttendeeDTO>(_mapper
                                                       .ConfigurationProvider)
-                                         .PaginatedListAsync(request.PaginatedListParams
-                                                  .PageNumber,
-                                              request.PaginatedListParams.PageSize);
+                                         .PaginatedListAsync(pageNumber,
+                                              pageSize);
 
-      Guard.Against.NullOrEmpty(paginatedActivitiesDto.Items);
+      GuardValidation.AgainstNullOrEmpty(paginatedActivitiesDto.Items);
 
       var userIds = paginatedActivitiesDto
                     .Items.SelectMany(activity =>
@@ -100,10 +103,8 @@ public class
       // 重新创建分页结果
       return new PaginatedList<ActivityWithAttendeeDTO>(filledActivities,
                                                         paginatedActivitiesDto.TotalCount,
-                                                        request.PaginatedListParams
-                                                            .PageNumber,
-                                                        request.PaginatedListParams
-                                                            .PageSize);
+                                                        pageNumber,
+                                                        pageSize);
     }
     catch (Exception ex)
     {

@@ -1,4 +1,5 @@
 using Application.common.DTO;
+using Application.CQRS.Followers.Commands.UpdateFollowingCommand;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,8 +33,14 @@ public class FollowController : BaseController
 
   // PUT: api/Follow/5
   [ HttpPut("{id:guid}") ]
-  public async Task<Unit> UpdateFollowing(Guid id)
+  public async Task<IActionResult> UpdateFollowing(Guid id)
   {
-    throw new NotImplementedException();
+    var result = await Mediator!.Send(new UpdateFollowerCommand
+    {
+        FollowingId = id.ToString(),
+        FollowerId = CurrentUserService!.Id!
+    });
+
+    return Ok(result);
   }
 }

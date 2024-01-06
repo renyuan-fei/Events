@@ -5,28 +5,29 @@ namespace Domain.Entities;
 
 public class Following : BaseAuditableEntity<FollowingId>
 {
-  private Following(UserRelationship relationship) { Relationship = relationship; }
+  private Following(FollowingId id,UserRelationship relationship)
+  {
+    Id = id;
+    Relationship = relationship;
+  }
 
   private Following() { }
 
   public UserRelationship Relationship { get; private set; }
 
-  private Following Follow(UserId followerId, UserId followingId)
+  public static Following Create(UserId followerId, UserId followingId)
   {
     var relationship = new UserRelationship(followerId, followingId);
+    var following = new Following(FollowingId.New(),relationship);
 
-    return new Following(relationship);
+    // 如果需要在创建时触发事件
+    following.AddDomainEvent(new FollowedDomainEvent(following));
+
+    return following;
   }
 
-  public void Followed(UserId followerId, UserId followingId)
+  public void Unfollow()
   {
-    var newFollowing = Follow(followerId, followingId);
-
-    AddDomainEvent(new FollowedDomainEvent(newFollowing));
-  }
-
-  public void Unfollow(UserId followerId, UserId followingId)
-  {
-    AddDomainEvent(new UnfollowedDomainEvent(followerId, followingId));
+    AddDomainEvent(new UnfollowedDomainEvent(Relationship.FollowerId, Relationship.FollowingId));
   }
 }

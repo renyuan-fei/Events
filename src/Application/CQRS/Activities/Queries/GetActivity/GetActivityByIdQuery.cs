@@ -1,5 +1,6 @@
 using Application.common.DTO;
 using Application.common.Helpers;
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 
 using Domain.Repositories;
@@ -46,50 +47,27 @@ public class
   {
     try
     {
-      var activityTask =
-          _activityRepository
-              .GetActivityWithAttendeesByIdAsync(new ActivityId(request.Id),
-                                                 cancellationToken);
+      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(new ActivityId(request.Id), cancellationToken);
 
-      var userIdsTask =
-          activityTask.ContinueWith(t => t.Result?.Attendees
-                                          .Select(a => a.Identity.UserId.Value)
-                                          .ToList(),
-                                    TaskContinuationOptions.OnlyOnRanToCompletion);
+      GuardValidation.AgainstNull(activity, $"Activity with Id {request.Id} not found");
 
-      await Task.WhenAll(activityTask, userIdsTask);
+      var userIds = activity!.Attendees.Select(a => a.Identity.UserId.Value).ToList();
 
-      var activityWithAttendees = activityTask.Result;
-
-      Guard.Against.Null(activityWithAttendees,
-                         $"Activity with Id {request.Id} not found");
-
-      var userIds = userIdsTask.Result;
-
-      Guard.Against.Null(userIds, message: "Could not get user ids");
+      GuardValidation.AgainstNullOrEmpty(userIds, "UserIds cannot be null or empty");
 
       var usersTask = _userService.GetUsersByIdsAsync(userIds);
-
-      var mainPhotosTask =
-          _photoRepository
-              .GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)),
-                                          cancellationToken);
+      var mainPhotosTask = _photoRepository.GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)), cancellationToken);
 
       await Task.WhenAll(usersTask, mainPhotosTask);
 
+      GuardValidation.AgainstNullOrEmpty(usersTask.Result, "Users cannot be null or empty");
+
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id, u => u);
-      ;
+      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
 
-      var photosDictionary =
-          mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
+      var result = _mapper.Map<ActivityWithAttendeeDTO>(activity);
+      return ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary, photosDictionary);
 
-      var result = _mapper.Map<ActivityWithAttendeeDTO>(activityWithAttendees);
-
-      result = ActivityHelper.FillWithPhotoAndUserDetail(result,
-                                                         usersDictionary,
-                                                         photosDictionary);
-
-      return result;
     }
     catch (Exception ex)
     {

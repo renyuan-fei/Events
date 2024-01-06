@@ -4,18 +4,18 @@ public class UserRelationship : ValueObject
 {
   public UserRelationship() { }
 
-  public UserRelationship(UserId followerId, UserId followeeId)
+  public UserRelationship(UserId followerId, UserId followingId)
   {
     FollowerId = followerId;
-    FolloweeId = followeeId;
+    FollowingId = followingId;
   }
 
   public UserId FollowerId { get; }
-  public UserId FolloweeId { get; }
+  public UserId FollowingId { get; }
 
   protected override IEnumerable<object> GetEqualityComponents()
   {
     yield return FollowerId;
-    yield return FolloweeId;
+    yield return FollowingId;
   }
 }

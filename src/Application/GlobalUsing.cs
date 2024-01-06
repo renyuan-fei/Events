@@ -2,7 +2,7 @@ global using Application.common.Exceptions;
 global using Application.common.interfaces;
 global using Application.common.Security;
 
-global using Ardalis.GuardClauses;
+global using Application.common.Helpers;
 
 global using AutoMapper;
 global using AutoMapper.QueryableExtensions;

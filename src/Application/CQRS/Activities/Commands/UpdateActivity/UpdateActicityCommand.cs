@@ -1,4 +1,5 @@
 using Application.common.DTO;
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.common.Models;
 
@@ -46,7 +47,7 @@ public class
           await _activityRepository.GetByIdAsync(new ActivityId(request.Id),
                                                  cancellationToken);
 
-      Guard.Against.Null(activity, "Activity with Id: {Id} not found.", request.Id);
+      GuardValidation.AgainstNull(activity, "Activity with Id: {Id} not found.", request.Id);
 
       activity.Update(_mapper.Map<Activity>(request.Activity));
 
