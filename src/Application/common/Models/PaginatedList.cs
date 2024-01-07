@@ -44,4 +44,10 @@ public class PaginatedList <T>
 
     return new PaginatedList<T>(items, count, pageNumber, pageSize);
   }
+
+  public PaginatedList<T> UpdateItems(Func<T, T> updateFunc)
+  {
+    var updatedItems = Items.Select(updateFunc).ToList();
+    return new PaginatedList<T>(updatedItems, TotalCount, PageNumber, TotalPages);
+  }
 }

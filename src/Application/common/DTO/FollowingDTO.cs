@@ -1,9 +1,11 @@
+using Application.common.DTO.Interface;
+
 namespace Application.common.DTO;
 
 /// <summary>
 ///   The data transfer object representing a user's following.
 /// </summary>
-public class FollowingDTO
+public class FollowingDTO : IUserDetail
 {
   /// <summary>
   ///   Gets or sets the unique identifier of the user.

@@ -95,19 +95,12 @@ public class
       var photosDictionary =
           mainPhotosTask.Result.ToDictionary(photo => photo.UserId.Value, photo => photo);
 
-      // 填充每个活动的参与者信息
-      var filledActivities = paginatedActivitiesDto.Items.Select(activity =>
-                                                       ActivityHelper
-                                                           .FillWithPhotoAndUserDetail(activity,
-                                                             usersDictionary,
-                                                             photosDictionary))
-                                                   .ToList();
-
       // 重新创建分页结果
-      return new PaginatedList<ActivityWithAttendeeDTO>(filledActivities,
-                                                        paginatedActivitiesDto.TotalCount,
-                                                        pageNumber,
-                                                        pageSize);
+      return paginatedActivitiesDto.UpdateItems(activity =>
+                                                    ActivityHelper
+                                                        .FillWithPhotoAndUserDetail(activity,
+                                                          usersDictionary,
+                                                          photosDictionary));
     }
     catch (Exception ex)
     {

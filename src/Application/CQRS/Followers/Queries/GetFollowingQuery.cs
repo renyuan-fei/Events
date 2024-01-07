@@ -79,23 +79,8 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
       var photosDictionary =
           mainPhotoTask.Result.ToDictionary(photo => photo.UserId.Value, photo => photo);
 
-      foreach (var following in paginatedFollowingDto.Items)
-      {
-        // 使用用户信息填充参与者信息
-        if (userDictionary.TryGetValue(following.UserId, out var user))
-        {
-          following.DisplayName = user.DisplayName;
-          following.UserName = user.UserName;
-          following.Bio = user.Bio;
-        }
-
-        // 使用照片信息填充参与者的图片URL
-        following.Image = photosDictionary.TryGetValue(following.UserId, out var photo)
-            ? photo.Details.Url
-            : DefaultImage.DefaultImageUrl;
-      }
-
-      return paginatedFollowingDto;
+      return paginatedFollowingDto.UpdateItems(follower => UserHelper
+                                                   .FillWithPhotoAndUserDetail(follower, userDictionary, photosDictionary));
     }
     catch (Exception ex)
     {

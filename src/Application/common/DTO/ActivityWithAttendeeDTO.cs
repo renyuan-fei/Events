@@ -64,7 +64,7 @@ public class ActivityWithAttendeeDTO
   /// <summary>
   ///   Gets or sets the username of the host.
   /// </summary>
-  public string HostUsername { get; set; }
+  public string? HostUsername { get; set; }
 
   /// <summary>
   ///   Gets or sets a value indicating whether the action is cancelled.

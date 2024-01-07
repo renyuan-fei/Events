@@ -1,9 +1,11 @@
+using Application.common.DTO.Interface;
+
 namespace Application.common.DTO;
 
 /// <summary>
 ///   Represents a data transfer object for an activity attendee.
 /// </summary>
-public class AttendeeDTO
+public class AttendeeDTO : IUserDetail
 {
   /// <summary>
   ///   Gets or sets the unique identifier of the user.
