@@ -56,25 +56,28 @@ public class
     try
     {
       var query = _activityRepository.GetAllActivitiesWithAttendeesQueryable();
-
       query = ApplyFilters(query, request.FilterParams);
 
       var pageNumber = request.PaginatedListParams.PageNumber;
       var pageSize = request.PaginatedListParams.PageSize;
 
+      // 直接进行分页处理
       var paginatedActivitiesDto = await query
                                          .ProjectTo<
                                              ActivityWithAttendeeDTO>(_mapper
-                                                      .ConfigurationProvider)
-                                         .PaginatedListAsync(pageNumber,
-                                              pageSize);
+                                                 .ConfigurationProvider)
+                                         .PaginatedListAsync(pageNumber, pageSize);
 
-      GuardValidation.AgainstNullOrEmpty(paginatedActivitiesDto.Items);
+      // 如果查询结果为空，PaginatedListAsync 将返回包含空 Items 集合的 PaginatedList 对象
+      if (!paginatedActivitiesDto.Items.Any())
+      {
+        return new PaginatedList<ActivityWithAttendeeDTO>();
+      }
 
       var userIds = paginatedActivitiesDto
                     .Items.SelectMany(activity =>
                                           activity.Attendees.Select(attendee =>
-                                                   attendee.UserId))
+                                              attendee.UserId))
                     .Distinct()
                     .ToList();
 
@@ -94,10 +97,10 @@ public class
 
       // 填充每个活动的参与者信息
       var filledActivities = paginatedActivitiesDto.Items.Select(activity =>
-                                                            ActivityHelper
-                                                                .FillWithPhotoAndUserDetail(activity,
-                                                                     usersDictionary,
-                                                                     photosDictionary))
+                                                       ActivityHelper
+                                                           .FillWithPhotoAndUserDetail(activity,
+                                                             usersDictionary,
+                                                             photosDictionary))
                                                    .ToList();
 
       // 重新创建分页结果

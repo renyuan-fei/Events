@@ -14,6 +14,14 @@ public class PaginatedList <T>
     Items = items;
   }
 
+  public PaginatedList()
+  {
+    PageNumber = 1;
+    TotalPages = 0;
+    TotalCount = 0;
+    Items = new List<T>();
+  }
+
   public IReadOnlyCollection<T> Items      { get; }
   public int                    PageNumber { get; }
   public int                    TotalPages { get; }

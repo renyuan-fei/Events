@@ -27,7 +27,7 @@ public class UserService : IUserService
     _mapper = mapper;
   }
 
-  public async Task<UserDTO> GetUserByIdAsync(string userId)
+  public async Task<UserDTO?> GetUserByIdAsync(string userId)
   {
     var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
     Guard.Against.Null(user, message: $"User with Id {userId} not found.");

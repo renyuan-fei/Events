@@ -23,12 +23,14 @@ public class FollowingRepository : Repository<Following, FollowingId>,
 
   public IQueryable<Following> GetFollowersByIdQueryable(UserId id)
   {
-    return DbContext.Followings.Where(following => following.Relationship.FollowerId == id).AsQueryable();
+    return DbContext.Followings.Where(follow => follow.Relationship.FollowingId ==
+        id).AsQueryable();
   }
 
-  public IQueryable<Following> GetFollowingsByIdQueryable(UserId userId)
+  public IQueryable<Following> GetFollowingsByIdQueryable(UserId id)
   {
-    return DbContext.Followings.Where(following => following.Relationship.FollowingId == userId).AsQueryable();
+    return DbContext.Followings.Where(follow => follow.Relationship.FollowerId ==
+        id).AsQueryable();
   }
 
 

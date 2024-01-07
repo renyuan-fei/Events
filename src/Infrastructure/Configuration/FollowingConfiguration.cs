@@ -30,7 +30,7 @@ public class FollowingConfiguration : IEntityTypeConfiguration<Following>
                                                           new UserId(followerId));
 
                       navigationBuilder.Property(relationship => relationship.FollowingId)
-                                       .HasColumnName("FolloweeId")
+                                       .HasColumnName("FollowingId")
                                        .HasConversion(followeeId => followeeId.Value,
                                                       followeeId =>
                                                           new UserId(followeeId));

@@ -1,6 +1,9 @@
 using Application.common.DTO;
+using Application.common.Models;
 using Application.CQRS.Followers.Commands.UpdateFollowingCommand;
+using Application.CQRS.Followers.Queries;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -15,29 +18,46 @@ public class FollowController : BaseController
   ///   Retrieves a paginated list of followers for the current user.
   /// </summary>
   /// <returns>A paginated list of followers.</returns>
-  [ HttpGet("Follower") ]
-  public async Task<List<FollowingDTO>> GetFollower()
+  [ Authorize ]
+  [ HttpGet("Follower/{pageNumber:int}/{pageSize:int?}") ]
+  public async Task<IActionResult> GetFollower(int pageNumber, int? pageSize)
   {
-    throw new NotImplementedException();
+    var result = await Mediator!.Send(new GetFollowerQuery
+    {
+        UserId = CurrentUserService!.Id!,
+        PaginatedListParams =
+            new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
+    });
+
+    return Ok(result);
   }
 
   /// <summary>
   ///   Retrieves a paginated list of followee for the current user.
   /// </summary>
   /// <returns>A paginated list of followee.</returns>
-  [ HttpGet("Followee") ]
-  public async Task<List<FollowingDTO>> GetFollowee()
+  [ Authorize ]
+  [ HttpGet("Following/{pageNumber:int}/{pageSize:int?}") ]
+  public async Task<IActionResult> GetFollowing(int pageNumber, int? pageSize)
   {
-    throw new NotImplementedException();
+    var result = await Mediator!.Send(new GetFollowingQuery
+    {
+        UserId = CurrentUserService!.Id!,
+        PaginatedListParams =
+            new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
+    });
+
+    return Ok(result);
   }
 
   // PUT: api/Follow/5
-  [ HttpPut("{id:guid}") ]
-  public async Task<IActionResult> UpdateFollowing(Guid id)
+  [ Authorize ]
+  [ HttpPut("{id}") ]
+  public async Task<IActionResult> UpdateFollowing(string id)
   {
     var result = await Mediator!.Send(new UpdateFollowerCommand
     {
-        FollowingId = id.ToString(),
+        FollowingId = id,
         FollowerId = CurrentUserService!.Id!
     });
 

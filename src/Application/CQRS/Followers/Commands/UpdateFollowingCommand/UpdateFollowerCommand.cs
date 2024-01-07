@@ -1,3 +1,4 @@
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Models;
@@ -41,12 +42,18 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
   {
     try
     {
-      var IsFollowingExists = await _userService.GetUserByIdAsync(request.FollowingId);
+      var isFollowingExists = await _userService.GetUserByIdAsync(request.FollowingId);
 
-
+      GuardValidation.AgainstNull(isFollowingExists,
+                                  $"Following with UserId {request.FollowingId} not found");
 
       var followerId = new UserId(request.FollowerId);
       var followingId = new UserId(request.FollowingId);
+
+      if (followerId == followingId)
+      {
+        throw new InvalidOperationException("You cannot follow yourself");
+      }
 
       var follower =
           await _followingRepository.IsFollowingAsync(followerId, followingId);
@@ -60,6 +67,7 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
       else
       {
         _followingRepository.Remove(follower);
+
         follower.Unfollow();
       }
 

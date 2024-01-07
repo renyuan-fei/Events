@@ -4,7 +4,7 @@ namespace Application.common.Interfaces;
 
 public interface IUserService
 {
-  Task<UserDTO> GetUserByIdAsync(string userId);
+  Task<UserDTO?> GetUserByIdAsync(string userId);
 
   Task<UserDTO> GetUserByEmailAsync(string username);
 

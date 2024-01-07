@@ -46,5 +46,21 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.UserName, opt => opt.Ignore())    // fill in later
         .ForMember(dest => dest.Bio, opt => opt.Ignore())         // fill in later
         .ForMember(dest => dest.Image, opt => opt.Ignore());      // fill in later
+
+    CreateMap<Following, FollowingDTO>()
+        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Relationship
+        .FollowingId.Value))
+        .ForMember(dest => dest.DisplayName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.UserName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Bio, opt => opt.Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Image, opt => opt.Ignore()); // Assuming you don't have this in Following entity
+
+    CreateMap<Following, FollowerDTO>()
+        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Relationship.FollowerId.Value))
+        .ForMember(dest => dest.DisplayName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.UserName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Bio, opt => opt.Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Image, opt => opt.Ignore()); // Assuming you don't have this in Following entity
+
   }
 }

@@ -4,7 +4,7 @@ using Application.common.Models;
 
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.ActivityAttendees.Queries.GetActivityAttendeesWithPagination;
+namespace Application.CQRS.Attendees.Queries.GetActivityAttendeesWithPagination;
 
 public record
     GetActivityAttendeesWithPaginationQuery : IRequest<
