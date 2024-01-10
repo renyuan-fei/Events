@@ -2,12 +2,12 @@ namespace Domain.Events.Photo;
 
 public sealed class PhotoRemovedDomainEvent : BaseEvent
 {
-  public PhotoRemovedDomainEvent(string publicId, UserId userId)
+  public PhotoRemovedDomainEvent(string publicId, string ownerId)
   {
     PublicId = publicId;
-    UserId = userId;
+    OwnerId = ownerId;
   }
 
   public string PublicId { get; }
-  public UserId UserId   { get; }
+  public string OwnerId   { get; }
 }

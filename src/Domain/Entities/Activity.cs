@@ -2,6 +2,7 @@ using Domain.Events.Activity;
 using Domain.Events.Attendee;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
+using Domain.ValueObjects.Photo;
 
 namespace Domain.Entities;
 

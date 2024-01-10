@@ -33,7 +33,7 @@ public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Result>
   {
     try
     {
-      return await _photoService.AddPhotoAsync(request.File, new UserId(request.UserId));
+      return await _photoService.AddPhotoAsync(request.File, request.UserId);
     }
     catch (Exception ex)
     {

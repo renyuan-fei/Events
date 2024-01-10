@@ -8,6 +8,7 @@ using Domain.Repositories;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Commands.CreateActivity;
@@ -47,6 +48,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
   {
     try
     {
+
       var activity = Activity.Create(request.ActivityDTO.Title,
                                      request.ActivityDTO.Date,
                                      Enum.Parse<Category>(request.ActivityDTO.Category),

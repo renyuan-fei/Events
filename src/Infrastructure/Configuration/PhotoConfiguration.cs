@@ -25,8 +25,5 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 
     builder.Property(photo => photo.Id)
            .HasConversion(photoId => photoId.Value, value => new PhotoId(value));
-
-    builder.Property(photo => photo.UserId)
-           .HasConversion(userId => userId.Value, value => new UserId(value));
   }
 }

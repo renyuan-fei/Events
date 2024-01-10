@@ -33,8 +33,8 @@ public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Result>
     try
     {
       return await _photoService.UpdatePhotoAsync(request.PublicId,
-                                                  new UserId(request
-                                                      .UserId));
+                                                  request
+                                                      .UserId);
     }
     catch (Exception ex)
     {

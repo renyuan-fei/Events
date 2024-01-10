@@ -1,6 +1,4 @@
 using Application.common.DTO;
-using Application.common.Helpers;
-using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.common.Mappings;
 using Application.common.Models;
@@ -8,17 +6,16 @@ using Application.common.Models;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
-using Domain.ValueObjects;
 
 using Microsoft.Extensions.Logging;
 
 using static System.Enum;
 
-namespace Application.CQRS.Activities.Queries.GetActivity;
+namespace Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 
 [ BypassAuthorization ]
 public record
-    GetPaginatedListActivitiesQuery : IRequest<PaginatedList<ActivityWithAttendeeDTO>>
+    GetPaginatedListActivitiesWithAttendeesQuery : IRequest<PaginatedList<ActivityWithAttendeeDTO>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
   public FilterParams?       FilterParams        { get; init; }
@@ -26,7 +23,7 @@ public record
 
 public class
     GetPaginatedListActivitiesQueryHandler :
-    IRequestHandler<GetPaginatedListActivitiesQuery,
+    IRequestHandler<GetPaginatedListActivitiesWithAttendeesQuery,
     PaginatedList<ActivityWithAttendeeDTO>>
 {
   private readonly IActivityRepository                             _activityRepository;
@@ -50,7 +47,7 @@ public class
   }
 
   public async Task<PaginatedList<ActivityWithAttendeeDTO>> Handle(
-      GetPaginatedListActivitiesQuery request,
+      GetPaginatedListActivitiesWithAttendeesQuery request,
       CancellationToken               cancellationToken)
   {
     try
@@ -85,7 +82,7 @@ public class
 
       var mainPhotosTask =
           _photoRepository
-              .GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)),
+              .GetMainPhotosByOwnerIdAsync(userIds.Select(id => id),
                                           cancellationToken);
 
       await Task.WhenAll(usersTask, mainPhotosTask);
@@ -93,7 +90,7 @@ public class
       var usersDictionary = usersTask.Result.ToDictionary(user => user.Id, user => user);
 
       var photosDictionary =
-          mainPhotosTask.Result.ToDictionary(photo => photo.UserId.Value, photo => photo);
+          mainPhotosTask.Result.ToDictionary(photo => photo.OwnerId, photo => photo);
 
       // 重新创建分页结果
       return paginatedActivitiesDto.UpdateItems(activity =>

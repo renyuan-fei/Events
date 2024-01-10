@@ -36,7 +36,7 @@ public class PhotoService : IPhotoService
     _unitOfWork = unitOfWork;
   }
 
-  public async Task<Result> AddPhotoAsync(IFormFile file, UserId userId)
+  public async Task<Result> AddPhotoAsync(IFormFile file, string ownerId)
   {
     PhotoUploadDTO? uploadResult = null;
 
@@ -53,14 +53,14 @@ public class PhotoService : IPhotoService
         return Result.Failure(new[ ] { "Photo upload failed" });
       }
 
-      var isMainPhotoExist = await _photoRepository.GetMainPhotoByUserIdAsync(userId,
+      var isMainPhotoExist = await _photoRepository.GetMainPhotoByOwnerIdAsync(ownerId,
                                CancellationToken.None)
                           != null;
 
       var photo = Photo.Add(uploadResult.PublicId,
                             uploadResult.Url,
                             !isMainPhotoExist,
-                            userId);
+                            ownerId);
 
       await _photoRepository.AddAsync(photo, new CancellationToken());
 
@@ -86,7 +86,7 @@ public class PhotoService : IPhotoService
     }
   }
 
-  public async Task<Result> RemovePhotoAsync(string publicId, UserId userId)
+  public async Task<Result> RemovePhotoAsync(string publicId, string ownerId)
   {
     await _transactionManager.BeginTransactionAsync();
 
@@ -105,7 +105,7 @@ public class PhotoService : IPhotoService
 
         _photoRepository.Remove(photo);
         await _transactionManager.CommitTransactionAsync();
-        photo.AddDomainEvent(new PhotoRemovedDomainEvent(publicId, userId));
+        photo.AddDomainEvent(new PhotoRemovedDomainEvent(publicId, ownerId));
       }
       else
       {
@@ -135,7 +135,7 @@ public class PhotoService : IPhotoService
     }
   }
 
-  public async Task<Result> UpdatePhotoAsync(string publicId, UserId userId)
+  public async Task<Result> UpdatePhotoAsync(string publicId, string ownerId)
   {
     var photo =
         await _photoRepository.GetByPublicIdAsync(publicId, new CancellationToken());
@@ -148,7 +148,7 @@ public class PhotoService : IPhotoService
     }
 
     var mainPhoto =
-        await _photoRepository.GetMainPhotoByUserIdAsync(userId, new CancellationToken());
+        await _photoRepository.GetMainPhotoByOwnerIdAsync(ownerId, new CancellationToken());
 
     if (mainPhoto == null) { return Result.Failure(new[ ] { "Main photo not found" }); }
 

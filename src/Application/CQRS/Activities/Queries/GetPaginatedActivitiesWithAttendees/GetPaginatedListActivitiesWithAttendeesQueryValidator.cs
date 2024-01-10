@@ -1,14 +1,15 @@
 using Application.Common.Interfaces;
+using Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
 public class
-    GetPaginatedListActivitiesQueryValidator : AbstractValidator<
-    GetPaginatedListActivitiesQuery>
+    GetPaginatedListActivitiesWithAttendeesQueryValidator : AbstractValidator<
+    GetPaginatedListActivitiesWithAttendeesQuery>
 {
   private readonly IEventsDbContext _context;
 
-  public GetPaginatedListActivitiesQueryValidator(IEventsDbContext context)
+  public GetPaginatedListActivitiesWithAttendeesQueryValidator(IEventsDbContext context)
   {
     _context = context;
 

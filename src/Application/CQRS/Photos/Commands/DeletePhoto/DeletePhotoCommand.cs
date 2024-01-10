@@ -33,8 +33,8 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Result>
     try
     {
       return await _photoService.RemovePhotoAsync(request.PublicId,
-                                                  new UserId(request
-                                                      .UserId));
+                                                  request
+                                                      .UserId);
     }
     catch (Exception ex)
     {

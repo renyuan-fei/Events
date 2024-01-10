@@ -4,22 +4,22 @@ namespace Domain.Entities;
 
 public class Photo : BaseAuditableEntity<PhotoId>
 {
-  private Photo(PhotoId photoId, PhotoDetails details, UserId userId)
+  private Photo(PhotoId photoId, PhotoDetails details, string ownerId)
   {
     Id = photoId;
     Details = details;
-    UserId = userId;
+    OwnerId = ownerId;
   }
 
   private Photo() { }
 
   public PhotoDetails Details { get; private set; }
-  public UserId       UserId  { get; private set; }
+  public string       OwnerId  { get; private set; }
 
-  public static Photo Add(string publicId, string url, bool isMain, UserId userId)
+  public static Photo Add(string publicId, string url, bool isMain, string ownerId)
   {
     var details = PhotoDetails.Create(publicId, url, isMain);
-    var photo = new Photo(PhotoId.New(), details, userId);
+    var photo = new Photo(PhotoId.New(), details, ownerId);
 
     return photo;
   }

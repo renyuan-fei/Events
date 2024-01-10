@@ -6,12 +6,12 @@ public interface IPhotoRepository
 
   Task<Photo?> GetByPublicIdAsync(string publicId, CancellationToken cancellationToken);
 
-  Task<Photo?> GetMainPhotoByUserIdAsync(
-      UserId            userId,
+  Task<Photo?> GetMainPhotoByOwnerIdAsync(
+      string            ownerId,
       CancellationToken cancellationToken);
 
-  public Task<IEnumerable<Photo>> GetMainPhotosByUserIdAsync(
-      IEnumerable<UserId> userIds,
+  public Task<IEnumerable<Photo>> GetMainPhotosByOwnerIdAsync(
+      IEnumerable<string> ownerIds,
       CancellationToken   cancellationToken);
 
   void Remove(Photo photo);

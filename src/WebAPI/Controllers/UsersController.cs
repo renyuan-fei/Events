@@ -8,12 +8,6 @@ namespace WebAPI.Controllers;
 
 public class UsersController : BaseController
 {
-  private readonly ICurrentUserService _currentUserService;
-
-  public UsersController(ICurrentUserService currentUserService)
-  {
-    _currentUserService = currentUserService;
-  }
 
   [ HttpGet ]
   public async Task<IActionResult> GetUser() { throw new NotImplementedException(); }

@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging;
 namespace Application.CQRS.Activities.Queries.GetActivity;
 
 [ BypassAuthorization ]
-public record GetActivityByIdQuery : IRequest<ActivityWithAttendeeDTO>
+public record GetActivityWithAttendeesByIdQuery : IRequest<ActivityWithAttendeeDTO>
 {
   public string Id { get; init; }
 }
 
 public class
-    GetActivityByIdQueryHandler : IRequestHandler<GetActivityByIdQuery,
+    GetActivityByIdQueryHandler : IRequestHandler<GetActivityWithAttendeesByIdQuery,
     ActivityWithAttendeeDTO>
 {
   private readonly IActivityRepository                  _activityRepository;
@@ -42,7 +42,7 @@ public class
   }
 
   public async Task<ActivityWithAttendeeDTO> Handle(
-      GetActivityByIdQuery request,
+      GetActivityWithAttendeesByIdQuery request,
       CancellationToken    cancellationToken)
   {
     try
@@ -56,14 +56,14 @@ public class
       GuardValidation.AgainstNullOrEmpty(userIds, "UserIds cannot be null or empty");
 
       var usersTask = _userService.GetUsersByIdsAsync(userIds);
-      var mainPhotosTask = _photoRepository.GetMainPhotosByUserIdAsync(userIds.Select(id => new UserId(id)), cancellationToken);
+      var mainPhotosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds.Select(id => id), cancellationToken);
 
       await Task.WhenAll(usersTask, mainPhotosTask);
 
       GuardValidation.AgainstNullOrEmpty(usersTask.Result, "Users cannot be null or empty");
 
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id, u => u);
-      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.UserId.Value, p => p);
+      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.OwnerId, p => p);
 
       var result = _mapper.Map<ActivityWithAttendeeDTO>(activity);
       return ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary, photosDictionary);

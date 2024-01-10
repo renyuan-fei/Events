@@ -68,8 +68,8 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
 
       var followingsTask = _userService.GetUsersByIdsAsync(followingsId);
 
-      var mainPhotoTask = _photoRepository.GetMainPhotosByUserIdAsync(followingsId
-            .Select(userId => new UserId(userId)),
+      var mainPhotoTask = _photoRepository.GetMainPhotosByOwnerIdAsync(followingsId
+            .Select(userId => userId),
         cancellationToken);
 
       var userDictionary =
@@ -77,7 +77,7 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
                                              following => following);
 
       var photosDictionary =
-          mainPhotoTask.Result.ToDictionary(photo => photo.UserId.Value, photo => photo);
+          mainPhotoTask.Result.ToDictionary(photo => photo.OwnerId, photo => photo);
 
       return paginatedFollowingDto.UpdateItems(follower => UserHelper
                                                    .FillWithPhotoAndUserDetail(follower, userDictionary, photosDictionary));

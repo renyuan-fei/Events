@@ -20,22 +20,20 @@ public class PhotoRepository : Repository<Photo, PhotoId>, IPhotoRepository
     return DbContext.Photos.FirstOrDefaultAsync(p => p.Details.PublicId == publicId,
                                                 cancellationToken);
   }
-
-  public Task<Photo?> GetMainPhotoByUserIdAsync(
-      UserId            userId,
+  public Task<Photo?> GetMainPhotoByOwnerIdAsync(
+      string            ownerId,
       CancellationToken cancellationToken)
   {
-    return DbContext.Photos.FirstOrDefaultAsync(p => p.UserId == userId
+    return DbContext.Photos.FirstOrDefaultAsync(p => p.OwnerId == ownerId
                                                   && p.Details.IsMain == true,
                                                 cancellationToken);
   }
 
-  public async Task<IEnumerable<Photo>> GetMainPhotosByUserIdAsync(
-      IEnumerable<UserId>
-          userIds,
-      CancellationToken cancellationToken)
+  public async Task<IEnumerable<Photo>> GetMainPhotosByOwnerIdAsync(
+      IEnumerable<string> ownerIds,
+      CancellationToken   cancellationToken)
   {
-    return await DbContext.Photos.Where(p => userIds.Contains(p.UserId)
+    return await DbContext.Photos.Where(p => ownerIds.Contains(p.OwnerId)
                                           && p.Details.IsMain
                                           == true)
                           .ToListAsync(cancellationToken);
