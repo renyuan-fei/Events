@@ -1,7 +1,7 @@
-using Application.common.Constant;
 using Application.common.DTO;
 using Application.common.DTO.Interface;
 
+using Domain.Constant;
 using Domain.Entities;
 
 namespace Application.common.Helpers;
@@ -24,7 +24,7 @@ public static class UserHelper
     // 使用照片信息填充参与者的图片URL
     data.Image = photosDictionary.TryGetValue(data.UserId, out var photo)
         ? photo.Details.Url
-        : DefaultImage.DefaultImageUrl;
+        : DefaultImage.DefaultUserImageUrl;
 
     return data;
   }

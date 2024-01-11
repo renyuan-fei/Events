@@ -10,7 +10,7 @@ public interface IPhotoService
 {
   public Task<Result> AddPhotoAsync(IFormFile file, string ownerId);
 
-  public Task<Result> RemovePhotoAsync(string publicId, string ownerId);
+  public Task<Result> RemovePhotoAsync(string publicId, string ownerId , bool mainProtect = true);
 
   public Task<Result> UpdatePhotoAsync(string publicId, string ownerId);
 }

@@ -48,19 +48,52 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Image, opt => opt.Ignore());      // fill in later
 
     CreateMap<Following, FollowingDTO>()
-        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Relationship
-        .FollowingId.Value))
-        .ForMember(dest => dest.DisplayName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
-        .ForMember(dest => dest.UserName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
-        .ForMember(dest => dest.Bio, opt => opt.Ignore()) // Assuming you don't have this in Following entity
-        .ForMember(dest => dest.Image, opt => opt.Ignore()); // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.UserId,
+                   opt => opt.MapFrom(src => src.Relationship
+                                                .FollowingId.Value))
+        .ForMember(dest => dest.DisplayName,
+                   opt => opt
+                       .Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.UserName,
+                   opt => opt
+                       .Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Bio,
+                   opt => opt
+                       .Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Image,
+                   opt => opt
+                       .Ignore()); // Assuming you don't have this in Following entity
 
     CreateMap<Following, FollowerDTO>()
-        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Relationship.FollowerId.Value))
-        .ForMember(dest => dest.DisplayName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
-        .ForMember(dest => dest.UserName, opt => opt.Ignore()) // Assuming you don't have this in Following entity
-        .ForMember(dest => dest.Bio, opt => opt.Ignore()) // Assuming you don't have this in Following entity
-        .ForMember(dest => dest.Image, opt => opt.Ignore()); // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.UserId,
+                   opt => opt.MapFrom(src => src.Relationship.FollowerId.Value))
+        .ForMember(dest => dest.DisplayName,
+                   opt => opt
+                       .Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.UserName,
+                   opt => opt
+                       .Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Bio,
+                   opt => opt
+                       .Ignore()) // Assuming you don't have this in Following entity
+        .ForMember(dest => dest.Image,
+                   opt => opt
+                       .Ignore()); // Assuming you don't have this in Following entity
 
+    CreateMap<Activity, ActivityWithHostUserDTO>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
+        .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+        .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+        .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()))
+        .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Location.City))
+        .ForMember(dest => dest.Venue, opt => opt.MapFrom(src => src.Location.Venue))
+        .ForMember(dest => dest.goingCount, opt => opt.MapFrom(src => src.Attendees.Count))
+        .ForMember(dest => dest.HostUser, opt => opt.MapFrom(src =>
+                       new HostUserDTO
+                       {
+                           Id = src.Attendees.FirstOrDefault(a => a.Identity.IsHost)!.Identity.UserId.Value,
+                           Username = "",
+                       }))
+        .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
   }
 }

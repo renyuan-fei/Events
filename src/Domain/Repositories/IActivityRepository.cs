@@ -16,5 +16,12 @@ public interface IActivityRepository
 
   IQueryable<Activity> GetAllActivitiesWithAttendeesQueryable();
 
+  public Task<bool> IsHostAsync(
+          ActivityId activityId,
+          UserId     userId,
+          CancellationToken
+                  cancellationToken =
+                  default);
+
   void Remove(Activity activity);
 }

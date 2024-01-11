@@ -24,19 +24,39 @@ public class PhotosController : BaseController
   /// <remarks>
   ///   This method uploads a photo specified by the <paramref name="file" /> parameter.
   ///   The uploaded photo is processed by the <see cref="Mediator" /> to create a new photo
-  ///   using the <see cref="CreatePhotoCommand" /> command.
+  ///   using the <see cref="UploadUserPhotoCommand" /> command.
   ///   The <see cref="UserId" /> property is set to the current user's ID obtained from the
   ///   <see cref="ICurrentUserService" />.
   ///   The result of the photo upload is returned as an <see cref="IActionResult" /> of the
-  ///   form <see cref="Ok(result)" />.
+  ///   form <see>
+  ///     <cref>Ok(result)</cref>
+  ///   </see>
+  ///   .
   /// </remarks>
   [ HttpPost ]
   [ Authorize ]
-  public async Task<IActionResult> UpLoadPhoto([ FromForm ] IFormFile file)
+  public async Task<IActionResult> UpLoadUserPhoto([ FromForm ] IFormFile file)
   {
-    var result = await Mediator?.Send(new CreatePhotoCommand
+    var result = await Mediator?.Send(new UploadUserPhotoCommand
     {
         UserId = CurrentUserService!.Id!,
+        File = file
+    })!;
+
+    return Ok(result);
+  }
+
+  [ HttpPost("{id}") ]
+  [ Authorize ]
+  [ Authorize(Policy = "IsActivityHost") ]
+  public async Task<IActionResult> UpLoadActivityPhoto(
+      [ FromForm ] IFormFile file,
+      string                 id)
+  {
+    var result = await Mediator?.Send(new UploadActivityPhotoCommand
+    {
+        UserId = CurrentUserService!.Id!,
+        ActivityId = id,
         File = file
     })!;
 

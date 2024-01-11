@@ -3,6 +3,7 @@ using Application.common.Models;
 using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
+using Application.CQRS.Activities.Queries.GetPaginatedActivities;
 using Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +40,7 @@ public class ActivitiesController : BaseController
       int?                        pageSize,
       [ FromQuery ] FilterParams? filterParams)
   {
-    var result = await Mediator!.Send(new GetPaginatedListActivitiesWithAttendeesQuery
+    var result = await Mediator!.Send(new GetPaginatedActivitiesQuery
     {
         PaginatedListParams =
             new PaginatedListParams

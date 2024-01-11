@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 
 using Infrastructure.DatabaseContext;
@@ -26,5 +27,17 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
   public IQueryable<Activity> GetAllActivitiesWithAttendeesQueryable()
   {
     return DbContext.Activities.Include(activity => activity.Attendees).AsQueryable();
+  }
+
+  public async Task<bool> IsHostAsync(
+      ActivityId activityId,
+      UserId     userId,
+      CancellationToken
+          cancellationToken =
+          default)
+  {
+    return await DbContext.Activities.Include(activity => activity.Attendees)
+                          .FirstOrDefaultAsync(activity => activity.Id == activityId && activity.Attendees.Any(attendee => attendee.Identity.UserId == userId && attendee.Identity.IsHost), cancellationToken)
+        != null;
   }
 }

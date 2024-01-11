@@ -8,13 +8,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.CreatePhoto;
 
-public record CreatePhotoCommand : IRequest<Result>
+public record UploadUserPhotoCommand : IRequest<Result>
 {
   public string    UserId { get; init; }
   public IFormFile File   { get; init; }
 }
 
-public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Result>
+public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, Result>
 {
   private readonly ILogger<CreatePhotoHandler> _logger;
   private readonly IPhotoService               _photoService;
@@ -28,7 +28,7 @@ public class CreatePhotoHandler : IRequestHandler<CreatePhotoCommand, Result>
   }
 
   public async Task<Result> Handle(
-      CreatePhotoCommand request,
+      UploadUserPhotoCommand request,
       CancellationToken  cancellationToken)
   {
     try

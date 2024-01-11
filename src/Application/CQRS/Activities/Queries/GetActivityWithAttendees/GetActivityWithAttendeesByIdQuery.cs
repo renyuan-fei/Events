@@ -43,36 +43,41 @@ public class
 
   public async Task<ActivityWithAttendeeDTO> Handle(
       GetActivityWithAttendeesByIdQuery request,
-      CancellationToken    cancellationToken)
+      CancellationToken                 cancellationToken)
   {
     try
     {
-      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(new ActivityId(request.Id), cancellationToken);
+      GuardValidation.AgainstNullOrEmpty(request.Id, "Activity Id cannot be null or empty");
+
+      var activityId = new ActivityId(request.Id);
+      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(activityId, cancellationToken);
 
       GuardValidation.AgainstNull(activity, $"Activity with Id {request.Id} not found");
 
-      var userIds = activity!.Attendees.Select(a => a.Identity.UserId.Value).ToList();
+      if (!activity!.Attendees.Any())
+      {
+        _logger.LogInformation("No attendees found for activity with Id {ActivityId}", request.Id);
+        return new ActivityWithAttendeeDTO();
+      }
 
-      GuardValidation.AgainstNullOrEmpty(userIds, "UserIds cannot be null or empty");
-
+      var userIds = activity.Attendees.Select(a => a.Identity.UserId.Value).ToList();
       var usersTask = _userService.GetUsersByIdsAsync(userIds);
-      var mainPhotosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds.Select(id => id), cancellationToken);
+      var mainPhotosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
       await Task.WhenAll(usersTask, mainPhotosTask);
 
-      GuardValidation.AgainstNullOrEmpty(usersTask.Result, "Users cannot be null or empty");
+      GuardValidation.AgainstNullOrEmpty(usersTask.Result, "User information for attendees not found");
 
-      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id, u => u);
-      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.OwnerId, p => p);
+      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
+      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.OwnerId);
 
       var result = _mapper.Map<ActivityWithAttendeeDTO>(activity);
       return ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary, photosDictionary);
-
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage Mapping to DTO: {ExMessage}", ex.Message);
-
+      _logger.LogError(ex, "Error occurred in {Name}: {ExMessage}", nameof(GetActivityByIdQueryHandler), ex
+          .Message);
       throw;
     }
   }

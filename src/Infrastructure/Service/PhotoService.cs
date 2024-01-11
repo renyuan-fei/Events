@@ -86,7 +86,8 @@ public class PhotoService : IPhotoService
     }
   }
 
-  public async Task<Result> RemovePhotoAsync(string publicId, string ownerId)
+  public async Task<Result> RemovePhotoAsync(string publicId, string ownerId, bool
+          mainProtect = true)
   {
     await _transactionManager.BeginTransactionAsync();
 
@@ -98,7 +99,7 @@ public class PhotoService : IPhotoService
 
       if (photo != null)
       {
-        if (photo.Details.IsMain)
+        if (photo.Details.IsMain && mainProtect)
         {
           return Result.Failure(new[ ] { "Cannot delete main photo" });
         }

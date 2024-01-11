@@ -9,8 +9,6 @@ using Domain.Repositories;
 
 using Microsoft.Extensions.Logging;
 
-using static System.Enum;
-
 namespace Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 
 [ BypassAuthorization ]
@@ -117,7 +115,7 @@ public class
 
     if (!string.IsNullOrWhiteSpace(filterParams.Category))
     {
-      TryParse<Category>(filterParams.Category, out var parsedCategory);
+      Enum.TryParse<Category>(filterParams.Category, out var parsedCategory);
       categoryEnum = parsedCategory;
     }
 

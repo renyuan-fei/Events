@@ -4,6 +4,7 @@ using Application.Common.Helpers;
 using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Security;
 
 using Domain.Repositories;
 
@@ -14,6 +15,7 @@ using Infrastructure.Repositories;
 using Infrastructure.security;
 using Infrastructure.Service;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +48,7 @@ public static class DependencyInjection
 
     // services
     services.AddTransient<IDateTimeService, DateTimeService>();
+    services.AddTransient<IIdentityService, IdentityService>();
     services.AddScoped<ICloudinaryService, CloudinaryService>();
     services.AddScoped<IPhotoService, PhotoService>();
     services.AddScoped<IUserService, UserService>();
@@ -126,7 +129,6 @@ public static class DependencyInjection
               , string>>()
             .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, string>>();
 
-    services.AddTransient<IIdentityService, IdentityService>();
 
     return services;
   }
