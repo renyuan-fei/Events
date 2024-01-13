@@ -5,19 +5,39 @@ import {Grid, useMediaQuery, useTheme} from "@mui/material";
 import {AuthLanguageControl} from "./AuthLanguageControl";
 import {Logo} from "./Logo";
 import SearchComponent from "@ui/Search.tsx";
+import {RootState} from "@store/store.ts";
+import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {queryClient} from "@apis/queryClient.ts";
+import {UserBar} from "@ui/User/UserBar.tsx";
+
+interface cacheProp
+{
+    displayName: string;
+    image: string;
+}
 
 export function NavBar() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isLogin = useSelector((state : RootState) => state.user.isLogin)
+    const [name, setName] = useState('');
+    const [imgUrl, setImgUrl] = useState('');
 
+    useEffect(() => {
+        const cache : cacheProp | undefined= queryClient.getQueryData('userInfo');
+        if (cache) {
+            setName(cache.displayName);
+            setImgUrl(cache.image);
+        }
+    }, [isLogin]);
+
+    console.log(isMobile);
     return (
         <AppBar position="fixed" color="inherit"
                 sx={{
                     padding: {
-                        xs: 2,
-                        sm: 2,
-                        md: 2,
-                        lg: 2,
+                        padding: theme.spacing(1),
                         backgroundColor: 'white',
                         backgroundImage: 'none',
                         boxShadow: 'none',
@@ -40,16 +60,18 @@ export function NavBar() {
                         </Grid>
                     </Grid>
                 ) : (<Grid container alignItems="center"
-                           justifyContent="space-between">
-                    <Grid item xs={6} sm={4} md={2.5} lg={1.7}>
+                           justifyContent="flex-end">
+                    <Grid item xs={6} sm={4} md={2.5} lg={3.2}>
                         <Logo/>
                     </Grid>
-                    <Grid item xs={12} sm={5} md={6.5} lg={8.8}
+                    <Grid item xs={12} sm={5} md={6.5} lg={6.6}
                           order={{xs: 3, sm: 2}}>
                         <SearchComponent/>
                     </Grid>
-                    <Grid item xs={6} sm={3} md={3} lg={1.5} order={{xs: 2, sm: 3}}>
-                        <AuthLanguageControl/>
+
+                    <Grid item xs={6} sm={3} md={3} lg={2.2} order={{xs: 2, sm: 3}}>
+                        {isLogin ? <UserBar displayName={name}  image={imgUrl}/> : <AuthLanguageControl/>}
+                        {/*<AuthLanguageControl/>*/}
                     </Grid>
                 </Grid>)}
             </Toolbar>

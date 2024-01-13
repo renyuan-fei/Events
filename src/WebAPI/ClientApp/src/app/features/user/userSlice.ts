@@ -1,30 +1,37 @@
 import {createSlice} from '@reduxjs/toolkit'
 
 type UserState = {
-    username: string
-    position: {
-        latitude: number
-        longitude: number
-    }
-    address: string
-    error?: string
+    isLogin: boolean,
 }
 
 const initialState: UserState = {
-    username: '',
-    position: {
-        latitude: 0,
-        longitude: 0,
-    },
-    address: '',
+    isLogin: false,
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
-})
+    reducers: {
+        registerAction: (state, action) => {
+            state.isLogin = true;
+            localStorage.setItem('jwt', action.payload.token);
+        },
+        loginAction: (state, action) => {
+            state.isLogin = true;
+            localStorage.setItem('jwt', action.payload.token);
+        },
 
+        logoutAction: (state) => {
+            state.isLogin = false;
+            localStorage.removeItem('jwt');
+        }
+    },
+})
+export const {
+    registerAction,
+    loginAction,
+    logoutAction,
+} = userSlice.actions;
 
 export type {UserState}
 export default userSlice.reducer

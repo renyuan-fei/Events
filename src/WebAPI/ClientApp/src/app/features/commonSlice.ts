@@ -16,11 +16,11 @@ const commonSlice = createSlice({
     name: 'common',
     initialState,
     reducers: {
-        setSignUp: (state) => {
+        setSignUpForm: (state) => {
             state.signUpOpen = !state.signUpOpen;
             state.LoginOpen = false;
         },
-        setLogin: (state) => {
+        setLoginForm: (state) => {
             state.LoginOpen = !state.LoginOpen;
             state.signUpOpen = false;
         },
@@ -32,8 +32,8 @@ const commonSlice = createSlice({
 })
 
 export const {
-    setSignUp,
-    setLogin,
+    setSignUpForm,
+    setLoginForm,
     setIsMobile,
 } = commonSlice.actions;
 export type {CommonState}

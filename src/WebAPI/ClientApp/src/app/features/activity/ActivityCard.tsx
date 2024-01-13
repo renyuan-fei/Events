@@ -7,69 +7,75 @@ import PeopleIcon from '@mui/icons-material/People';
 import Box from '@mui/material/Box';
 import {CardActionArea, useTheme} from "@mui/material";
 
-
-// @ts-ignore
-export default function ActivityCard() {
+// Correct the function signature to accept a prop of type Item
+export default function ActivityCard({
+                                         title,
+                                         imageUrl,
+                                         date,
+                                         category,
+                                         goingCount,
+                                         hostUser
+                                     }: Item) {
     const theme = useTheme();
 
     return (
         <Card sx={{
             maxWidth: {xs: '100%', sm: 345},
             margin: theme.spacing(2),
-            borderRadius: 5
+            borderRadius: 5,
+            border: 'none'
         }}
               variant="outlined">
             <CardActionArea>
                 <CardMedia
                     component="img"
-                    height="220"
-                    image="https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702382852/cld-sample-3.jpg"
+                    image={imageUrl}
                     alt="Group picture"
-                    sx={{borderRadius: 5}}
+                    sx={{borderRadius: 5, height: 153}}
                 />
                 <CardContent>
                     <Box>
                         <Typography
                             gutterBottom
-                            variant="h5"
+                            variant="h6"
                             component="div"
                             sx={{
                                 wordWrap: 'break-word',
                                 overflow: 'hidden',
-                                '&:hover': {}
-                            }}
-                        >
-                            {"Lizardfffffffffffffffffffffffffffff"}
+                                fontWeight: 'fontWeightBold',
+                                lineHeight: '1.1',
+                                '&:hover': {}}}>
+                            {title}
                         </Typography>
-
                     </Box>
+
                     <Box display="flex" alignItems="center" mb={1}>
                         <Typography variant="caption" sx={{
                             fontWeight: 600,
                             fontSize: 14,
                             color: theme.palette.text.secondary,
                             mr: 1
-                        }}>Hosted by: {"international" +
-                            " student" +
-                            " support"}</Typography>
+                        }}>Hosted by: {hostUser.username}</Typography>
                     </Box>
+
                     <Box display="flex" alignItems="center" mb={1}>
                         <EventIcon color="action" sx={{marginRight: '5px'}}/>
-                        <Typography variant="caption">THU, DEC 21 • 18:30
-                            GMT+10</Typography>
+                        <Typography variant="caption">{date}</Typography>
                     </Box>
+
                     <Box display="flex" alignItems="center">
                         <PeopleIcon color="action" sx={{marginRight: '5px'}}/>
-                        <Typography variant="caption">113 going</Typography>
+                        <Typography variant="caption">{goingCount} going</Typography>
                         <Box flexGrow={1}/>
                         <Typography variant="caption" component="span" sx={{
-                            bgcolor: 'lightgrey',
+                            backgroundColor: 'lightgrey',
                             borderRadius: '4px',
                             padding: '2px 5px'
                         }}>
-                            Free
+                            {category}
                         </Typography>
                     </Box>
+
                 </CardContent>
             </CardActionArea>
         </Card>

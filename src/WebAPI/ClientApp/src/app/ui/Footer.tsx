@@ -20,6 +20,7 @@ function Footer() {
                         border: 2,
                         fontWeight: 800,
                         borderColor: grey[50],
+                        backgroundColor: grey[900],
                         height: 48,
                         width: 150,
                         color: grey[50],

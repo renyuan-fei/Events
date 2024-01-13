@@ -21,7 +21,7 @@ public class ActivityDTO
   /// The Title.
   /// </value>
   [ Required ]
-  [ MaxWordCount(20, ErrorMessage = "Title must be at most 20 words long.") ]
+  [ MaxWordCount(10, ErrorMessage = "Title must be at most 10 words long.") ]
   public string Title { get; set; }
 
   /// <summary>

@@ -1,13 +1,13 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import {useAppDispatch} from "@store/store.ts";
-import {setLogin} from "@features/commonSlice.ts";
+import { setLoginForm} from "@features/commonSlice.ts";
 
 export function LoginButton() {
     const dispatch = useAppDispatch()
 
     function handleClick(): void {
-        dispatch(setLogin())
+        dispatch(setLoginForm())
     }
 
     return (

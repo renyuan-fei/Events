@@ -12,6 +12,7 @@ import {useEffect} from "react";
 import {setIsMobile} from "@features/commonSlice.ts";
 import {ThemeProvider} from "@mui/material/styles";
 import {theme} from "@config/CustomTheme.ts";
+import {ReactQueryDevtools} from "react-query/devtools";
 
 function App() {
     const dispatch = useDispatch();
@@ -35,10 +36,10 @@ function App() {
         <ThemeProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
                 <RouterProvider router={router}/>
+                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </ThemeProvider>
-
-    )
+    );
 }
 
 export default App

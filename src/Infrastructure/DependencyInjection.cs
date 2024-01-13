@@ -117,7 +117,7 @@ public static class DependencyInjection
     // configuration for Identity
     services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-              options.Password.RequiredLength = 5;
+              options.Password.RequiredLength = 10;
               options.Password.RequireNonAlphanumeric = false;
               options.Password.RequireUppercase = false;
               options.Password.RequireLowercase = true;

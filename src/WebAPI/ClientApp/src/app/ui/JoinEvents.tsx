@@ -47,6 +47,7 @@ export default function JoinEvents() {
                     comfort zones, and pursue their passions, together. Membership is
                     free.
                 </Typography>
+
                 <Button variant="contained" color="secondary" sx={{
                     marginTop: theme.spacing(2),
                     backgroundColor: '#e32359',

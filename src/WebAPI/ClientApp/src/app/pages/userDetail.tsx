@@ -1,4 +1,4 @@
-export function UsrDetail() {
+export function UserDetail() {
     return (
         <></>
     );

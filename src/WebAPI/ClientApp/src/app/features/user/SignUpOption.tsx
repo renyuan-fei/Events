@@ -28,7 +28,7 @@ const brandColors = {
 };
 
 
-function SignUpModal() {
+function SignUpOption() {
     const theme = useTheme();
 
     const open = useSelector((state: RootState) => state.common.signUpOpen);
@@ -180,4 +180,4 @@ function SignUpModal() {
     );
 }
 
-export default SignUpModal;
+export default SignUpOption;

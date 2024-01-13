@@ -4,8 +4,8 @@
 // import {ErrorMessage} from "@ui/ErrorMessage.tsx";
 // import {Activity} from "@models/Activity.ts";
 
-import ActivityCard from "@ui/ActivityCard.tsx";
 import {Grid} from "@mui/material";
+import ActivityCard from "@features/activity/ActivityCard.tsx";
 
 export function Activities() {
     // const {

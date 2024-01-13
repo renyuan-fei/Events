@@ -26,11 +26,6 @@ public class ActivityWithHostUserDTO
   public DateTime Date { get; set; }
 
   /// <summary>
-  /// Description of the activity.
-  /// </summary>
-  // public string Description { get; set; }
-
-  /// <summary>
   /// Category of the activity.
   /// </summary>
   public string Category { get; set; }

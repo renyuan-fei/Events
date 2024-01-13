@@ -1,39 +1,38 @@
-import axios from "axios";
-import {Activity} from "@type/Activity.ts";
+import axiosInstance from "@apis/BaseApi.ts";
 
-const BaseUrl: string = "https://localhost:7095";
-
-export async function GetActivities({page = 1, searchTerm = []}: {
+export async function GetActivities({
+                                        page = 1,
+                                        pageSize = 10,
+                                        searchTerm = []
+                                    }: {
     page: number,
-    searchTerm: string[]
-} = {page: 1, searchTerm: []}) {
+    pageSize: number,
+    searchTerm?: string[]
+} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<paginatedResponse> {
+
     const params = new URLSearchParams();
+    searchTerm.forEach(term => params.append("searchTerm", term));
 
-    searchTerm.forEach(term => params.append("SearchTerm", term));
-
-    let url = "";
-
-    if (params.size > 0) {
-        url = `${BaseUrl}/api/Activities/${page}/?${params.toString()}`
-    } else {
-        url = `${BaseUrl}/api/Activities/${page}`
+    let url = `/api/Activities/${page}/${pageSize}`;
+    if (params.toString()) {
+        url += `?${params.toString()}`;
     }
 
-
     try {
-        const response = await axios.get<Activity[]>(url);
+        const response = await axiosInstance.get<paginatedResponse>(url);
         return response.data;
-
     } catch (error) {
-        // 更好的错误处理
         console.error(error);
         throw error;
     }
 }
 
 
+
+
+
 export async function GetActivity(id: string) {
-    axios.get(`${BaseUrl}/api/Activities/${id}`)
+    axiosInstance.get(`/api/Activities/${id}`)
         .then(response => {
             console.log(response.data);
         }).catch(error => {
