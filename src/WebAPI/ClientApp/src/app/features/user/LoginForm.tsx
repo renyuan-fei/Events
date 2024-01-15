@@ -21,11 +21,9 @@ import {ImageComp} from "@ui/Image.tsx";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import React, {FormEvent, useEffect, useState} from "react";
 import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
-import {useMutation} from "react-query";
-import {LoginRequest} from "@type/Account.ts";
-import {login} from "@apis/Account.ts";
+import {useLoginQuery} from "@apis/Account.ts";
 import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
-import {loginAction} from "@features/user/userSlice.ts";
+import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 
 interface FormValues {
     email: string;
@@ -37,8 +35,6 @@ interface FormErrors {
 }
 
 function LoginForm() {
-    const { mutate} = useMutation('userInfo',(loginData: LoginRequest) => login(loginData));
-
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.LoginOpen);
     const dispatch = useAppDispatch()
@@ -52,13 +48,16 @@ function LoginForm() {
         password: 'TestPassword123456789',
     });
 
+    const loginQuery = useLoginQuery(formValues);
+
+
     function handleClick(): void {
         dispatch(setLoginForm())
-        // setFormValues({
-        //     email: '',
-        //     password: '',
-        // })
-        // setFormErrors({})
+        setFormValues({
+            email: '',
+            password: '',
+        })
+        setFormErrors({})
     }
 
     function handleOpenSignUp() {
@@ -123,21 +122,13 @@ function LoginForm() {
 
         if (isFormValid) {
             console.log('Form is valid! Submitting...', formValues);
-            mutate({
-                email: formValues.email,
-                password: formValues.password,
-            }, {
-                onSuccess: (data) => {
-                    // 成功响应处理
-                    console.log('Login successful:', data);
-                    dispatch(loginAction({ token: data.token }));
-                },
-                onError: (error) => {
-                    // 错误处理
-                    console.log('Login error:', error);
-                }
-            });
 
+            // login logical operation
+            loginQuery.refetch();
+            
+            if (loginQuery.isLoading) {
+                return <LoadingComponent/>;
+            }
 
         } else {
             console.log('Form is invalid or incomplete! Not submitting.');

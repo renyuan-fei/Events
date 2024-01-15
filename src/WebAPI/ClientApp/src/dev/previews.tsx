@@ -4,6 +4,7 @@ import SignUpForm from "@features/user/SignUpForm.tsx";
 import LoginForm from "@features/user/LoginForm.tsx";
 import SvgButton from "@ui/User/SvgButton.tsx";
 import {UserBar} from "@ui/User/UserBar.tsx";
+import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 
 const ComponentPreviews = () => {
     return (
@@ -22,6 +23,10 @@ const ComponentPreviews = () => {
             <ComponentPreview
                 path="/UserBar">
                 <UserBar/>
+            </ComponentPreview>
+            <ComponentPreview
+                path="/LoadingComponent">
+                <LoadingComponent/>
             </ComponentPreview>
         </Previews>
     );

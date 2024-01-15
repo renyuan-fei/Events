@@ -4,12 +4,14 @@ type CommonState = {
     signUpOpen: boolean,
     LoginOpen: boolean,
     isMobile: boolean,
+    isLoading: boolean,
 }
 
 const initialState: CommonState = {
     signUpOpen: false,
     LoginOpen: false,
     isMobile: false,
+    isLoading: false,
 }
 
 const commonSlice = createSlice({
@@ -26,8 +28,7 @@ const commonSlice = createSlice({
         },
         setIsMobile: (state, action) => {
             state.isMobile = action.payload;
-        },
-
+        }
     },
 })
 

@@ -115,18 +115,13 @@ public class AccountController : BaseController
     var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
     if (!result.Succeeded)
     {
-      return Unauthorized("Invalid login attempt.");
+      return BadRequest("Email or password is incorrect.");
     }
 
     var user = await _userManager.FindByEmailAsync(loginDTO.Email);
     if (user == null)
     {
       return Unauthorized("User not found.");
-    }
-
-    if (user.RefreshTokenExpirationDateTime != DateTime.MinValue && user.RefreshToken!= null)
-    {
-      return BadRequest("user is already logged in.");
     }
 
     // 确保所有必要的用户信息都存在
@@ -139,8 +134,21 @@ public class AccountController : BaseController
     return await GenerateTokenResponse(user, updateRefreshToken: true);
   }
 
-  [Authorize]
-  [HttpGet]
+  /// <summary>
+  /// Gets the current authenticated user.
+  /// </summary>
+  /// <returns>
+  /// Returns the account response DTO of the current user.
+  /// </returns>
+  /// <remarks>
+  /// This method is used to retrieve the current authenticated user.
+  /// It verifies the user's authorization and retrieves the user's information,
+  /// including email and username. If the user information is incomplete or the user is not logged in,
+  /// an unauthorized response will be returned. Otherwise, it will generate a token response
+  /// for the user without updating the refresh token.
+  /// </remarks>
+  [ Authorize ]
+  [ HttpGet ]
   public async Task<ActionResult<AccountResponseDTO>> GetCurrentUser()
   {
     var email = User.FindFirstValue(ClaimTypes.Email);

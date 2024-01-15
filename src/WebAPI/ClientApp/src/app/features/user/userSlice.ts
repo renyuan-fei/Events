@@ -12,10 +12,6 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        registerAction: (state, action) => {
-            state.isLogin = true;
-            localStorage.setItem('jwt', action.payload.token);
-        },
         loginAction: (state, action) => {
             state.isLogin = true;
             localStorage.setItem('jwt', action.payload.token);
@@ -28,7 +24,6 @@ const userSlice = createSlice({
     },
 })
 export const {
-    registerAction,
     loginAction,
     logoutAction,
 } = userSlice.actions;

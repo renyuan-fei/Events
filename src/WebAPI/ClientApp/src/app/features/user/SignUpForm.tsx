@@ -16,14 +16,13 @@ import Box from "@mui/material/Box";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@store/store.ts";
-import {useQuery} from "react-query";
-import {register} from "@apis/Account.ts";
-import {AuthResponse} from "@type/Account.ts";
+import {useRegisterQuery} from "@apis/Account.ts";
 import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
+import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 
 
 interface FormValues {
-    name: string;
+    displayName: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -40,12 +39,14 @@ function SignUpForm() {
     const dispatch = useDispatch();
 
     const [formValues, setFormValues] = useState<FormValues>({
-        name: 'TestEmail@example.com',
+        displayName: 'TestEmail@example.com',
         email: 'TestEmail@example.com',
         password: 'TestPassword123456789',
         confirmPassword: 'TestPassword123456789',
         phoneNumber: '719159880',
     });
+
+    const registerQuery = useRegisterQuery(formValues);
 
     const [formErrors, setFormErrors] = useState<FormErrors>({});
 
@@ -53,15 +54,14 @@ function SignUpForm() {
 
     function handleClick(): void {
         dispatch(setSignUpForm());
-        // setFormValues({
-        //     name: '',
-        //     email: '',
-        //     password: '',
-        //     confirmPassword: '',
-        //     location: '',
-        //     gender:'male',
-        // })
-        // setFormErrors({})
+        setFormValues({
+            displayName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            phoneNumber: ''
+        })
+        setFormErrors({})
     }
 
     function handleOpenLogin() {
@@ -72,7 +72,7 @@ function SignUpForm() {
         let errors: FormErrors = {};
 
         switch (name) {
-            case 'name':
+            case 'displayName':
                 errors.name = value ? '' : 'This field is required';
                 break;
             case 'email':
@@ -145,13 +145,12 @@ function SignUpForm() {
         if (isFormValid) {
             console.log('Form is valid! Submitting...', formValues);
             // Insert submit logic here
-            const {} = useQuery<AuthResponse, Error>(['userInfo'], () => register({
-                confirmPassword: formValues.confirmPassword,
-                password: formValues.password,
-                email: formValues.email,
-                displayName: formValues.name,
-                phoneNumber: "632462717",
-            }));
+            registerQuery.refetch();
+
+            if (registerQuery.isLoading)
+            {
+                return <LoadingComponent/>;
+            }
 
         } else {
             console.log('Form is invalid or incomplete! Not submitting.');
@@ -190,7 +189,7 @@ function SignUpForm() {
                         label="Your name"
                         required
                         autoFocus
-                        value={formValues.name}
+                        value={formValues.displayName}
                         onChange={handleChange}
                         error={Boolean(formErrors.name)}
                         helperText={formErrors.name || ''}

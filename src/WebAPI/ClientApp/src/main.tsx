@@ -7,6 +7,11 @@ import store from "@store/store.ts";
 import {Provider} from "react-redux";
 import {DevSupport} from "@react-buddy/ide-toolbox";
 import {ComponentPreviews, useInitial} from "./dev";
+import {theme} from "@config/CustomTheme.ts";
+import {queryClient} from "@apis/queryClient.ts";
+import {ReactQueryDevtools} from "react-query/devtools";
+import {ThemeProvider} from "@mui/material/styles";
+import {QueryClientProvider} from "react-query";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
@@ -16,7 +21,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <DevSupport ComponentPreviews={ComponentPreviews}
                             useInitialHook={useInitial}
                 >
-                    <App/>
+                    <ThemeProvider theme={theme}>
+                        <QueryClientProvider client={queryClient}>
+                            <App/>
+                            <ReactQueryDevtools initialIsOpen={false} />
+                        </QueryClientProvider>
+                    </ThemeProvider>
                 </DevSupport>
             </Provider>
         </React.Fragment>
