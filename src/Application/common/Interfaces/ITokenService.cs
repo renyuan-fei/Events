@@ -24,10 +24,11 @@ public interface IJwtTokenService
   ///   Retrieves a <see cref="ClaimsPrincipal" /> object from a JWT token.
   /// </summary>
   /// <param name="token">The JWT token.</param>
+  /// <param name="validateLifetime"></param>
   /// <returns>
   ///   A <see cref="ClaimsPrincipal" /> object if the token is valid and contains valid
   ///   claims,
   ///   or null if the token is invalid or does not contain any claims.
   /// </returns>
-  ClaimsPrincipal? GetPrincipalFromJwtToken(string? token);
+  ClaimsPrincipal? GetPrincipalFromJwtToken(string? token, bool validateLifetime = true);
 }

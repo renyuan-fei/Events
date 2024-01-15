@@ -45,5 +45,5 @@ public class ApplicationUser : IdentityUser
   /// <value>
   ///   The expiration date and time of the refresh token.
   /// </value>
-  public DateTime RefreshTokenExpirationDateTime { get; set; }
+  public DateTime RefreshTokenExpirationDateTime { get; set; } = DateTime.MinValue;
 }

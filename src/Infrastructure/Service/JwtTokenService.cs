@@ -76,6 +76,7 @@ public class JwtTokenService : IJwtTokenService
       {
           Token = token,
           Expiration = expiration,
+          RefreshToken = GenerateRefreshToken(),
           RefreshTokenExpirationDateTime =
               DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
                                                           ["RefreshToken:EXPIRATION_MINUTES"]))
@@ -84,51 +85,51 @@ public class JwtTokenService : IJwtTokenService
 
     return new AuthenticationDTO
     {
-        Token = token,
-        Expiration = expiration,
-        RefreshToken = GenerateRefreshToken(),
-        RefreshTokenExpirationDateTime =
-            DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
-                                                        ["RefreshToken:EXPIRATION_MINUTES"]))
+            Token = token,
+            Expiration = expiration,
     };
   }
 
-  public ClaimsPrincipal? GetPrincipalFromJwtToken(string? token)
+  public ClaimsPrincipal? GetPrincipalFromJwtToken(string? token, bool validateLifetime = true)
   {
-    var tokenValidationParameters = new TokenValidationParameters
+    if (string.IsNullOrEmpty(token))
     {
-        ValidateAudience = true,
-        ValidAudience = _configuration["Jwt:Audience"]!,
-        ValidateIssuer = true,
-        ValidIssuer = _configuration["Jwt:Issuer"]!,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8
-                                             .GetBytes(_configuration["Jwt:Key"]
-                                                       !)),
-        ValidateLifetime = false // should be false here
-    };
-
-    var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-
-    // 对 token 进行验证
-    var principal =
-        jwtSecurityTokenHandler.ValidateToken(token,
-                                              tokenValidationParameters,
-                                              out var securityToken);
-
-    // 如果token的类型不是JwtSecurityToken
-    // 并且，验证不通过
-    // 则抛出异常
-    if (securityToken is not JwtSecurityToken jwtSecurityToken
-     || !jwtSecurityToken
-         .Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                            StringComparison.InvariantCulture))
-    {
-      throw new SecurityTokenValidationException("Invalid token");
+      return null;
     }
 
-    return principal;
+    var tokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+        ValidateIssuer = true,
+        ValidIssuer = _configuration["Jwt:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = _configuration["Jwt:Audience"],
+        ValidateLifetime = validateLifetime, // 可以根据需要设置为 true 或 false
+        ClockSkew = TimeSpan.Zero            // 可以根据需要设置时钟偏移量
+    };
+
+    try
+    {
+      var tokenHandler = new JwtSecurityTokenHandler();
+      var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
+
+      // 验证是否为 JWT
+      if (validatedToken is JwtSecurityToken jwtSecurityToken)
+      {
+        if (jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+          return principal;
+        }
+      }
+    }
+    catch (Exception)
+    {
+      // 在这里处理验证失败的情况，例如记录日志等
+      return null;
+    }
+
+    return null;
   }
 
   /// <summary>

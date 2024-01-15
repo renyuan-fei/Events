@@ -4,11 +4,15 @@ using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Interfaces;
 
+using Domain.Constant;
+using Domain.Repositories;
+
 using Infrastructure.Identity;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers;
 
@@ -18,7 +22,8 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class AccountController : BaseController
 {
-  private readonly ICurrentUserService            _currentUserService;
+  private readonly IPhotoRepository               _photoRepository;
+  private readonly IUserService                   _userService;
   private readonly IIdentityService               _identityService;
   private readonly IJwtTokenService               _jwtTokenService;
   private readonly SignInManager<ApplicationUser> _signInManager;
@@ -38,22 +43,22 @@ public class AccountController : BaseController
   /// </param>
   /// <param name="identityService">A service providing identity related utility methods</param>
   /// <param name="jwtTokenService">A service for JWT token generation and validation</param>
-  /// <param name="currentUserService">
-  ///   A service for fetching the current authenticated user's
-  ///   details
-  /// </param>
+  /// <param name="userService"></param>
+  /// <param name="photoRepository"></param>
   public AccountController(
       UserManager<ApplicationUser>   userManager,
       SignInManager<ApplicationUser> signInManager,
       IIdentityService               identityService,
       IJwtTokenService               jwtTokenService,
-      ICurrentUserService            currentUserService)
+      IUserService                   userService,
+      IPhotoRepository               photoRepository)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _identityService = identityService;
     _jwtTokenService = jwtTokenService;
-    _currentUserService = currentUserService;
+    _userService = userService;
+    _photoRepository = photoRepository;
   }
 
   /// <summary>
@@ -99,36 +104,65 @@ public class AccountController : BaseController
   /// <returns>
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
-  [ HttpPost("login") ]
-  public async Task<ActionResult<AccountResponseDTO>> Login(
-      [ FromBody ] LoginDTO loginDTO)
+  [HttpPost("login")]
+  public async Task<ActionResult<AccountResponseDTO>> Login([FromBody] LoginDTO loginDTO)
   {
-    if (!ModelState.IsValid) { return BadRequest(ModelState); }
+    if (!ModelState.IsValid)
+    {
+      return BadRequest(ModelState);
+    }
 
-    var result =
-        await _signInManager.PasswordSignInAsync(loginDTO.Email,
-                                                 loginDTO.Password,
-                                                 false,
-                                                 false);
-
-    if (!result.Succeeded) { return Unauthorized("Invalid login attempt."); }
+    var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
+    if (!result.Succeeded)
+    {
+      return Unauthorized("Invalid login attempt.");
+    }
 
     var user = await _userManager.FindByEmailAsync(loginDTO.Email);
-
     if (user == null)
     {
-      // 用户不存在
       return Unauthorized("User not found.");
     }
 
+    if (user.RefreshTokenExpirationDateTime != DateTime.MinValue && user.RefreshToken!= null)
+    {
+      return BadRequest("user is already logged in.");
+    }
+
     // 确保所有必要的用户信息都存在
-    if (string.IsNullOrEmpty(user.Email)
-     || string.IsNullOrEmpty(user.UserName))
+    if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.UserName))
     {
       return Unauthorized("User information is incomplete.");
     }
 
-    return await GenerateTokenResponse(user);
+    // 登录成功，生成带有更新刷新令牌的响应
+    return await GenerateTokenResponse(user, updateRefreshToken: true);
+  }
+
+  [Authorize]
+  [HttpGet]
+  public async Task<ActionResult<AccountResponseDTO>> GetCurrentUser()
+  {
+    var email = User.FindFirstValue(ClaimTypes.Email);
+    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+    if (user == null)
+    {
+      return Unauthorized("User not found.");
+    }
+
+    if (user.RefreshTokenExpirationDateTime== DateTime.MinValue && user.RefreshToken== null)
+    {
+      return Unauthorized("user is not logged in.");
+    }
+
+    // 确保所有必要的用户信息都存在
+    if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.UserName))
+    {
+      return Unauthorized("User information is incomplete.");
+    }
+
+    // 获取当前用户信息，不更新刷新令牌
+    return await GenerateTokenResponse(user, updateRefreshToken: false);
   }
 
   /// <summary>
@@ -138,12 +172,12 @@ public class AccountController : BaseController
   ///   Returns a IActionResult, with HTTP 200 status code and a success message if the request
   ///   was successful.
   /// </returns>
-  [ HttpPost("refresh") ]
+  [HttpPost("refresh")]
   public async Task<ActionResult<AccountResponseDTO>> GenerateNewAccessToken()
   {
     const string bearerPrefix = "Bearer ";
 
-    // 从HTTP请求的Cookie中获取令牌
+    // 从HTTP请求的Header中获取令牌
     var authHeader = Request.Headers["Authorization"].FirstOrDefault();
 
     var jwtToken = authHeader?.StartsWith(bearerPrefix) == true
@@ -153,14 +187,13 @@ public class AccountController : BaseController
     var refreshToken = Request.Cookies["RefreshToken"];
 
     // 检查令牌是否为空
-    if (string.IsNullOrEmpty(jwtToken)
-     || string.IsNullOrEmpty(refreshToken))
+    if (string.IsNullOrEmpty(jwtToken) || string.IsNullOrEmpty(refreshToken))
     {
       return BadRequest("Invalid token request");
     }
 
     // 验证JWT令牌
-    var principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken);
+    var principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken, false);
 
     // 检查JWT令牌是否无效
     if (principal == null) { return BadRequest("Invalid JWT token"); }
@@ -172,34 +205,13 @@ public class AccountController : BaseController
     var user = await _userManager.FindByEmailAsync(email);
 
     // 验证刷新令牌和过期时间
-    if (user == null
-     || user.RefreshToken != refreshToken
-     || user.RefreshTokenExpirationDateTime <= DateTime.Now)
+    if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpirationDateTime <= DateTime.Now)
     {
       return BadRequest("Invalid refresh token");
     }
 
-    var data = new TokenDTO
-    {
-        DisplayName = user.DisplayName,
-        Email = user.Email,
-        UserName = user.UserName,
-        Id = user.Id
-    };
-
-    // 生成新的Access令牌, 但不更新过期时间
-    var token = _jwtTokenService.CreateToken(data, true);
-
-    // 更新HTTP Only Cookie
-
-    // 返回确认信息或空内容
-    return Ok(new AccountResponseDTO
-    {
-        DisplayName = user.DisplayName,
-        Email = user.Email,
-        Token = token.Token,
-        ExpirationDateTime = token.Expiration
-    });
+    // 生成新的Access令牌，同时更新刷新令牌
+    return await GenerateTokenResponse(user, updateRefreshToken: true);
   }
 
   /// <summary>
@@ -208,19 +220,35 @@ public class AccountController : BaseController
   /// <returns>
   ///   Returns an empty IActionResult with HTTP 204 status code.
   /// </returns>
-  [ Authorize ]
-  [ HttpGet("logout") ]
+  [Authorize]
+  [HttpPost("logout")]
   public async Task<IActionResult> Logout()
   {
-    //Sign out the user from ASP.NET Core Authentication system.
+    var email = User.FindFirstValue(ClaimTypes.Email);
+    var user = await _userManager.FindByEmailAsync(email);
+
+    if (user == null)
+    {
+      return BadRequest("User not found");
+    }
+
+    if (user.RefreshToken == null && user.RefreshTokenExpirationDateTime == DateTime.MinValue)
+    {
+      return BadRequest("User is not logout.");
+    }
+
+    // 清除用户的刷新令牌和过期时间
+    user.RefreshToken = null;
+    user.RefreshTokenExpirationDateTime = DateTime.MinValue;
+    await _userManager.UpdateAsync(user);
+
+    // 从 ASP.NET Core 认证系统中登出用户
     await _signInManager.SignOutAsync();
 
-    //Delete the refresh token cookie
+    // 删除存储在客户端的刷新令牌 Cookie
     Response.Cookies.Delete("RefreshToken");
 
-    //set Token and ExpirationDateTime to null in database
-
-    //Return NoContent Result (HTTP 204 Status Code)
+    // 返回无内容的结果（HTTP 204状态码）
     return NoContent();
   }
 
@@ -228,11 +256,11 @@ public class AccountController : BaseController
   ///   Internal method for generating a response token.
   /// </summary>
   /// <param name="user">Instance of the ApplicationUser class</param>
+  /// <param name="updateRefreshToken"></param>
   /// <returns>
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
-  async private Task<ActionResult<AccountResponseDTO>> GenerateTokenResponse(
-      ApplicationUser user)
+  async private Task<ActionResult<AccountResponseDTO>> GenerateTokenResponse(ApplicationUser user, bool updateRefreshToken = false)
   {
     var tokenDto = new TokenDTO
     {
@@ -242,30 +270,36 @@ public class AccountController : BaseController
         UserName = user.UserName
     };
 
-    // create JWT Token
-    var token = _jwtTokenService.CreateToken(tokenDto);
+    // 创建 JWT 令牌
+    var token = _jwtTokenService.CreateToken(tokenDto, updateRefreshToken);
 
-    // set Refresh Token in Cookie
-    var cookieOptions = new CookieOptions
+    if (updateRefreshToken)
     {
-        HttpOnly = true, Expires = token.RefreshTokenExpirationDateTime, Secure = true
-    };
+      // 设置 Refresh Token 到 Cookie
+      var cookieOptions = new CookieOptions
+      {
+          HttpOnly = true,
+          Expires = token.RefreshTokenExpirationDateTime,
+          Secure = true
+      };
+      Response.Cookies.Append("RefreshToken", token.RefreshToken!, cookieOptions);
 
-    Response.Cookies.Append("RefreshToken", token.RefreshToken!, cookieOptions);
+      // 更新用户的 Refresh Token 和过期时间
+      user.RefreshToken = token.RefreshToken;
+      user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
+      await _userManager.UpdateAsync(user);
+    }
 
-    // 舍 User's Refresh Token and Refresh Token Expiration DateTime'
-    user.RefreshToken = token.RefreshToken;
-    user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
-
-    // update user's refresh token and expiration date time'
-    await _userManager.UpdateAsync(user);
+    // 获取用户的照片信息
+    var image = await _photoRepository.GetMainPhotoByOwnerIdAsync(user.Id, CancellationToken.None);
 
     var responseDto = new AccountResponseDTO
     {
         DisplayName = user.DisplayName,
         Email = user.Email,
         Token = token.Token,
-        ExpirationDateTime = token.Expiration
+        ExpirationDateTime = token.Expiration,
+        Image = image != null ? image.Details.Url : DefaultImage.DefaultUserImageUrl
     };
 
     return Ok(responseDto);
