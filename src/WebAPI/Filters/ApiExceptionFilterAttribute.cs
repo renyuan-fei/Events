@@ -42,9 +42,9 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
   {
     var type = context.Exception.GetType();
 
-    if (_exceptionHandlers.ContainsKey(type))
+    if (_exceptionHandlers.TryGetValue(type, out var handler))
     {
-      _exceptionHandlers[type].Invoke(context);
+      handler.Invoke(context);
 
       return;
     }

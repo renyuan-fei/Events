@@ -52,6 +52,9 @@
       ],
       "@type/*": [
         "./src/app/types/*"
+      ],
+      "@hooks/*": [
+        "./src/app/hooks/*"
       ]
     }
   },

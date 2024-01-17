@@ -1,15 +1,16 @@
 import Button from '@mui/material/Button';
 import {useAppDispatch} from "@store/store.ts";
 import {useMediaQuery, useTheme} from "@mui/material";
-import {setSignUpForm} from "@features/commonSlice.ts";
+import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 
 function SignupButton() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useAppDispatch()
 
-    function handleClick(): void {
-        dispatch(setSignUpForm())
+    function handleOpen(): void {
+        dispatch(setSignUpForm(true))
+        dispatch(setLoginForm(false))
     }
 
     if (isMobile) {
@@ -19,7 +20,7 @@ function SignupButton() {
                 height: 35,
                 fontSize: 14,
             }}
-                    onClick={handleClick}
+                    onClick={handleOpen}
             >
                 Sign up
             </Button>
@@ -32,7 +33,7 @@ function SignupButton() {
             height: 50,
             fontSize: 16,
         }}
-                onClick={handleClick}
+                onClick={handleOpen}
         >
             Sign up
         </Button>

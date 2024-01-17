@@ -1,4 +1,4 @@
-import axiosInstance from "@apis/BaseApi.ts";
+import apiClient from "@apis/BaseApi.ts";
 
 export async function GetActivities({
                                         page = 1,
@@ -19,7 +19,7 @@ export async function GetActivities({
     }
 
     try {
-        const response = await axiosInstance.get<paginatedResponse>(url);
+        const response = await apiClient.get<paginatedResponse>(url);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -32,7 +32,7 @@ export async function GetActivities({
 
 
 export async function GetActivity(id: string) {
-    axiosInstance.get(`/api/Activities/${id}`)
+    apiClient.get(`/api/Activities/${id}`)
         .then(response => {
             console.log(response.data);
         }).catch(error => {

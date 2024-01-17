@@ -16,9 +16,10 @@ import Box from "@mui/material/Box";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@store/store.ts";
-import {useRegisterQuery} from "@apis/Account.ts";
-import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
-import {LoadingComponent} from "@ui/LoadingComponent.tsx";
+import {setAlertInfo, setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
+import {
+    useRegisterMutation
+} from "@apis/Account.ts";
 
 
 interface FormValues {
@@ -46,14 +47,28 @@ function SignUpForm() {
         phoneNumber: '719159880',
     });
 
-    const registerQuery = useRegisterQuery(formValues);
 
     const [formErrors, setFormErrors] = useState<FormErrors>({});
 
     const [Height, setHeight] = useState(780)
 
-    function handleClick(): void {
-        dispatch(setSignUpForm());
+    const { mutate: registerMutate} = useRegisterMutation(formValues, ()=>{
+        dispatch(setAlertInfo({
+            open: true,
+            message: 'Registration successful',
+            severity: 'success',
+        }));
+        dispatch(setSignUpForm(false))
+    },(error: any)=>{
+        dispatch(setAlertInfo({
+            open: true,
+            message: error.message,
+            severity: 'error',
+        }));
+    });
+
+    function handleClose(): void {
+        dispatch(setSignUpForm(false));
         setFormValues({
             displayName: '',
             email: '',
@@ -65,8 +80,20 @@ function SignUpForm() {
     }
 
     function handleOpenLogin() {
-        dispatch(setLoginForm());
+        dispatch(setLoginForm(true));
+        dispatch(setSignUpForm(false))
     }
+
+    // const validateEmail = async (email: string) => {
+    //     if (!/\S+@\S+\.\S+/.test(email)) {
+    //         return 'Email address is invalid';
+    //     }
+    //     const isRegistered = await checkEmailRegistered(email);
+    //     if (isRegistered) {
+    //         return 'Email is already registered';
+    //     }
+    //     return '';
+    // };
 
     function validate(name: keyof FormValues, value: string): FormErrors {
         let errors: FormErrors = {};
@@ -144,14 +171,7 @@ function SignUpForm() {
 
         if (isFormValid) {
             console.log('Form is valid! Submitting...', formValues);
-            // Insert submit logic here
-            registerQuery.refetch();
-
-            if (registerQuery.isLoading)
-            {
-                return <LoadingComponent/>;
-            }
-
+            registerMutate();
         } else {
             console.log('Form is invalid or incomplete! Not submitting.');
         }
@@ -167,7 +187,7 @@ function SignUpForm() {
         }}>
             <DialogTitle sx={{textAlign: 'center'}}>
                 <IconButton
-                    onClick={handleClick}
+                    onClick={handleClose}
                     aria-label="close"
                     sx={{
                         position: 'absolute',
@@ -185,7 +205,7 @@ function SignUpForm() {
             <DialogContent>
                 <Box component="form" noValidate onSubmit={handleSignUp} sx={{mt: 1}}>
                     <CustomTextField
-                        name="name"
+                        name="displayName"
                         label="Your name"
                         required
                         autoFocus

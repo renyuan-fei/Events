@@ -7,8 +7,7 @@ import {
     Divider,
     FormControlLabel,
     IconButton,
-    Link,
-    Typography,
+    Link, Typography,
     useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,9 +20,12 @@ import {ImageComp} from "@ui/Image.tsx";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import React, {FormEvent, useEffect, useState} from "react";
 import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
-import {useLoginQuery} from "@apis/Account.ts";
-import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
-import {LoadingComponent} from "@ui/LoadingComponent.tsx";
+import {
+    setAlertInfo,
+    setLoginForm,
+    setSignUpForm
+} from "@features/commonSlice.ts";
+import {useLoginMutation} from "@apis/Account.ts";
 
 interface FormValues {
     email: string;
@@ -35,24 +37,33 @@ interface FormErrors {
 }
 
 function LoginForm() {
+    const dispatch = useAppDispatch()
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.LoginOpen);
-    const dispatch = useAppDispatch()
-
     const [Height, setHeight] = useState(580)
-
     const [formErrors, setFormErrors] = useState<FormErrors>({});
-
     const [formValues, setFormValues] = useState<FormValues>({
         email: 'TestEmail@example.com',
         password: 'TestPassword123456789',
     });
 
-    const loginQuery = useLoginQuery(formValues);
+    const { mutate: loginMutate} = useLoginMutation(formValues, ()=>{
+        dispatch(setAlertInfo({
+            open: true,
+            message: 'You have been logged in',
+            severity: 'success',
+        }));
+        dispatch(setLoginForm(false))
+    },(error: any)=>{
+        dispatch(setAlertInfo({
+            open: true,
+            message: error.message,
+            severity: 'error',
+        }));
+    });
 
-
-    function handleClick(): void {
-        dispatch(setLoginForm())
+    function handleClose(): void {
+        dispatch(setLoginForm(false))
         setFormValues({
             email: '',
             password: '',
@@ -61,7 +72,8 @@ function LoginForm() {
     }
 
     function handleOpenSignUp() {
-        dispatch(setSignUpForm())
+        dispatch(setSignUpForm(true))
+        dispatch(setLoginForm(false))
     }
 
     function validate(name: keyof FormValues, value: string): FormErrors {
@@ -106,8 +118,6 @@ function LoginForm() {
         setHeight(baseDialogHeight + errorHeightIncrement * errorCount);
     }, [formErrors]);
 
-
-
     const handleLogin = (event: FormEvent) => {
         event.preventDefault();
 
@@ -122,19 +132,11 @@ function LoginForm() {
 
         if (isFormValid) {
             console.log('Form is valid! Submitting...', formValues);
-
-            // login logical operation
-            loginQuery.refetch();
-            
-            if (loginQuery.isLoading) {
-                return <LoadingComponent/>;
-            }
-
+            loginMutate();
         } else {
             console.log('Form is invalid or incomplete! Not submitting.');
         }
     };
-
 
     return (
         <Dialog open={open} maxWidth="xs" fullWidth sx={{
@@ -145,10 +147,11 @@ function LoginForm() {
             },
         }}
         >
+
             <DialogTitle sx={{textAlign: 'center', m: 0, pt: 6}}>
                 <IconButton
                     aria-label="close"
-                    onClick={handleClick}
+                    onClick={handleClose}
                     sx={{
                         position: 'absolute',
                         right: theme.spacing(2),

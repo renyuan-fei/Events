@@ -7,32 +7,13 @@ import {Logo} from "./Logo";
 import SearchComponent from "@ui/Search.tsx";
 import {RootState} from "@store/store.ts";
 import {useSelector} from "react-redux";
-import {useEffect, useState} from "react";
-import {queryClient} from "@apis/queryClient.ts";
 import {UserBar} from "@ui/User/UserBar.tsx";
-
-interface cacheProp
-{
-    displayName: string;
-    image: string;
-}
 
 export function NavBar() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const isLogin = useSelector((state : RootState) => state.user.isLogin)
-    const [name, setName] = useState('');
-    const [imgUrl, setImgUrl] = useState('');
+    const {isLogin, userName, imageUrl} = useSelector((state : RootState) => state.user)
 
-    useEffect(() => {
-        const cache : cacheProp | undefined= queryClient.getQueryData('userInfo');
-        if (cache) {
-            setName(cache.displayName);
-            setImgUrl(cache.image);
-        }
-    }, [isLogin]);
-
-    console.log(isMobile);
     return (
         <AppBar position="fixed" color="inherit"
                 sx={{
@@ -70,8 +51,7 @@ export function NavBar() {
                     </Grid>
 
                     <Grid item xs={6} sm={3} md={3} lg={2.2} order={{xs: 2, sm: 3}}>
-                        {isLogin ? <UserBar displayName={name}  image={imgUrl}/> : <AuthLanguageControl/>}
-                        {/*<AuthLanguageControl/>*/}
+                        {isLogin ? <UserBar displayName={userName}  image={imageUrl}/> : <AuthLanguageControl/>}
                     </Grid>
                 </Grid>)}
             </Toolbar>

@@ -18,8 +18,9 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 // 创建一个 Axios 实例
-const axiosInstance: AxiosInstance = axios.create({
+const apiClient: AxiosInstance = axios.create({
     baseURL: BASE_URL, // 替换为你的 API 基础 URL
+    // withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
         // 可以根据需要添加其他默认请求头
@@ -28,11 +29,11 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 // 可以添加请求拦截器
-axiosInstance.interceptors.request.use(config => {
-    const token= localStorage.getItem('jwt');
+apiClient.interceptors.request.use(config => {
+    const token = localStorage.getItem('jwt');
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
@@ -42,7 +43,7 @@ axiosInstance.interceptors.request.use(config => {
 });
 
 // 可以添加响应拦截器
-axiosInstance.interceptors.response.use(
+apiClient.interceptors.response.use(
     (response: AxiosResponse) => response,
     async (error: AxiosError) => {
         const originalRequest = error.config as CustomAxiosRequestConfig;
@@ -53,9 +54,7 @@ axiosInstance.interceptors.response.use(
             originalRequest._retry = true; // 标记这是一次重试请求
 
             try {
-                // 替换为你的刷新 token URL 和逻辑
-                const refreshToken = localStorage.getItem('refreshToken'); // 假设你的 refresh token 存储在本地
-                const response = await axios.get(`https://your-api-refresh-token-url.com/?refreshToken=${refreshToken}`);
+                const response = await axios.get(`/api/Account/refresh`);
 
                 if (response.status === 200) {
                     // 存储新 token 到本地
@@ -67,7 +66,7 @@ axiosInstance.interceptors.response.use(
                     originalRequest.headers['Authorization'] = 'Bearer ' + response.data.token;
 
                     // 如果需要，也更新 Axios 实例的默认头部
-                    axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
+                    apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
 
                     // 重新发起原始请求
                     return axios(originalRequest);
@@ -79,9 +78,28 @@ axiosInstance.interceptors.response.use(
             }
         }
 
+        //TODO error handle
+        if (error.response) {
+            // 可以根据不同的状态码做不同的处理
+            if (error.response.status === 401) {
+                // 未授权逻辑
+                console.log('unauthorized');
+                return Promise.reject(error.response.data);
+            } else if (error.response.status === 404) {
+                // 资源未找到逻辑
+                console.log('not found');
+                return Promise.reject(error.response.data);
+            } else {
+                // 其他错误
+                console.log(error.response.data);
+                return Promise.reject(error.response.data);
+            }
+        }
+
         // 对于其他响应错误直接返回
         return Promise.reject(error);
     }
 );
 
-export default axiosInstance;
+export default apiClient;
+export type ApiClient = typeof apiClient;

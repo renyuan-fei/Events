@@ -1,13 +1,14 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import {useAppDispatch} from "@store/store.ts";
-import { setLoginForm} from "@features/commonSlice.ts";
+import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 
 export function LoginButton() {
     const dispatch = useAppDispatch()
 
-    function handleClick(): void {
-        dispatch(setLoginForm())
+    function handleOpen(): void {
+        dispatch(setLoginForm(true))
+        dispatch(setSignUpForm(false))
     }
 
     return (
@@ -22,7 +23,7 @@ export function LoginButton() {
                     backgroundColor: 'transparent', // 保持背景透明或设置您希望的颜色
                 },
             }}
-                    onClick={handleClick}>
+                    onClick={handleOpen}>
                 Login
             </Button>
         </Box>

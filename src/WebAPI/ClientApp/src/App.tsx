@@ -35,8 +35,8 @@ function App() {
 
     useEffect(() => {
         // 检查本地存储中是否有JWT令牌
-        if (localStorage.getItem('jwt')) {
-            currentUserQuery.refetch(); // 手动触发用户数据获取请求
+        if (localStorage.getItem('jwt' )) {
+            currentUserQuery.refetch();
         }
     }, []);
 

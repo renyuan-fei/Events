@@ -75,7 +75,12 @@ public class AccountController : BaseController
   public async Task<ActionResult<AccountResponseDTO>> Register(
       [ FromBody ] RegisterDTO registerDTO)
   {
-    if (!ModelState.IsValid) { return BadRequest(ModelState); }
+    if (!ModelState.IsValid) { return BadRequest("Incomplete information"); }
+
+    if (await _userManager.FindByEmailAsync(registerDTO.Email) != null)
+    {
+      return BadRequest("Email is already taken.");
+    }
 
     var user = new ApplicationUser
     {
@@ -85,17 +90,32 @@ public class AccountController : BaseController
         PhoneNumber = registerDTO.PhoneNumber
     };
 
-    if (await _userManager.FindByEmailAsync(registerDTO.Email) != null)
-    {
-      return BadRequest("Email is already taken.");
-    }
-
     var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
     if (!result.Succeeded) { return BadRequest(result.Errors); }
 
-    return await GenerateTokenResponse(user);
+    return await GenerateTokenResponse(user, updateRefreshToken: true);
   }
+
+  /// <summary>
+  /// Checks if the email is registered in the system.
+  /// </summary>
+  /// <param name="email">The email to be checked.</param>
+  /// <returns>Returns an ActionResult with HTTP status code Ok if the email is not registered,
+  /// otherwise returns an ActionResult with HTTP status code BadRequest.</returns>
+  [ HttpGet("email") ]
+  public async Task<ActionResult> IsEmailRegistered([ FromQuery ] string email)
+  {
+    var isEmailRegistered = await _userManager.FindByEmailAsync(email) != null;
+
+    if (isEmailRegistered)
+    {
+      return BadRequest();
+    }
+
+    return Ok();
+  }
+
 
   /// <summary>
   ///   Login endpoint for authenticating users.
@@ -242,7 +262,7 @@ public class AccountController : BaseController
 
     if (user.RefreshToken == null && user.RefreshTokenExpirationDateTime == DateTime.MinValue)
     {
-      return BadRequest("User is not logout.");
+      return BadRequest("User is not login.");
     }
 
     // 清除用户的刷新令牌和过期时间
