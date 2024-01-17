@@ -6,26 +6,28 @@ import {useAppDispatch} from "@store/store.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 import axios from "axios";
+import {ApiResponse} from "@type/ApiResponse.ts";
 
 
 // 登录请求
-export async function login(requestData: LoginRequest) {
-    const response = await apiClient.post<AuthResponse>('/api/Account/Login', requestData);
+async function login(requestData: LoginRequest) : Promise<AuthResponse> {
+    const response = await apiClient.post<ApiResponse<AuthResponse>>('/api/Account/Login', requestData);
     return handleResponse(response);
 }
 
-export async function register(requestData: RegisterRequest) {
-    const response = await apiClient.post<AuthResponse>('/api/Account/Register', requestData);
+async function register(requestData: RegisterRequest) : Promise<AuthResponse> {
+    const response = await apiClient.post<ApiResponse<AuthResponse>>('/api/Account/Register', requestData);
     return handleResponse(response);
 }
 
 
-export async function logout() : Promise<void> {
+async function logout() : Promise<void> {
     await apiClient.post<AuthResponse>('/api/Account/Logout');
 }
 
-export async function getCurrentUser() {
-    const response = await apiClient.get<AuthResponse>('/api/Account/')
+async function getCurrentUser(): Promise<AuthResponse> {
+    const response = await apiClient.get<ApiResponse<AuthResponse>>('/api/Account/')
+    console.log(response);
     return handleResponse(response);
 }
 
@@ -49,6 +51,7 @@ export const useLoginMutation = (
         () => login(loginRequest),
         {
             onSuccess: (data: AuthResponse) => {
+                console.log("login:",data);
                 dispatch(loginAction({ token: data.token , userName: data.displayName, imageUrl: data.image }));
 
                 if (additionalOnSuccess) {

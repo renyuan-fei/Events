@@ -58,7 +58,11 @@ public static class ConfigureServiceExtension
 
     if (configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value == "Development")
     {
-      services.AddControllersWithViews();
+      // services.AddControllersWithViews();
+      services.AddControllersWithViews(options =>
+                                           options.Filters
+                                                  .Add<ApiExceptionFilterAttribute>())
+              .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
     }
     else
     {

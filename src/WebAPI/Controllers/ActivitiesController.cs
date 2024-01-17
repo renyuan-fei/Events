@@ -1,10 +1,13 @@
 using Application.common.DTO;
 using Application.common.Models;
 using Application.CQRS.Activities.Commands.CreateActivity;
+using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
 using Application.CQRS.Activities.Queries.GetPaginatedActivities;
 using Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
+using Application.CQRS.Attendees.Commands.AddAttendee;
+using Application.CQRS.Attendees.Commands.DeleteAttendee;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +38,7 @@ public class ActivitiesController : BaseController
   /// <param name="pageNumber"></param>
   /// <returns>An ActionResult containing the paginated list of activities.</returns>
   [ HttpGet("{pageNumber:int}/{pageSize:int?}") ]
-  public async Task<ActionResult<IEnumerable<Activity>>> GetPaginatedListActivities(
+  public async Task<OkObjectResult> GetPaginatedListActivities(
       int                         pageNumber,
       int?                        pageSize,
       [ FromQuery ] FilterParams? filterParams)
@@ -50,7 +53,8 @@ public class ActivitiesController : BaseController
         FilterParams = filterParams
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<PaginatedList<ActivityWithHostUserDTO>>.Success(result));
+    // return Ok(result);
   }
 
   // GET: api/Activities/5
@@ -63,11 +67,12 @@ public class ActivitiesController : BaseController
   ///   IActionResult with the specified Activity entity.
   /// </returns>
   [ HttpGet("{id}") ]
-  public async Task<ActionResult<Activity>> GetActivity(string id)
+  public async Task<OkObjectResult> GetActivity(string id)
   {
     var result = await Mediator!.Send(new GetActivityWithAttendeesByIdQuery { Id = id });
 
-    return Ok(result);
+    return Ok(ApiResponse<ActivityWithAttendeeDTO>.Success(result));
+    // return Ok(result);
   }
 
   // PUT: api/Activities/5
@@ -84,7 +89,7 @@ public class ActivitiesController : BaseController
   [ Authorize ]
   // [ Authorize(Policy = "IsActivityHost") ]
   [ HttpPut("{id}") ]
-  public async Task<IActionResult> PutActivity(
+  public async Task<OkObjectResult> PutActivity(
       string                   id,
       [ FromBody ] ActivityDTO activity)
   {
@@ -93,7 +98,8 @@ public class ActivitiesController : BaseController
         Id = id, Activity = activity
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<Result>.Success(result));
+    // return Ok(result);
   }
 
   // POST: api/Activities
@@ -116,7 +122,8 @@ public class ActivitiesController : BaseController
         CurrentUserId = CurrentUserService!.Id!
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<Result>.Success(result));
+    // return Ok(result);
   }
 
   // DELETE: api/Activities/5
@@ -130,15 +137,43 @@ public class ActivitiesController : BaseController
   /// </returns>
   [ Authorize ]
   [ Authorize(Policy = "IsActivityHost") ]
-  [ HttpDelete("{id:guid}") ]
-  public async Task<IActionResult> DeleteActivity(Guid id) { return Ok(); }
+  [ HttpDelete("{id}") ]
+  public async Task<IActionResult> DeleteActivity(string id)
+  {
+    var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
+
+    return Ok(ApiResponse<Result>.Success());
+  }
 
   /// <summary>
   ///   Updates the attendees for a specific activity.
   /// </summary>
-  /// <param name="id">The ID of the activity.</param>
+  /// <param name="activityId"></param>
+  /// <param name="userId"></param>
   /// <returns>An IActionResult representing the status of the update.</returns>
   [ Authorize ]
-  [ HttpPut("{id:guid}/attendees") ]
-  public async Task<IActionResult> UpdateActivityAttendees(Guid id) { return Ok(); }
+  [ HttpDelete("{activityId}/attendees/{userId}") ]
+  public async Task<IActionResult> DeleteAttendee(string activityId, string userId)
+  {
+    var result =
+        await Mediator!.Send(new RemoveAttendeeCommand
+        {
+            ActivityId = activityId, UserId = userId
+        });
+
+    return Ok(ApiResponse<Result>.Success(result));
+  }
+
+  [ Authorize ]
+  [ HttpDelete("{activityId}/attendees/{userId}") ]
+  public async Task<IActionResult> AddAttendee(string activityId, string userId)
+  {
+    var result =
+        await Mediator!.Send(new AddAttendeeCommand
+        {
+            ActivityId = activityId, UserId = userId
+        });
+
+    return Ok(ApiResponse<Result>.Success(result));
+  }
 }

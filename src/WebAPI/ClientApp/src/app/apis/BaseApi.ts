@@ -17,7 +17,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
     _retry?: boolean;
 }
 
-// 创建一个 Axios 实例
+// build a custom axios request interceptor
 const apiClient: AxiosInstance = axios.create({
     baseURL: BASE_URL, // 替换为你的 API 基础 URL
     // withCredentials: true,
@@ -44,8 +44,11 @@ apiClient.interceptors.request.use(config => {
 
 // 可以添加响应拦截器
 apiClient.interceptors.response.use(
-    (response: AxiosResponse) => response,
+    (response: AxiosResponse) => {
+        return Promise.resolve(response);
+    },
     async (error: AxiosError) => {
+
         const originalRequest = error.config as CustomAxiosRequestConfig;
 
         // 检查错误是否为 401 并且这不是用于刷新 token 的请求
@@ -80,6 +83,8 @@ apiClient.interceptors.response.use(
 
         //TODO error handle
         if (error.response) {
+
+
             // 可以根据不同的状态码做不同的处理
             if (error.response.status === 401) {
                 // 未授权逻辑

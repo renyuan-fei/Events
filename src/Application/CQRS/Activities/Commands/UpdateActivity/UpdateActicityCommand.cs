@@ -53,9 +53,12 @@ public class
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
-      return result
-          ? Result.Success()
-          : Result.Failure(new[ ] { "Could not update activity." });
+      if (!result)
+      {
+        throw new DbUpdateException("There was an error saving activity data to the database");
+      }
+
+      return Result.Success();
     }
     catch (Exception ex)
     {

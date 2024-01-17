@@ -20,6 +20,8 @@
     "@mui/styled-engine-sc": "^6.0.0-alpha.6",
     "@mui/x-date-pickers": "^6.18.5",
     "@mui/x-tree-view": "^6.17.0",
+    "@react-buddy/ide-toolbox": "^2.4.0",
+    "@react-buddy/palette-mui": "^5.0.1",
     "@tanstack/react-query": "^4.29.5",
     "@tanstack/react-query-devtools": "^4.36.1",
     "axios": "^1.6.2",
@@ -33,9 +35,7 @@
     "react-router-dom": "^6.19.0",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
-    "styled-components": "^6.1.1",
-    "@react-buddy/ide-toolbox": "^2.4.0",
-    "@react-buddy/palette-mui": "^5.0.1"
+    "styled-components": "^6.1.1"
   },
   "devDependencies": {
     "@reduxjs/toolkit": "^1.9.7",
@@ -53,6 +53,7 @@
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
+    "rollup-plugin-ignore": "^1.0.10",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",

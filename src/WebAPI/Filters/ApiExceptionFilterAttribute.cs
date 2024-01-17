@@ -1,4 +1,5 @@
 using Application.common.Exceptions;
+using Application.common.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -63,24 +64,36 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
   {
     var exception = (ValidationException)context.Exception;
 
-    var details = new ValidationProblemDetails(exception.Errors)
+    var problemDetails = new ValidationProblemDetails(exception.Errors)
     {
         Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
     };
 
-    context.Result = new BadRequestObjectResult(details);
+    var response =
+        ApiResponse<ValidationProblemDetails>.Failure("Validation error occurred",
+                                                      StatusCodes.Status400BadRequest,
+                                                      problemDetails);
+
+    context.Result = new BadRequestObjectResult(response);
 
     context.ExceptionHandled = true;
   }
 
   private void HandleInvalidModelStateException(ExceptionContext context)
   {
-    var details = new ValidationProblemDetails(context.ModelState)
+    var problemDetails = new ValidationProblemDetails(context.ModelState)
     {
+        Status = StatusCodes.Status400BadRequest,
+        Title = "Validation Error",
         Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
     };
 
-    context.Result = new BadRequestObjectResult(details);
+    var response =
+        ApiResponse<ValidationProblemDetails>.Failure("Invalid model state",
+                                                      StatusCodes.Status400BadRequest,
+                                                      problemDetails);
+
+    context.Result = new BadRequestObjectResult(response);
 
     context.ExceptionHandled = true;
   }
@@ -89,65 +102,58 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
   {
     var exception = (NotFoundException)context.Exception;
 
-    var details = new ProblemDetails
+    var problemDetails = new ProblemDetails
     {
-        Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-        Title = "The specified resource was not found.",
-        Detail = exception.Message
+        Status = StatusCodes.Status404NotFound,
+        Title = "Not Found",
+        Detail = exception.Message,
+        Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4"
     };
 
-    context.Result = new NotFoundObjectResult(details);
+    var response =
+        ApiResponse<ProblemDetails>.Failure("Resource not found",
+                                            StatusCodes.Status404NotFound,
+                                            problemDetails);
+
+    context.Result = new NotFoundObjectResult(response);
 
     context.ExceptionHandled = true;
   }
 
   private void HandleUnauthorizedAccessException(ExceptionContext context)
   {
-    var details = new ProblemDetails
+    var problemDetails = new ProblemDetails
     {
         Status = StatusCodes.Status401Unauthorized,
         Title = "Unauthorized",
         Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
     };
 
-    context.Result = new ObjectResult(details)
-    {
-        StatusCode = StatusCodes.Status401Unauthorized
-    };
+    var response = ApiResponse<ProblemDetails>.Failure("Unauthorized access",
+                                                       StatusCodes.Status401Unauthorized,
+                                                       problemDetails);
+
+    context.Result = new ObjectResult(response) { StatusCode = StatusCodes
+        .Status401Unauthorized };
 
     context.ExceptionHandled = true;
   }
 
   private void HandleForbiddenAccessException(ExceptionContext context)
   {
-    var details = new ProblemDetails
+    var problemDetails = new ProblemDetails
     {
         Status = StatusCodes.Status403Forbidden,
         Title = "Forbidden",
         Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
     };
 
-    context.Result = new ObjectResult(details)
-    {
-        StatusCode = StatusCodes.Status403Forbidden
-    };
+    var response =
+        ApiResponse<ProblemDetails>.Failure("Access forbidden",
+                                            StatusCodes.Status403Forbidden,
+                                            problemDetails);
 
-    context.ExceptionHandled = true;
-  }
-
-  private void HandleUnknownException(ExceptionContext context)
-  {
-    var details = new ProblemDetails
-    {
-        Status = StatusCodes.Status500InternalServerError,
-        Title = "An error occurred while processing your request.",
-        Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
-    };
-
-    context.Result = new ObjectResult(details)
-    {
-        StatusCode = StatusCodes.Status500InternalServerError
-    };
+    context.Result = new ObjectResult(response) { StatusCode = StatusCodes.Status403Forbidden };
 
     context.ExceptionHandled = true;
   }
@@ -156,18 +162,47 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
   {
     var exception = context.Exception as DbUpdateException;
 
-    var details = new ProblemDetails
+    var problemDetails = new ProblemDetails
     {
-        Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-        Title = "An error occurred while processing your request.",
         Status = StatusCodes.Status500InternalServerError,
-        Detail = exception!.Message
+        Title = "Database Update Error",
+        Detail = exception?.Message,
+        Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
     };
 
-    context.Result = new ObjectResult(details)
+    var response =
+        ApiResponse<ProblemDetails>
+            .Failure("An error occurred while updating the database",
+                     StatusCodes.Status500InternalServerError,
+                     problemDetails);
+
+    context.Result = new ObjectResult(response)
     {
         StatusCode = StatusCodes.Status500InternalServerError
     };
+
+    context.ExceptionHandled = true;
+  }
+
+  private void HandleUnknownException(ExceptionContext context)
+  {
+    var problemDetails = new ProblemDetails
+    {
+        Status = StatusCodes.Status500InternalServerError,
+        Title = "An unknown error occurred",
+        Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+    };
+
+    var response = ApiResponse<ProblemDetails>.Failure("An unexpected error occurred",
+                                                       StatusCodes
+                                                           .Status500InternalServerError,
+                                                       problemDetails);
+
+    context.Result =
+        new ObjectResult(response)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
 
     context.ExceptionHandled = true;
   }

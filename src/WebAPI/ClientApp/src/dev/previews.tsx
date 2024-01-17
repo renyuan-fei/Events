@@ -2,9 +2,8 @@ import {ComponentPreview, Previews} from "@react-buddy/ide-toolbox";
 import {PaletteTree} from "./palette";
 import SignUpForm from "@features/user/SignUpForm.tsx";
 import LoginForm from "@features/user/LoginForm.tsx";
-import SvgButton from "@ui/User/SvgButton.tsx";
-import {UserBar} from "@ui/User/UserBar.tsx";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
+import Intro from "@ui/Intro.tsx";
 
 const ComponentPreviews = () => {
     return (
@@ -17,16 +16,11 @@ const ComponentPreviews = () => {
                 <LoginForm/>
             </ComponentPreview>
             <ComponentPreview
-                path="/Connections">
-                <SvgButton/>
-            </ComponentPreview>
-            <ComponentPreview
-                path="/UserBar">
-                <UserBar/>
-            </ComponentPreview>
-            <ComponentPreview
                 path="/LoadingComponent">
                 <LoadingComponent/>
+            </ComponentPreview>
+            <ComponentPreview path="/Intro">
+                <Intro/>
             </ComponentPreview>
         </Previews>
     );

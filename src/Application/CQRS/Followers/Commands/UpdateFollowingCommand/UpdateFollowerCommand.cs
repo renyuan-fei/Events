@@ -2,6 +2,7 @@ using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Models;
+using Application.CQRS.Activities.Commands.UpdateActivity;
 
 using Domain.Entities;
 using Domain.Repositories;
@@ -73,14 +74,17 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
-      return result
-          ? Result.Success()
-          : Result.Failure(new[ ] { "Failed to update follower" });
+      if (!result)
+      {
+        throw new Exception("There was an error saving data to the database");
+      }
+
+      return Result.Success();
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
-
+      _logger.LogError(ex, "Error occurred in {Name}: {ExMessage}", nameof(UpdateActivityCommand), ex
+                           .Message);
       throw;
     }
   }

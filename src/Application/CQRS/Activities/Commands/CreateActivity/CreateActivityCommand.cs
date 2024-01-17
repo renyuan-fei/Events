@@ -48,7 +48,6 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
   {
     try
     {
-
       var activity = Activity.Create(request.ActivityDTO.Title,
                                      request.ActivityDTO.Date,
                                      Enum.Parse<Category>(request.ActivityDTO.Category),
@@ -68,12 +67,12 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
-      return result
-          ? Result.Success()
-          : Result.Failure(new[ ]
-          {
-              "There was an error saving activity data to the database"
-          });
+      if (!result)
+      {
+        throw new DbUpdateException("There was an error saving data to the database");
+      }
+
+      return Result.Success();
     }
     catch (Exception ex)
     {

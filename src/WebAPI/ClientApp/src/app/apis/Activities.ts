@@ -1,6 +1,10 @@
 import apiClient from "@apis/BaseApi.ts";
+import {handleResponse} from "@apis/ApiHandler.ts";
+import {ApiResponse} from "@type/ApiResponse.ts";
+import {Activity} from "@type/Activity.ts";
+import {useQuery} from "react-query";
 
-export async function GetActivities({
+async function GetActivities({
                                         page = 1,
                                         pageSize = 10,
                                         searchTerm = []
@@ -18,24 +22,24 @@ export async function GetActivities({
         url += `?${params.toString()}`;
     }
 
-    try {
-        const response = await apiClient.get<paginatedResponse>(url);
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    const response = await apiClient.get<ApiResponse<paginatedResponse>>(url);
+
+    return handleResponse(response);
+}
+async function GetActivity(id: string) {
+    const response = await apiClient.get<ApiResponse<Activity>>(`/api/Activities/${id}`)
+    return handleResponse(response);
 }
 
+// const { data, isLoading, error } = useQuery<ApiResponse<paginatedResponse>, Error>(['upcomingActivities', 1, 8], () => GetActivities({ page: 1, pageSize: 8 }));
 
+export const useGetActivitiesQuery = () => {
+    return useQuery(['paginatedActivities', 1, 8], () => GetActivities({ page: 1, pageSize: 8 }), {
+    })
+}
 
-
-
-export async function GetActivity(id: string) {
-    apiClient.get(`/api/Activities/${id}`)
-        .then(response => {
-            console.log(response.data);
-        }).catch(error => {
-        console.log(error);
+export const useGetActivityQuery = (id: string) => {
+    return useQuery(['activities', id], () => GetActivity(id), {
+        enabled: false
     })
 }

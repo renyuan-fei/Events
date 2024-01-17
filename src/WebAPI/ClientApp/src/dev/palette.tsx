@@ -15,7 +15,7 @@ export const PaletteTree = () => (
                 </Variant>
             </Component>
         </Category>
-        <MUIPalette/>
+        <Palette/>
     </Palette>
 );
 

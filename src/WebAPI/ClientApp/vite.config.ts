@@ -1,7 +1,7 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tsconfigPaths from "vite-tsconfig-paths";
-
+import ignore from "rollup-plugin-ignore";
 // https://vitejs.dev/config/
 
 export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
@@ -15,7 +15,14 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
             host: true,
             strictPort: true
         },
-        build: {},
+        build: {
+            rollupOptions: {
+                plugins: [
+                    // TODO ignore dev dir
+                    // ignore([PaletteTree])
+                ]
+            }
+        },
         preview:
             {
                 port: 5173,

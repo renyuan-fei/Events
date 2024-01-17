@@ -3,6 +3,9 @@ using System.Security.Claims;
 using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Interfaces;
+using Application.common.Models;
+
+using CloudinaryDotNet.Actions;
 
 using Domain.Constant;
 using Domain.Repositories;
@@ -79,7 +82,7 @@ public class AccountController : BaseController
 
     if (await _userManager.FindByEmailAsync(registerDTO.Email) != null)
     {
-      return BadRequest("Email is already taken.");
+      return BadRequest(ApiResponse<Result>.Failure("Email is already taken."));
     }
 
     var user = new ApplicationUser
@@ -92,7 +95,7 @@ public class AccountController : BaseController
 
     var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
-    if (!result.Succeeded) { return BadRequest(result.Errors); }
+    if (!result.Succeeded) { return BadRequest(ApiResponse<Result>.Failure("Error occurred when registering")); }
 
     return await GenerateTokenResponse(user, updateRefreshToken: true);
   }
@@ -110,7 +113,7 @@ public class AccountController : BaseController
 
     if (isEmailRegistered)
     {
-      return BadRequest();
+      return BadRequest(ApiResponse<Result>.Failure("Email is already taken."));
     }
 
     return Ok();
@@ -135,19 +138,19 @@ public class AccountController : BaseController
     var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
     if (!result.Succeeded)
     {
-      return BadRequest("Email or password is incorrect.");
+      return BadRequest(ApiResponse<Result>.Failure("Email or password is incorrect."));
     }
 
     var user = await _userManager.FindByEmailAsync(loginDTO.Email);
     if (user == null)
     {
-      return Unauthorized("User not found.");
+      return Unauthorized(ApiResponse<Result>.Failure("User not found."));
     }
 
     // 确保所有必要的用户信息都存在
     if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.UserName))
     {
-      return Unauthorized("User information is incomplete.");
+      return Unauthorized(ApiResponse<Result>.Failure("User information is incomplete."));
     }
 
     // 登录成功，生成带有更新刷新令牌的响应
@@ -175,18 +178,18 @@ public class AccountController : BaseController
     var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
     if (user == null)
     {
-      return Unauthorized("User not found.");
+      return Unauthorized(ApiResponse<Result>.Failure("User not found"));
     }
 
     if (user.RefreshTokenExpirationDateTime== DateTime.MinValue && user.RefreshToken== null)
     {
-      return Unauthorized("user is not logged in.");
+      return Unauthorized(ApiResponse<Result>.Failure("user is not logged in"));
     }
 
     // 确保所有必要的用户信息都存在
     if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.UserName))
     {
-      return Unauthorized("User information is incomplete.");
+      return Unauthorized(ApiResponse<Result>.Failure("User information is incomplete"));
     }
 
     // 获取当前用户信息，不更新刷新令牌
@@ -217,14 +220,14 @@ public class AccountController : BaseController
     // 检查令牌是否为空
     if (string.IsNullOrEmpty(jwtToken) || string.IsNullOrEmpty(refreshToken))
     {
-      return BadRequest("Invalid token request");
+      return BadRequest(ApiResponse<Result>.Failure("Invalid request"));
     }
 
     // 验证JWT令牌
     var principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken, false);
 
     // 检查JWT令牌是否无效
-    if (principal == null) { return BadRequest("Invalid JWT token"); }
+    if (principal == null) { return BadRequest(ApiResponse<Result>.Failure("Invalid JWT token")); }
 
     // 从JWT令牌中获取用户信息
     var email = principal.FindFirstValue(ClaimTypes.Email);
@@ -235,7 +238,7 @@ public class AccountController : BaseController
     // 验证刷新令牌和过期时间
     if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpirationDateTime <= DateTime.Now)
     {
-      return BadRequest("Invalid refresh token");
+      return BadRequest(ApiResponse<Result>.Failure("Invalid refresh token"));
     }
 
     // 生成新的Access令牌，同时更新刷新令牌
@@ -257,12 +260,12 @@ public class AccountController : BaseController
 
     if (user == null)
     {
-      return BadRequest("User not found");
+      return BadRequest(ApiResponse<Result>.Failure("User not found"));
     }
 
     if (user.RefreshToken == null && user.RefreshTokenExpirationDateTime == DateTime.MinValue)
     {
-      return BadRequest("User is not login.");
+      return BadRequest(ApiResponse<Result>.Failure("user is not logged in"));
     }
 
     // 清除用户的刷新令牌和过期时间
@@ -330,6 +333,6 @@ public class AccountController : BaseController
         Image = image != null ? image.Details.Url : DefaultImage.DefaultUserImageUrl
     };
 
-    return Ok(responseDto);
+    return Ok(ApiResponse<AccountResponseDTO>.Success(responseDto));
   }
 }
