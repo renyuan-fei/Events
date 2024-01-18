@@ -9,18 +9,18 @@ import {ApiResponse} from "@type/ApiResponse.ts";
 
 
 // 登录请求
-async function login(requestData: LoginRequest) : Promise<AuthResponse> {
+async function login(requestData: LoginRequest): Promise<AuthResponse> {
     const response = await apiClient.post<ApiResponse<AuthResponse>>('/api/Account/Login', requestData);
     return handleResponse(response);
 }
 
-async function register(requestData: RegisterRequest) : Promise<AuthResponse> {
+async function register(requestData: RegisterRequest): Promise<AuthResponse> {
     const response = await apiClient.post<ApiResponse<AuthResponse>>('/api/Account/Register', requestData);
     return handleResponse(response);
 }
 
 
-async function logout() : Promise<void> {
+async function logout(): Promise<void> {
     await apiClient.post<AuthResponse>('/api/Account/Logout');
 }
 
@@ -30,9 +30,9 @@ async function getCurrentUser(): Promise<AuthResponse> {
     return handleResponse(response);
 }
 
-export async function checkEmailRegistered (email : string){
+export async function checkEmailRegistered(email: string) {
     try {
-        const response = await axios.get(`https://localhost:7095/api/Account/email`, { params: { email } });
+        const response = await axios.get(`https://localhost:7095/api/Account/email`, {params: {email}});
         return response.status !== 200;
     } catch (error) {
         return true; // 假设错误意味着电子邮件已注册
@@ -40,18 +40,22 @@ export async function checkEmailRegistered (email : string){
 };
 
 export const useLoginMutation = (
-    loginRequest: LoginRequest,
     additionalOnSuccess?: (data: AuthResponse) => void,
     additionalOnError?: (error: any) => void
 ) => {
     const dispatch = useAppDispatch();
 
     return useMutation(
-        () => login(loginRequest),
+        (loginRequest: LoginRequest) => login(loginRequest),
         {
             onSuccess: (data: AuthResponse) => {
-                console.log("login:",data);
-                dispatch(loginAction({ token: data.token , userName: data.displayName, imageUrl: data.image }));
+
+                console.log("login:", data);
+                dispatch(loginAction({
+                    token: data.token,
+                    userName: data.displayName,
+                    imageUrl: data.image
+                }));
 
                 if (additionalOnSuccess) {
                     additionalOnSuccess(data);
@@ -68,16 +72,19 @@ export const useLoginMutation = (
 };
 
 
-
-export const useRegisterMutation = (registerRequest: RegisterRequest,additionalOnSuccess?: (data: AuthResponse) => void,
+export const useRegisterMutation = (additionalOnSuccess?: (data: AuthResponse) => void,
                                     additionalOnError?: (error: any) => void) => {
     const dispatch = useAppDispatch();
 
     return useMutation(
-        () => register(registerRequest),
+        (registerRequest: RegisterRequest) => register(registerRequest),
         {
             onSuccess: (data: AuthResponse) => {
-                dispatch(loginAction({ token: data.token , userName: data.displayName, imageUrl: data.image }));
+                dispatch(loginAction({
+                    token: data.token,
+                    userName: data.displayName,
+                    imageUrl: data.image
+                }));
                 if (additionalOnSuccess) {
                     additionalOnSuccess(data);
                 }
@@ -120,7 +127,11 @@ export const useGetCurrentUserQuery = () => {
     return useQuery("userInfo", () => getCurrentUser(), {
         enabled: false,
         onSuccess(data: AuthResponse) {
-            dispatch(loginAction({ token: data.token , userName: data.displayName, imageUrl: data.image }));
+            dispatch(loginAction({
+                token: data.token,
+                userName: data.displayName,
+                imageUrl: data.image
+            }));
         },
         onError(error: any) {
             console.log(error);

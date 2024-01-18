@@ -1,15 +1,13 @@
 using Application.common.DTO;
-using Application.common.Helpers;
 using Application.Common.Helpers;
 using Application.common.Interfaces;
 
 using Domain.Repositories;
-using Domain.ValueObjects;
 using Domain.ValueObjects.Activity;
 
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.Activities.Queries.GetActivity;
+namespace Application.CQRS.Activities.Queries.GetActivityWithAttendees;
 
 [ BypassAuthorization ]
 public record GetActivityWithAttendeesByIdQuery : IRequest<ActivityWithAttendeeDTO>
@@ -47,8 +45,6 @@ public class
   {
     try
     {
-      GuardValidation.AgainstNullOrEmpty(request.Id, "Activity Id cannot be null or empty");
-
       var activityId = new ActivityId(request.Id);
       var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(activityId, cancellationToken);
 

@@ -4,6 +4,7 @@ using Application.CQRS.Activities.Commands.CreateActivity;
 using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Activities.Commands.UpdateActivity;
 using Application.CQRS.Activities.Queries.GetActivity;
+using Application.CQRS.Activities.Queries.GetActivityWithAttendees;
 using Application.CQRS.Activities.Queries.GetPaginatedActivities;
 using Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 using Application.CQRS.Attendees.Commands.AddAttendee;
@@ -19,16 +20,6 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class ActivitiesController : BaseController
 {
-  // GET: api/Activities
-  /// <summary>
-  ///   Handles HTTP GET request to retrieve a list of all Activity entities.
-  /// </summary>
-  /// <returns>
-  ///   A task that represents the asynchronous operation. The task result contains an
-  ///   IActionResult with the list of all Activity entities.
-  /// </returns>
-  [ HttpGet ]
-  public async Task<ActionResult<IEnumerable<Activity>>> GetActivities() { return Ok(); }
 
   /// <summary>
   ///   Retrieves a paginated list of activities.
@@ -54,7 +45,6 @@ public class ActivitiesController : BaseController
     });
 
     return Ok(ApiResponse<PaginatedList<ActivityWithHostUserDTO>>.Success(result));
-    // return Ok(result);
   }
 
   // GET: api/Activities/5
@@ -72,7 +62,6 @@ public class ActivitiesController : BaseController
     var result = await Mediator!.Send(new GetActivityWithAttendeesByIdQuery { Id = id });
 
     return Ok(ApiResponse<ActivityWithAttendeeDTO>.Success(result));
-    // return Ok(result);
   }
 
   // PUT: api/Activities/5
@@ -89,7 +78,7 @@ public class ActivitiesController : BaseController
   [ Authorize ]
   // [ Authorize(Policy = "IsActivityHost") ]
   [ HttpPut("{id}") ]
-  public async Task<OkObjectResult> PutActivity(
+  public async Task<IActionResult> PutActivity(
       string                   id,
       [ FromBody ] ActivityDTO activity)
   {
@@ -99,7 +88,6 @@ public class ActivitiesController : BaseController
     });
 
     return Ok(ApiResponse<Result>.Success(result));
-    // return Ok(result);
   }
 
   // POST: api/Activities
@@ -122,8 +110,9 @@ public class ActivitiesController : BaseController
         CurrentUserId = CurrentUserService!.Id!
     });
 
-    return Ok(ApiResponse<Result>.Success(result));
-    // return Ok(result);
+    return CreatedAtAction(nameof(GetActivity),new {},ApiResponse<Result>.Success(
+                            data: result,
+                            statusCode: StatusCodes.Status201Created));
   }
 
   // DELETE: api/Activities/5
@@ -142,7 +131,7 @@ public class ActivitiesController : BaseController
   {
     var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
 
-    return Ok(ApiResponse<Result>.Success());
+    return Ok(ApiResponse<Result>.Success(result));
   }
 
   /// <summary>
@@ -165,7 +154,7 @@ public class ActivitiesController : BaseController
   }
 
   [ Authorize ]
-  [ HttpDelete("{activityId}/attendees/{userId}") ]
+  [ HttpPost("{activityId}/attendees/{userId}") ]
   public async Task<IActionResult> AddAttendee(string activityId, string userId)
   {
     var result =
@@ -174,6 +163,8 @@ public class ActivitiesController : BaseController
             ActivityId = activityId, UserId = userId
         });
 
-    return Ok(ApiResponse<Result>.Success(result));
+    return CreatedAtAction(nameof(GetActivity),new {},ApiResponse<Result>.Success(data: result,
+        statusCode:
+        StatusCodes.Status201Created));
   }
 }

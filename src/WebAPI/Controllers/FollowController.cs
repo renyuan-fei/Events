@@ -29,7 +29,7 @@ public class FollowController : BaseController
             new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<PaginatedList<FollowerDTO>>.Success(result));
   }
 
   /// <summary>
@@ -47,7 +47,7 @@ public class FollowController : BaseController
             new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<PaginatedList<FollowingDTO>>.Success(result));
   }
 
   // PUT: api/Follow/5
@@ -61,6 +61,6 @@ public class FollowController : BaseController
         FollowerId = CurrentUserService!.Id!
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<Result>.Success(data: result));
   }
 }

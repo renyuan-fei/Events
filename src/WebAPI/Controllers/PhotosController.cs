@@ -1,4 +1,5 @@
 using Application.common.interfaces;
+using Application.common.Models;
 using Application.CQRS.Photos.Commands.CreatePhoto;
 using Application.CQRS.Photos.Commands.DeletePhoto;
 using Application.CQRS.Photos.Commands.UpdatePhoto;
@@ -43,7 +44,8 @@ public class PhotosController : BaseController
         File = file
     })!;
 
-    return Ok(result);
+    return CreatedAtAction("", new { }, ApiResponse<Result>.Success(data: result,
+        statusCode: StatusCodes.Status201Created));
   }
 
   [ HttpPost("{id}") ]
@@ -60,7 +62,8 @@ public class PhotosController : BaseController
         File = file
     })!;
 
-    return Ok(result);
+    return CreatedAtAction("", new { }, ApiResponse<Result>.Success(data: result,
+                             statusCode: StatusCodes.Status201Created));
   }
 
   // PUT: api/Photo/5
@@ -79,7 +82,7 @@ public class PhotosController : BaseController
         PublicId = id
     })!;
 
-    return Ok(result);
+    return Ok(ApiResponse<Result>.Success(data: result));
   }
 
   // DELETE: api/Photo/5
@@ -98,6 +101,6 @@ public class PhotosController : BaseController
         PublicId = id
     })!;
 
-    return Ok(result);
+    return Ok(ApiResponse<Result>.Success(data: result));
   }
 }

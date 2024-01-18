@@ -23,9 +23,9 @@ public class ApiResponse<T>
     Metadata = metadata;
   }
 
-  public static ApiResponse<T?> Success(T data=default(T), string message = "Request successful.", object? metadata = null)
+  public static ApiResponse<T?> Success(T data = default(T), string message = "Request successful.", int statusCode = StatusCodes.Status200OK, object? metadata = null)
   {
-    return new ApiResponse<T?>(StatusCodes.Status200OK, message, metadata, data);
+    return new ApiResponse<T?>(statusCode, message, metadata, data);
   }
 
   public static ApiResponse<T?> Failure(string message, int statusCode = StatusCodes.Status400BadRequest, object? metadata = null)

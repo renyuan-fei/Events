@@ -48,7 +48,7 @@ function LoginForm() {
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.LoginOpen);
     const [Height, setHeight] = useState(580)
-    const { control,reset, handleSubmit,getValues, formState: { errors } } = useForm<FormValues>({
+    const { control,reset, handleSubmit,formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
             email: 'TestEmail@example.com',
@@ -56,8 +56,7 @@ function LoginForm() {
         }
     });
 
-    const formValues: FormValues = getValues()
-    const { mutate: loginMutate, isLoading } = useLoginMutation(formValues, ()=>{
+    const { mutate: loginMutate, isLoading } = useLoginMutation(()=>{
         dispatch(setAlertInfo({
             open: true,
             message: 'You have been logged in',
@@ -93,8 +92,8 @@ function LoginForm() {
         dispatch(setLoginForm(false))
     }
 
-    const onSubmit = () => {
-        loginMutate();
+    const onSubmit = (data: FormValues) => {
+        loginMutate(data);
     };
 
     useEffect(() => {

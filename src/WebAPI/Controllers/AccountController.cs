@@ -97,7 +97,10 @@ public class AccountController : BaseController
 
     if (!result.Succeeded) { return BadRequest(ApiResponse<Result>.Failure("Error occurred when registering")); }
 
-    return await GenerateTokenResponse(user, updateRefreshToken: true);
+    var response =  await GenerateToken(user, updateRefreshToken: true);
+
+    return CreatedAtAction(nameof(Login),new{id = user.Id},ApiResponse<AccountResponseDTO>
+        .Success(data: response, statusCode: StatusCodes.Status201Created));
   }
 
   /// <summary>
@@ -154,7 +157,9 @@ public class AccountController : BaseController
     }
 
     // 登录成功，生成带有更新刷新令牌的响应
-    return await GenerateTokenResponse(user, updateRefreshToken: true);
+    var response = await GenerateToken(user, updateRefreshToken: true);
+
+    return Ok(ApiResponse<AccountResponseDTO>.Success(data: response));
   }
 
   /// <summary>
@@ -193,7 +198,9 @@ public class AccountController : BaseController
     }
 
     // 获取当前用户信息，不更新刷新令牌
-    return await GenerateTokenResponse(user, updateRefreshToken: false);
+    var response = await GenerateToken(user, updateRefreshToken: false);
+
+    return Ok(ApiResponse<AccountResponseDTO>.Success(data: response));
   }
 
   /// <summary>
@@ -220,14 +227,14 @@ public class AccountController : BaseController
     // 检查令牌是否为空
     if (string.IsNullOrEmpty(jwtToken) || string.IsNullOrEmpty(refreshToken))
     {
-      return BadRequest(ApiResponse<Result>.Failure("Invalid request"));
+      return Unauthorized(ApiResponse<Result>.Failure("Invalid request"));
     }
 
     // 验证JWT令牌
     var principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken, false);
 
     // 检查JWT令牌是否无效
-    if (principal == null) { return BadRequest(ApiResponse<Result>.Failure("Invalid JWT token")); }
+    if (principal == null) { return Unauthorized(ApiResponse<Result>.Failure("Invalid JWT token")); }
 
     // 从JWT令牌中获取用户信息
     var email = principal.FindFirstValue(ClaimTypes.Email);
@@ -238,11 +245,13 @@ public class AccountController : BaseController
     // 验证刷新令牌和过期时间
     if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpirationDateTime <= DateTime.Now)
     {
-      return BadRequest(ApiResponse<Result>.Failure("Invalid refresh token"));
+      return Unauthorized(ApiResponse<Result>.Failure("Invalid refresh token"));
     }
 
     // 生成新的Access令牌，同时更新刷新令牌
-    return await GenerateTokenResponse(user, updateRefreshToken: true);
+    var reponse = await GenerateToken(user, updateRefreshToken: true);
+
+    return Ok(ApiResponse<AccountResponseDTO>.Success(data: reponse));
   }
 
   /// <summary>
@@ -265,7 +274,7 @@ public class AccountController : BaseController
 
     if (user.RefreshToken == null && user.RefreshTokenExpirationDateTime == DateTime.MinValue)
     {
-      return BadRequest(ApiResponse<Result>.Failure("user is not logged in"));
+      return Unauthorized(ApiResponse<Result>.Failure("user is not logged in"));
     }
 
     // 清除用户的刷新令牌和过期时间
@@ -291,7 +300,7 @@ public class AccountController : BaseController
   /// <returns>
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
-  async private Task<ActionResult<AccountResponseDTO>> GenerateTokenResponse(ApplicationUser user, bool updateRefreshToken = false)
+  async private Task<AccountResponseDTO> GenerateToken(ApplicationUser user, bool updateRefreshToken = false)
   {
     var tokenDto = new TokenDTO
     {
@@ -333,6 +342,6 @@ public class AccountController : BaseController
         Image = image != null ? image.Details.Url : DefaultImage.DefaultUserImageUrl
     };
 
-    return Ok(ApiResponse<AccountResponseDTO>.Success(responseDto));
+    return responseDto;
   }
 }

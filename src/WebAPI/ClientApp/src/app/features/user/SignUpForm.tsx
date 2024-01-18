@@ -65,7 +65,7 @@ function SignUpForm() {
     const open = useSelector((state: RootState) => state.common.signUpOpen);
     const dispatch = useDispatch();
 
-    const { control,reset, watch, trigger, handleSubmit,getValues, formState: { errors } } = useForm<FormValues>({
+    const { control,reset, watch, trigger, handleSubmit,formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
             displayName: 'TestEmail@example.com',
@@ -103,8 +103,7 @@ function SignUpForm() {
 
     const [Height, setHeight] = useState(780)
 
-    let values = getValues();
-    const { mutate: registerMutate, isLoading} = useRegisterMutation(values, ()=>{
+    const { mutate: registerMutate, isLoading} = useRegisterMutation(()=>{
         dispatch(setAlertInfo({
             open: true,
             message: 'Registration successful',
@@ -137,8 +136,8 @@ function SignUpForm() {
         dispatch(setSignUpForm(false))
     }
 
-    function onSubmit() {
-        registerMutate();
+    function onSubmit(data: FormValues) {
+        registerMutate(data);
     }
 
 
