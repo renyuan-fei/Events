@@ -7,7 +7,7 @@ import {Logo} from "./Logo";
 import SearchComponent from "@ui/Search.tsx";
 import {RootState} from "@store/store.ts";
 import {useSelector} from "react-redux";
-import {UserBar} from "@ui/User/UserBar.tsx";
+import {UserBar} from "@ui/UserBar.tsx";
 
 export function NavBar() {
     const theme = useTheme();

@@ -18,7 +18,7 @@ import {RootState, useAppDispatch} from "@store/store.ts";
 import Box from "@mui/material/Box";
 import {ImageComp} from "@ui/Image.tsx";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
-import React, {FormEvent, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
 import {
     setAlertInfo,
@@ -26,49 +26,61 @@ import {
     setSignUpForm
 } from "@features/commonSlice.ts";
 import {useLoginMutation} from "@apis/Account.ts";
+import { z } from 'zod';
+import {Controller, FieldErrors, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 
 interface FormValues {
     email: string;
     password: string;
 }
 
-interface FormErrors {
-    [key: string]: string;
-}
+const schema = z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(10, 'Password must be at least 10 characters long')
+});
 
 function LoginForm() {
     const dispatch = useAppDispatch()
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.LoginOpen);
     const [Height, setHeight] = useState(580)
-    const [formErrors, setFormErrors] = useState<FormErrors>({});
-    const [formValues, setFormValues] = useState<FormValues>({
-        email: 'TestEmail@example.com',
-        password: 'TestPassword123456789',
+    const { control,reset, handleSubmit,getValues, formState: { errors } } = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            email: 'TestEmail@example.com',
+            password: 'TestPassword123456789',
+        }
     });
 
-    const { mutate: loginMutate} = useLoginMutation(formValues, ()=>{
+    const formValues: FormValues = getValues()
+    const { mutate: loginMutate } = useLoginMutation(formValues, ()=>{
         dispatch(setAlertInfo({
             open: true,
             message: 'You have been logged in',
             severity: 'success',
         }));
-        dispatch(setLoginForm(false))
-    },(error: any)=>{
+        dispatch(setLoginForm(false));
+    },(error)=>{
         dispatch(setAlertInfo({
             open: true,
             message: error.message,
             severity: 'error',
         }));
+
+        reset({
+            email: '',
+            password: '',
+        });
     });
 
     function handleClose(): void {
         dispatch(setLoginForm(false))
-        setFormValues({
+
+        reset({
             email: '',
             password: '',
-        })
-        setFormErrors({})
+        });
     }
 
     function handleOpenSignUp() {
@@ -76,67 +88,22 @@ function LoginForm() {
         dispatch(setLoginForm(false))
     }
 
-    function validate(name: keyof FormValues, value: string): FormErrors {
-        let errors: FormErrors = {};
-
-        switch (name) {
-            case 'email':
-                errors.email = /\S+@\S+\.\S+/.test(value) ? '' : 'Email address is invalid';
-                break;
-            case 'password':
-                if (!value) {
-                    errors.password = 'This field is required';
-                } else if (value.length < 10) {
-                    errors.password = 'Password must be at least 10 characters long';
-                } else if (!/[a-z]/.test(value)) {
-                    errors.password = 'Password must contain at least one lowercase letter';
-                } else if (!/\d/.test(value)) {
-                    errors.password = 'Password must contain at least one digit';
-                } else {
-                    errors.password = '';
-                }
-                break;
-            default:
-                break;
-        }
-        return errors;
-    }
-
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const {name, value} = event.target;
-        setFormValues(prevState => ({...prevState, [name]: value}));
-        setFormErrors(validate(name as keyof FormValues, value));
-    }
+    const onSubmit = () => {
+        loginMutate();
+    };
 
     useEffect(() => {
-        function countErrors(errors : FormErrors): number {
-            return Object.values(errors).filter(error => error !== '').length;
-        }
+        const countErrors = (errors : FieldErrors<FormValues>) => {
+            // 计算具有实际错误信息的字段数量
+            return Object.values(errors).filter(error => error).length;
+        };
+
         const baseDialogHeight = 580; // 基础高度
         const errorHeightIncrement = 20; // 每个错误增加的高度
-        const errorCount = countErrors(formErrors);
+        const errorCount = countErrors(errors);
         setHeight(baseDialogHeight + errorHeightIncrement * errorCount);
-    }, [formErrors]);
+    }, [errors]); // 监听 errors 对象
 
-    const handleLogin = (event: FormEvent) => {
-        event.preventDefault();
-
-        const newErrors = Object.keys(formValues).reduce((errors: FormErrors, fieldName: string) => {
-            return {...errors, ...validate(fieldName as keyof FormValues, formValues[fieldName as keyof FormValues])};
-        }, {});
-
-        setFormErrors(newErrors);
-
-        const isFormValid = Object.keys(newErrors).every(fieldName => !newErrors[fieldName]) &&
-            Object.keys(formValues).every(fieldName => formValues[fieldName as keyof FormValues] !== '');
-
-        if (isFormValid) {
-            console.log('Form is valid! Submitting...', formValues);
-            loginMutate();
-        } else {
-            console.log('Form is invalid or incomplete! Not submitting.');
-        }
-    };
 
     return (
         <Dialog open={open} maxWidth="xs" fullWidth sx={{
@@ -192,29 +159,36 @@ function LoginForm() {
 
             <DialogContent dividers>
 
-                <Box component={"form"} noValidate onSubmit={handleLogin}>
+                <Box component={"form"} noValidate onSubmit={handleSubmit(onSubmit)}>
 
-                    <CustomTextField
+                    <Controller
                         name="email"
-                        label="Email"
-                        type="email"
-                        required
-                        autoComplete="email"
-                        value={formValues.email}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.email)}
-                        helperText={formErrors.email || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomTextField
+                                {...field}
+                                label="Email"
+                                type="email"
+                                required
+                                autoComplete="email"
+                                error={Boolean(errors.email)}
+                                helperText={errors.email?.message || ''}
+                            />
+                        )}
                     />
-
-                    <CustomPasswordTextField
+                    <Controller
                         name="password"
-                        label="Password"
-                        autoComplete="password"
-                        required
-                        value={formValues.password}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.password)}
-                        helperText={formErrors.password || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomPasswordTextField
+                                {...field}
+                                label="Password"
+                                autoComplete="current-password"
+                                required
+                                error={Boolean(errors.password)}
+                                helperText={errors.password?.message || ''}
+                            />
+                        )}
                     />
 
                     <FormControlLabel

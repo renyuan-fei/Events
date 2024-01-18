@@ -25,7 +25,7 @@ export function AlterComponent({
     };
 
     return (
-        <Snackbar anchorOrigin={{ vertical: vertical, horizontal: horizontal }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar anchorOrigin={{ vertical: vertical, horizontal: horizontal }} open={open} autoHideDuration={3000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                 {message}
             </Alert>

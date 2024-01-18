@@ -1,4 +1,4 @@
-import React, {FormEvent, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -18,8 +18,34 @@ import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@store/store.ts";
 import {setAlertInfo, setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 import {
+    checkEmailRegistered,
     useRegisterMutation
 } from "@apis/Account.ts";
+import {z} from "zod";
+import {Controller, FieldErrors, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
+
+
+const schema = z.object({
+    displayName: z.string().nonempty({ message: "This field is required" }),
+    email: z.string().email({ message: "Email address is invalid" }),
+    password: z.string().min(10, { message: "Password must be at least 10 characters long" })
+        .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
+        .regex(/\d/, { message: "Password must contain at least one digit" }),
+    confirmPassword: z.string(),
+    phoneNumber: z.string()
+        .regex(/^04\d{8}$/, {message: "Phone number must be 04xxx-xxxx-xxxx"})
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+}).refine(async (data) => {
+    const isRegistered = await checkEmailRegistered(data.email);
+    return !isRegistered;
+}, {
+    message: "Email is already registered",
+    path: ["email"],
+});
 
 
 interface FormValues {
@@ -30,29 +56,34 @@ interface FormValues {
     phoneNumber: string;
 }
 
-interface FormErrors {
-    [key: string]: string;
-}
-
 function SignUpForm() {
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.signUpOpen);
     const dispatch = useDispatch();
 
-    const [formValues, setFormValues] = useState<FormValues>({
-        displayName: 'TestEmail@example.com',
-        email: 'TestEmail@example.com',
-        password: 'TestPassword123456789',
-        confirmPassword: 'TestPassword123456789',
-        phoneNumber: '719159880',
+    const { control,reset, watch, trigger, handleSubmit,getValues, formState: { errors } } = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            displayName: 'TestEmail@example.com',
+            email: 'TestEmail@example.com',
+            password: 'TestPassword123456789',
+            confirmPassword: 'TestPassword123456789',
+            phoneNumber: '719159880',
+        }
     });
 
+    const email = watch("email");
 
-    const [formErrors, setFormErrors] = useState<FormErrors>({});
+    useEffect(() => {
+        // 当 email 变化时，触发验证
+        trigger("email");
+    }, [email, trigger]);
+
 
     const [Height, setHeight] = useState(780)
 
-    const { mutate: registerMutate} = useRegisterMutation(formValues, ()=>{
+    let values = getValues();
+    const { mutate: registerMutate} = useRegisterMutation(values, ()=>{
         dispatch(setAlertInfo({
             open: true,
             message: 'Registration successful',
@@ -69,14 +100,14 @@ function SignUpForm() {
 
     function handleClose(): void {
         dispatch(setSignUpForm(false));
-        setFormValues({
+
+        reset({
             displayName: '',
             email: '',
             password: '',
             confirmPassword: '',
             phoneNumber: ''
         })
-        setFormErrors({})
     }
 
     function handleOpenLogin() {
@@ -84,98 +115,22 @@ function SignUpForm() {
         dispatch(setSignUpForm(false))
     }
 
-    // const validateEmail = async (email: string) => {
-    //     if (!/\S+@\S+\.\S+/.test(email)) {
-    //         return 'Email address is invalid';
-    //     }
-    //     const isRegistered = await checkEmailRegistered(email);
-    //     if (isRegistered) {
-    //         return 'Email is already registered';
-    //     }
-    //     return '';
-    // };
-
-    function validate(name: keyof FormValues, value: string): FormErrors {
-        let errors: FormErrors = {};
-
-        switch (name) {
-            case 'displayName':
-                errors.name = value ? '' : 'This field is required';
-                break;
-            case 'email':
-                errors.email = /\S+@\S+\.\S+/.test(value) ? '' : 'Email address is invalid';
-                break;
-            case 'password':
-                if (!value) {
-                    errors.password = 'This field is required';
-                } else if (value.length < 10) {
-                    errors.password = 'Password must be at least 10 characters long';
-                } else if (!/[a-z]/.test(value)) {
-                    errors.password = 'Password must contain at least one lowercase letter';
-                } else if (!/\d/.test(value)) {
-                    errors.password = 'Password must contain at least one digit';
-                } else {
-                    errors.password = '';
-                }
-                break;
-            case 'confirmPassword':
-                if (!value) {
-                    errors.confirmPassword = 'This field is required';
-                } else {
-                    errors.confirmPassword = value === formValues.password ? '' : 'Passwords must match';
-                }
-                break;
-            case 'phoneNumber':
-                if (!value) {
-                    errors.confirmPassword = 'This field is required';
-                } else if (!/\d{10}/.test(value)) {
-                    errors.confirmPassword = value === formValues.phoneNumber ? '' : 'The mobile phone number must be 10 digits';
-                }
-                break;
-            default:
-                break;
-        }
-
-        return errors;
+    function onSubmit() {
+        registerMutate();
     }
 
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const {name, value} = event.target;
-        setFormValues(prevState => ({...prevState, [name]: value}));
-        setFormErrors(validate(name as keyof FormValues, value));
-    }
 
     useEffect(() => {
-        function countErrors(errors : FormErrors): number {
-            return Object.values(errors).filter(error => error !== '').length;
-        }
+        const countErrors = (errors : FieldErrors<FormValues>) => {
+            // 计算具有实际错误信息的字段数量
+            return Object.values(errors).filter(error => error).length;
+        };
+
         const baseDialogHeight = 580; // 基础高度
         const errorHeightIncrement = 20; // 每个错误增加的高度
-        const errorCount = countErrors(formErrors);
+        const errorCount = countErrors(errors);
         setHeight(baseDialogHeight + errorHeightIncrement * errorCount);
-    }, [formErrors]);
-
-    function handleSignUp(event: FormEvent) {
-        event.preventDefault();
-
-        // Validate each field
-        const newErrors = Object.keys(formValues).reduce((errors: FormErrors, fieldName: string) => {
-            return {...errors, ...validate(fieldName as keyof FormValues, formValues[fieldName as keyof FormValues])};
-        }, {});
-
-        setFormErrors(newErrors);
-
-        // Check if there are any errors or empty fields
-        const isFormValid = Object.keys(newErrors).every(fieldName => !newErrors[fieldName]) &&
-            Object.keys(formValues).every(fieldName => formValues[fieldName as keyof FormValues] !== '');
-
-        if (isFormValid) {
-            console.log('Form is valid! Submitting...', formValues);
-            registerMutate();
-        } else {
-            console.log('Form is invalid or incomplete! Not submitting.');
-        }
-    }
+    }, [errors]); // 监听 errors 对象
 
     return (
         <Dialog open={open} maxWidth="xs" fullWidth sx={{
@@ -203,58 +158,82 @@ function SignUpForm() {
             </DialogTitle>
 
             <DialogContent>
-                <Box component="form" noValidate onSubmit={handleSignUp} sx={{mt: 1}}>
-                    <CustomTextField
+                <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 1}}>
+                    <Controller
                         name="displayName"
-                        label="Your name"
-                        required
-                        autoFocus
-                        value={formValues.displayName}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.name)}
-                        helperText={formErrors.name || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomTextField
+                                {...field}
+                                label="Your name"
+                                required
+                                autoFocus
+                                error={!!errors.displayName}
+                                helperText={errors.displayName?.message || ''}
+                            />
+                        )}
                     />
-                    <CustomTextField
+
+                    <Controller
                         name="email"
-                        label="Email address"
-                        type={"email"}
-                        required
-                        autoComplete="email"
-                        value={formValues.email}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.email)}
-                        helperText={formErrors.email || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomTextField
+                                {...field}
+                                label="Email address"
+                                type="email"
+                                required
+                                autoComplete="email"
+                                error={!!errors.email}
+                                helperText={errors.email?.message || ''}
+                            />
+                        )}
                     />
-                    <CustomTextField
+
+                    <Controller
                         name="password"
-                        label="Password"
-                        type="password"
-                        required
-                        autoComplete="new-password"
-                        value={formValues.password}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.password)}
-                        helperText={formErrors.password || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomPasswordTextField
+                                {...field}
+                                label="Password"
+                                type="password"
+                                required
+                                autoComplete="new-password"
+                                error={!!errors.password}
+                                helperText={errors.password?.message || ''}
+                            />
+                        )}
                     />
-                    <CustomTextField
+
+                    <Controller
                         name="confirmPassword"
-                        label="confirm Password"
-                        type="password"
-                        required
-                        value={formValues.confirmPassword}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.confirmPassword)}
-                        helperText={formErrors.confirmPassword || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomPasswordTextField
+                                {...field}
+                                label="Confirm Password"
+                                type="password"
+                                required
+                                error={!!errors.confirmPassword}
+                                helperText={errors.confirmPassword?.message || ''}
+                            />
+                        )}
                     />
-                    <CustomTextField
+
+                    <Controller
                         name="phoneNumber"
-                        label="phone number"
-                        type="text"
-                        required
-                        value={formValues.phoneNumber}
-                        onChange={handleChange}
-                        error={Boolean(formErrors.phoneNumber)}
-                        helperText={formErrors.phoneNumber || ''}
+                        control={control}
+                        render={({ field }) => (
+                            <CustomTextField
+                                {...field}
+                                label="Phone Number"
+                                type="text"
+                                required
+                                error={!!errors.phoneNumber}
+                                helperText={errors.phoneNumber?.message || ''}
+                            />
+                        )}
                     />
 
                     {/* Implement reCAPTCHA here */}
