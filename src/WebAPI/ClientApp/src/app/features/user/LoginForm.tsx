@@ -29,6 +29,8 @@ import {useLoginMutation} from "@apis/Account.ts";
 import { z } from 'zod';
 import {Controller, FieldErrors, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {LoadingComponent} from "@ui/LoadingComponent.tsx";
+import {useNavigate} from "react-router";
 
 interface FormValues {
     email: string;
@@ -36,11 +38,12 @@ interface FormValues {
 }
 
 const schema = z.object({
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(10, 'Password must be at least 10 characters long')
+    email: z.string().email('Invalid email address').min(1, 'Email is required'),
+    password: z.string().min(1, 'Password is required'),
 });
 
 function LoginForm() {
+    const navigate = useNavigate();
     const dispatch = useAppDispatch()
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.LoginOpen);
@@ -54,13 +57,15 @@ function LoginForm() {
     });
 
     const formValues: FormValues = getValues()
-    const { mutate: loginMutate } = useLoginMutation(formValues, ()=>{
+    const { mutate: loginMutate, isLoading } = useLoginMutation(formValues, ()=>{
         dispatch(setAlertInfo({
             open: true,
             message: 'You have been logged in',
             severity: 'success',
         }));
         dispatch(setLoginForm(false));
+
+        navigate('/home');
     },(error)=>{
         dispatch(setAlertInfo({
             open: true,
@@ -114,6 +119,7 @@ function LoginForm() {
             },
         }}
         >
+            {isLoading && <LoadingComponent/>}
 
             <DialogTitle sx={{textAlign: 'center', m: 0, pt: 6}}>
                 <IconButton

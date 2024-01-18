@@ -6,7 +6,7 @@ export function LoadingComponent() {
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={true}
         >
-            <CircularProgress color="primary" />
+            <CircularProgress color="inherit" size={80}  thickness={4}  />
         </Backdrop>
     );
 }

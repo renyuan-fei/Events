@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -25,6 +25,8 @@ import {z} from "zod";
 import {Controller, FieldErrors, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
+import {LoadingComponent} from "@ui/LoadingComponent.tsx";
+import {useNavigate} from "react-router";
 
 
 const schema = z.object({
@@ -57,6 +59,8 @@ interface FormValues {
 }
 
 function SignUpForm() {
+    const abortControllerRef = useRef(new AbortController());
+    const navigate = useNavigate();
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.signUpOpen);
     const dispatch = useDispatch();
@@ -73,23 +77,41 @@ function SignUpForm() {
     });
 
     const email = watch("email");
+    const confirmPassword = watch("confirmPassword");
+    const phoneNumber = watch("phoneNumber");
+
+    useEffect(() => {
+        return () => {
+            // 组件卸载时取消所有挂起的请求
+            abortControllerRef.current.abort();
+        };
+    }, []);
 
     useEffect(() => {
         // 当 email 变化时，触发验证
         trigger("email");
     }, [email, trigger]);
 
+    useEffect(() => {
+        trigger("confirmPassword");
+    }, [confirmPassword, trigger]);
+
+    useEffect(() => {
+        trigger("phoneNumber");
+    }, [phoneNumber,trigger]);
+
 
     const [Height, setHeight] = useState(780)
 
     let values = getValues();
-    const { mutate: registerMutate} = useRegisterMutation(values, ()=>{
+    const { mutate: registerMutate, isLoading} = useRegisterMutation(values, ()=>{
         dispatch(setAlertInfo({
             open: true,
             message: 'Registration successful',
             severity: 'success',
         }));
         dispatch(setSignUpForm(false))
+        navigate('/home');
     },(error: any)=>{
         dispatch(setAlertInfo({
             open: true,
@@ -140,6 +162,8 @@ function SignUpForm() {
                 borderRadius: theme.shape.borderRadius,
             },
         }}>
+            {isLoading && <LoadingComponent/>}
+
             <DialogTitle sx={{textAlign: 'center'}}>
                 <IconButton
                     onClick={handleClose}

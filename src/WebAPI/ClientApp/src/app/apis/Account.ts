@@ -3,7 +3,6 @@ import apiClient from "@apis/BaseApi.ts";
 import {useMutation, useQuery} from "react-query";
 import {loginAction, logoutAction} from "@features/user/userSlice.ts";
 import {useAppDispatch} from "@store/store.ts";
-import {setAlertInfo} from "@features/commonSlice.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 import axios from "axios";
 import {ApiResponse} from "@type/ApiResponse.ts";
@@ -93,24 +92,23 @@ export const useRegisterMutation = (registerRequest: RegisterRequest,additionalO
 };
 
 
-export const useLogoutMutation = () => {
+export const useLogoutMutation = (additionalOnSuccess?: () => void,
+                                  additionalOnError?: (error: any) => void) => {
     const dispatch = useAppDispatch()
 
     return useMutation(() => logout(), {
         onSuccess() {
             dispatch(logoutAction());
-            dispatch(setAlertInfo({
-                open: true,
-                message: 'You have been logged out',
-                severity: 'success',
-            }));
+
+            if (additionalOnSuccess) {
+                additionalOnSuccess();
+            }
         },
         onError(error: any) {
-            dispatch(setAlertInfo({
-                open: true,
-                message: error.message,
-                severity: 'error',
-            }));
+
+            if (additionalOnError) {
+                additionalOnError(error);
+            }
         }
     });
 };
