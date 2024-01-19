@@ -44,11 +44,11 @@ public class PhotosController : BaseController
         File = file
     })!;
 
-    return CreatedAtAction("", new { }, ApiResponse<Result>.Success(data: result,
-        statusCode: StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,ApiResponse<Result>.Success(data: result,
+                        statusCode: StatusCodes.Status201Created));
   }
 
-  [ HttpPost("{id}") ]
+  [ HttpPost("activity/{id}") ]
   [ Authorize ]
   [ Authorize(Policy = "IsActivityHost") ]
   public async Task<IActionResult> UpLoadActivityPhoto(
@@ -62,8 +62,8 @@ public class PhotosController : BaseController
         File = file
     })!;
 
-    return CreatedAtAction("", new { }, ApiResponse<Result>.Success(data: result,
-                             statusCode: StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,ApiResponse<Result>.Success(data: result,
+                        statusCode: StatusCodes.Status201Created));
   }
 
   // PUT: api/Photo/5

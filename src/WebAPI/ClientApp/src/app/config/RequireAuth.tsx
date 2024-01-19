@@ -10,7 +10,9 @@ export function RequireAuth() {
     const isLogin = useSelector((state : RootState) => state.user.isLogin)
     const location = useLocation();
 
-    if (!isLogin) {
+    const jwt = localStorage.getItem("jwt");
+
+    if (!isLogin && !jwt) {
         dispatch(setLoginForm(true))
         return <Navigate to='/' state={{from: location}} />
     }

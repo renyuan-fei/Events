@@ -8,7 +8,7 @@ import {router} from "@config/Router.tsx";
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {
-    setIsMobile
+    setIsMobile, setLoginForm
 } from "@features/commonSlice.ts";
 import {useGetCurrentUserQuery} from "@apis/Account.ts";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
@@ -36,6 +36,7 @@ function App() {
     useEffect(() => {
         // 检查本地存储中是否有JWT令牌
         if (localStorage.getItem('jwt' )) {
+            dispatch(setLoginForm(false))
             currentUserQuery.refetch();
         }
     }, []);

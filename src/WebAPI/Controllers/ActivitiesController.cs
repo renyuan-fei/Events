@@ -20,7 +20,6 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class ActivitiesController : BaseController
 {
-
   /// <summary>
   ///   Retrieves a paginated list of activities.
   /// </summary>
@@ -56,7 +55,7 @@ public class ActivitiesController : BaseController
   ///   A task that represents the asynchronous operation. The task result contains an
   ///   IActionResult with the specified Activity entity.
   /// </returns>
-  [ HttpGet("{id}") ]
+  [ HttpGet("{id}", Name = "GetActivity") ]
   public async Task<OkObjectResult> GetActivity(string id)
   {
     var result = await Mediator!.Send(new GetActivityWithAttendeesByIdQuery { Id = id });
@@ -110,9 +109,10 @@ public class ActivitiesController : BaseController
         CurrentUserId = CurrentUserService!.Id!
     });
 
-    return CreatedAtAction(nameof(GetActivity),new {},ApiResponse<Result>.Success(
-                            data: result,
-                            statusCode: StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,
+                      ApiResponse<Result>.Success(data: result,
+                                                  message: "Activity created successfully",
+                                                  statusCode: StatusCodes.Status201Created));
   }
 
   // DELETE: api/Activities/5
@@ -131,7 +131,7 @@ public class ActivitiesController : BaseController
   {
     var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
 
-    return Ok(ApiResponse<Result>.Success(result));
+    return Ok(ApiResponse<Result>.Success(data:result, message: "Activity deleted successfully"));
   }
 
   /// <summary>
@@ -150,7 +150,7 @@ public class ActivitiesController : BaseController
             ActivityId = activityId, UserId = userId
         });
 
-    return Ok(ApiResponse<Result>.Success(result));
+    return Ok(ApiResponse<Result>.Success(data: result, message: "Attendee removed successfully"));
   }
 
   [ Authorize ]
@@ -163,8 +163,10 @@ public class ActivitiesController : BaseController
             ActivityId = activityId, UserId = userId
         });
 
-    return CreatedAtAction(nameof(GetActivity),new {},ApiResponse<Result>.Success(data: result,
-        statusCode:
-        StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,
+                      ApiResponse<Result>.Success(data: result,
+                                                  message: "Attendee added successfully",
+                                                  statusCode:
+                                                  StatusCodes.Status201Created));
   }
 }

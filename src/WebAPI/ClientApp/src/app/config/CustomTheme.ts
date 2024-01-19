@@ -44,15 +44,15 @@ export const theme = createTheme({
     components: {
         MuiButton: {
             styleOverrides: {
-                root:({ ownerState }) => ({
+                root:({ ownerState, varient }) => ({
                     // 用条件逻辑判断按钮颜色是否为primary
-                    ...(ownerState.color === 'primary' && {
+                    ...(ownerState.color === 'primary' && varient === 'contained' && {
                         backgroundColor: '#00798a',
                         '&:hover': {
                             backgroundColor: '#3e8da0',
                         }
                     }),
-                    ...(ownerState.color === 'secondary' && {
+                    ...(ownerState.color === 'secondary' && varient === 'contained' && {
                         backgroundColor: '#e32359',
                         '&:hover': {
                             backgroundColor: '#e63a6a',

@@ -4,8 +4,8 @@ import {useMutation, useQuery} from "react-query";
 import {loginAction, logoutAction} from "@features/user/userSlice.ts";
 import {useAppDispatch} from "@store/store.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
-import axios from "axios";
 import {ApiResponse} from "@type/ApiResponse.ts";
+import {debounce} from "@mui/material";
 
 
 // 登录请求
@@ -30,14 +30,15 @@ async function getCurrentUser(): Promise<AuthResponse> {
     return handleResponse(response);
 }
 
-export async function checkEmailRegistered(email: string) {
+export const checkEmailRegistered = debounce(async (email: string) => {
     try {
-        const response = await axios.get(`https://localhost:7095/api/Account/email`, {params: {email}});
+        const response = await apiClient.get(`/api/Account/email`, {params: {email}});
         return response.status !== 200;
     } catch (error) {
         return true; // 假设错误意味着电子邮件已注册
     }
-};
+}, 500); // 500 毫秒的延迟
+
 
 export const useLoginMutation = (
     additionalOnSuccess?: (data: AuthResponse) => void,

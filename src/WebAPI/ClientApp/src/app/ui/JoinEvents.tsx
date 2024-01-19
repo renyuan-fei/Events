@@ -2,11 +2,19 @@ import {Box, Button, Typography, useTheme} from '@mui/material';
 import JoinEventsImg from "@assets/JoinEventsImg.png";
 import {ImageComp} from "@ui/Image.tsx";
 import {useSelector} from "react-redux";
-import {RootState} from "@store/store.ts";
+import {RootState, useAppDispatch} from "@store/store.ts";
+import {setSignUpForm} from "@features/commonSlice.ts";
 
 export default function JoinEvents() {
     const theme = useTheme();
     const isMobile = useSelector((state: RootState) => state.common.isMobile);
+    const dispatch = useAppDispatch();
+
+    function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+        event.preventDefault();
+
+        dispatch(setSignUpForm(true));
+    }
 
     return (
         <Box
@@ -48,7 +56,7 @@ export default function JoinEvents() {
                     free.
                 </Typography>
 
-                <Button variant="contained" color="secondary" sx={{
+                <Button variant="contained" color="secondary" onClick={handleClick} sx={{
                     marginTop: theme.spacing(2),
                     backgroundColor: '#e32359',
                     width: {xs: '100%', sm: 192},
@@ -56,7 +64,7 @@ export default function JoinEvents() {
                     fontWeight: 700,
                     borderRadius: 3,
                     [theme.breakpoints.down('xs')]: {
-                        width: '100%', // 小屏幕上按钮宽度100%
+                        width: '100%',
                     },
                 }}>
                     Sign up

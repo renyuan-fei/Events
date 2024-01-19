@@ -17,11 +17,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <React.Fragment>
             <Provider store={store}>
-                <CssBaseline/>
                 <DevSupport ComponentPreviews={ComponentPreviews}
                             useInitialHook={useInitial}
                 >
                     <ThemeProvider theme={theme}>
+                        <CssBaseline/>
                         <QueryClientProvider client={queryClient}>
                             <App/>
                             <ReactQueryDevtools initialIsOpen={false} />

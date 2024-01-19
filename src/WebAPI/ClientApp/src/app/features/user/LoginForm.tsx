@@ -120,7 +120,7 @@ function LoginForm() {
         >
             {isLoading && <LoadingComponent/>}
 
-            <DialogTitle sx={{textAlign: 'center', m: 0, pt: 6}}>
+            <DialogTitle sx={{textAlign: 'center', m: 0, pt: theme.spacing(5)}}>
                 <IconButton
                     aria-label="close"
                     onClick={handleClose}
@@ -143,7 +143,7 @@ function LoginForm() {
                 <Typography component="div" variant="h6" sx={{
                     flex: 1,
                     textAlign: 'center',
-                    fontWeight: 700,
+                    fontWeight: theme.typography.fontWeightBold,
                     fontSize: 30
                 }}>
                     Log in

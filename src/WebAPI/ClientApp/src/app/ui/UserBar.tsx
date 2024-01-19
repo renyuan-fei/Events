@@ -6,7 +6,7 @@ import React from "react";
 import {User} from "@type/Account.ts";
 import {useLogoutMutation} from "@apis/Account.ts";
 import SvgButton from "@ui/SvgButton.tsx";
-import {setAlertInfo} from "@features/commonSlice.ts";
+import {setAlertInfo, setLoginForm} from "@features/commonSlice.ts";
 import {useAppDispatch} from "@store/store.ts";
 import {useNavigate} from "react-router";
 
@@ -35,6 +35,7 @@ export function UserBar({displayName, image}: User) {
             severity: 'error',
         }));
         navigate('/');
+        dispatch(setLoginForm(false))
     });
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 

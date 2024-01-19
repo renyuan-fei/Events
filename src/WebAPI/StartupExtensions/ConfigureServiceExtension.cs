@@ -91,6 +91,7 @@ public static class ConfigureServiceExtension
       {
         // 允许端口 5173 进行跨域请求
         builder.WithOrigins(configuration.GetSection("AllowedOrigins").Get<string[ ]>()!)
+               .AllowCredentials()
                .WithHeaders("Authorization",
                             "origin",
                             "accept",
@@ -98,9 +99,7 @@ public static class ConfigureServiceExtension
                .WithMethods("GET",
                             "POST",
                             "PUT",
-                            "DELETE",
-                            "OPTIONS");
-        // .AllowCredentials();
+                            "DELETE");
       });
     });
 

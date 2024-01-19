@@ -20,7 +20,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 // build a custom axios request interceptor
 const apiClient: AxiosInstance = axios.create({
     baseURL: BASE_URL, // 替换为你的 API 基础 URL
-    // withCredentials: true,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
         // 可以根据需要添加其他默认请求头
@@ -57,16 +57,16 @@ apiClient.interceptors.response.use(
             originalRequest._retry = true; // 标记这是一次重试请求
 
             try {
-                const response = await axios.get(`/api/Account/refresh`);
+                const response = await apiClient.post(`/api/Account/refresh`);
 
                 if (response.status === 200) {
                     // 存储新 token 到本地
-                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('token', response.data.data.token);
 
                     // 更新原始请求的头部
                     // 确保 headers 已定义
                     originalRequest.headers = originalRequest.headers || {};
-                    originalRequest.headers['Authorization'] = 'Bearer ' + response.data.token;
+                    originalRequest.headers['Authorization'] = 'Bearer ' + response.data.data.token;
 
                     // 如果需要，也更新 Axios 实例的默认头部
                     apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
@@ -78,26 +78,6 @@ apiClient.interceptors.response.use(
                 // 处理刷新 token 失败的情况
                 console.error('Error refreshing token', e);
                 return Promise.reject(e);
-            }
-        }
-
-        //TODO error handle
-        if (error.response) {
-
-
-            // 可以根据不同的状态码做不同的处理
-            if (error.response.status === 401) {
-                // 未授权逻辑
-                console.log('unauthorized');
-                return Promise.reject(error.response.data);
-            } else if (error.response.status === 404) {
-                // 资源未找到逻辑
-                console.log('not found');
-                return Promise.reject(error.response.data);
-            } else {
-                // 其他错误
-                console.log(error.response.data);
-                return Promise.reject(error.response.data);
             }
         }
 

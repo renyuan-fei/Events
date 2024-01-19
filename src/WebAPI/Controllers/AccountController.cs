@@ -99,8 +99,8 @@ public class AccountController : BaseController
 
     var response =  await GenerateToken(user, updateRefreshToken: true);
 
-    return CreatedAtAction(nameof(Login),new{id = user.Id},ApiResponse<AccountResponseDTO>
-        .Success(data: response, statusCode: StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,ApiResponse<AccountResponseDTO>
+                          .Success(data: response, statusCode: StatusCodes.Status201Created));
   }
 
   /// <summary>
@@ -249,9 +249,9 @@ public class AccountController : BaseController
     }
 
     // 生成新的Access令牌，同时更新刷新令牌
-    var reponse = await GenerateToken(user, updateRefreshToken: true);
+    var response = await GenerateToken(user, updateRefreshToken: true);
 
-    return Ok(ApiResponse<AccountResponseDTO>.Success(data: reponse));
+    return Ok(ApiResponse<AccountResponseDTO>.Success(data: response));
   }
 
   /// <summary>
@@ -319,13 +319,19 @@ public class AccountController : BaseController
       var cookieOptions = new CookieOptions
       {
           HttpOnly = true,
+          SameSite = SameSiteMode.None,
           Expires = token.RefreshTokenExpirationDateTime,
           Secure = true
       };
-      Response.Cookies.Append("RefreshToken", token.RefreshToken!, cookieOptions);
 
-      // 更新用户的 Refresh Token 和过期时间
-      user.RefreshToken = token.RefreshToken;
+      if (token.RefreshToken != null)
+      {
+        Response.Cookies.Append("RefreshToken", token.RefreshToken, cookieOptions);
+
+        // 更新用户的 Refresh Token 和过期时间
+        user.RefreshToken = token.RefreshToken;
+      }
+
       user.RefreshTokenExpirationDateTime = token.RefreshTokenExpirationDateTime;
       await _userManager.UpdateAsync(user);
     }

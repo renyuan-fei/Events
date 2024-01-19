@@ -5,6 +5,7 @@ import LoginForm from "@features/user/LoginForm.tsx";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 import Intro from "@ui/Intro.tsx";
 import {ActivitiesCalendar} from "@features/activity/ActivitiesCalendar.tsx";
+import {ActivitiyItem} from "@features/activity/ActivitiyItem.tsx";
 
 const ComponentPreviews = () => {
     return (
@@ -26,6 +27,14 @@ const ComponentPreviews = () => {
             <ComponentPreview
                 path="/ActivitiesCalendar">
                 <ActivitiesCalendar/>
+            </ComponentPreview>
+            <ComponentPreview
+                path="/ActivitiyItem">
+                <ActivitiyItem/>
+            </ComponentPreview>
+            <ComponentPreview
+                path="/ComponentPreviews">
+                <ComponentPreviews/>
             </ComponentPreview>
         </Previews>
     );

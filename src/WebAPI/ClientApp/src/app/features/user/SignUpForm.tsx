@@ -1,9 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
 import {
-    Button,
-    Dialog,
+    Button, Dialog,
     DialogContent,
-    DialogTitle,
+    DialogTitle, Divider,
     // FormControlLabel, Grid,
     IconButton,
     Link,
@@ -27,10 +26,12 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 import {useNavigate} from "react-router";
+import LogoImg from "@assets/logo.png";
+import {ImageComp} from "@ui/Image.tsx";
 
 
 const schema = z.object({
-    displayName: z.string().nonempty({ message: "This field is required" }),
+    displayName: z.string().min(1,{ message: "This field is required" }),
     email: z.string().email({ message: "Email address is invalid" }),
     password: z.string().min(10, { message: "Password must be at least 10 characters long" })
         .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
@@ -163,7 +164,7 @@ function SignUpForm() {
         }}>
             {isLoading && <LoadingComponent/>}
 
-            <DialogTitle sx={{textAlign: 'center'}}>
+            <DialogTitle sx={{textAlign: 'center' , m: 0, pt: theme.spacing(6)}}>
                 <IconButton
                     onClick={handleClose}
                     aria-label="close"
@@ -175,12 +176,25 @@ function SignUpForm() {
                 >
                     <CloseIcon/>
                 </IconButton>
-                <Typography component={"div"} variant="h6" sx={{fontWeight: 700}}>
+                <ImageComp Src={LogoImg} Alt={"logo"} Sx={{
+                    width: 40,
+                    height: 40,
+                    position: 'absolute',
+                    top: theme.spacing(2),
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                }}></ImageComp>
+                <Typography component={"div"} variant="h6" sx={{
+                    flex: 1,
+                    textAlign: 'center',
+                    fontWeight: theme.typography.fontWeightBold,
+                    fontSize: 30
+                }}>
                     Finish signing up
                 </Typography>
             </DialogTitle>
 
-            <DialogContent>
+            <DialogContent dividers>
                 <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 1}}>
                     <Controller
                         name="displayName"
@@ -281,6 +295,8 @@ function SignUpForm() {
                         <Link href="#" underline="none">Cookie Policy</Link>.
                     </Typography>
                 </Box>
+
+                <Divider sx={{mt: 2, mb: 2}}>or</Divider>
 
                 <Typography component={"div"} variant={"body2"} align="center"
                             sx={{mt: 2}}>
