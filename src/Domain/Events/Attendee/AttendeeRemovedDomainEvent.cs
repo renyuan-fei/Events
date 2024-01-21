@@ -5,12 +5,12 @@ namespace Domain.Events.Attendee;
 
 public sealed class AttendeeRemovedDomainEvent : BaseEvent
 {
-  public AttendeeRemovedDomainEvent(ActivityId activityId, AttendeeId attendeeId)
+  public AttendeeRemovedDomainEvent(ActivityId activityId, UserId attendeeId)
   {
     ActivityId = activityId;
     AttendeeId = attendeeId;
   }
 
   public ActivityId ActivityId { get; init; }
-  public AttendeeId AttendeeId { get; init; }
+  public UserId AttendeeId { get; init; }
 }

@@ -58,14 +58,14 @@ public class
 
       var userIds = activity.Attendees.Select(a => a.Identity.UserId.Value).ToList();
       var usersTask = _userService.GetUsersByIdsAsync(userIds);
-      var mainPhotosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+      var photosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
-      await Task.WhenAll(usersTask, mainPhotosTask);
+      await Task.WhenAll(usersTask, photosTask);
 
       GuardValidation.AgainstNullOrEmpty(usersTask.Result, "User information for attendees not found");
 
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
-      var photosDictionary = mainPhotosTask.Result.ToDictionary(p => p.OwnerId);
+      var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
       var result = _mapper.Map<ActivityWithAttendeeDTO>(activity);
       return ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary, photosDictionary);

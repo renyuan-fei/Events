@@ -44,11 +44,22 @@ public class
       var activityId = request.ActivityId;
       var userId = request.UserId;
 
-      var activity = await _activityRepository.GetByIdAsync(new ActivityId(activityId), cancellationToken);
+      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(new ActivityId(activityId),
+          cancellationToken);
 
       GuardValidation.AgainstNull(activity, nameof(activity));
 
-      activity.RemoveAttendee(new AttendeeId(userId));
+      var attendee = activity.Attendees.SingleOrDefault(attendee => attendee.Identity
+          .UserId == new UserId(userId));
+
+      GuardValidation.AgainstNull(attendee, $"attendee with id {userId} not found");
+
+      if (attendee!.Identity.IsHost)
+      {
+        throw new InvalidOperationException("Host cannot be removed.");
+      }
+
+      activity.RemoveAttendee(new UserId(userId));
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
@@ -62,8 +73,10 @@ public class
     catch (Exception ex)
     {
       _logger.LogError(ex,
-                       "ErrorMessage saving to the database: {ExMessage}",
-                       ex.Message);
+                       "Error occurred in {Name}: {ExMessage}",
+                       nameof(RemoveAttendeeCommand),
+                       ex
+                           .Message);
 
       throw;
     }

@@ -1,4 +1,4 @@
-import {ActivityAttendee} from "./ActivityAttendee.ts";
+import {Attendee} from "./Attendee.ts";
 
 export type Activity = {
     Id: string,
@@ -10,5 +10,5 @@ export type Activity = {
     Venue: string,
     HostName: string,
     IsCancelled: boolean,
-    Attendees: Array<ActivityAttendee>,
+    Attendees: Array<Attendee>,
 }

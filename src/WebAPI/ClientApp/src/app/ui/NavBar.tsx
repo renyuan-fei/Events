@@ -23,6 +23,10 @@ export function NavBar() {
                         backgroundImage: 'none',
                         boxShadow: 'none',
                     }
+                    ,border: {
+                        borderWidth: 1,
+                        borderBottom: `1px solid ${theme.palette.divider}`,
+                    }
                 }}>
             <Toolbar>
                 {isMobile ? (

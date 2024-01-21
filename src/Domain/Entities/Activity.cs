@@ -97,10 +97,12 @@ public class Activity : BaseAuditableEntity<ActivityId>
     AddDomainEvent(new AttendeeAddedDomainEvent(attendee));
   }
 
-  public void RemoveAttendee(AttendeeId attendeeId)
+  public void RemoveAttendee(UserId userId)
   {
-    Attendees.Remove(Attendees.Single(a => a.Id == attendeeId));
+    var attendee = Attendees.First(a => a.Identity.UserId == userId);
 
-    AddDomainEvent(new AttendeeRemovedDomainEvent(Id, attendeeId));
+    Attendees.Remove(attendee);
+
+    AddDomainEvent(new AttendeeRemovedDomainEvent(Id, userId));
   }
 }

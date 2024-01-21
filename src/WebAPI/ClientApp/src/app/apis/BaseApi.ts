@@ -77,6 +77,10 @@ apiClient.interceptors.response.use(
             } catch (e) {
                 // 处理刷新 token 失败的情况
                 console.error('Error refreshing token', e);
+                localStorage.removeItem('token');
+                // 将cookie移除
+                // 名字为RefreshToken
+                document.cookie = "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 return Promise.reject(e);
             }
         }

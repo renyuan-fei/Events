@@ -5,9 +5,14 @@ import {ActivityFilter} from "@features/activity/ActivityFilter.tsx";
 
 export function ActivitiesList({children} : { children: React.ReactNode; }) {
     return (
-        <Box >
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center', // Centers children horizontally
+            justifyContent: 'center', // Centers children vertically (if they have a definite height)
+            width: '100%', // Ensures the container takes full width
+        }}>
             <ActivityFilter/>
-            <Divider sx={{ borderWidth: 1.2, borderColor: 'rgb(162,162,162)' }} />
             {children}
         </Box>
     );

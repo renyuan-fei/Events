@@ -3,6 +3,7 @@ import {AppLayout} from "@pages/AppLayout.tsx";
 import MainPage from "@pages/MainPage.tsx";
 import {HomePage} from "@pages/HomePage.tsx";
 import {RequireAuth} from "@config/RequireAuth.tsx";
+import {ActivityDetailPage} from "@pages/ActivityDetailPage.tsx";
 // import {Outlet} from "react-router";
 export const router = createHashRouter([
     {
@@ -16,7 +17,8 @@ export const router = createHashRouter([
                 ),
                 children: [
                     { path: "/home", element: <HomePage /> },
+                    { path: "/activity/:activityId", element: <ActivityDetailPage/> }
                 ],}
         ]
-    }
+    },
 ])

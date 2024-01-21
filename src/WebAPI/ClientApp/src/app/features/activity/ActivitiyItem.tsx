@@ -3,6 +3,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import EventIcon from "@mui/icons-material/Event";
 import PeopleIcon from "@mui/icons-material/People";
+import Divider from "@mui/material/Divider";
+import {  } from 'react-router-dom';
+import {useNavigate} from "react-router";
 
 function formatToLocalTimezone(dateString: string): string {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -25,31 +28,47 @@ function formatToLocalTimezone(dateString: string): string {
 }
 
 
-// interface ActivitiyItemProps {
-//     Id: string;
-//     title: string;
-//     imageUrl: string;
-//     date: string;
-//     category: string;
-//     goingCount: number;
-//     hostUser: string;
-// }
-export function ActivitiyItem() {
-    const imageUrl = "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702382811/sample.jpg"
-    const date = "2024-01-17 00:00:00.0000000"
-    const category = "Category"
-    const goingCount = 24
-    const hostUser = {username: "test"}
-    const title = "Friday Night drinks / language exchange"
+interface ActivityItemProps {
+    id: string;
+    title: string;
+    imageUrl: string;
+    date: string;
+    category: string;
+    city: string;
+    venue: string;
+    goingCount: number;
+    hostUser: { username: string; id: string; };
+    key: string;
+}
+
+export function ActivityItem(props: ActivityItemProps) {
+    const navigate = useNavigate();
+
+    const {id, title, imageUrl, date, category, goingCount, hostUser} = props;
+
+    // const imageUrl = "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702382811/sample.jpg"
+    // const date = "2024-01-17 00:00:00.0000000"
+    // const category = "Category"
+    // const goingCount = 24
+    // const hostUser = {username: "test"}
+    // const title = "Friday Night drinks / language exchange"
+
+    const handleClick = () => {
+        // Navigate to the route with the activity's ID
+        navigate(`/activity/${id}`);
+    };
+
     const theme = useTheme();
     return (
         <Box component={"div"}
              sx={{
-                 height: '161px',
-                 width: '561px',
+                 height: '162px',
+                 width: '604px',
                  paddingTop: theme.spacing(2),
                  paddingBottom: theme.spacing(2),
-             }}>
+                 cursor: 'pointer',
+             }}
+             onClick={handleClick}>
             <Grid container>
                 <Grid
                     item
@@ -60,8 +79,8 @@ export function ActivitiyItem() {
                     <Box component={"img"}
                          src={imageUrl}
                          sx={{
-                             height: '87px',
-                             width: '100%',
+                             height: '80%',
+                             width: 'auto',
                              borderRadius: theme.shape.borderRadius,
                          }}>
                     </Box>
@@ -71,13 +90,16 @@ export function ActivitiyItem() {
                     <Box>
                         <Box display="flex" alignItems="center" mb={1}>
                             <EventIcon color="action" sx={{marginRight: '5px'}}/>
-                            <Typography variant="caption" sx={{color: '#7c6f50', fontSize: theme.typography.fontSize, fontWeight:theme.typography.fontWeightBold}}>{formatToLocalTimezone(date)}</Typography>
+                            <Typography variant="caption" sx={{
+                                color: '#7c6f50',
+                                fontSize: theme.typography.fontSize,
+                                fontWeight: theme.typography.fontWeightBold
+                            }}>{formatToLocalTimezone(date)}</Typography>
                         </Box>
 
                         <Box>
                             <Typography
                                 gutterBottom
-                                variant="h6"
                                 component="div"
                                 sx={{
                                     wordWrap: 'break-word',
@@ -101,7 +123,8 @@ export function ActivitiyItem() {
 
                         <Box display="flex" alignItems="center">
                             <PeopleIcon color="action" sx={{marginRight: '5px'}}/>
-                            <Typography variant="caption">{goingCount} attendees</Typography>
+                            <Typography
+                                variant="caption">{goingCount} attendees</Typography>
                             <Box flexGrow={1}/>
                             <Typography variant="caption" component="span" sx={{
                                 backgroundColor: 'lightgrey',
@@ -115,6 +138,10 @@ export function ActivitiyItem() {
                     </Box>
                 </Grid>
             </Grid>
+
+            <Divider sx={{
+                marginTop: theme.spacing(2),
+            }}/>
         </Box>
     );
 }

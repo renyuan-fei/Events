@@ -98,8 +98,8 @@ public class
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "ErrorMessage Mapping to DTO: {ExMessage}", ex.Message);
-
+      _logger.LogError(ex, "Error occurred in {Name}: {ExMessage}", nameof(GetPaginatedListActivitiesWithAttendeesQuery), ex
+                           .Message);
       throw;
     }
   }

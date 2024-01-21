@@ -9,6 +9,7 @@ using Application.CQRS.Activities.Queries.GetPaginatedActivities;
 using Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 using Application.CQRS.Attendees.Commands.AddAttendee;
 using Application.CQRS.Attendees.Commands.DeleteAttendee;
+using Application.CQRS.Attendees.Queries.GetActivityAttendeesWithPagination;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -111,8 +112,10 @@ public class ActivitiesController : BaseController
 
     return StatusCode(StatusCodes.Status201Created,
                       ApiResponse<Result>.Success(data: result,
-                                                  message: "Activity created successfully",
-                                                  statusCode: StatusCodes.Status201Created));
+                                                  message:
+                                                  "Activity created successfully",
+                                                  statusCode:
+                                                  StatusCodes.Status201Created));
   }
 
   // DELETE: api/Activities/5
@@ -131,7 +134,24 @@ public class ActivitiesController : BaseController
   {
     var result = await Mediator!.Send(new DeleteActivityCommand { Id = id });
 
-    return Ok(ApiResponse<Result>.Success(data:result, message: "Activity deleted successfully"));
+    return Ok(ApiResponse<Result>.Success(data: result,
+                                          message: "Activity deleted successfully"));
+  }
+
+  [ HttpGet("{activityId}/attendees/{pageNumber:int}/{pageSize:int?}") ]
+  public async Task<IActionResult> GetPaginatedListAttendees(
+      string activityId,
+      int    pageNumber,
+      int    pageSize)
+  {
+    var result = await Mediator!.Send(new GetPaginatedListAttendeesQuery
+    {
+        PaginatedListParams =
+            new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize },
+        ActivityId = activityId
+    });
+
+    return Ok(ApiResponse<PaginatedList<AttendeeDTO>>.Success(result));
   }
 
   /// <summary>
@@ -150,7 +170,8 @@ public class ActivitiesController : BaseController
             ActivityId = activityId, UserId = userId
         });
 
-    return Ok(ApiResponse<Result>.Success(data: result, message: "Attendee removed successfully"));
+    return Ok(ApiResponse<Result>.Success(data: result,
+                                          message: "Attendee removed successfully"));
   }
 
   [ Authorize ]

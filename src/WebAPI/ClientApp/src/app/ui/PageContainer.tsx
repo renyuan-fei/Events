@@ -8,7 +8,7 @@ interface ContainerProps {
 export function PageContainer({children}: ContainerProps) {
     return (
         <Container maxWidth={"lg"} sx={{
-            mt: 20
+            mt: 15
         }}>
             {children}
         </Container>

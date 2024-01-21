@@ -43,9 +43,17 @@ public class
       var activityId = request.ActivityId;
       var userId = request.UserId;
 
-      var activity = await _activityRepository.GetByIdAsync(new ActivityId(activityId), cancellationToken);
+      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(new ActivityId(activityId),
+          cancellationToken);
 
       GuardValidation.AgainstNull(activity, nameof(activity));
+
+      var isExisting = activity.Attendees.Any(attendee => attendee.Identity.UserId == new UserId(userId));
+
+      if (isExisting)
+      {
+        throw new InvalidOperationException("Attendee already exists.");
+      }
 
       var attendee = Attendee.Create(new UserId(userId),false,new ActivityId(activityId), activity);
 
@@ -63,8 +71,10 @@ public class
     catch (Exception ex)
     {
       _logger.LogError(ex,
-                       "ErrorMessage saving to the database: {ExMessage}",
-                       ex.Message);
+                       "Error occurred in {Name}: {ExMessage}",
+                       nameof(AddAttendeeCommand),
+                       ex
+                           .Message);
 
       throw;
     }
