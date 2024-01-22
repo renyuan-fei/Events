@@ -1,7 +1,9 @@
 using Domain.Events.Activity;
 using Domain.Events.Attendee;
+using Domain.Events.Comment;
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
+using Domain.ValueObjects.Comment;
 using Domain.ValueObjects.Photo;
 
 namespace Domain.Entities;
@@ -104,5 +106,21 @@ public class Activity : BaseAuditableEntity<ActivityId>
     Attendees.Remove(attendee);
 
     AddDomainEvent(new AttendeeRemovedDomainEvent(Id, userId));
+  }
+
+  public void AddComment(Comment comment)
+  {
+    Comments.Add(comment);
+
+    AddDomainEvent(new CommentAddedDomainEvent(comment));
+  }
+
+  public void RemoveComment(CommentId commentId)
+  {
+    var comment = Comments.First(c => c.Id == commentId);
+
+    Comments.Remove(comment);
+
+    AddDomainEvent(new CommentRemovedDomainEvent(Id, commentId));
   }
 }

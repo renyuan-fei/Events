@@ -17,11 +17,11 @@ public static class ActivityHelper
       UserHelper.FillWithPhotoAndUserDetail(
        attendee, usersDictionary, photosDictionary);
 
-      if (attendee.IsHost)
-      {
-        activity.HostUsername = attendee.UserName;
-      }
+      if (!attendee.IsHost) continue;
 
+      activity.HostUser.Id = attendee.UserId;
+      activity.HostUser.Username = attendee.UserName!;
+      activity.HostUser.ImageUrl = photosDictionary[attendee.UserId].Details.Url;
     }
 
     return activity;

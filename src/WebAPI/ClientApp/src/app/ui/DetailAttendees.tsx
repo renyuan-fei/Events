@@ -2,68 +2,51 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Attendee} from "@type/Attendee.ts";
 import {Avatar, Paper, Stack, useTheme} from "@mui/material";
+import Button from "@mui/material/Button";
+import {useNavigate} from "react-router";
 
 // @ts-ignore
 interface DetailAttendeesProps {
-    countGoing: number;
     attendees: Array<Attendee>;
 }
 
 // @ts-ignore
-export function DetailAttendees() {
+export function DetailAttendees(props: DetailAttendeesProps) {
     const theme = useTheme();
+    const navigate = useNavigate();
 
     // @ts-ignore
-    // const {countGoing, attendees} = props;
-    const countGoing = 25;
+    const {attendees} = props;
 
-    const attendees: Array<Attendee> = [
-        {
-            "userId": "c0feebb9-bc2a-446b-876c-0cd8aa9a913d",
-            "isHost": true,
-            "displayName": "TestEmail@example.com",
-            "userName": "TestEmail@example.com",
-            "bio": "Hello World!",
-            "image": "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1705591941/e9y3v0k6tbkrmcfwr63m.png"
-        },
-        {
-            "userId": "245c20b7-249a-46de-b7f8-0d3cbd13a289",
-            "isHost": false,
-            "displayName": "TestEmail@example.com",
-            "userName": "TestEm111ail@example.com",
-            "bio": "Hello World!",
-            "image": "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702453913/gyzjw6xpz9pzl0xg7de4.jpg"
-        },
-        {
-            "userId": "245c20b7-249a-46de-b7f8-0d3cbd13a289",
-            "isHost": false,
-            "displayName": "TestEmail@example.com",
-            "userName": "TestEm111ail@example.com",
-            "bio": "Hello World!",
-            "image": "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702453913/gyzjw6xpz9pzl0xg7de4.jpg"
-        },
-        {
-            "userId": "245c20b7-249a-46de-b7f8-0d3cbd13a289",
-            "isHost": false,
-            "displayName": "TestEmail@example.com",
-            "userName": "TestEm111ail@example.com",
-            "bio": "Hello World!",
-            "image": "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702453913/gyzjw6xpz9pzl0xg7de4.jpg"
-        }
-    ];
+    const handleSeeAllClick = () => {
+        navigate('/all-attendees/${id}');
+    };
 
     return (
-        <Box sx={{}}>
-            <Typography variant="h2" // The variant closest to your requirement
-                        component="h2"
-                        sx={{
-                            fontSize: '20px', // 20px font size
-                            fontWeight: theme.typography.fontWeightBold,
-                            fontFamily: '"Graphik Meetup", -apple-system, sans-serif', // Custom font family
-                            marginBottom: theme.spacing(2.5),
-                        }}>
+        <Box sx={{ marginTop: theme.spacing(2), marginBottom:theme.spacing(3)}}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing(1) }}>
+            <Typography component="div" variant="h2" sx={{
+                fontSize: '20px',
+                fontWeight: theme.typography.fontWeightBold,
+                fontFamily: '"Graphik Meetup", -apple-system, sans-serif',
+            }}>
                 Attendees ({attendees.length})
             </Typography>
+            <Button
+                variant={"text"}
+                onClick={handleSeeAllClick}
+                sx={{
+                    color: '#00798A', // The color from the image
+                    fontFamily: '"Graphik Meetup", -apple-system, sans-serif', // The font from the image
+                    fontSize: '16px', // The font size from the image
+                    textTransform: 'none', // Prevents uppercase transformation
+                    textDecoration: 'none', // Removes underline
+                }}
+            >
+                See all
+            </Button>
+
+        </Box>
             <Paper sx={{flexGrow: 1, padding: theme.spacing(3)}}>
                 <Stack direction="row" spacing={2} alignItems="center" sx={{}}>
                     {attendees.map((attendee) => (
@@ -78,6 +61,9 @@ export function DetailAttendees() {
                             flexDirection: 'column', // Stack children vertically
                             justifyContent: 'center', // Center children vertically
                             alignItems: 'center', // Center children horizontally
+                            borderColor: 'rgb(217 217 217)',
+                            borderStyle:'solid',
+                            borderWidth: '0.2px'
                         }}>
                             <Avatar
                                 alt={attendee.displayName}
@@ -89,10 +75,10 @@ export function DetailAttendees() {
                                     marginBottom: '8px', // Add space between the avatar and the text
                                 }}
                             />
-                            <Typography variant="caption" display="block" gutterBottom>
+                            <Typography component="div" variant="caption" display="block" gutterBottom>
                                 {attendee.displayName}
                             </Typography>
-                            <Typography variant="caption" display="block">
+                            <Typography component="div" variant="caption" display="block">
                                 {attendee.isHost ? 'Host' : 'Member'}
                             </Typography>
                         </Box>

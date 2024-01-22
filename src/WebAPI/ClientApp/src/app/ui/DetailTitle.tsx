@@ -24,13 +24,27 @@ function stringToColor(string: string) {
 }
 
 function stringAvatar(name: string) {
+    let initials = '';
+    const nameParts = name.split(' ');
+
+    // 获取第一个单词的首字母
+    if (nameParts[0]) {
+        initials += nameParts[0][0];
+    }
+
+    // 如果存在第二个单词，获取其首字母
+    if (nameParts.length > 1 && nameParts[1]) {
+        initials += nameParts[1][0];
+    }
+
     return {
         sx: {
             bgcolor: stringToColor(name),
         },
-        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+        children: initials,
     };
 }
+
 
 interface DetailTitleProps {
     title: string;

@@ -1,8 +1,8 @@
-export type Attendee = {
-    userId: string,
-    isHost: boolean,
-    displayName: string,
-    userName: string,
-    bio: string,
-    image: string
+export interface Attendee {
+    userId: string;
+    isHost: boolean;
+    displayName: string;
+    userName: string;
+    bio: string;
+    image: string;
 }

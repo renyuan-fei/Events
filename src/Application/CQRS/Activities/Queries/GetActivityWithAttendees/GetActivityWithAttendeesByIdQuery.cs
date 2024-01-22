@@ -2,6 +2,7 @@ using Application.common.DTO;
 using Application.Common.Helpers;
 using Application.common.Interfaces;
 
+using Domain.Constant;
 using Domain.Repositories;
 using Domain.ValueObjects.Activity;
 
@@ -36,6 +37,7 @@ public class
     _logger = logger;
     _activityRepository = activityRepository;
     _photoRepository = photoRepository;
+    this._userService = userService;
     _userService = userService;
   }
 
@@ -46,34 +48,57 @@ public class
     try
     {
       var activityId = new ActivityId(request.Id);
-      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(activityId, cancellationToken);
+
+      var activity =
+          await _activityRepository.GetActivityWithAttendeesByIdAsync(activityId,
+            cancellationToken);
 
       GuardValidation.AgainstNull(activity, $"Activity with Id {request.Id} not found");
 
       if (!activity!.Attendees.Any())
       {
-        _logger.LogInformation("No attendees found for activity with Id {ActivityId}", request.Id);
+        _logger.LogInformation("No attendees found for activity with Id {ActivityId}",
+                               request.Id);
+
         return new ActivityWithAttendeeDTO();
       }
 
       var userIds = activity.Attendees.Select(a => a.Identity.UserId.Value).ToList();
       var usersTask = _userService.GetUsersByIdsAsync(userIds);
-      var photosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+
+      var photosTask =
+          _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
       await Task.WhenAll(usersTask, photosTask);
 
-      GuardValidation.AgainstNullOrEmpty(usersTask.Result, "User information for attendees not found");
+      GuardValidation.AgainstNullOrEmpty(usersTask.Result,
+                                         "User information for attendees not found");
 
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
       var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
+      var activityPhotos =
+          await _photoRepository.GetMainPhotoByOwnerIdAsync(activityId.Value,
+                                                              cancellationToken);
+
       var result = _mapper.Map<ActivityWithAttendeeDTO>(activity);
-      return ActivityHelper.FillWithPhotoAndUserDetail(result, usersDictionary, photosDictionary);
+
+      result.ImageUrl = activityPhotos == null
+          ? DefaultImage.DefaultActivityImageUrl
+          : activityPhotos!.Details.Url;
+
+      return ActivityHelper.FillWithPhotoAndUserDetail(result,
+                                                       usersDictionary,
+                                                       photosDictionary);
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error occurred in {Name}: {ExMessage}", nameof(GetActivityByIdQueryHandler), ex
-          .Message);
+      _logger.LogError(ex,
+                       "Error occurred in {Name}: {ExMessage}",
+                       nameof(GetActivityByIdQueryHandler),
+                       ex
+                           .Message);
+
       throw;
     }
   }

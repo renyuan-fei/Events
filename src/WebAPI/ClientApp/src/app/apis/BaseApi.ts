@@ -77,13 +77,18 @@ apiClient.interceptors.response.use(
             } catch (e) {
                 // 处理刷新 token 失败的情况
                 console.error('Error refreshing token', e);
-                localStorage.removeItem('token');
-                // 将cookie移除
-                // 名字为RefreshToken
+                localStorage.removeItem('jwt');
                 document.cookie = "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 return Promise.reject(e);
             }
         }
+
+        // 如果 refresh 返回 401 错误，清除本地 token
+        if (error.response?.status === 401 && originalRequest._retry) {
+            localStorage.removeItem('jwt');
+            document.cookie = "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
 
         // 对于其他响应错误直接返回
         return Promise.reject(error);

@@ -74,8 +74,10 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     catch (Exception ex)
     {
       _logger.LogError(ex,
-                       "Error occurred while saving to the database: {ExMessage}",
-                       ex.Message);
+                       "Error occurred in {Name}: {ExMessage}",
+                       nameof(CreateActivityCommand),
+                       ex
+                           .Message);
 
       throw;
     }

@@ -62,6 +62,8 @@ public static class DependencyInjection
     services.AddScoped<IAttendeeRepository, AttendeeRepository>();
     services.AddScoped<IFollowingRepository, FollowingRepository>();
     services.AddScoped<IPhotoRepository, PhotoRepository>();
+    services.AddScoped<ICommentRepository, CommentRepository>();
+
     #endregion
 
     // read and config all mapping settings that inherit from Class Profile

@@ -1,3 +1,4 @@
+using Application.common.interfaces;
 using Application.CQRS.Comments.commands.CreateComment;
 using Application.CQRS.Comments.Queries.GetComments;
 
@@ -15,6 +16,7 @@ public class ChatHub : Hub
   ///   Represents a mediator used for handling communication between components.
   /// </summary>
   private readonly IMediator _mediator;
+  private readonly ICurrentUserService _currentUserService;
 
   /// <summary>
   ///   Initializes a new instance of the ChatHub class.
@@ -24,7 +26,11 @@ public class ChatHub : Hub
   ///   with the mediator.
   /// </param>
   /// /
-  public ChatHub(IMediator mediator) { _mediator = mediator; }
+  public ChatHub(IMediator mediator, ICurrentUserService currentUserService)
+  {
+    _mediator = mediator;
+    _currentUserService = currentUserService;
+  }
 
   /// <summary>
   ///   Sends a comment and notifies the group about the new comment.
@@ -38,7 +44,7 @@ public class ChatHub : Hub
     var comment =
         await _mediator.Send(new CreateCommentCommand
         {
-            Body = body, ActivityId = Guid.Parse(activityId!)
+            Body = body, ActivityId = activityId!, UserId = _currentUserService.Id!
         });
 
     await Clients.Group(activityId!)
@@ -59,7 +65,7 @@ public class ChatHub : Hub
 
     var result = await _mediator.Send(new GetCommentsQuery
     {
-        ActivityId = Guid.Parse(activityId!)
+        ActivityId = activityId!
     });
 
     await Clients.Caller.SendAsync("LoadComments", result);

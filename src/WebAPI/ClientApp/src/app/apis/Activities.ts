@@ -40,6 +40,6 @@ export const useGetActivitiesQuery = () => {
 
 export const useGetActivityQuery = (id: string) => {
     return useQuery(['activities', id], () => GetActivity(id), {
-        enabled: false
+        enabled: !!id
     })
 }

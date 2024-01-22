@@ -36,7 +36,16 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.IsCancelled,
                    opt => opt.MapFrom(src => src.Status == ActivityStatus.Canceled))
         .ForMember(dest => dest.Attendees, opt => opt.MapFrom(src => src.Attendees))
-        .ForMember(dest => dest.HostUsername, opt => opt.Ignore()); // 需要额外逻辑来填充
+        .ForMember(dest => dest.HostUser,
+                   opt => opt.MapFrom(src =>
+                                          new HostUserDTO
+                                          {
+                                              Id = src.Attendees.FirstOrDefault(a => a.Identity.IsHost)!.Identity.UserId.Value,
+                                              Username = "",
+                                              ImageUrl = "",
+                                          }))
+        .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
+
 
     CreateMap<Attendee, AttendeeDTO>()
         .ForMember(dest => dest.UserId,
@@ -84,16 +93,24 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
         .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
         .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
-        .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()))
+        .ForMember(dest => dest.Category,
+                   opt => opt.MapFrom(src => src.Category.ToString()))
         .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Location.City))
         .ForMember(dest => dest.Venue, opt => opt.MapFrom(src => src.Location.Venue))
-        .ForMember(dest => dest.goingCount, opt => opt.MapFrom(src => src.Attendees.Count))
-        .ForMember(dest => dest.HostUser, opt => opt.MapFrom(src =>
-                       new HostUserDTO
-                       {
-                           Id = src.Attendees.FirstOrDefault(a => a.Identity.IsHost)!.Identity.UserId.Value,
-                           Username = "",
-                       }))
+        .ForMember(dest => dest.goingCount,
+                   opt => opt.MapFrom(src => src.Attendees.Count))
+        .ForMember(dest => dest.HostUser,
+                   opt => opt.MapFrom(src =>
+                                          new HostUserDTO
+                                          {
+                                              Id =
+                                                  src.Attendees
+                                                     .FirstOrDefault(a => a.Identity
+                                                         .IsHost)!.Identity
+                                                     .UserId.Value,
+                                              Username = "",
+                                              ImageUrl = "",
+                                          }))
         .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
   }
 }

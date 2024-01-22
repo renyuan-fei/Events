@@ -1,5 +1,12 @@
 using Application.common.DTO;
+using Application.Common.Helpers;
+using Application.common.Interfaces;
 using Application.Common.Interfaces;
+
+using AutoMapper.Internal;
+
+using Domain.Repositories;
+using Domain.ValueObjects.Activity;
 
 using Microsoft.Extensions.Logging;
 
@@ -7,33 +14,68 @@ namespace Application.CQRS.Comments.Queries.GetComments;
 
 public record GetCommentsQuery : IRequest<List<CommentDTO>>
 {
-  public Guid ActivityId { get; init; }
+  public string ActivityId { get; init; }
 }
 
 public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<CommentDTO>>
 {
-  private readonly IEventsDbContext                 _context;
+  private readonly IPhotoRepository                 _photoRepository;
+  private readonly ICommentRepository               _commentRepository;
   private readonly ILogger<GetCommentsQueryHandler> _logger;
   private readonly IMapper                          _mapper;
+  private readonly IUserService                     _userService;
 
   public GetCommentsQueryHandler(
-      IEventsDbContext                 context,
       IMapper                          mapper,
-      ILogger<GetCommentsQueryHandler> logger)
+      ILogger<GetCommentsQueryHandler> logger,
+      ICommentRepository               commentRepository,
+      IUserService                     userService,
+      IPhotoRepository                 photoRepository)
   {
-    _context = context;
     _mapper = mapper;
     _logger = logger;
+    _commentRepository = commentRepository;
+    _userService = userService;
+    _photoRepository = photoRepository;
   }
 
   public async Task<List<CommentDTO>> Handle(
       GetCommentsQuery  request,
       CancellationToken cancellationToken)
   {
-    try { throw new NotImplementedException(); }
+    try
+    {
+      var activityId = new ActivityId(request.ActivityId);
+      var comments = _commentRepository.GetCommentsByActivityId(activityId);
+
+      var userIds = comments.Select(c => c.UserId.Value).ToList();
+
+      var usersTask = _userService.GetUsersByIdsAsync(userIds);
+
+      var photosTask =
+          _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+
+      await Task.WhenAll(usersTask, photosTask);
+
+      GuardValidation.AgainstNullOrEmpty(usersTask.Result,
+                                         "User information for attendees not found");
+
+      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
+      var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
+
+      var result = _mapper.Map<List<CommentDTO>>(comments);
+
+      result.ForAll(comment => UserHelper.FillWithPhotoAndUserDetail(comment, usersDictionary, photosDictionary));
+
+      return result;
+    }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error saving to the database: {ExMessage}", ex.Message);
+      _logger.LogError(ex,
+                       "Error occurred in {Name}: {ExMessage}",
+                       nameof(GetCommentsQuery),
+                       ex
+                           .Message);
 
       throw;
     }

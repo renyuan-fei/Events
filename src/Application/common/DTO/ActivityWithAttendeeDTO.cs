@@ -21,6 +21,8 @@ public class ActivityWithAttendeeDTO
   /// </value>
   public string Title { get; set; }
 
+  public string? ImageUrl { get; set; }
+
   /// <summary>
   ///   Gets or sets the date value.
   /// </summary>
@@ -64,7 +66,7 @@ public class ActivityWithAttendeeDTO
   /// <summary>
   ///   Gets or sets the username of the host.
   /// </summary>
-  public string? HostUsername { get; set; }
+  public HostUserDTO HostUser { get; set; }
 
   /// <summary>
   ///   Gets or sets a value indicating whether the action is cancelled.

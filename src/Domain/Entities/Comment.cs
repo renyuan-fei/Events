@@ -20,15 +20,20 @@ public class Comment : BaseAuditableEntity<CommentId>
   public ActivityId ActivityId { get; private set; }
   public Activity   Activity   { get; }
 
+  public static Comment Create(UserId userId, string body, ActivityId activityId)
+  {
+    return new Comment(userId, body, activityId);
+  }
+
   public void AddComment(ActivityId id, UserId userId, string body)
   {
     var newComment = new Comment(userId, body, id);
 
-    AddDomainEvent(new CommentCreateDomainEvent(newComment));
+    AddDomainEvent(new CommentAddedDomainEvent(newComment));
   }
 
   public void RemoveComment(ActivityId id, CommentId commentId)
   {
-    AddDomainEvent(new CommentDeletedDomainEvent(id, commentId));
+    AddDomainEvent(new CommentRemovedDomainEvent(id, commentId));
   }
 }

@@ -65,4 +65,7 @@ public class HostUserDTO
   /// Identifier for the host user.
   /// </summary>
   public string Id { get; set; }
+
+
+  public string ImageUrl { get; set; }
 }

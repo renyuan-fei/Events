@@ -1,14 +1,19 @@
 import {Attendee} from "./Attendee.ts";
 
-export type Activity = {
-    Id: string,
-    Title: string,
-    Date: Date
-    Category: string,
-    Description: string
-    City: string,
-    Venue: string,
-    HostName: string,
-    IsCancelled: boolean,
-    Attendees: Array<Attendee>,
+export interface Activity {
+    id: string;
+    title: string;
+    imageUrl: string;
+    date: string; // or Date if you plan to convert the string to a Date object
+    description: string;
+    category: string;
+    city: string;
+    venue: string;
+    hostUser: {
+        username: string;
+        id: string;
+        imageUrl: string;
+    };
+    isCancelled: boolean;
+    attendees: Attendee[];
 }

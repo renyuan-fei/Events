@@ -3,9 +3,9 @@ using Domain.ValueObjects.Comment;
 
 namespace Domain.Events.Comment;
 
-public sealed class CommentDeletedDomainEvent : BaseEvent
+public sealed class CommentRemovedDomainEvent : BaseEvent
 {
-  public CommentDeletedDomainEvent(ActivityId activityId, CommentId commentId)
+  public CommentRemovedDomainEvent(ActivityId activityId, CommentId commentId)
   {
     ActivityId = activityId;
     CommentId = commentId;
