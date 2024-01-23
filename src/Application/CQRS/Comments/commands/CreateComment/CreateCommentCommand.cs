@@ -3,6 +3,7 @@ using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 
+using Domain.Constant;
 using Domain.Entities;
 using Domain.Repositories;
 using Domain.ValueObjects;
@@ -23,6 +24,9 @@ public record CreateCommentCommand : IRequest<CommentDTO>
 public class
     CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommentDTO>
 {
+  private readonly IPhotoRepository                     _photoRepository;
+  private readonly IUserService                         _userService;
+  private readonly IMapper                              _mapper;
   private readonly IUnitOfWork                          _unitOfWork;
   private readonly IActivityRepository                  _activityRepository;
   private readonly ILogger<CreateCommentCommandHandler> _logger;
@@ -30,11 +34,17 @@ public class
   public CreateCommentCommandHandler(
       ILogger<CreateCommentCommandHandler> logger,
       IActivityRepository                  activityRepository,
-      IUnitOfWork                          unitOfWork)
+      IUnitOfWork                          unitOfWork,
+      IMapper                              mapper,
+      IUserService                         userService,
+      IPhotoRepository                     photoRepository)
   {
     _logger = logger;
     _activityRepository = activityRepository;
     _unitOfWork = unitOfWork;
+    _mapper = mapper;
+    _userService = userService;
+    _photoRepository = photoRepository;
   }
 
   public async Task<CommentDTO> Handle(
@@ -46,6 +56,10 @@ public class
       var body = request.Body;
       var activityId = new ActivityId(request.ActivityId);
       var userId = new UserId(request.UserId);
+
+      var user = await _userService.GetUserByIdAsync(userId.Value);
+
+      GuardValidation.AgainstNull(user, $"User with Id {request.UserId} not found");
 
       var newComment = Comment.Create(userId, body, activityId);
 
@@ -62,7 +76,20 @@ public class
         throw new DbUpdateException("Could not create comment");
       }
 
-      throw new DbUpdateException("There was an error saving data to the database");
+      var photo = await _photoRepository.GetMainPhotoByOwnerIdAsync(userId.Value,
+          cancellationToken) ;
+
+      var value = _mapper.Map<CommentDTO>(newComment);
+
+      value.UserName = user.UserName;
+
+      value.Image = photo == null
+          ? DefaultImage.DefaultUserImageUrl
+          : photo.Details.Url;
+
+      value.Bio = user.Bio;
+
+      return value;
     }
     catch (Exception ex)
     {

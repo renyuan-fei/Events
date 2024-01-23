@@ -6,8 +6,9 @@ namespace Domain.Entities;
 
 public class Comment : BaseAuditableEntity<CommentId>
 {
-  private Comment(UserId userId, string body, ActivityId activityId)
+  private Comment(CommentId commentId,UserId userId, string body, ActivityId activityId)
   {
+    Id = commentId;
     UserId = userId;
     Body = body;
     ActivityId = activityId;
@@ -22,12 +23,12 @@ public class Comment : BaseAuditableEntity<CommentId>
 
   public static Comment Create(UserId userId, string body, ActivityId activityId)
   {
-    return new Comment(userId, body, activityId);
+    return new Comment(CommentId.New(),userId, body, activityId);
   }
 
   public void AddComment(ActivityId id, UserId userId, string body)
   {
-    var newComment = new Comment(userId, body, id);
+    var newComment = new Comment(CommentId.New(),userId, body, id);
 
     AddDomainEvent(new CommentAddedDomainEvent(newComment));
   }

@@ -48,6 +48,11 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
       var activityId = new ActivityId(request.ActivityId);
       var comments = _commentRepository.GetCommentsByActivityId(activityId);
 
+      if (!comments.Any())
+      {
+        return new List<CommentDTO>();
+      }
+
       var userIds = comments.Select(c => c.UserId.Value).ToList();
 
       var usersTask = _userService.GetUsersByIdsAsync(userIds);

@@ -13,7 +13,8 @@ public class CommentRepository : Repository<Comment, CommentId>, ICommentReposit
 
   public List<Comment> GetCommentsByActivityId(ActivityId activityId)
   {
-     return DbContext.Comments.Where(comment => comment.ActivityId == activityId)
-                            .ToList();
+    return DbContext.Comments.Where(comment => comment.ActivityId == activityId)
+                    .OrderByDescending(comment => comment.Created)
+                    .ToList();
   }
 }

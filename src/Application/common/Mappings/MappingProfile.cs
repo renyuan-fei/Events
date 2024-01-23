@@ -112,5 +112,16 @@ public class MappingProfile : Profile
                                               ImageUrl = "",
                                           }))
         .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
+
+    CreateMap<Comment, CommentDTO>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value)) // 假设 Id 是一个包装类型
+        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId.Value)) // 同上
+        .ForMember(dest => dest.Body, opt => opt.MapFrom(src => src.Body))
+        .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // 如果 Comment 中没有 CreatedAt 字段
+        .ForMember(dest => dest.DisplayName, opt => opt.Ignore())
+        .ForMember(dest => dest.UserName, opt => opt.Ignore())
+        .ForMember(dest => dest.Bio, opt => opt.Ignore())
+        .ForMember(dest => dest.Image, opt => opt.Ignore());
+
   }
 }
