@@ -21,15 +21,11 @@ export function HomePage() {
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={2}>
                         {/* 左侧栏 */}
-                        <Grid item md={4.5} sx={{ display: { xs: 'none', md: 'block' } }}>
+                        <Grid item md={4.5} sx={{ display: { sm: 'none', md: 'block' } }}>
                             <ActivitiesCalendar/>
-                            {/* 其他左侧内容 */}
                             <Paper sx={{ marginTop: theme.spacing(2), padding: theme.spacing(2) }}>
-                                {/* 这里放置其他组件，如 "Your next events" */}
                                 <Typography variant="h6">Your next events</Typography>
-                                {/* ... */}
                             </Paper>
-                            {/* ...更多左侧内容... */}
                         </Grid>
 
                         {/* 右侧栏 */}
@@ -43,7 +39,6 @@ export function HomePage() {
                                     }
                                 </ActivitiesList>
                             </Paper>
-                            {/* ...更多右侧内容... */}
                         </Grid>
                     </Grid>
                 </Box>

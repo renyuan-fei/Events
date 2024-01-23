@@ -41,6 +41,7 @@ public class ChatHub : Hub
     var httpContext = Context.GetHttpContext();
     var activityId = httpContext!.Request.Query["activityId"];
 
+    ////TODO 用户Id获取问题
     var comment =
         await _mediator.Send(new CreateCommentCommand
         {
@@ -55,7 +56,6 @@ public class ChatHub : Hub
   ///   Method called when a client connects to the hub.
   /// </summary>
   /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-  [ Authorize ]
   public async override Task OnConnectedAsync()
   {
     var httpContext = Context.GetHttpContext();

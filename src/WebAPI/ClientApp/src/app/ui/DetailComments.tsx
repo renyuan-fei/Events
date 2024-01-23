@@ -13,20 +13,28 @@ import {
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentInput from "@ui/CommentInput.tsx";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
+import {useEffect} from "react";
+import {startConnection, stopConnection} from "@config/HubConnection.ts";
 
-const mockComments = [
-    {
-        id: '1',
-        name: 'Fiona',
-        avatar: '/path/to/fiona-avatar.jpg',
-        date: '9 days ago',
-        content: 'Hello 👋quick question? I love live music however I’m a vegetarian ... I can bring some lunch & buy my drinks ? Thnx for reply 🍻 cheers',
-    }
-    // ... More comments
-];
 
-export default function DetailComments() {
+export default function DetailComments({activityId} : { activityId : string | undefined}) {
+    const comments = useSelector((state : RootState) => state.comment.comments);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (activityId)
+        {
+            dispatch(startConnection(activityId))
+        }
+        return () => {
+            dispatch(stopConnection())
+        }
+    }, [activityId]);
+
     const theme = useTheme();
+
     return (
         <Box sx={{width: '100%', bgcolor: 'background.paper'}}>
             <Typography component="div" variant="h2" sx={{
@@ -36,23 +44,24 @@ export default function DetailComments() {
             }}>
                 Comments
             </Typography>
+
             <CommentInput/>
 
             <List>
-                {mockComments.map((comment, index) => (
+                {comments.map((comment, index) => (
                     <Box key={comment.id}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar alt={comment.name} src={comment.avatar}/>
+                                <Avatar alt={comment.userName} src={comment.image}/>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={comment.name}
+                                primary={comment.userName}
                                 secondary={
                                     <Typography
                                         variant="body2"
                                         color="text.primary"
                                     >
-                                        {comment.content}
+                                        {comment.body}
                                     </Typography>
                                 }
                             />
@@ -63,7 +72,7 @@ export default function DetailComments() {
                                 <MoreHorizIcon/>
                             </IconButton>
                         </ListItem>
-                        {index < mockComments.length - 1 &&
+                        {index < comments.length - 1 &&
                             <Divider variant="inset" component="li"/>}
                     </Box>
                 ))}

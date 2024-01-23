@@ -13,6 +13,7 @@ import {
 import {useGetCurrentUserQuery} from "@apis/Account.ts";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 
+
 function App() {
     const dispatch = useDispatch();
     const currentUserQuery = useGetCurrentUserQuery();

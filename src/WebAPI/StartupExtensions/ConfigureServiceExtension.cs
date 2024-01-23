@@ -95,7 +95,9 @@ public static class ConfigureServiceExtension
                .WithHeaders("Authorization",
                             "origin",
                             "accept",
-                            "content-type")
+                            "content-type",
+                            "x-requested-with",
+                            "x-signalr-user-agent")
                .WithMethods("GET",
                             "POST",
                             "PUT",

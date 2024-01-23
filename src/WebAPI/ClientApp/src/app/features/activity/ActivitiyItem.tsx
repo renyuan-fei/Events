@@ -62,8 +62,10 @@ export function ActivityItem(props: ActivityItemProps) {
     return (
         <Box component={"div"}
              sx={{
+                 // height: '162px',
+                 // width: '604px',
                  height: '162px',
-                 width: '604px',
+                 width: '90%',
                  paddingTop: theme.spacing(2),
                  paddingBottom: theme.spacing(2),
                  cursor: 'pointer',

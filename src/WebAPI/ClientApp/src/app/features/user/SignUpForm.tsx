@@ -68,12 +68,19 @@ function SignUpForm() {
 
     const { control,reset, watch, trigger, handleSubmit,formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(schema),
+        // defaultValues: {
+        //     displayName: 'TestEmail@example.com',
+        //     email: 'TestEmail@example.com',
+        //     password: 'TestPassword123456789',
+        //     confirmPassword: 'TestPassword123456789',
+        //     phoneNumber: '719159880',
+        // }
         defaultValues: {
-            displayName: 'TestEmail@example.com',
-            email: 'TestEmail@example.com',
-            password: 'TestPassword123456789',
-            confirmPassword: 'TestPassword123456789',
-            phoneNumber: '719159880',
+            displayName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            phoneNumber: '',
         }
     });
 
@@ -221,7 +228,7 @@ function SignUpForm() {
                                 type="email"
                                 required
                                 autoComplete="email"
-                                error={!!errors.email}
+                                error={!!field.value && !!errors.email}
                                 helperText={errors.email?.message || ''}
                             />
                         )}

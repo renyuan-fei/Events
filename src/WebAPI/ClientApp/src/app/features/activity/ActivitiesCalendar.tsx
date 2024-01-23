@@ -7,13 +7,13 @@ export function ActivitiesCalendar() {
     const theme = useTheme();
 
     return (
-        <Paper sx={{ padding: theme.spacing(2) , margin: theme.spacing(2)}}>
+        <Paper sx={{ padding: theme.spacing(2) , margin: theme.spacing(2) , height: '362px', width: '368px'}}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateCalendar
                     displayWeekNumber
                     sx={{
                         width: '100%',
-                        maxWidth: '360px'
+                        height: '362',
                     }}
                     slots={{
                     }}

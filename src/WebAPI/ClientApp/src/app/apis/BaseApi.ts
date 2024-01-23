@@ -5,6 +5,7 @@ import axios, {
     AxiosResponse,
 } from 'axios';
 
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // 定义接口以扩展 Axios 请求配置（如果需要）
@@ -51,25 +52,31 @@ apiClient.interceptors.response.use(
 
         const originalRequest = error.config as CustomAxiosRequestConfig;
 
+        // 如果 refresh 返回 401 错误，清除本地 token
+        if (error.response?.status === 401 && originalRequest.url === '/api/Account/refresh') {
+            console.log('refresh token 失效');
+            localStorage.removeItem('jwt');
+            window.location.reload();
+        }
+
         // 检查错误是否为 401 并且这不是用于刷新 token 的请求
         if (error.response?.status === 401 && !originalRequest._retry) {
 
             originalRequest._retry = true; // 标记这是一次重试请求
 
+
             try {
                 const response = await apiClient.post(`/api/Account/refresh`);
 
                 if (response.status === 200) {
-                    // 存储新 token 到本地
-                    localStorage.setItem('token', response.data.data.token);
+                    const token = response.data.data.token;
 
+                    // 存储新 token 到本地
+                    localStorage.setItem('jwt', token);
                     // 更新原始请求的头部
                     // 确保 headers 已定义
                     originalRequest.headers = originalRequest.headers || {};
-                    originalRequest.headers['Authorization'] = 'Bearer ' + response.data.data.token;
-
-                    // 如果需要，也更新 Axios 实例的默认头部
-                    apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
+                    originalRequest.headers['Authorization'] = 'Bearer ' + token;
 
                     // 重新发起原始请求
                     return axios(originalRequest);
@@ -78,15 +85,8 @@ apiClient.interceptors.response.use(
                 // 处理刷新 token 失败的情况
                 console.error('Error refreshing token', e);
                 localStorage.removeItem('jwt');
-                document.cookie = "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 return Promise.reject(e);
             }
-        }
-
-        // 如果 refresh 返回 401 错误，清除本地 token
-        if (error.response?.status === 401 && originalRequest._retry) {
-            localStorage.removeItem('jwt');
-            document.cookie = "RefreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         }
 
 

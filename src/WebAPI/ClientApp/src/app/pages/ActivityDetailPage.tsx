@@ -18,7 +18,6 @@ export function ActivityDetailPage() {
 
     const {data, isLoading, isError} = useGetActivityQuery(activityId as string);
 
-    console.log(data);
     useEffect(() => {
         if (!activityId) {
             navigate('/notfound');
@@ -46,7 +45,7 @@ export function ActivityDetailPage() {
                         <DetailBody title={data.title} imageUrl={data.imageUrl} description={data.description}/>
                         <DetailAttendees attendees={data.attendees}/>
                         <DetailImageList/>
-                        <DetailComments/>
+                        <DetailComments activityId={activityId}/>
                     </Grid>
 
                     <Grid item xs={12} md={4.5} sx={{display: {xs: 'none', md: 'block'}}}>

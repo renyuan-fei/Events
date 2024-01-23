@@ -234,7 +234,11 @@ public class AccountController : BaseController
     var principal = _jwtTokenService.GetPrincipalFromJwtToken(jwtToken, false);
 
     // 检查JWT令牌是否无效
-    if (principal == null) { return Unauthorized(ApiResponse<Result>.Failure("Invalid JWT token")); }
+    if (principal == null)
+    {
+      // Response.Cookies.Delete("RefreshToken");
+      return Unauthorized(ApiResponse<Result>.Failure("Invalid JWT token"));
+    }
 
     // 从JWT令牌中获取用户信息
     var email = principal.FindFirstValue(ClaimTypes.Email);
@@ -245,6 +249,7 @@ public class AccountController : BaseController
     // 验证刷新令牌和过期时间
     if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpirationDateTime <= DateTime.Now)
     {
+      Response.Cookies.Delete("RefreshToken");
       return Unauthorized(ApiResponse<Result>.Failure("Invalid refresh token"));
     }
 
