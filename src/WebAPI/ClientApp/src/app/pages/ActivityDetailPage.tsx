@@ -4,11 +4,12 @@ import {DetailTitle} from "@ui/DetailTitle.tsx";
 import {DetailBody} from "@ui/DetailBody.tsx";
 import {DetailAttendees} from "@ui/DetailAttendees.tsx";
 import {Grid, useTheme} from "@mui/material";
-import DetailImageList from "@ui/DetailImageList.tsx";
 import DetailComments from "@ui/DetailComments.tsx";
 import {DetailSidebar} from "@ui/DetailSidebar.tsx";
 import {useGetActivityQuery} from "@apis/Activities.ts";
 import {useEffect} from "react";
+import {Photo} from "@type/Photo.ts";
+import CustomImageList from "@ui/Custom/CustomImageList.tsx";
 
 export function ActivityDetailPage() {
     const theme = useTheme();
@@ -44,7 +45,7 @@ export function ActivityDetailPage() {
                     <Grid item md={7.5}>
                         <DetailBody title={data.title} imageUrl={data.imageUrl} description={data.description}/>
                         <DetailAttendees attendees={data.attendees}/>
-                        <DetailImageList/>
+                        <CustomImageList images={new Array<Photo>} Id={activityId} isUser={true}/>
                         <DetailComments activityId={activityId}/>
                     </Grid>
 

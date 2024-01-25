@@ -4,19 +4,21 @@ namespace Application.common.Interfaces;
 
 public interface IUserService
 {
-  Task<UserDTO?> GetUserByIdAsync(string userId);
+  Task<bool> IsUserExistingAsync(string email);
 
-  Task<UserDTO> GetUserByEmailAsync(string username);
+  Task<UserDto?> GetUserByIdAsync(string userId, CancellationToken cancellationToken);
 
-  Task<IEnumerable<UserDTO>> GetAllUsersAsync();
+  Task<UserDto> GetUserByEmailAsync(string username, CancellationToken cancellationToken);
 
-  Task<IEnumerable<UserDTO>> GetUsersByIdsAsync(IEnumerable<string> userIds);
+  Task<IEnumerable<UserDto>> GetAllUsersAsync();
 
-  Task<IEnumerable<UserDTO>> SearchUsersAsync(string searchTerm);
+  Task<IEnumerable<UserDto>> GetUsersByIdsAsync(IEnumerable<string> userIds, CancellationToken cancellationToken);
 
-  Task AddUserAsync(UserDTO userDto);
+  Task<IEnumerable<UserDto>> SearchUsersAsync(string searchTerm);
 
-  Task UpdateUserAsync(UserDTO userDto);
+  Task AddUserAsync(UserDto userDto);
+
+  Task UpdateUserAsync(UserDto userDto);
 
   Task DeleteUserAsync(Guid userId);
 

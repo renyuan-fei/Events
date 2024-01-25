@@ -10,7 +10,7 @@ public static class UserHelper
 {
   public static T FillWithPhotoAndUserDetail <T>(
       T                                    data,
-      IReadOnlyDictionary<string, UserDTO> usersDictionary,
+      IReadOnlyDictionary<string, UserDto> usersDictionary,
       IReadOnlyDictionary<string, Photo>   photosDictionary)
   where T : IUserDetail
   {

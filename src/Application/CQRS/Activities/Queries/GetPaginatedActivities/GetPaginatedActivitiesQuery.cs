@@ -20,7 +20,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.CQRS.Activities.Queries.GetPaginatedActivities;
 
 public record
-    GetPaginatedActivitiesQuery : IRequest<PaginatedList<ActivityWithHostUserDTO>>
+    GetPaginatedActivitiesQuery : IRequest<PaginatedList<ActivityWithHostUserDto>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
 
@@ -29,7 +29,7 @@ public record
 
 public class
     GetPaginatedActivitiesQueryHandler : IRequestHandler<GetPaginatedActivitiesQuery,
-    PaginatedList<ActivityWithHostUserDTO>>
+    PaginatedList<ActivityWithHostUserDto>>
 {
   private readonly IPhotoRepository                            _photoRepository;
   private readonly IUserService                                _userService;
@@ -51,7 +51,7 @@ public class
     _photoRepository = photoRepository;
   }
 
-public async Task<PaginatedList<ActivityWithHostUserDTO>> Handle(
+public async Task<PaginatedList<ActivityWithHostUserDto>> Handle(
     GetPaginatedActivitiesQuery request,
     CancellationToken cancellationToken)
 {
@@ -64,7 +64,7 @@ public async Task<PaginatedList<ActivityWithHostUserDTO>> Handle(
         var pageSize = request.PaginatedListParams.PageSize;
 
         var paginatedActivitiesDto = await query
-            .ProjectTo<ActivityWithHostUserDTO>(_mapper.ConfigurationProvider)
+            .ProjectTo<ActivityWithHostUserDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(pageNumber, pageSize);
 
         if (!paginatedActivitiesDto.Items.Any())
@@ -79,7 +79,7 @@ public async Task<PaginatedList<ActivityWithHostUserDTO>> Handle(
         GuardValidation.AgainstNullOrEmpty(userIds, "Error occurred while getting user ids");
         GuardValidation.AgainstNullOrEmpty(activityIds, "Error occurred while getting activity ids");
 
-        var users = await _userService.GetUsersByIdsAsync(userIds);
+        var users = await _userService.GetUsersByIdsAsync(userIds, cancellationToken);
         var activityPhotos = await _photoRepository.GetMainPhotosByOwnerIdAsync(activityIds, cancellationToken);
 
         var usersDictionary = users.ToDictionary(user => user.Id);

@@ -17,14 +17,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Followers.Queries;
 
-public record GetFollowerQuery : IRequest<PaginatedList<FollowerDTO>>
+public record GetFollowerQuery : IRequest<PaginatedList<FollowerDto>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
   public string              UserId              { get; init; }
 }
 
 public class GetFollowerQueryHandler : IRequestHandler<GetFollowerQuery,
-    PaginatedList<FollowerDTO>>
+    PaginatedList<FollowerDto>>
 {
   private readonly IUserService                     _userService;
   private readonly IPhotoRepository                 _photoRepository;
@@ -46,7 +46,7 @@ public class GetFollowerQueryHandler : IRequestHandler<GetFollowerQuery,
     _followingRepository = followingRepository;
   }
 
-  public async Task<PaginatedList<FollowerDTO>> Handle(
+  public async Task<PaginatedList<FollowerDto>> Handle(
       GetFollowerQuery  request,
       CancellationToken cancellationToken)
   {
@@ -58,19 +58,19 @@ public class GetFollowerQueryHandler : IRequestHandler<GetFollowerQuery,
 
       var query = _followingRepository.GetFollowersByIdQueryable(id);
       var paginatedFollowerDto = await query
-                                       .ProjectTo<FollowerDTO>(_mapper.ConfigurationProvider)
+                                       .ProjectTo<FollowerDto>(_mapper.ConfigurationProvider)
                                        .PaginatedListAsync(pageNumber, pageSize);
 
       if (!paginatedFollowerDto.Items.Any())
       {
-        return new PaginatedList<FollowerDTO>();
+        return new PaginatedList<FollowerDto>();
       }
 
 
       var followingsId =
           paginatedFollowerDto.Items.Select(following => following.UserId).ToList();
 
-      var followingsTask = _userService.GetUsersByIdsAsync(followingsId);
+      var followingsTask = _userService.GetUsersByIdsAsync(followingsId, cancellationToken);
 
       var mainPhotoTask = _photoRepository.GetMainPhotosByOwnerIdAsync(followingsId
             .Select(userId => userId),

@@ -3,23 +3,25 @@ using Application.common.Models;
 
 using Domain.ValueObjects;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.Photos.Commands.DeletePhoto;
+namespace Application.CQRS.Photos.Commands.UpdatePhoto;
 
-public record DeletePhotoCommand : IRequest<Result>
+public record UpdateUserMainPhotoCommand : IRequest<Result>
 {
-  public string UserId   { get; init; }
-  public string PublicId { get; init; }
+  public string    UserId { get; init; }
+  public IFormFile File   { get; init; }
+
 }
 
-public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Result>
+public class UpdateUserMainPhotoCommandHandler : IRequestHandler<UpdateUserMainPhotoCommand, Result>
 {
-  private readonly ILogger<DeletePhotoHandler> _logger;
+  private readonly ILogger<UpdateUserMainPhotoCommandHandler> _logger;
   private readonly IPhotoService               _photoService;
 
-  public DeletePhotoHandler(
-      ILogger<DeletePhotoHandler> logger,
+  public UpdateUserMainPhotoCommandHandler(
+      ILogger<UpdateUserMainPhotoCommandHandler> logger,
       IPhotoService               photoService)
   {
     _logger = logger;
@@ -27,12 +29,12 @@ public class DeletePhotoHandler : IRequestHandler<DeletePhotoCommand, Result>
   }
 
   public async Task<Result> Handle(
-      DeletePhotoCommand request,
+      UpdateUserMainPhotoCommand request,
       CancellationToken  cancellationToken)
   {
     try
     {
-      return await _photoService.RemovePhotoAsync(request.PublicId,
+      return await _photoService.UpdateMainPhotoAsync(request.File,
                                                   request
                                                       .UserId);
     }

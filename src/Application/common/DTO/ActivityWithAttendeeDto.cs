@@ -3,7 +3,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents an activity data transfer object.
 /// </summary>
-public class ActivityWithAttendeeDTO
+public class ActivityWithAttendeeDto
 {
   /// <summary>
   ///   Gets or sets the unique identifier for the property.
@@ -82,5 +82,7 @@ public class ActivityWithAttendeeDTO
   /// <value>
   ///   The collection of attendees associated with the activity.
   /// </value>
-  public ICollection<AttendeeDTO> Attendees { get; set; }
+  public ICollection<AttendeeDto> Attendees { get; set; }
+
+  public ICollection<PhotoDto> Photos { get; set; } = new List<PhotoDto>();
 }

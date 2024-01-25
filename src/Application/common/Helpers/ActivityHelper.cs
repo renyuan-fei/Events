@@ -6,9 +6,9 @@ namespace Application.common.Helpers;
 
 public static class ActivityHelper
 {
-  public static ActivityWithAttendeeDTO FillWithPhotoAndUserDetail(
-      ActivityWithAttendeeDTO              activity,
-      IReadOnlyDictionary<string, UserDTO> usersDictionary,
+  public static ActivityWithAttendeeDto FillWithPhotoAndUserDetail(
+      ActivityWithAttendeeDto              activity,
+      IReadOnlyDictionary<string, UserDto> usersDictionary,
       IReadOnlyDictionary<string, Photo>   photosDictionary)
   {
     // 遍历活动的每个参与者

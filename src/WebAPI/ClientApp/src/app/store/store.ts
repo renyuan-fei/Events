@@ -2,13 +2,15 @@ import {configureStore} from '@reduxjs/toolkit'
 import {useDispatch} from 'react-redux'
 import userReducer from '@features/user/userSlice';
 import commonReducer from '@features/commonSlice';
-import commentSlice from "@features/CommentSlice.ts";
 import {createSignalRMiddleware} from "@config/HubConnection.ts";
+import commentSlice from "@features/Comment/CommentSlice.ts";
+import activitySlice from "@features/activity/activitySlice.ts";
 
 const signalRMiddleware = createSignalRMiddleware(); // 创建 SignalR 中间件实例
 
 const store = configureStore({
     reducer: {
+        activity: activitySlice,
         comment: commentSlice,
         common: commonReducer,
         user: userReducer,

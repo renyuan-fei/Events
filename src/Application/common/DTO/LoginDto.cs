@@ -5,7 +5,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for login details.
 /// </summary>
-public class LoginDTO
+public class LoginDto
 {
   /// <summary>
   ///   Gets or sets the email address.

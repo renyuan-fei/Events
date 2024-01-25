@@ -3,7 +3,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents authentication data transfer object.
 /// </summary>
-public class AuthenticationDTO
+public class AuthenticationDto
 {
   /// <summary>
   ///   Gets or sets the value of the token.

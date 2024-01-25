@@ -13,10 +13,19 @@ const CommentInput: React.FC = () => {
     };
 
     const handleSendComment = () => {
-        console.log(comment);
-        dispatch(sendMessage(comment));
-        setComment(''); // Clear the input after sending
+        if (comment.trim() !== '') {
+            console.log(comment);
+            dispatch(sendMessage(comment));
+            setComment(''); // Clear the input after sending
+        }
     };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            handleSendComment();
+        }
+    };
+
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -28,6 +37,7 @@ const CommentInput: React.FC = () => {
                 placeholder="Add a comment..."
                 variant="outlined"
                 sx={{ ml: 1, flex: 1 }}
+                onKeyDown={handleKeyDown}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">

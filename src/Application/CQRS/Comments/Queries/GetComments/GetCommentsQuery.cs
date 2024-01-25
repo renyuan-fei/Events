@@ -12,12 +12,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Comments.Queries.GetComments;
 
-public record GetCommentsQuery : IRequest<List<CommentDTO>>
+public record GetCommentsQuery : IRequest<List<CommentDto>>
 {
   public string ActivityId { get; init; }
 }
 
-public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<CommentDTO>>
+public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<CommentDto>>
 {
   private readonly IPhotoRepository                 _photoRepository;
   private readonly ICommentRepository               _commentRepository;
@@ -39,7 +39,7 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
     _photoRepository = photoRepository;
   }
 
-  public async Task<List<CommentDTO>> Handle(
+  public async Task<List<CommentDto>> Handle(
       GetCommentsQuery  request,
       CancellationToken cancellationToken)
   {
@@ -50,12 +50,12 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
 
       if (!comments.Any())
       {
-        return new List<CommentDTO>();
+        return new List<CommentDto>();
       }
 
       var userIds = comments.Select(c => c.UserId.Value).ToList();
 
-      var usersTask = _userService.GetUsersByIdsAsync(userIds);
+      var usersTask = _userService.GetUsersByIdsAsync(userIds,cancellationToken);
 
       var photosTask =
           _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
@@ -68,7 +68,7 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
       var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
-      var result = _mapper.Map<List<CommentDTO>>(comments);
+      var result = _mapper.Map<List<CommentDto>>(comments);
 
       result.ForAll(comment => UserHelper.FillWithPhotoAndUserDetail(comment, usersDictionary, photosDictionary));
 

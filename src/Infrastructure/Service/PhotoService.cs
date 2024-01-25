@@ -38,7 +38,7 @@ public class PhotoService : IPhotoService
 
   public async Task<Result> AddPhotoAsync(IFormFile file, string ownerId)
   {
-    PhotoUploadDTO? uploadResult = null;
+    PhotoUploadDto? uploadResult = null;
 
     await _transactionManager.BeginTransactionAsync();
 
@@ -53,13 +53,9 @@ public class PhotoService : IPhotoService
         return Result.Failure(new[ ] { "Photo upload failed" });
       }
 
-      var isMainPhotoExist = await _photoRepository.GetMainPhotoByOwnerIdAsync(ownerId,
-                               CancellationToken.None)
-                          != null;
-
       var photo = Photo.Add(uploadResult.PublicId,
                             uploadResult.Url,
-                            !isMainPhotoExist,
+                            false,
                             ownerId);
 
       await _photoRepository.AddAsync(photo, new CancellationToken());
@@ -162,4 +158,56 @@ public class PhotoService : IPhotoService
         ? Result.Success()
         : Result.Failure(new[ ] { "Photo update failed" });
   }
+
+  public async Task<Result> UpdateMainPhotoAsync(IFormFile file, string ownerId)
+  {
+    PhotoUploadDto? uploadResult = null;
+    await _transactionManager.BeginTransactionAsync();
+
+    try
+    {
+      // 上传新照片
+      uploadResult = await _cloudinaryService.UpLoadPhotoAsync(file);
+      if (uploadResult == null)
+      {
+        await _transactionManager.RollbackTransactionAsync();
+        return Result.Failure(new[] { "Failed to upload new main photo" });
+      }
+
+      var isMainPhotoExists = await _photoRepository.GetMainPhotoByOwnerIdAsync(ownerId, new CancellationToken());
+
+      if (isMainPhotoExists is { Details.IsMain: true })
+      {
+        // 获取并删除旧的主照片
+        var oldMainPhoto = await _photoRepository.GetMainPhotoByOwnerIdAsync(ownerId, CancellationToken.None);
+        if (oldMainPhoto != null)
+        {
+          _photoRepository.Remove(oldMainPhoto);
+          await _cloudinaryService.DeletePhotoAsync(oldMainPhoto.Details.PublicId);
+        }
+      }
+
+      // 创建新的主照片实体并添加到数据库
+      var newMainPhoto = Photo.Add(uploadResult.PublicId, uploadResult.Url, true, ownerId);
+      await _photoRepository.AddAsync(newMainPhoto, new CancellationToken());
+
+      await _transactionManager.CommitTransactionAsync();
+
+      newMainPhoto.AddDomainEvent(new PhotoAddedDomainEvent(newMainPhoto));
+
+      return Result.Success();
+    }
+    catch (Exception ex)
+    {
+      await _transactionManager.RollbackTransactionAsync();
+      if (uploadResult != null)
+      {
+        await _cloudinaryService.DeletePhotoAsync(uploadResult.PublicId);
+      }
+      _logger.LogError(ex, "Error occurred while updating main photo");
+
+      return Result.Failure(new[] { ex.Message });
+    }
+  }
+
 }

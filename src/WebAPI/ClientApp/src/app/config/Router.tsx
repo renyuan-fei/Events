@@ -4,6 +4,7 @@ import MainPage from "@pages/MainPage.tsx";
 import {HomePage} from "@pages/HomePage.tsx";
 import {RequireAuth} from "@config/RequireAuth.tsx";
 import {ActivityDetailPage} from "@pages/ActivityDetailPage.tsx";
+import {UserProfile} from "@pages/userProfile.tsx";
 // import {Outlet} from "react-router";
 export const router = createHashRouter([
     {
@@ -11,14 +12,17 @@ export const router = createHashRouter([
         element: <AppLayout/>,
         children: [
             {path: "/", element: <MainPage/>},
-            {element: (
+            {
+                element: (
                     <RequireAuth>
                     </RequireAuth>
                 ),
                 children: [
-                    { path: "/home", element: <HomePage /> },
-                    { path: "/activity/:activityId", element: <ActivityDetailPage/> }
-                ],}
+                    {path: "/home", element: <HomePage/>},
+                    {path: "/activity/:activityId", element: <ActivityDetailPage/>},
+                    {path: "/user/:userId?", element: <UserProfile/> }
+                ]
+            },
         ]
     },
 ])

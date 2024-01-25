@@ -2,26 +2,34 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {useTheme} from "@mui/material";
+import {Paper, useTheme} from "@mui/material";
 import {useNavigate} from "react-router";
 import Button from "@mui/material/Button";
+import {Photo} from "@type/Photo.ts";
 
-// interface DetailImageListProps {
-//     images: Array<string>;
-// }
+interface DetailImageListProps {
+    Id: string | undefined;
+    isUser: boolean
+    images: Array<Photo>;
+}
 
-export default function DetailImageList() {
+export default function DetailImageList(props: DetailImageListProps) {
     const theme = useTheme();
     const navigate = useNavigate();
+    const {Id, images, isUser} = props;
 
-    // Function to handle the "See all" button click
     const handleSeeAllClick = () => {
-        navigate('/all-photos'); // Navigate to the route where all photos are displayed
+        navigate(`/photos/${Id}`);
     };
 
     return (
-        <Box sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(3) }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing(1) }}>
+        <Box sx={{marginTop: theme.spacing(2), marginBottom: theme.spacing(3)}}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: theme.spacing(1)
+            }}>
                 <Typography component="div" variant="h2" sx={{
                     fontSize: '20px',
                     fontWeight: theme.typography.fontWeightBold,
@@ -42,16 +50,40 @@ export default function DetailImageList() {
                 >
                     See all
                 </Button>
-
             </Box>
 
-            <ImageList sx={{ width: '100%', height: 'auto' }} cols={3}>
+            <Paper sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center', // 使内容在Paper中垂直居中
+                alignItems: 'center',
+                height: 150,
+                padding: theme.spacing(4)
+            }}>
+                <Typography sx={{mb: 2}}
+                            variant={"h6"}
+                            component={"div"}>
+                    No photos available
+                </Typography>
+                {isUser && (
+                    <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/photos/upload`)} // 替换为上传照片的实际路由
+                        sx={{mb: 2}}
+                    >
+                        Add Photos
+                    </Button>
+                )}
+            </Paper>
+
+            <ImageList sx={{width: '100%', height: 'auto'}} cols={3}>
                 {images.slice(0, 6).map((item, index) => (
-                    <ImageListItem key={item.img} sx={{ borderRadius: theme.shape.borderRadius }}>
+                    <ImageListItem key={item.publicId}
+                                   sx={{borderRadius: theme.shape.borderRadius}}>
                         <img
-                            src={`${item.img}?w=164&h=150&fit=crop&auto=format`}
-                            srcSet={`${item.img}?w=164&h=150&fit=crop&auto=format&dpr=2 2x`}
-                            alt={item.title}
+                            src={`${item.url}?w=164&h=150&fit=crop&auto=format`}
+                            srcSet={`${item.url}?w=164&h=150&fit=crop&auto=format&dpr=2 2x`}
+                            alt={item.publicId}
                             loading="lazy"
                             style={{
                                 width: '100%',
@@ -72,7 +104,8 @@ export default function DetailImageList() {
                                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
                                 borderRadius: theme.shape.borderRadius,
                             }}>
-                                <Typography component="div" variant="h6" sx={{ color: 'common.white' }}>
+                                <Typography component="div" variant="h6"
+                                            sx={{color: 'common.white'}}>
                                     +{images.length - 6}
                                 </Typography>
                             </Box>
@@ -83,55 +116,3 @@ export default function DetailImageList() {
         </Box>
     );
 }
-
-
-const images = [
-    {
-        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-        title: 'Breakfast',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-        title: 'Burger',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Camera',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-        title: 'Coffee',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-        title: 'Hats',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-        title: 'Honey',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-        title: 'Basketball',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        title: 'Fern',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-        title: 'Mushrooms',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-        title: 'Tomato basil',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-        title: 'Sea star',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-        title: 'Bike',
-    },
-];

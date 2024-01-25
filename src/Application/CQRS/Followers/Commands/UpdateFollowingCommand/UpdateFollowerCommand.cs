@@ -43,7 +43,7 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
   {
     try
     {
-      var isFollowingExists = await _userService.GetUserByIdAsync(request.FollowingId);
+      var isFollowingExists = await _userService.GetUserByIdAsync(request.FollowingId, cancellationToken);
 
       GuardValidation.AgainstNull(isFollowingExists,
                                   $"Following with UserId {request.FollowingId} not found");

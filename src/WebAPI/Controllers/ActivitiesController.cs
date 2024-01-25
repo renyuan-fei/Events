@@ -28,23 +28,18 @@ public class ActivitiesController : BaseController
   /// <param name="filterParams"></param>
   /// <param name="pageNumber"></param>
   /// <returns>An ActionResult containing the paginated list of activities.</returns>
-  [ HttpGet("{pageNumber:int}/{pageSize:int?}") ]
+  [ HttpGet ]
   public async Task<OkObjectResult> GetPaginatedListActivities(
-      int                         pageNumber,
-      int?                        pageSize,
-      [ FromQuery ] FilterParams? filterParams)
+      [FromQuery]   PaginatedListParams paginatedListParams,
+      [ FromQuery ] FilterParams?       filterParams)
   {
     var result = await Mediator!.Send(new GetPaginatedActivitiesQuery
     {
-        PaginatedListParams =
-            new PaginatedListParams
-            {
-                PageNumber = pageNumber, PageSize = pageSize ?? 10
-            },
+        PaginatedListParams = paginatedListParams,
         FilterParams = filterParams
     });
 
-    return Ok(ApiResponse<PaginatedList<ActivityWithHostUserDTO>>.Success(result));
+    return Ok(ApiResponse<PaginatedList<ActivityWithHostUserDto>>.Success(result));
   }
 
   // GET: api/Activities/5
@@ -61,7 +56,7 @@ public class ActivitiesController : BaseController
   {
     var result = await Mediator!.Send(new GetActivityWithAttendeesByIdQuery { Id = id });
 
-    return Ok(ApiResponse<ActivityWithAttendeeDTO>.Success(result));
+    return Ok(ApiResponse<ActivityWithAttendeeDto>.Success(result));
   }
 
   // PUT: api/Activities/5
@@ -80,7 +75,7 @@ public class ActivitiesController : BaseController
   [ HttpPut("{id}") ]
   public async Task<IActionResult> PutActivity(
       string                   id,
-      [ FromBody ] ActivityDTO activity)
+      [ FromBody ] ActivityDto activity)
   {
     var result = await Mediator!.Send(new UpdateActivityCommand
     {
@@ -102,7 +97,7 @@ public class ActivitiesController : BaseController
   /// </returns>
   [ Authorize ]
   [ HttpPost ]
-  public async Task<IActionResult> PostActivity([ FromBody ] ActivityDTO activity)
+  public async Task<IActionResult> PostActivity([ FromBody ] ActivityDto activity)
   {
     var result = await Mediator!.Send(new CreateActivityCommand
     {
@@ -138,20 +133,18 @@ public class ActivitiesController : BaseController
                                           message: "Activity deleted successfully"));
   }
 
-  [ HttpGet("{activityId}/attendees/{pageNumber:int}/{pageSize:int?}") ]
+  [ HttpGet("{activityId}/attendees") ]
   public async Task<IActionResult> GetPaginatedListAttendees(
       string activityId,
-      int    pageNumber,
-      int    pageSize)
+      PaginatedListParams paginatedListParams)
   {
     var result = await Mediator!.Send(new GetPaginatedListAttendeesQuery
     {
-        PaginatedListParams =
-            new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize },
+        PaginatedListParams = paginatedListParams,
         ActivityId = activityId
     });
 
-    return Ok(ApiResponse<PaginatedList<AttendeeDTO>>.Success(result));
+    return Ok(ApiResponse<PaginatedList<AttendeeDto>>.Success(result));
   }
 
   /// <summary>

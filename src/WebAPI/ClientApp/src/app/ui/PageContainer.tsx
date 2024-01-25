@@ -8,7 +8,9 @@ interface ContainerProps {
 export function PageContainer({children}: ContainerProps) {
     return (
         <Container maxWidth={"xl"} sx={{
-            mt: 15
+            pt: '32px',
+            pb: '48px',
+            mt: 9.8
         }}>
             {children}
         </Container>

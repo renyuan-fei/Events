@@ -6,6 +6,7 @@ import {useAppDispatch} from "@store/store.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
 import {debounce} from "@mui/material";
+import {UserProfile} from "@type/UserProfile.ts";
 
 
 // 登录请求
@@ -28,6 +29,34 @@ async function getCurrentUser(): Promise<AuthResponse> {
     const response = await apiClient.get<ApiResponse<AuthResponse>>('/api/Account/')
     console.log(response);
     return handleResponse(response);
+}
+
+async function GetUserProfile(id: string): Promise<UserProfile> {
+    if (!id) {
+        id = ''
+    }
+    const response = await apiClient.get<ApiResponse<UserProfile>>(`/api/Users/${id}`);
+    return handleResponse(response);
+}
+
+export const useGetUserProfileQuery = (id: string | undefined) => {
+    let key = id;
+    if (id === undefined) {
+        key = 'main'
+    }
+    return useQuery(
+        ['UserProfile', key],
+        () => GetUserProfile(id || ''),
+        {
+            onSuccess: (data: UserProfile) => {
+                console.log(data);
+            },
+            onError: (error: any) => {
+                console.log(error);
+            },
+            enabled: !!id // 只有在 id 非空时才启用查询
+        }
+    );
 }
 
 export const checkEmailRegistered = debounce(async (email: string) => {
@@ -55,7 +84,7 @@ export const useLoginMutation = (
                 dispatch(loginAction({
                     token: data.token,
                     userName: data.displayName,
-                    imageUrl: data.image
+                    imageUrl: data.image,
                 }));
 
                 if (additionalOnSuccess) {

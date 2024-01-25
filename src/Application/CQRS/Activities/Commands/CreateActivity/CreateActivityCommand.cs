@@ -19,7 +19,7 @@ namespace Application.CQRS.Activities.Commands.CreateActivity;
 public record CreateActivityCommand : IRequest<Result>
 {
   public string      CurrentUserId { get; init; }
-  public ActivityDTO ActivityDTO   { get; init; }
+  public ActivityDto ActivityDTO   { get; init; }
 }
 
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,

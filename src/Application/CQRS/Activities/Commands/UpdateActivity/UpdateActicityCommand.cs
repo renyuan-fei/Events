@@ -14,7 +14,7 @@ namespace Application.CQRS.Activities.Commands.UpdateActivity;
 public record UpdateActivityCommand : IRequest<Result>
 {
   public string      Id       { get; init; }
-  public ActivityDTO Activity { get; init; }
+  public ActivityDto Activity { get; init; }
 }
 
 public class

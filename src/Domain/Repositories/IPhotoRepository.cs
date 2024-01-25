@@ -6,6 +6,10 @@ public interface IPhotoRepository
 
   Task<Photo?> GetByPublicIdAsync(string publicId, CancellationToken cancellationToken);
 
+  Task<List<Photo>> GetPhotosByOwnerIdAsync(string ownerId, CancellationToken cancellationToken);
+
+  IQueryable<Photo> GetPhotosWithoutMainPhotoByOwnerIdQueryable(string ownerId, CancellationToken cancellationToken);
+
   Task<Photo?> GetMainPhotoByOwnerIdAsync(
       string            ownerId,
       CancellationToken cancellationToken);

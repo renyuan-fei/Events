@@ -20,13 +20,34 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
     return DbContext
            .Activities
            .Where(activity => activity.Id == id)
-           .Include(a => a.Attendees)
+           .Include(a => a.Attendees.OrderBy(attendee => attendee.Created))
            .FirstOrDefaultAsync(cancellationToken);
+  }
+
+  public async Task<List<Activity>> GetActivityByUserIdAsync(
+      UserId            userId,
+      CancellationToken cancellationToken = default)
+  {
+    return await DbContext.Activities.Where(activity => activity.Attendees.Any(attendee =>
+                                                attendee.Identity.UserId == userId))
+                          .Include(a => a.Attendees.OrderBy(attendee => attendee.Created))
+                          .ToListAsync(cancellationToken);
+  }
+
+  public async Task<bool> IsActivityExistingAsync(
+      ActivityId        id,
+      CancellationToken cancellationToken = default)
+  {
+    return await DbContext.Activities.AnyAsync(activity => activity.Id == id,
+                                               cancellationToken);
   }
 
   public IQueryable<Activity> GetAllActivitiesWithAttendeesQueryable()
   {
-    return DbContext.Activities.Include(activity => activity.Attendees).AsQueryable();
+    return DbContext.Activities
+                    .Include(activity =>
+                                 activity.Attendees.OrderBy(attendee => attendee.Created))
+                    .AsQueryable();
   }
 
   public async Task<bool> IsHostAsync(
@@ -37,7 +58,13 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
           default)
   {
     return await DbContext.Activities.Include(activity => activity.Attendees)
-                          .FirstOrDefaultAsync(activity => activity.Id == activityId && activity.Attendees.Any(attendee => attendee.Identity.UserId == userId && attendee.Identity.IsHost), cancellationToken)
+                          .FirstOrDefaultAsync(activity =>
+                                                   activity.Id == activityId
+                                                && activity.Attendees.Any(attendee =>
+                                                       attendee.Identity.UserId
+                                                    == userId
+                                                    && attendee.Identity.IsHost),
+                                               cancellationToken)
         != null;
   }
 }

@@ -21,14 +21,14 @@ const svg = [
 export function UserBar({displayName, image}: User) {
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
-    const {mutate: logoutMutation} = useLogoutMutation(()=>{
+    const {mutate: logoutMutation} = useLogoutMutation(() => {
         dispatch(setAlertInfo({
             open: true,
             message: 'You have been logged out',
             severity: 'success',
         }));
 
-    },(error: any)=>{
+    }, (error: any) => {
         dispatch(setAlertInfo({
             open: true,
             message: error.message,
@@ -41,6 +41,10 @@ export function UserBar({displayName, image}: User) {
 
     function handleOpenUserMenu(event: React.MouseEvent<HTMLElement>) {
         setAnchorElUser(event.currentTarget);
+    }
+
+    function handleJump(path: string) {
+        navigate(path);
     }
 
     function handleCloseUserMenu() {
@@ -80,7 +84,7 @@ export function UserBar({displayName, image}: User) {
                         </Tooltip>
 
                         <Menu
-                            sx={{mt: '45px', marginLeft: '34px'}}
+                            sx={{mt: '70px'}}
                             id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
@@ -96,7 +100,10 @@ export function UserBar({displayName, image}: User) {
                             onClose={handleCloseUserMenu}
                         >
 
-                            <MenuItem key={"Profile"} onClick={handleCloseUserMenu}>
+                            <MenuItem key={"Profile"} onClick=
+                                {
+                                    () => handleJump(`/user/`)
+                                }>
                                 <Typography textAlign="center">Profile</Typography>
                             </MenuItem>
                             <MenuItem key={"setting"} onClick={handleCloseUserMenu}>

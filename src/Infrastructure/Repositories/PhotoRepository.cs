@@ -20,6 +20,22 @@ public class PhotoRepository : Repository<Photo, PhotoId>, IPhotoRepository
     return DbContext.Photos.FirstOrDefaultAsync(p => p.Details.PublicId == publicId,
                                                 cancellationToken);
   }
+
+  public Task<List<Photo>> GetPhotosByOwnerIdAsync(
+      string            ownerId,
+      CancellationToken cancellationToken)
+  {
+    return DbContext.Photos.Where(p => p.OwnerId == ownerId).ToListAsync(
+        cancellationToken);
+  }
+
+  public IQueryable<Photo> GetPhotosWithoutMainPhotoByOwnerIdQueryable(
+      string            ownerId,
+      CancellationToken cancellationToken)
+  {
+    return DbContext.Photos.Where(p => p.OwnerId == ownerId && !p.Details.IsMain).AsQueryable();
+  }
+
   public Task<Photo?> GetMainPhotoByOwnerIdAsync(
       string            ownerId,
       CancellationToken cancellationToken)

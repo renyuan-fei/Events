@@ -3,7 +3,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for user information.
 /// </summary>
-public class UserProfileDTO
+public class UserProfileDto
 {
   /// <summary>
   ///   Gets or sets the unique identifier for the property.
@@ -50,7 +50,13 @@ public class UserProfileDTO
   /// </value>
   public string PhoneNumber { get; set; }
 
-  public string MainPhoto { get; set; }
+  public string Image { get; set; }
 
-  public List<PhotoDTO> Photos { get; set; }
+  public int Followers { get; set; }
+
+  public int Following { get; set; }
+
+  // public List<PhotoDTO> Photos { get; set; }
+
+  // public List<ActivityWithHostUserDTO> Activities { get; set; }
 }

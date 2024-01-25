@@ -65,7 +65,7 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
       var followingsId =
           paginatedFollowingDto.Items.Select(following => following.UserId).ToList();
 
-      var followingsTask = _userService.GetUsersByIdsAsync(followingsId);
+      var followingsTask = _userService.GetUsersByIdsAsync(followingsId, cancellationToken);
 
       var mainPhotoTask = _photoRepository.GetMainPhotosByOwnerIdAsync(followingsId
             .Select(userId => userId),

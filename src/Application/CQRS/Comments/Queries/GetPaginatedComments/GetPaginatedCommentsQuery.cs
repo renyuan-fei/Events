@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Comments.Queries.GetPaginatedComments;
 
-public record GetPaginatedCommentsQuery : IRequest<PaginatedList<CommentDTO>>
+public record GetPaginatedCommentsQuery : IRequest<PaginatedList<CommentDto>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
   public Guid                ActivityId          { get; init; }
@@ -14,7 +14,7 @@ public record GetPaginatedCommentsQuery : IRequest<PaginatedList<CommentDTO>>
 
 public class
     GetPaginatedCommentsQueryHandler : IRequestHandler<GetPaginatedCommentsQuery,
-    PaginatedList<CommentDTO>>
+    PaginatedList<CommentDto>>
 {
   private readonly IEventsDbContext                          _context;
   private readonly ILogger<GetPaginatedCommentsQueryHandler> _logger;
@@ -30,7 +30,7 @@ public class
     _logger = logger;
   }
 
-  public async Task<PaginatedList<CommentDTO>> Handle(
+  public async Task<PaginatedList<CommentDto>> Handle(
       GetPaginatedCommentsQuery request,
       CancellationToken         cancellationToken)
   {

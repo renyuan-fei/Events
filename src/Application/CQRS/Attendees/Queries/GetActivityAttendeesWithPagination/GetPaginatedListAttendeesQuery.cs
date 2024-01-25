@@ -15,7 +15,7 @@ namespace Application.CQRS.Attendees.Queries.GetActivityAttendeesWithPagination;
 
 public record
     GetPaginatedListAttendeesQuery : IRequest<
-    PaginatedList<AttendeeDTO>>
+    PaginatedList<AttendeeDto>>
 {
   public string ActivityId { get; init; }
 
@@ -23,7 +23,7 @@ public record
 }
 
 public class GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
-    GetPaginatedListAttendeesQuery, PaginatedList<AttendeeDTO>>
+    GetPaginatedListAttendeesQuery, PaginatedList<AttendeeDto>>
 {
   private readonly IActivityRepository _activityRepository;
   private readonly ILogger<GetActivityAttendeesWithPaginationQueryHandler> _logger;
@@ -45,7 +45,7 @@ public class GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
     _userService = userService;
   }
 
-  public async Task<PaginatedList<AttendeeDTO>> Handle(
+  public async Task<PaginatedList<AttendeeDto>> Handle(
       GetPaginatedListAttendeesQuery request,
       CancellationToken              cancellationToken)
   {
@@ -62,12 +62,12 @@ public class GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
       if (!activity!.Attendees.Any())
       {
         _logger.LogInformation("No attendees found for activity with Id {ActivityId}", request.ActivityId);
-        return new PaginatedList<AttendeeDTO>();
+        return new PaginatedList<AttendeeDto>();
       }
 
       var userIds = activity!.Attendees.Select(attendee => attendee.Identity.UserId.Value).ToList();;
 
-      var usersTask = _userService.GetUsersByIdsAsync(userIds);
+      var usersTask = _userService.GetUsersByIdsAsync(userIds, cancellationToken);
       var photosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
       await Task.WhenAll(usersTask, photosTask);
@@ -77,7 +77,7 @@ public class GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
       var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
-      var result = _mapper.Map<PaginatedList<AttendeeDTO>>(activity!.Attendees);
+      var result = _mapper.Map<PaginatedList<AttendeeDto>>(activity!.Attendees);
 
       result.Items.ForAll(attendee =>
       {

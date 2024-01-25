@@ -27,28 +27,33 @@ public class UserService : IUserService
     _mapper = mapper;
   }
 
-  public async Task<UserDTO?> GetUserByIdAsync(string userId)
+  public async Task<bool> IsUserExistingAsync(string email)
   {
-    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    return await _userManager.Users.AnyAsync(u => u.Email == email);
+  }
+
+  public async Task<UserDto?> GetUserByIdAsync(string userId, CancellationToken cancellationToken)
+  {
+    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     Guard.Against.Null(user, message: $"User with Id {userId} not found.");
 
-    return _mapper.Map<UserDTO>(user);
+    return _mapper.Map<UserDto>(user);
   }
 
-  public async Task<UserDTO> GetUserByEmailAsync(string email)
+  public async Task<UserDto> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
   {
-    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     Guard.Against.Null(user, message: $"User with Email {email} not found.");
 
-    return _mapper.Map<UserDTO>(user);
+    return _mapper.Map<UserDto>(user);
   }
 
-  public Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+  public Task<IEnumerable<UserDto>> GetAllUsersAsync()
   {
     throw new NotImplementedException();
   }
 
-  public async Task<IEnumerable<UserDTO>> GetUsersByIdsAsync(IEnumerable<string> userIds)
+  public async Task<IEnumerable<UserDto>> GetUsersByIdsAsync(IEnumerable<string> userIds, CancellationToken cancellationToken)
   {
     var enumerable = userIds.ToList();
     Guard.Against.NullOrEmpty(enumerable, message: "User IDs list is null or empty.");
@@ -57,9 +62,9 @@ public class UserService : IUserService
     {
       var users = await _userManager.Users
                                     .Where(u => Enumerable.Contains(enumerable, u.Id))
-                                    .ToListAsync();
+                                    .ToListAsync(cancellationToken);
 
-      return users.Select(user => _mapper.Map<UserDTO>(user));
+      return users.Select(user => _mapper.Map<UserDto>(user));
     }
     catch (Exception ex)
     {
@@ -69,14 +74,14 @@ public class UserService : IUserService
     }
   }
 
-  public Task<IEnumerable<UserDTO>> SearchUsersAsync(string searchTerm)
+  public Task<IEnumerable<UserDto>> SearchUsersAsync(string searchTerm)
   {
     throw new NotImplementedException();
   }
 
-  public Task AddUserAsync(UserDTO userDto) { throw new NotImplementedException(); }
+  public Task AddUserAsync(UserDto userDto) { throw new NotImplementedException(); }
 
-  public Task UpdateUserAsync(UserDTO userDto) { throw new NotImplementedException(); }
+  public Task UpdateUserAsync(UserDto userDto) { throw new NotImplementedException(); }
 
   public Task DeleteUserAsync(Guid userId) { throw new NotImplementedException(); }
 

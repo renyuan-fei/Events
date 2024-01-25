@@ -8,24 +8,28 @@ import {useSelector} from "react-redux";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 import {AlterComponent} from "@ui/AlterComponent.tsx";
 import {RootState} from "@store/store.ts";
+import Box from "@mui/material/Box";
 
 export function AppLayout() {
-    const { isLoading, alertInfo } = useSelector((state : RootState) => state.common);
+    const {isLoading, alertInfo} = useSelector((state: RootState) => state.common);
 
 
     return (
-        <>
-            {isLoading && <LoadingComponent />}
+        <Box sx={{
+            backgroundColor: 'rgb(246,247,248)'
+        }}>
+            {isLoading && <LoadingComponent/>}
             {alertInfo.open && (
-                <AlterComponent severity={alertInfo.severity} message={alertInfo.message} />
+                <AlterComponent severity={alertInfo.severity}
+                                message={alertInfo.message}/>
             )}
             <NavBar/>
             <PageContainer>
                 <SignUpForm/>
                 <LoginModal/>
-                <Outlet />
+                <Outlet/>
             </PageContainer>
             <Footer/>
-        </>
+        </Box>
     );
 }

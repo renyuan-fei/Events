@@ -1,3 +1,4 @@
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Models;
@@ -6,6 +7,7 @@ using AutoMapper;
 
 using Domain.Entities;
 using Domain.Repositories;
+using Domain.ValueObjects.Activity;
 
 using MediatR;
 
@@ -16,7 +18,6 @@ namespace Application.CQRS.Photos.Commands.CreatePhoto;
 
 public record UploadActivityPhotoCommand : IRequest<Result>
 {
-  public string    UserId     { get; init; }
   public string    ActivityId { get; init; }
   public IFormFile File       { get; init; }
 }
@@ -25,6 +26,7 @@ public class
     UploadActivityPhotoCommandHandler : IRequestHandler<UploadActivityPhotoCommand,
     Result>
 {
+  private readonly IActivityRepository                        _activityRepository;
   private readonly IPhotoRepository                           _photoRepository;
   private readonly IPhotoService                              _photoService;
   private readonly ILogger<UploadActivityPhotoCommandHandler> _logger;
@@ -32,11 +34,13 @@ public class
   public UploadActivityPhotoCommandHandler(
       ILogger<UploadActivityPhotoCommandHandler> logger,
       IPhotoService                              photoService,
-      IPhotoRepository                           photoRepository)
+      IPhotoRepository                           photoRepository,
+      IActivityRepository                        activityRepository)
   {
     _logger = logger;
     _photoService = photoService;
     _photoRepository = photoRepository;
+    _activityRepository = activityRepository;
   }
 
   public async Task<Result> Handle(
@@ -45,22 +49,8 @@ public class
   {
     try
     {
-      var isActivityPhotoExists =
-          await _photoRepository.GetMainPhotoByOwnerIdAsync(request.ActivityId,
-                                                              cancellationToken);
+      var result = await _photoService.AddPhotoAsync(request.File, request.ActivityId);
 
-      if (isActivityPhotoExists == null)
-        return await _photoService.AddPhotoAsync(request.File, request.ActivityId);
-
-      var result = await _photoService.RemovePhotoAsync(isActivityPhotoExists.Details
-                                                            .PublicId,
-                                                        request.ActivityId,
-                                                        false);
-
-      if (result.Succeeded)
-      {
-        return await _photoService.AddPhotoAsync(request.File, request.ActivityId);
-      }
       return result;
     }
     catch (Exception ex)

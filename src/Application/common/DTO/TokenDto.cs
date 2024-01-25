@@ -3,7 +3,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a Data Transfer Object for a token.
 /// </summary>
-public class TokenDTO
+public class TokenDto
 {
   /// <summary>
   ///   Gets or sets the unique identifier for the property.

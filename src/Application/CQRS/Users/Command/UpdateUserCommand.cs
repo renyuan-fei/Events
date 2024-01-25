@@ -7,7 +7,7 @@ namespace Application.CQRS.Users.Command;
 public record UpdateUserCommand : IRequest<Unit>
 {
   public Guid    UserId { get; init; }
-  public UserDTO user   { get; init; }
+  public UserDto user   { get; init; }
 }
 
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>

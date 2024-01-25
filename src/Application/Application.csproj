@@ -23,8 +23,6 @@
         <Folder Include="CQRS\Comments\commands\DeleteComment\"/>
         <Folder Include="CQRS\Comments\commands\UpdateComment\"/>
         <Folder Include="CQRS\Users\Command\UpdateUser\"/>
-        <Folder Include="CQRS\Users\Queries\GetFollowerUser\"/>
-        <Folder Include="CQRS\Users\Queries\GetFollowingUser\"/>
     </ItemGroup>
 
     <ItemGroup>

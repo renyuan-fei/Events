@@ -9,7 +9,7 @@ namespace Application.common.DTO;
 /// <summary>
 /// Represents an activity data transfer object.
 /// </summary>
-public class ActivityDTO
+public class ActivityDto
 {
   /// <summary>
   /// Gets or sets the Title.

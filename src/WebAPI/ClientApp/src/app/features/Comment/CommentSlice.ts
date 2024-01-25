@@ -17,7 +17,7 @@ const commentSlice = createSlice({
             state.comments = action.payload;
         },
         receiveComments: (state, action) => {
-            state.comments.unshift(action.payload);
+            state.comments.push(action.payload);
         },
         clearComments: (state) => {
             state.comments = [];

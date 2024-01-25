@@ -18,7 +18,7 @@ public interface IJwtTokenService
   ///   (Optional, default value is false)
   /// </param>
   /// <returns>The AuthenticationDTO object representing the created authentication token.</returns>
-  AuthenticationDTO CreateToken(TokenDTO tokenDTO, bool isRefresh = false);
+  AuthenticationDto CreateToken(TokenDto tokenDTO, bool isRefresh = false);
 
   /// <summary>
   ///   Retrieves a <see cref="ClaimsPrincipal" /> object from a JWT token.

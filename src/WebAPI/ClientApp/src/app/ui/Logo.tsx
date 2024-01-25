@@ -45,7 +45,7 @@ export function Logo() {
                     <Grid container spacing={6} alignItems="center">
                         <Grid item xs={6}>
                             <img src={LogoImg} alt={"Logo"}
-                                 style={{maxWidth: 80, maxHeight: 80}}/>
+                                 style={{maxWidth: 70, maxHeight: 70}}/>
                         </Grid>
                         <Grid item xs={6}>
                             <Typography variant="h6" component="div">

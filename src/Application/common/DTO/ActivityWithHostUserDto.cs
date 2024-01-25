@@ -3,7 +3,7 @@ namespace Application.common.DTO;
 /// <summary>
 /// DTO for activity with information about the host user.
 /// </summary>
-public class ActivityWithHostUserDTO
+public class ActivityWithHostUserDto
 {
   /// <summary>
   /// Identifier for the activity.

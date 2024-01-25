@@ -11,7 +11,7 @@ public class MappingProfile : Profile
   public MappingProfile()
   {
     // ActivityDTO to Activity
-    CreateMap<ActivityDTO, Activity>()
+    CreateMap<ActivityDto, Activity>()
         .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
         .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
         .ForMember(dest => dest.Category,
@@ -24,7 +24,7 @@ public class MappingProfile : Profile
         .ForAllOtherMembers(opts => opts
                                 .Ignore()); // Ignore other members not explicitly mapped
 
-    CreateMap<Activity, ActivityWithAttendeeDTO>()
+    CreateMap<Activity, ActivityWithAttendeeDto>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
         .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
         .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
@@ -47,7 +47,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
 
 
-    CreateMap<Attendee, AttendeeDTO>()
+    CreateMap<Attendee, AttendeeDto>()
         .ForMember(dest => dest.UserId,
                    opt => opt.MapFrom(src => src.Identity.UserId.Value))
         .ForMember(dest => dest.IsHost, opt => opt.MapFrom(src => src.Identity.IsHost))
@@ -73,7 +73,7 @@ public class MappingProfile : Profile
                    opt => opt
                        .Ignore()); // Assuming you don't have this in Following entity
 
-    CreateMap<Following, FollowerDTO>()
+    CreateMap<Following, FollowerDto>()
         .ForMember(dest => dest.UserId,
                    opt => opt.MapFrom(src => src.Relationship.FollowerId.Value))
         .ForMember(dest => dest.DisplayName,
@@ -89,7 +89,7 @@ public class MappingProfile : Profile
                    opt => opt
                        .Ignore()); // Assuming you don't have this in Following entity
 
-    CreateMap<Activity, ActivityWithHostUserDTO>()
+    CreateMap<Activity, ActivityWithHostUserDto>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
         .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
         .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
@@ -113,7 +113,7 @@ public class MappingProfile : Profile
                                           }))
         .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
 
-    CreateMap<Comment, CommentDTO>()
+    CreateMap<Comment, CommentDto>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value)) // 假设 Id 是一个包装类型
         .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId.Value)) // 同上
         .ForMember(dest => dest.Body, opt => opt.MapFrom(src => src.Body))
@@ -123,5 +123,25 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Bio, opt => opt.Ignore())
         .ForMember(dest => dest.Image, opt => opt.Ignore());
 
+    CreateMap<UserDto, UserProfileDto>()
+        .ForMember(dest => dest.Id,
+                   opt =>
+                       opt.MapFrom(src =>
+                                       new Guid(src.Id))) // Assuming src.Id is a string that can be converted to Guid
+        .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
+        .ForMember(dest => dest.Bio, opt => opt.MapFrom(src => src.Bio))
+        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+        .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+        .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+        .ForMember(dest => dest.Image,
+                   opt => opt.Ignore()) // Assuming this needs to be handled separately
+        .ForMember(dest => dest.Followers,
+                   opt => opt.Ignore()) // Assuming this needs to be handled separately
+        .ForMember(dest => dest.Following,
+                   opt => opt.Ignore()); // Assuming this needs to be handled separately
+
+    CreateMap<Photo, PhotoDto>()
+        .ForMember(dest => dest.PublicId, opt => opt.MapFrom(src => src.Details.PublicId))
+        .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Details.Url));
   }
 }

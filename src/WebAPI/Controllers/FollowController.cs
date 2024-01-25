@@ -1,5 +1,7 @@
 using Application.common.DTO;
 using Application.common.Models;
+using Application.CQRS.Followers.Commands.CreateFollowingCommand;
+using Application.CQRS.Followers.Commands.DeleteFollowingCommand;
 using Application.CQRS.Followers.Commands.UpdateFollowingCommand;
 using Application.CQRS.Followers.Queries;
 
@@ -29,7 +31,7 @@ public class FollowController : BaseController
             new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
     });
 
-    return Ok(ApiResponse<PaginatedList<FollowerDTO>>.Success(result));
+    return Ok(ApiResponse<PaginatedList<FollowerDto>>.Success(result));
   }
 
   /// <summary>
@@ -59,6 +61,45 @@ public class FollowController : BaseController
     {
         FollowingId = id,
         FollowerId = CurrentUserService!.Id!
+    });
+
+    return Ok(ApiResponse<Result>.Success(data: result));
+  }
+
+  [Authorize]
+  [HttpGet("IsFollowing/{targetUserId}")]
+  public async Task<IActionResult> IsFollowing(string targetUserId)
+  {
+    var result = await Mediator!.Send(new IsFollowingQuery
+    {
+        UserId = CurrentUserService!.Id!,
+        targetUserId = targetUserId
+    });
+
+    return Ok(ApiResponse<bool>.Success(result));
+  }
+
+  [Authorize]
+  [ HttpPost ]
+  public async Task<IActionResult> CreateFollowing([FromQuery]string id)
+  {
+    var result = await Mediator!.Send(new CreateFollowingCommand
+    {
+        UserId = CurrentUserService!.Id!,
+        TargetUserId = id
+    });
+
+    return StatusCode(StatusCodes.Status201Created,ApiResponse<Result>.Success(data: result));
+  }
+
+  [Authorize]
+  [ HttpDelete ]
+  public async Task<IActionResult> DeleteFollowing([FromQuery] string id)
+  {
+    var result = await Mediator!.Send(new DeleteFollowingCommand
+    {
+        UserId = CurrentUserService!.Id!,
+        TargetUserId = id
     });
 
     return Ok(ApiResponse<Result>.Success(data: result));

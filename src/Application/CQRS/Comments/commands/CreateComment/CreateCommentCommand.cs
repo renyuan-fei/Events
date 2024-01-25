@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Comments.commands.CreateComment;
 
-public record CreateCommentCommand : IRequest<CommentDTO>
+public record CreateCommentCommand : IRequest<CommentDto>
 {
   public string Body       { get; init; } = null!;
   public string ActivityId { get; init; }
@@ -22,7 +22,7 @@ public record CreateCommentCommand : IRequest<CommentDTO>
 }
 
 public class
-    CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommentDTO>
+    CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommentDto>
 {
   private readonly IPhotoRepository                     _photoRepository;
   private readonly IUserService                         _userService;
@@ -47,7 +47,7 @@ public class
     _photoRepository = photoRepository;
   }
 
-  public async Task<CommentDTO> Handle(
+  public async Task<CommentDto> Handle(
       CreateCommentCommand request,
       CancellationToken    cancellationToken)
   {
@@ -57,7 +57,7 @@ public class
       var activityId = new ActivityId(request.ActivityId);
       var userId = new UserId(request.UserId);
 
-      var user = await _userService.GetUserByIdAsync(userId.Value);
+      var user = await _userService.GetUserByIdAsync(userId.Value, cancellationToken);
 
       GuardValidation.AgainstNull(user, $"User with Id {request.UserId} not found");
 
@@ -79,7 +79,7 @@ public class
       var photo = await _photoRepository.GetMainPhotoByOwnerIdAsync(userId.Value,
           cancellationToken) ;
 
-      var value = _mapper.Map<CommentDTO>(newComment);
+      var value = _mapper.Map<CommentDto>(newComment);
 
       value.UserName = user.UserName;
 

@@ -24,7 +24,7 @@ public class CloudinaryService : ICloudinaryService
     _cloudinary = new Cloudinary(account);
   }
 
-  public async Task<PhotoUploadDTO?> UpLoadPhotoAsync(IFormFile file)
+  public async Task<PhotoUploadDto?> UpLoadPhotoAsync(IFormFile file)
   {
     if (file.Length <= 0) return null;
 
@@ -44,7 +44,7 @@ public class CloudinaryService : ICloudinaryService
                                       .Message);
     }
 
-    return new PhotoUploadDTO
+    return new PhotoUploadDto
     {
         PublicId = uploadResult.PublicId, Url = uploadResult.SecureUrl.ToString()
     };

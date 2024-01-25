@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.CQRS.Activities.Queries.GetPaginatedActivitiesWithAttendees;
 
 [ BypassAuthorization ]
-public record GetPaginatedListActivitiesWithAttendeesQuery : IRequest<PaginatedList<ActivityWithAttendeeDTO>>
+public record GetPaginatedListActivitiesWithAttendeesQuery : IRequest<PaginatedList<ActivityWithAttendeeDto>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
   public FilterParams?       FilterParams        { get; init; }
@@ -21,7 +21,7 @@ public record GetPaginatedListActivitiesWithAttendeesQuery : IRequest<PaginatedL
 public class
     GetPaginatedListActivitiesQueryHandler :
     IRequestHandler<GetPaginatedListActivitiesWithAttendeesQuery,
-    PaginatedList<ActivityWithAttendeeDTO>>
+    PaginatedList<ActivityWithAttendeeDto>>
 {
   private readonly IActivityRepository                             _activityRepository;
   private readonly ILogger<GetPaginatedListActivitiesQueryHandler> _logger;
@@ -43,7 +43,7 @@ public class
     _photoRepository = photoRepository;
   }
 
-  public async Task<PaginatedList<ActivityWithAttendeeDTO>> Handle(
+  public async Task<PaginatedList<ActivityWithAttendeeDto>> Handle(
       GetPaginatedListActivitiesWithAttendeesQuery request,
       CancellationToken               cancellationToken)
   {
@@ -58,14 +58,14 @@ public class
       // 直接进行分页处理
       var paginatedActivitiesDto = await query
                                          .ProjectTo<
-                                             ActivityWithAttendeeDTO>(_mapper
+                                             ActivityWithAttendeeDto>(_mapper
                                                  .ConfigurationProvider)
                                          .PaginatedListAsync(pageNumber, pageSize);
 
       // 如果查询结果为空，PaginatedListAsync 将返回包含空 Items 集合的 PaginatedList 对象
       if (!paginatedActivitiesDto.Items.Any())
       {
-        return new PaginatedList<ActivityWithAttendeeDTO>();
+        return new PaginatedList<ActivityWithAttendeeDto>();
       }
 
       var userIds = paginatedActivitiesDto
@@ -75,7 +75,7 @@ public class
                     .Distinct()
                     .ToList();
 
-      var usersTask = _userService.GetUsersByIdsAsync(userIds);
+      var usersTask = _userService.GetUsersByIdsAsync(userIds, cancellationToken);
 
       var mainPhotosTask =
           _photoRepository

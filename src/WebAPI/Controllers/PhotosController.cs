@@ -1,8 +1,11 @@
+using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Models;
+using Application.CQRS.Activities.Commands.DeleteActivity;
 using Application.CQRS.Photos.Commands.CreatePhoto;
 using Application.CQRS.Photos.Commands.DeletePhoto;
 using Application.CQRS.Photos.Commands.UpdatePhoto;
+using Application.CQRS.Photos.Query.GetPhotos;
 
 using Domain.ValueObjects;
 
@@ -16,6 +19,26 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class PhotosController : BaseController
 {
+  [ HttpGet("top/{id:required}") ]
+  public async Task<ApiResponse<TopPhotosWithRemainingCountDto?>> GetTopPhotosWithRemainingCountAsync(string id)
+  {
+    var result =
+        await Mediator!.Send(new GetTopPhotosWithRemainingCountQuery { OwnerId = id });
+
+    return ApiResponse<TopPhotosWithRemainingCountDto>.Success(result);
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<PaginatedList<PhotoDto>>> GetPaginatedPhotos([FromQuery] PaginatedListParams paginatedListParams, string id)
+  {
+    var result = await Mediator!.Send(new GetPaginatedPhotos
+    {
+        paginatedListParams = paginatedListParams,
+        OwnerId = id
+    });
+    return Ok(result);
+  }
+
   // POST: api/Photo
   /// <summary>
   ///   Uploads a photo.
@@ -44,8 +67,10 @@ public class PhotosController : BaseController
         File = file
     })!;
 
-    return StatusCode(StatusCodes.Status201Created,ApiResponse<Result>.Success(data: result,
-                        statusCode: StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,
+                      ApiResponse<Result>.Success(data: result,
+                                                  statusCode:
+                                                  StatusCodes.Status201Created));
   }
 
   [ HttpPost("activity/{id}") ]
@@ -57,13 +82,13 @@ public class PhotosController : BaseController
   {
     var result = await Mediator?.Send(new UploadActivityPhotoCommand
     {
-        UserId = CurrentUserService!.Id!,
-        ActivityId = id,
-        File = file
+        ActivityId = id, File = file
     })!;
 
-    return StatusCode(StatusCodes.Status201Created,ApiResponse<Result>.Success(data: result,
-                        statusCode: StatusCodes.Status201Created));
+    return StatusCode(StatusCodes.Status201Created,
+                      ApiResponse<Result>.Success(data: result,
+                                                  statusCode:
+                                                  StatusCodes.Status201Created));
   }
 
   // PUT: api/Photo/5
@@ -72,14 +97,29 @@ public class PhotosController : BaseController
   /// </summary>
   /// <param name="id">The public id of the photo to be updated.</param>
   /// <returns>An IActionResult representing the updated photo.</returns>
-  [ HttpPut("{id:required}") ]
   [ Authorize ]
-  public async Task<IActionResult> UpdatePhoto(string id)
+  [ HttpPut ]
+  public async Task<IActionResult> UpdateUserMainPhoto([ FromForm ] IFormFile file)
   {
-    var result = await Mediator?.Send(new UpdatePhotoCommand
+    var result = await Mediator?.Send(new UpdateUserMainPhotoCommand
     {
         UserId = CurrentUserService!.Id!,
-        PublicId = id
+        File = file,
+    })!;
+
+    return Ok(ApiResponse<Result>.Success(data: result));
+  }
+
+  [ Authorize ]
+  [ Authorize(Policy = "IsActivityHost") ]
+  [ HttpPut("activity/{id:required}") ]
+  public async Task<IActionResult> UpdateActivityMainPhoto(
+      [ FromForm ] IFormFile file,
+      string                 id)
+  {
+    var result = await Mediator?.Send(new UpdateActivityMainPhotoCommand
+    {
+        ActivityId = id, File = file,
     })!;
 
     return Ok(ApiResponse<Result>.Success(data: result));
@@ -91,14 +131,26 @@ public class PhotosController : BaseController
   /// </summary>
   /// <param name="id">The public ID of the photo to delete.</param>
   /// <returns>An <see cref="IActionResult" /> representing the result of the operation.</returns>
-  [ HttpDelete("{id:required}") ]
   [ Authorize ]
-  public async Task<IActionResult> DeletePhoto(string id)
+  [ HttpDelete("{id:required}") ]
+  public async Task<IActionResult> DeleteUsrPhoto(string id)
   {
-    var result = await Mediator?.Send(new DeletePhotoCommand
+    var result = await Mediator?.Send(new DeleteUserPhotoCommand
     {
         UserId = CurrentUserService!.Id!,
         PublicId = id
+    })!;
+
+    return Ok(ApiResponse<Result>.Success(data: result));
+  }
+
+  [ Authorize ]
+  [ HttpDelete("activity/{id:required}/{publicId:required}") ]
+  public async Task<IActionResult> DeleteActivityPhoto(string id, string publicId)
+  {
+    var result = await Mediator?.Send(new DeleteActivityPhotoCommand
+    {
+        ActivityId = id, PublicId = publicId
     })!;
 
     return Ok(ApiResponse<Result>.Success(data: result));

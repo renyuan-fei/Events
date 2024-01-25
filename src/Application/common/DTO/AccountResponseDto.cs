@@ -3,8 +3,9 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents the response data for an account request.
 /// </summary>
-public class AccountResponseDTO
+public class AccountResponseDto
 {
+  public string Id { get; set; }
   /// Gets or sets the display name.
   /// This property contains the display name, which is used to represent an entity or item in a user interface.
   /// The display name is a string value that can be assigned to the property. It can be null (if nullable string types are supported), or an empty string if no display name is provided

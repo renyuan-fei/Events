@@ -75,8 +75,8 @@ public class AccountController : BaseController
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   [ HttpPost("register") ]
-  public async Task<ActionResult<AccountResponseDTO>> Register(
-      [ FromBody ] RegisterDTO registerDTO)
+  public async Task<ActionResult<AccountResponseDto>> Register(
+      [ FromBody ] RegisterDto registerDTO)
   {
     if (!ModelState.IsValid) { return BadRequest("Incomplete information"); }
 
@@ -99,7 +99,7 @@ public class AccountController : BaseController
 
     var response =  await GenerateToken(user, updateRefreshToken: true);
 
-    return StatusCode(StatusCodes.Status201Created,ApiResponse<AccountResponseDTO>
+    return StatusCode(StatusCodes.Status201Created,ApiResponse<AccountResponseDto>
                           .Success(data: response, statusCode: StatusCodes.Status201Created));
   }
 
@@ -131,7 +131,7 @@ public class AccountController : BaseController
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   [HttpPost("login")]
-  public async Task<ActionResult<AccountResponseDTO>> Login([FromBody] LoginDTO loginDTO)
+  public async Task<ActionResult<AccountResponseDto>> Login([FromBody] LoginDto loginDTO)
   {
     if (!ModelState.IsValid)
     {
@@ -159,7 +159,7 @@ public class AccountController : BaseController
     // 登录成功，生成带有更新刷新令牌的响应
     var response = await GenerateToken(user, updateRefreshToken: true);
 
-    return Ok(ApiResponse<AccountResponseDTO>.Success(data: response));
+    return Ok(ApiResponse<AccountResponseDto>.Success(data: response));
   }
 
   /// <summary>
@@ -177,7 +177,7 @@ public class AccountController : BaseController
   /// </remarks>
   [ Authorize ]
   [ HttpGet ]
-  public async Task<ActionResult<AccountResponseDTO>> GetCurrentUser()
+  public async Task<ActionResult<AccountResponseDto>> GetCurrentUser()
   {
     var email = User.FindFirstValue(ClaimTypes.Email);
     var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -200,7 +200,7 @@ public class AccountController : BaseController
     // 获取当前用户信息，不更新刷新令牌
     var response = await GenerateToken(user, updateRefreshToken: false);
 
-    return Ok(ApiResponse<AccountResponseDTO>.Success(data: response));
+    return Ok(ApiResponse<AccountResponseDto>.Success(data: response));
   }
 
   /// <summary>
@@ -211,7 +211,7 @@ public class AccountController : BaseController
   ///   was successful.
   /// </returns>
   [HttpPost("refresh")]
-  public async Task<ActionResult<AccountResponseDTO>> GenerateNewAccessToken()
+  public async Task<ActionResult<AccountResponseDto>> GenerateNewAccessToken()
   {
     const string bearerPrefix = "Bearer ";
 
@@ -256,7 +256,7 @@ public class AccountController : BaseController
     // 生成新的Access令牌，同时更新刷新令牌
     var response = await GenerateToken(user, updateRefreshToken: true);
 
-    return Ok(ApiResponse<AccountResponseDTO>.Success(data: response));
+    return Ok(ApiResponse<AccountResponseDto>.Success(data: response));
   }
 
   /// <summary>
@@ -305,9 +305,9 @@ public class AccountController : BaseController
   /// <returns>
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
-  async private Task<AccountResponseDTO> GenerateToken(ApplicationUser user, bool updateRefreshToken = false)
+  async private Task<AccountResponseDto> GenerateToken(ApplicationUser user, bool updateRefreshToken = false)
   {
-    var tokenDto = new TokenDTO
+    var tokenDto = new TokenDto
     {
         Id = user.Id,
         DisplayName = user.DisplayName,
@@ -344,8 +344,9 @@ public class AccountController : BaseController
     // 获取用户的照片信息
     var image = await _photoRepository.GetMainPhotoByOwnerIdAsync(user.Id, CancellationToken.None);
 
-    var responseDto = new AccountResponseDTO
+    var responseDto = new AccountResponseDto
     {
+        Id = user.Id,
         DisplayName = user.DisplayName,
         Email = user.Email,
         Token = token.Token,

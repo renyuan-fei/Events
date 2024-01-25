@@ -16,15 +16,18 @@ public record UploadUserPhotoCommand : IRequest<Result>
 
 public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, Result>
 {
+  private readonly IUserService                _userService;
   private readonly ILogger<CreatePhotoHandler> _logger;
   private readonly IPhotoService               _photoService;
 
   public CreatePhotoHandler(
       ILogger<CreatePhotoHandler> logger,
-      IPhotoService               photoService)
+      IPhotoService               photoService,
+      IUserService                userService)
   {
     _logger = logger;
     _photoService = photoService;
+    _userService = userService;
   }
 
   public async Task<Result> Handle(
@@ -33,6 +36,14 @@ public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, Result
   {
     try
     {
+      // var isUserExisting = await _userService.IsUserExistingAsync(request.UserId);
+      //
+      // if (!isUserExisting)
+      // {
+      //   throw new NotFoundException(nameof(UploadUserPhotoCommand),
+      //                               $"User with Id {request.UserId} not found");
+      // }
+
       return await _photoService.AddPhotoAsync(request.File, request.UserId);
     }
     catch (Exception ex)

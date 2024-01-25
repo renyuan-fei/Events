@@ -1,11 +1,12 @@
 import {Middleware} from 'redux';
 import {HubConnection, HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
+
+import {ChatComments} from "@type/ChatComments.ts";
 import {
     clearComments,
     loadComments,
-    receiveComments,
-} from "@features/CommentSlice.ts";
-import {ChatComments} from "@type/ChatComments.ts";
+    receiveComments
+} from "@features/Comment/CommentSlice.ts";
 
 enum SignalRActionTypes {
     START_CONNECTION = 'SIGNALR_START_CONNECTION',

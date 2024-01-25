@@ -8,7 +8,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Divider,
-    useTheme
+    useTheme, Paper
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -36,7 +36,7 @@ export default function DetailComments({activityId} : { activityId : string | un
     const theme = useTheme();
 
     return (
-        <Box sx={{width: '100%', bgcolor: 'background.paper'}}>
+        <Paper sx={{width: '100%', padding: theme.spacing(2)}}>
             <Typography component="div" variant="h2" sx={{
                 fontSize: '20px',
                 fontWeight: theme.typography.fontWeightBold,
@@ -77,7 +77,7 @@ export default function DetailComments({activityId} : { activityId : string | un
                     </Box>
                 ))}
             </List>
-        </Box>
+        </Paper>
     )
         ;
 }

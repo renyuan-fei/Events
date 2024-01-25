@@ -11,14 +11,14 @@ using Microsoft.Extensions.Logging;
 namespace Application.CQRS.Activities.Queries.GetActivityWithAttendees;
 
 [ BypassAuthorization ]
-public record GetActivityWithAttendeesByIdQuery : IRequest<ActivityWithAttendeeDTO>
+public record GetActivityWithAttendeesByIdQuery : IRequest<ActivityWithAttendeeDto>
 {
   public string Id { get; init; }
 }
 
 public class
     GetActivityByIdQueryHandler : IRequestHandler<GetActivityWithAttendeesByIdQuery,
-    ActivityWithAttendeeDTO>
+    ActivityWithAttendeeDto>
 {
   private readonly IActivityRepository                  _activityRepository;
   private readonly ILogger<GetActivityByIdQueryHandler> _logger;
@@ -41,7 +41,7 @@ public class
     _userService = userService;
   }
 
-  public async Task<ActivityWithAttendeeDTO> Handle(
+  public async Task<ActivityWithAttendeeDto> Handle(
       GetActivityWithAttendeesByIdQuery request,
       CancellationToken                 cancellationToken)
   {
@@ -60,11 +60,11 @@ public class
         _logger.LogInformation("No attendees found for activity with Id {ActivityId}",
                                request.Id);
 
-        return new ActivityWithAttendeeDTO();
+        return new ActivityWithAttendeeDto();
       }
 
       var userIds = activity.Attendees.Select(a => a.Identity.UserId.Value).ToList();
-      var usersTask = _userService.GetUsersByIdsAsync(userIds);
+      var usersTask = _userService.GetUsersByIdsAsync(userIds, cancellationToken);
 
       var photosTask =
           _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
@@ -78,14 +78,25 @@ public class
       var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
       var activityPhotos =
-          await _photoRepository.GetMainPhotoByOwnerIdAsync(activityId.Value,
-                                                              cancellationToken);
+          await _photoRepository.GetPhotosByOwnerIdAsync(activityId.Value,
+                                                         cancellationToken);
 
-      var result = _mapper.Map<ActivityWithAttendeeDTO>(activity);
+      var result = _mapper.Map<ActivityWithAttendeeDto>(activity);
 
-      result.ImageUrl = activityPhotos == null
-          ? DefaultImage.DefaultActivityImageUrl
-          : activityPhotos!.Details.Url;
+      var activityMainPhoto = activityPhotos.FirstOrDefault(p => p.Details.IsMain);
+
+      if (activityMainPhoto == null)
+      {
+        result.ImageUrl = DefaultImage.DefaultActivityImageUrl;
+      }
+      else
+      {
+        result.ImageUrl = activityMainPhoto.Details.Url;
+
+        result.Photos = activityPhotos.Where(p => !p.Details.IsMain)
+                                      .Select(p => _mapper.Map<PhotoDto>(p))
+                                      .ToList();
+      }
 
       return ActivityHelper.FillWithPhotoAndUserDetail(result,
                                                        usersDictionary,

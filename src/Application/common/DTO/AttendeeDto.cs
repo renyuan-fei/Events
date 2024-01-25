@@ -5,7 +5,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for an activity attendee.
 /// </summary>
-public class AttendeeDTO : IUserDetail
+public class AttendeeDto : IUserDetail
 {
   /// <summary>
   ///   Gets or sets the unique identifier of the user.

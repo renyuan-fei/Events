@@ -3,8 +3,10 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for a user.
 /// </summary>
-public class UpdateUserDTO
+public class UserDto
 {
+  public string Id { get; init; }
+
   /// <summary>
   ///   Gets or sets the display name.
   /// </summary>

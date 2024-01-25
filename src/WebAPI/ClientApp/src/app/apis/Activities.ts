@@ -5,24 +5,27 @@ import {Activity} from "@type/Activity.ts";
 import {useQuery} from "react-query";
 
 async function GetActivities({
-                                        page = 1,
-                                        pageSize = 10,
-                                        searchTerm = []
-                                    }: {
+                                 page = 1,
+                                 pageSize = 10,
+                                 searchTerm = []
+                             }: {
     page: number,
     pageSize: number,
     searchTerm?: string[]
-} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<paginatedResponse> {
+} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<paginatedResponse<Item>> {
 
     const params = new URLSearchParams();
+    params.append("page", page.toString());
+    params.append("pageSize", pageSize.toString());
+
     searchTerm.forEach(term => params.append("searchTerm", term));
 
-    let url = `/api/Activities/${page}/${pageSize}`;
+    let url = `/api/Activities`;
     if (params.toString()) {
         url += `?${params.toString()}`;
     }
 
-    const response = await apiClient.get<ApiResponse<paginatedResponse>>(url);
+    const response = await apiClient.get<ApiResponse<paginatedResponse<Item>>>(url);
 
     return handleResponse(response);
 }

@@ -17,7 +17,7 @@ public class JwtTokenService : IJwtTokenService
 
   public JwtTokenService(IConfiguration configuration) { _configuration = configuration; }
 
-  public AuthenticationDTO CreateToken(TokenDTO tokenDTO, bool isRefreshToken = false)
+  public AuthenticationDto CreateToken(TokenDto tokenDTO, bool isRefreshToken = false)
   {
     // expires in 10 minutes
     var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration
@@ -72,7 +72,7 @@ public class JwtTokenService : IJwtTokenService
     // return the token
     if (isRefreshToken)
     {
-      return new AuthenticationDTO
+      return new AuthenticationDto
       {
           Token = token,
           Expiration = expiration,
@@ -83,7 +83,7 @@ public class JwtTokenService : IJwtTokenService
       };
     }
 
-    return new AuthenticationDTO
+    return new AuthenticationDto
     {
             Token = token,
             Expiration = expiration,

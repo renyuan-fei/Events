@@ -1,6 +1,6 @@
 namespace Application.common.DTO;
 
-public class PhotoUploadDTO
+public class PhotoUploadDto
 {
   public string PublicId { get; set; }
 

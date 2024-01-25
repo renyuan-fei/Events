@@ -2,7 +2,7 @@ using Application.common.DTO.Interface;
 
 namespace Application.common.DTO;
 
-public class CommentDTO : IUserDetail
+public class CommentDto : IUserDetail
 {
   public string  Id          { get; set; }
   public string  UserId      { get; set; }

@@ -7,7 +7,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   Represents a data transfer object for registering a user.
 /// </summary>
-public class RegisterDTO
+public class RegisterDto
 {
   /// <summary>
   ///   The display name property.

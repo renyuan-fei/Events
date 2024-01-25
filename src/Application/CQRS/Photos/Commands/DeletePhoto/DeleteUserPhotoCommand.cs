@@ -5,21 +5,21 @@ using Domain.ValueObjects;
 
 using Microsoft.Extensions.Logging;
 
-namespace Application.CQRS.Photos.Commands.UpdatePhoto;
+namespace Application.CQRS.Photos.Commands.DeletePhoto;
 
-public record UpdatePhotoCommand : IRequest<Result>
+public record DeleteUserPhotoCommand : IRequest<Result>
 {
   public string UserId   { get; init; }
   public string PublicId { get; init; }
 }
 
-public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Result>
+public class DeletePhotoHandler : IRequestHandler<DeleteUserPhotoCommand, Result>
 {
-  private readonly ILogger<UpdatePhotoHandler> _logger;
+  private readonly ILogger<DeletePhotoHandler> _logger;
   private readonly IPhotoService               _photoService;
 
-  public UpdatePhotoHandler(
-      ILogger<UpdatePhotoHandler> logger,
+  public DeletePhotoHandler(
+      ILogger<DeletePhotoHandler> logger,
       IPhotoService               photoService)
   {
     _logger = logger;
@@ -27,12 +27,12 @@ public class UpdatePhotoHandler : IRequestHandler<UpdatePhotoCommand, Result>
   }
 
   public async Task<Result> Handle(
-      UpdatePhotoCommand request,
+      DeleteUserPhotoCommand request,
       CancellationToken  cancellationToken)
   {
     try
     {
-      return await _photoService.UpdatePhotoAsync(request.PublicId,
+      return await _photoService.RemovePhotoAsync(request.PublicId,
                                                   request
                                                       .UserId);
     }

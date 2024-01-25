@@ -12,14 +12,40 @@ import {
 } from "@features/commonSlice.ts";
 import {useGetCurrentUserQuery} from "@apis/Account.ts";
 import {LoadingComponent} from "@ui/LoadingComponent.tsx";
+import {useMediaQuery, useTheme} from "@mui/material";
 
 
 function App() {
+    const theme = useTheme();
+    const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
+    const matchesSM = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+    const matchesMD = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+    const matchesLG = useMediaQuery(theme.breakpoints.between('lg', 'xl'));
+    const matchesXL = useMediaQuery(theme.breakpoints.up('xl'));
+
+    useEffect(() => {
+        if (matchesXS) {
+            console.log('Current breakpoint: xs');
+        }
+        if (matchesSM) {
+            console.log('Current breakpoint: sm');
+        }
+        if (matchesMD) {
+            console.log('Current breakpoint: md');
+        }
+        if (matchesLG) {
+            console.log('Current breakpoint: lg');
+        }
+        if (matchesXL) {
+            console.log('Current breakpoint: xl');
+        }
+    }, [matchesXS, matchesSM, matchesMD, matchesLG, matchesXL]);
+
     const dispatch = useDispatch();
     const currentUserQuery = useGetCurrentUserQuery();
 
     useEffect(() => {
-        const checkMobile = () => dispatch(setIsMobile(window.innerWidth < 768));
+        const checkMobile = () => dispatch(setIsMobile(window.innerWidth < 600));
 
         // 监听窗口尺寸变化
         window.addEventListener('resize', checkMobile);
