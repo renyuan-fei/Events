@@ -7,7 +7,7 @@ import Divider from "@mui/material/Divider";
 import {  } from 'react-router-dom';
 import {useNavigate} from "react-router";
 
-function formatToLocalTimezone(dateString: string): string {
+const formatToLocalTimezone = (dateString: string): string => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const date = new Date(dateString + 'Z'); // Parse the date string as UTC
 

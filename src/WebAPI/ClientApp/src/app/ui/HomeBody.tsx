@@ -1,8 +1,10 @@
 import Box from "@mui/material/Box";
 
-export function HomeBody() {
+const HomeBody = () => {
     return (
         <Box>
         </Box>
     );
 }
+
+export default HomeBody;

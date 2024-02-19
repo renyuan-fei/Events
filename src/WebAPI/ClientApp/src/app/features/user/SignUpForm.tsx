@@ -15,35 +15,49 @@ import Box from "@mui/material/Box";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@store/store.ts";
-import {setAlertInfo, setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
+import { setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 import {
     checkEmailRegistered,
-    useRegisterMutation
 } from "@apis/Account.ts";
 import {z} from "zod";
 import {Controller, FieldErrors, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
-import {LoadingComponent} from "@ui/LoadingComponent.tsx";
-import {useNavigate} from "react-router";
 import LogoImg from "@assets/logo.png";
-import {ImageComp} from "@ui/Image.tsx";
+import useRegisterMutation from "@features/user/hooks/useRegisterMutation.ts";
+import CustomPasswordTextField from "@ui/Custom/CustomPasswordTextField.tsx";
+import ImageComp from "@ui/Image.tsx";
+import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 
 const schema = z.object({
-    displayName: z.string().min(1,{ message: "This field is required" }),
-    email: z.string().email({ message: "Email address is invalid" }),
-    password: z.string().min(10, { message: "Password must be at least 10 characters long" })
-        .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
-        .regex(/\d/, { message: "Password must contain at least one digit" }),
+    displayName: z.string().optional().refine((val) => val === undefined || val === '' || val.length >= 1, {
+        message: "This field is required"
+    }),
+    email: z.string().optional().refine((val) => val === undefined || val === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+        message: "Email address is invalid"
+    }),
+    password: z.string().optional().refine((val) => {
+        // 当密码字段不为空时，应用所有的密码规则
+        if(val === undefined || val === '') return true;
+        return val.length >= 10 && /[a-z]/.test(val) && /\d/.test(val);
+    }, {
+        message: "Password must be at least 10 characters long, contain at least one lowercase letter, and one digit"
+    }),
     confirmPassword: z.string(),
-    phoneNumber: z.string()
-        .regex(/^04\d{8}$/, {message: "Phone number must be 04xxx-xxxx-xxxx"})
-}).refine(data => data.password === data.confirmPassword, {
+    phoneNumber: z.string().optional().refine((val) => val === undefined || val === '' || /^04\d{8}$/.test(val), {
+        message: "Phone number must be 04xxxxxxx"
+    }),
+}).refine(data => data.password === data.confirmPassword || data.confirmPassword === undefined || data.confirmPassword === '', {
     message: "Passwords must match",
     path: ["confirmPassword"],
 }).refine(async (data) => {
+
+    if(data.email === undefined || data.email === '') return true;
+
     const isRegistered = await checkEmailRegistered(data.email);
+
+    console.log(isRegistered);
+
     return !isRegistered;
 }, {
     message: "Email is already registered",
@@ -59,9 +73,8 @@ interface FormValues {
     phoneNumber: string;
 }
 
-function SignUpForm() {
+const SignUpForm = () => {
     const abortControllerRef = useRef(new AbortController());
-    const navigate = useNavigate();
     const theme = useTheme();
     const open = useSelector((state: RootState) => state.common.signUpOpen);
     const dispatch = useDispatch();
@@ -73,7 +86,7 @@ function SignUpForm() {
         //     email: 'TestEmail@example.com',
         //     password: 'TestPassword123456789',
         //     confirmPassword: 'TestPassword123456789',
-        //     phoneNumber: '719159880',
+        //     phoneNumber: '0422937524',
         // }
         defaultValues: {
             displayName: '',
@@ -111,32 +124,12 @@ function SignUpForm() {
 
     const [Height, setHeight] = useState(780)
 
-    const { mutate: registerMutate, isLoading} = useRegisterMutation(()=>{
-        dispatch(setAlertInfo({
-            open: true,
-            message: 'Registration successful',
-            severity: 'success',
-        }));
-        dispatch(setSignUpForm(false))
-        navigate('/home');
-    },(error: any)=>{
-        dispatch(setAlertInfo({
-            open: true,
-            message: error.message,
-            severity: 'error',
-        }));
-    });
+    const { mutateAsync: registerMutate, isLoading} = useRegisterMutation();
 
     function handleClose(): void {
         dispatch(setSignUpForm(false));
 
-        reset({
-            displayName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-            phoneNumber: ''
-        })
+        reset()
     }
 
     function handleOpenLogin() {
@@ -144,8 +137,15 @@ function SignUpForm() {
         dispatch(setSignUpForm(false))
     }
 
-    function onSubmit(data: FormValues) {
-        registerMutate(data);
+    async function onSubmit(data: FormValues) {
+        await registerMutate(data,{
+            onSuccess: () => {
+                reset()
+            },
+            onError: () => {
+                reset()
+            }
+        });
     }
 
 

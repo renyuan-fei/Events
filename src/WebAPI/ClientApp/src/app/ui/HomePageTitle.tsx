@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {RootState} from "@store/store.ts";
-import {useSelector} from "react-redux";
 import {theme} from "@config/CustomTheme.ts";
+import {queryClient} from "@apis/queryClient.ts";
+import {userInfo} from "@type/userInfo.ts";
 
-export function HomePageTitle() {
+const HomePageTitle = () => {
 
-    const username = useSelector((state: RootState) => state.user.userName);
+    const username = queryClient.getQueryData<userInfo>('userInfo')?.displayName;
+
     return (
         <Box>
             <Typography variant="h1" component="h1" sx={{mb: theme.spacing(4), font: '42px', fontWeight: theme.typography.fontWeightBold}}>
@@ -19,3 +20,5 @@ export function HomePageTitle() {
         </Box>
     );
 }
+
+export default HomePageTitle;

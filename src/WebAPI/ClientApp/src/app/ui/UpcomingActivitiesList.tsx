@@ -2,7 +2,7 @@ import ActivityCard from '@features/activity/ActivityCard.tsx';
 import { Grid, Typography, Box, useTheme } from '@mui/material';
 import {useGetActivitiesQuery} from "@apis/Activities.ts";
 
-export function UpcomingActivitiesList() {
+const UpcomingActivitiesList = () => {
     const theme = useTheme();
 
     // 使用 useQuery 并指定返回数据的类型
@@ -25,3 +25,5 @@ export function UpcomingActivitiesList() {
         </Box>
     );
 }
+
+export default UpcomingActivitiesList;

@@ -4,7 +4,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Button from "@mui/material/Button";
 
-export function DetailSidebar() {
+const DetailSidebar = () => {
     const theme = useTheme();
     return (
         <Paper sx={{
@@ -46,3 +46,5 @@ export function DetailSidebar() {
         </Paper>
     );
 }
+
+export default DetailSidebar;

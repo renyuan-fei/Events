@@ -13,7 +13,7 @@ interface UserCardProps {
     isFollowed: boolean;
 }
 
-export function UserCard(props: UserCardProps) {
+const UserCard = (props: UserCardProps) => {
     const theme = useTheme();
     const {imageUrl, isUser, isFollowed} = props;
 
@@ -113,3 +113,5 @@ export function UserCard(props: UserCardProps) {
         </Card>
     );
 }
+
+export default UserCard;

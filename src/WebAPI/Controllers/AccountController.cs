@@ -111,8 +111,7 @@ public class AccountController : BaseController
   /// otherwise returns an ActionResult with HTTP status code BadRequest.</returns>
   [ HttpGet("email") ]
   public async Task<ActionResult> IsEmailRegistered([ FromQuery ] string email)
-  {
-    var isEmailRegistered = await _userManager.FindByEmailAsync(email) != null;
+  { var isEmailRegistered = await _userManager.FindByEmailAsync(email) != null;
 
     if (isEmailRegistered)
     {

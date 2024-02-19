@@ -1,11 +1,12 @@
 import {Box, Button, Typography, useTheme} from '@mui/material';
 import JoinEventsImg from "@assets/JoinEventsImg.png";
-import {ImageComp} from "@ui/Image.tsx";
 import {useSelector} from "react-redux";
 import {RootState, useAppDispatch} from "@store/store.ts";
 import {setSignUpForm} from "@features/commonSlice.ts";
+import React from "react";
+import ImageComp from "@ui/Image.tsx";
 
-export default function JoinEvents() {
+const JoinEvents = () => {
     const theme = useTheme();
     const isMobile = useSelector((state: RootState) => state.common.isMobile);
     const dispatch = useAppDispatch();
@@ -82,3 +83,5 @@ export default function JoinEvents() {
         </Box>
     );
 }
+
+export default JoinEvents;

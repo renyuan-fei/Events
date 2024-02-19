@@ -5,10 +5,12 @@ interface ContainerProps {
     children: React.ReactNode;
 }
 
-export function ComponentContainer({children}: ContainerProps) {
+const ComponentContainer = ({children}: ContainerProps) => {
     return (
         <Container maxWidth={"xl"}>
             {children}
         </Container>
     );
 }
+
+export default ComponentContainer;

@@ -16,7 +16,7 @@ const categories = [
     {name: 'Games', icon: 'videogame_asset', color: '#f37558'},
 ];
 
-export default function ExploreCategories() {
+const ExploreCategories = () => {
     const theme = useTheme();
     const isMobile = useSelector((state: RootState) => state.common.isMobile);
 
@@ -55,3 +55,5 @@ export default function ExploreCategories() {
         </Box>
     );
 }
+
+export default ExploreCategories;

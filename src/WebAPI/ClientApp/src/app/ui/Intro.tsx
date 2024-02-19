@@ -1,10 +1,10 @@
 import {Box, Button, Grid, Typography, useTheme} from '@mui/material';
 import IntroImg from '@assets/IntroImg.png';
-import {ImageComp} from "@ui/Image.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "@store/store.ts";
+import ImageComp from "@ui/Image.tsx";
 
-export default function Intro() {
+const Intro = () => {
     const theme = useTheme();
     const isMobile = useSelector((state: RootState) => state.common.isMobile);
 
@@ -58,3 +58,5 @@ export default function Intro() {
         </Box>
     );
 }
+
+export default Intro;

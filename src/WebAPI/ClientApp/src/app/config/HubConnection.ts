@@ -27,7 +27,8 @@ const sendMessage = (message: string) => ({
     payload: message
 });
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = 'https://localhost:7095';
 
 // 创建 SignalR 中间件
 const createSignalRMiddleware = (): Middleware => {

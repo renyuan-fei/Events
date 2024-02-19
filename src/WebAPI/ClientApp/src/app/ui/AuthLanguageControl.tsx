@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import SignUpButton from "@ui/SignUpButton";
-import {LoginButton} from "@ui/LoginButton.tsx";
+import React from "react";
+import LoginButton from "@ui/LoginButton.tsx";
 
-export function AuthLanguageControl() {
+const AuthLanguageControl: React.FC = () => {
     return (
         <Box sx={{
             width: {xs: '100%', sm: '200px', md: '200px', lg: '250px'},
@@ -23,3 +24,5 @@ export function AuthLanguageControl() {
         </Box>
     );
 }
+
+export default AuthLanguageControl;

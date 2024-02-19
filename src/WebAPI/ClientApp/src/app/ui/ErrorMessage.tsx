@@ -1,4 +1,4 @@
-export function ErrorMessage({Error}: { Error: Error }) {
+const ErrorMessage = ({Error}: { Error: Error }) => {
     return (
         <div>
             Some thing wrong
@@ -6,3 +6,5 @@ export function ErrorMessage({Error}: { Error: Error }) {
         </div>
     );
 }
+
+export default ErrorMessage;

@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
-import {HomePageTitle} from "@ui/HomePageTitle.tsx";
 import {Grid, Paper, useTheme} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {ActivitiesCalendar} from "@features/activity/ActivitiesCalendar.tsx";
-import {ActivitiesList} from "@features/activity/ActivitiesList.tsx";
 import {useGetActivitiesQuery} from "@apis/Activities.ts";
 import {ActivityItem} from "@features/activity/ActivitiyItem.tsx";
+import HomePageTitle from "@ui/HomePageTitle.tsx";
+import ActivitiesCalendar from "@features/activity/ActivitiesCalendar.tsx";
+import ActivitiesList from "@features/activity/ActivitiesList.tsx";
 
-export function HomePage() {
+const HomePage = () => {
     const theme = useTheme();
 
     const getActivitiesQuery = useGetActivitiesQuery();
@@ -47,3 +47,5 @@ export function HomePage() {
         </>
     );
 }
+
+export default HomePage;

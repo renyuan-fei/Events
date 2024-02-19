@@ -6,7 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import {grey} from "@mui/material/colors";
 import Container from "@mui/material/Container";
 
-function Footer() {
+const Footer = () => {
     return (
         <Box sx={{
             backgroundColor: grey[900],

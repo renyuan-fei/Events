@@ -4,7 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 import {useAppDispatch} from "@store/store.ts";
 import {sendMessage} from "@config/HubConnection.ts";
 
-const CommentInput: React.FC = () => {
+const CommentInput = () => {
     const [comment, setComment] = useState<string>('');
     const dispatch = useAppDispatch()
 

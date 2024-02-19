@@ -13,7 +13,7 @@ interface CustomImageListProps {
     images: Array<Photo>;
 }
 
-export default function CustomImageList(props: CustomImageListProps) {
+const CustomImageList = (props: CustomImageListProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const {Id, images, isUser} = props;
@@ -116,3 +116,5 @@ export default function CustomImageList(props: CustomImageListProps) {
         </Box>
     );
 }
+
+export default CustomImageList;

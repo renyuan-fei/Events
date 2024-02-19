@@ -4,7 +4,7 @@ import {ApiResponse} from "@type/ApiResponse.ts";
 import {Activity} from "@type/Activity.ts";
 import {useQuery} from "react-query";
 
-async function GetActivities({
+export const GetActivities = async ({
                                  page = 1,
                                  pageSize = 10,
                                  searchTerm = []
@@ -12,7 +12,7 @@ async function GetActivities({
     page: number,
     pageSize: number,
     searchTerm?: string[]
-} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<paginatedResponse<Item>> {
+} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<paginatedResponse<Item>> => {
 
     const params = new URLSearchParams();
     params.append("page", page.toString());
@@ -29,7 +29,7 @@ async function GetActivities({
 
     return handleResponse(response);
 }
-async function GetActivity(id: string) {
+export const GetActivity = async (id: string) => {
     const response = await apiClient.get<ApiResponse<Activity>>(`/api/Activities/${id}`)
     return handleResponse(response);
 }

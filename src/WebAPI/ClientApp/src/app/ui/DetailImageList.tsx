@@ -13,7 +13,7 @@ interface DetailImageListProps {
     images: Array<Photo>;
 }
 
-export default function DetailImageList(props: DetailImageListProps) {
+const DetailImageList = (props: DetailImageListProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const {Id, images, isUser} = props;
@@ -116,3 +116,5 @@ export default function DetailImageList(props: DetailImageListProps) {
         </Box>
     );
 }
+
+export default DetailImageList;

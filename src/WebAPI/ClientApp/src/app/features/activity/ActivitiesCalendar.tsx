@@ -3,7 +3,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import {Paper, useTheme} from "@mui/material";
 
-export function ActivitiesCalendar() {
+const ActivitiesCalendar = () => {
     const theme = useTheme();
 
     return (
@@ -39,3 +39,5 @@ export function ActivitiesCalendar() {
         </Paper>
     );
 }
+
+export default ActivitiesCalendar;

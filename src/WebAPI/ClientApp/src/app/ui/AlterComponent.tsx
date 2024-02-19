@@ -6,16 +6,16 @@ import {RootState} from "@store/store.ts";
 interface SnackbarProps {
     vertical?: 'top' | 'bottom';
     horizontal?: 'center' | 'left' | 'right';
-    severity: 'error' |'success' | 'warning' | 'info';
+    severity: 'error' | 'success' | 'warning' | 'info';
     message: string;
 }
 
-export function AlterComponent({
-    vertical = 'top',
-    horizontal = 'center',
-    severity = 'info',
-    message,
-                               } : SnackbarProps) {
+const AlterComponent = ({
+                                   vertical = 'top',
+                                   horizontal = 'center',
+                                   severity = 'info',
+                                   message,
+                               }: SnackbarProps) => {
 
     const dispatch = useDispatch();
     const open = useSelector((state: RootState) => state.common.alertInfo.open);
@@ -25,10 +25,15 @@ export function AlterComponent({
     };
 
     return (
-        <Snackbar anchorOrigin={{ vertical: vertical, horizontal: horizontal }} open={open} autoHideDuration={3000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+        <Snackbar anchorOrigin={{vertical: vertical, horizontal: horizontal}}
+                  open={open}
+                  autoHideDuration={3000}
+                  onClose={handleClose}>
+            <Alert onClose={handleClose} severity={severity} sx={{width: '100%'}}>
                 {message}
             </Alert>
         </Snackbar>
     );
 }
+
+export default AlterComponent

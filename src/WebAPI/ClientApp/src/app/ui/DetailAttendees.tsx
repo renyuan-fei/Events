@@ -11,7 +11,7 @@ interface DetailAttendeesProps {
 }
 
 // @ts-ignore
-export function DetailAttendees(props: DetailAttendeesProps) {
+const DetailAttendees = (props: DetailAttendeesProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -95,3 +95,5 @@ export function DetailAttendees(props: DetailAttendeesProps) {
         </Box>
     );
 }
+
+export default DetailAttendees;

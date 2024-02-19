@@ -10,9 +10,9 @@ import {useEffect} from "react";
 import {
     setIsMobile, setLoginForm
 } from "@features/commonSlice.ts";
-import {useGetCurrentUserQuery} from "@apis/Account.ts";
-import {LoadingComponent} from "@ui/LoadingComponent.tsx";
 import {useMediaQuery, useTheme} from "@mui/material";
+import useGetCurrentUserQuery from "@features/user/hooks/useGetCurrentUserQuery.ts";
+import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 
 function App() {
@@ -42,7 +42,8 @@ function App() {
     }, [matchesXS, matchesSM, matchesMD, matchesLG, matchesXL]);
 
     const dispatch = useDispatch();
-    const currentUserQuery = useGetCurrentUserQuery();
+
+    const {refetch,isRefetching} = useGetCurrentUserQuery();
 
     useEffect(() => {
         const checkMobile = () => dispatch(setIsMobile(window.innerWidth < 600));
@@ -64,12 +65,12 @@ function App() {
         // 检查本地存储中是否有JWT令牌
         if (localStorage.getItem('jwt' )) {
             dispatch(setLoginForm(false))
-            currentUserQuery.refetch();
+            refetch();
         }
     }, []);
 
     // 使用 currentUserQuery 的状态来控制加载组件的显示
-    if (currentUserQuery.isLoading) {
+    if (isRefetching) {
         return <LoadingComponent />;
     }
 

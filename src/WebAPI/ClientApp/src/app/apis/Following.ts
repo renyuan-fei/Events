@@ -4,7 +4,7 @@ import {handleResponse} from "@apis/ApiHandler.ts";
 import {IsFollowing} from "@type/IsFollowing.ts";
 import {useQuery} from "react-query";
 
-async function IsFollowingUser(userId :string): Promise<IsFollowing> {
+const IsFollowingUser = async (userId :string): Promise<IsFollowing> => {
     const response = await apiClient.get<ApiResponse<IsFollowing>>('/api/Follow/IsFollowing/'+ userId);
     return handleResponse(response);
 }

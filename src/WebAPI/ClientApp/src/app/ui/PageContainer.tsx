@@ -5,7 +5,7 @@ interface ContainerProps {
     children: React.ReactNode;
 }
 
-export function PageContainer({children}: ContainerProps) {
+const PageContainer = ({children}: ContainerProps) => {
     return (
         <Container maxWidth={"xl"} sx={{
             pt: '32px',
@@ -16,3 +16,5 @@ export function PageContainer({children}: ContainerProps) {
         </Container>
     );
 }
+
+export default PageContainer;

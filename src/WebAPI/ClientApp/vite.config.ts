@@ -12,10 +12,11 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
             tsconfigPaths()],
         base: mode === 'production' ? './' : '/',
         server: {
+            port: 5173,
             // 默认为开发服务器的端口
             // port: mode === 'production' ? 5173 : 5173,
             host: true,
-            strictPort: true
+            strictPort: true,
         },
         build: {
             rollupOptions: {

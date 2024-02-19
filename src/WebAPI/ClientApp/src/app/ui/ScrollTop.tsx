@@ -7,7 +7,7 @@ interface Props {
     children: React.ReactElement;
 }
 
-function ScrollTop(props: Props) {
+const ScrollTop = (props: Props) => {
     const {children, window} = props;
     const trigger = useScrollTrigger({
         target: window ? window() : undefined,

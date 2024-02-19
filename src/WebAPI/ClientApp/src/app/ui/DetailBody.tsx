@@ -8,7 +8,7 @@ interface DetailBodyProps {
     description: string;
 }
 
-export function DetailBody(props: DetailBodyProps) {
+const DetailBody = (props: DetailBodyProps) => {
     const theme = useTheme();
     const { imageUrl, title, description } = props;
 
@@ -56,3 +56,5 @@ export function DetailBody(props: DetailBodyProps) {
         </Paper>
     );
 }
+
+export default DetailBody;

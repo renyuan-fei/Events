@@ -3,7 +3,7 @@ import {useAppDispatch} from "@store/store.ts";
 import {useMediaQuery, useTheme} from "@mui/material";
 import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 
-function SignupButton() {
+const SignupButton = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useAppDispatch()

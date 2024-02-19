@@ -1,17 +1,17 @@
 import {useNavigate, useParams} from "react-router";
 import Box from "@mui/material/Box";
-import {DetailTitle} from "@ui/DetailTitle.tsx";
-import {DetailBody} from "@ui/DetailBody.tsx";
-import {DetailAttendees} from "@ui/DetailAttendees.tsx";
 import {Grid, useTheme} from "@mui/material";
 import DetailComments from "@ui/DetailComments.tsx";
-import {DetailSidebar} from "@ui/DetailSidebar.tsx";
 import {useGetActivityQuery} from "@apis/Activities.ts";
 import {useEffect} from "react";
 import {Photo} from "@type/Photo.ts";
 import CustomImageList from "@ui/Custom/CustomImageList.tsx";
+import DetailSidebar from "@ui/DetailSidebar.tsx";
+import DetailAttendees from "@ui/DetailAttendees.tsx";
+import DetailBody from "@ui/DetailBody.tsx";
+import DetailTitle from "@ui/DetailTitle.tsx";
 
-export function ActivityDetailPage() {
+const ActivityDetailPage = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -56,5 +56,6 @@ export function ActivityDetailPage() {
             </Box>
         </Box>
     );
-
 }
+
+export default ActivityDetailPage;

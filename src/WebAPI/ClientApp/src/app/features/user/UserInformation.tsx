@@ -9,7 +9,7 @@ interface UserInformation{
     phoneNumber: string;
     bio: string;
 }
-export function UserInformation(props: UserInformation) {
+const UserInformation = (props: UserInformation) => {
     const theme = useTheme();
     const {name, email, phoneNumber, bio} = props;
 
@@ -37,3 +37,5 @@ export function UserInformation(props: UserInformation) {
         </Card>
     );
 }
+
+export default UserInformation;

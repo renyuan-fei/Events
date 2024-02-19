@@ -1,10 +1,11 @@
 import {IconButton, TextFieldProps} from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import React, {forwardRef, useState} from "react";
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
-import React, { useState } from "react";
 
-export function CustomPasswordTextField(props: TextFieldProps) {
+// 使用 forwardRef 包装组件以允许传递 ref
+const CustomPasswordTextField = forwardRef<HTMLDivElement, TextFieldProps>((props, ref) => {
     const [visible, setVisible] = useState(false);
 
     function handleIsVisible(event: React.MouseEvent<HTMLButtonElement>) {
@@ -12,6 +13,7 @@ export function CustomPasswordTextField(props: TextFieldProps) {
         setVisible(!visible);
     }
 
+    // 组件实现，你可以根据需要自定义这部分
     return (
         <CustomTextField
             {...props}
@@ -22,6 +24,9 @@ export function CustomPasswordTextField(props: TextFieldProps) {
                         {visible ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>,
             }}
+            inputRef={ref} // 使用 inputRef 属性接收 ref
         />
     );
-}
+});
+
+export default CustomPasswordTextField;

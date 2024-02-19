@@ -6,7 +6,7 @@ interface ImageProps {
     Sx: {},
 }
 
-export function ImageComp({Src, Alt, Sx}: ImageProps) {
+const ImageComp = ({Src, Alt, Sx}: ImageProps) => {
     return (
         <Box
             component="img"
@@ -16,3 +16,5 @@ export function ImageComp({Src, Alt, Sx}: ImageProps) {
         />
     );
 }
+
+export default ImageComp;

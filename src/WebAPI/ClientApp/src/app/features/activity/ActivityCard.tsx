@@ -6,17 +6,27 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import Box from '@mui/material/Box';
 import {CardActionArea, useTheme} from "@mui/material";
+import {useNavigate} from "react-router";
+import React, {useCallback} from "react";
 
 // Correct the function signature to accept a prop of type Item
-export default function ActivityCard({
+const ActivityCard = ({
+                                         id,
                                          title,
                                          imageUrl,
                                          date,
                                          category,
                                          goingCount,
                                          hostUser
-                                     }: Item) {
+                                     }: Item) => {
     const theme = useTheme();
+    const navigate = useNavigate();
+
+    const onCardClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        navigate(`/activity/${id}`);
+    }, [navigate, id]);
+
 
     return (
         <Card sx={{
@@ -25,7 +35,7 @@ export default function ActivityCard({
             borderRadius: 5,
             border: 'none'
         }}
-              variant="outlined">
+              variant="outlined" onClick={onCardClick}>
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -81,3 +91,5 @@ export default function ActivityCard({
         </Card>
     );
 }
+
+export default ActivityCard;

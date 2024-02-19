@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import {useAppDispatch} from "@store/store.ts";
 import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 
-export function LoginButton() {
+const LoginButton = () => {
     const dispatch = useAppDispatch()
 
     function handleOpen(): void {
@@ -29,3 +29,5 @@ export function LoginButton() {
         </Box>
     );
 }
+
+export default LoginButton;

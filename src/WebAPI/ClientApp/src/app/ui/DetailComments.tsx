@@ -19,7 +19,7 @@ import {useEffect} from "react";
 import {startConnection, stopConnection} from "@config/HubConnection.ts";
 
 
-export default function DetailComments({activityId} : { activityId : string | undefined}) {
+const DetailComments = ({activityId} : { activityId : string | undefined}) => {
     const comments = useSelector((state : RootState) => state.comment.comments);
     const dispatch = useDispatch();
 
@@ -78,6 +78,7 @@ export default function DetailComments({activityId} : { activityId : string | un
                 ))}
             </List>
         </Paper>
-    )
-        ;
+    );
 }
+
+export default DetailComments;

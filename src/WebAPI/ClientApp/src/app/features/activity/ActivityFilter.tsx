@@ -9,7 +9,7 @@ import Divider from "@mui/material/Divider";
 const CategoryValue : string[] = [];
 const CityValue: string[] = [];
 
-export function ActivityFilter() {
+const ActivityFilter = () => {
 
     function handleClear(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault();
@@ -38,3 +38,5 @@ export function ActivityFilter() {
         </Box>
     );
 }
+
+export default ActivityFilter;

@@ -1,8 +1,8 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import {ActivityFilter} from "@features/activity/ActivityFilter.tsx";
+import ActivityFilter from "@features/activity/ActivityFilter.tsx";
 
-export function ActivitiesList({children} : { children: React.ReactNode; }) {
+const ActivitiesList = ({children} : { children: React.ReactNode; }) => {
     return (
         <Box sx={{
             display: 'flex',
@@ -16,3 +16,5 @@ export function ActivitiesList({children} : { children: React.ReactNode; }) {
         </Box>
     );
 }
+
+export default ActivitiesList;

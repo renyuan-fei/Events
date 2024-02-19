@@ -1,11 +1,9 @@
 import {
     Button,
-    Checkbox,
     Dialog,
     DialogContent,
     DialogTitle,
     Divider,
-    FormControlLabel,
     IconButton,
     Link, Typography,
     useTheme
@@ -16,25 +14,24 @@ import LogoImg from "@assets/logo.png";
 import {useSelector} from "react-redux";
 import {RootState, useAppDispatch} from "@store/store.ts";
 import Box from "@mui/material/Box";
-import {ImageComp} from "@ui/Image.tsx";
-import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import {useEffect, useState} from "react";
-import {CustomPasswordTextField} from "@ui/Custom/CustomPasswordTextField.tsx";
 import {
-    setAlertInfo,
     setLoginForm,
     setSignUpForm
 } from "@features/commonSlice.ts";
-import {useLoginMutation} from "@apis/Account.ts";
-import { z } from 'zod';
-import {Controller, FieldErrors, useForm} from "react-hook-form";
+import {z} from 'zod';
+import {FieldErrors, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {LoadingComponent} from "@ui/LoadingComponent.tsx";
-import {useNavigate} from "react-router";
+import useLoginMutation from "@features/user/hooks/useLoginMutation.ts";
+import FormField from "@ui/FormField.tsx";
+import FormCheckbox from "@ui/FormCheckbox.tsx";
+import ImageComp from "@ui/Image.tsx";
+import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 interface FormValues {
     email: string;
     password: string;
+    keepSignedIn: boolean;
 }
 
 const schema = z.object({
@@ -42,49 +39,27 @@ const schema = z.object({
     password: z.string().min(1, 'Password is required'),
 });
 
-function LoginForm() {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch()
+const LoginForm = () => {
     const theme = useTheme();
+    const dispatch = useAppDispatch()
     const open = useSelector((state: RootState) => state.common.LoginOpen);
     const [Height, setHeight] = useState(580)
-    const { control,reset, handleSubmit,formState: { errors } } = useForm<FormValues>({
+    const {control, reset, handleSubmit, formState: {errors}} = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
+            // email: '',
+            // password: '',
             email: 'TestEmail@example.com',
             password: 'TestPassword123456789',
+            keepSignedIn: false,
         }
     });
 
-    const { mutate: loginMutate, isLoading } = useLoginMutation(()=>{
-        dispatch(setAlertInfo({
-            open: true,
-            message: 'You have been logged in',
-            severity: 'success',
-        }));
-        dispatch(setLoginForm(false));
-
-        navigate('/home');
-    },(error)=>{
-        dispatch(setAlertInfo({
-            open: true,
-            message: error.message,
-            severity: 'error',
-        }));
-
-        reset({
-            email: '',
-            password: '',
-        });
-    });
+    const {mutateAsync: loginMutate, isLoading} = useLoginMutation();
 
     function handleClose(): void {
         dispatch(setLoginForm(false))
-
-        reset({
-            email: '',
-            password: '',
-        });
+        reset();
     }
 
     function handleOpenSignUp() {
@@ -92,12 +67,16 @@ function LoginForm() {
         dispatch(setLoginForm(false))
     }
 
-    const onSubmit = (data: FormValues) => {
-        loginMutate(data);
+    const onSubmit = async (data: FormValues) => {
+        await loginMutate(data, {
+            onSuccess: () => {
+                reset();
+            }
+        });
     };
 
     useEffect(() => {
-        const countErrors = (errors : FieldErrors<FormValues>) => {
+        const countErrors = (errors: FieldErrors<FormValues>) => {
             // 计算具有实际错误信息的字段数量
             return Object.values(errors).filter(error => error).length;
         };
@@ -110,7 +89,7 @@ function LoginForm() {
 
 
     return (
-        <Dialog open={open} maxWidth="xs" fullWidth sx={{
+        <Dialog open={open} maxWidth='xs' fullWidth sx={{
             '& .MuiDialog-paper': {
                 width: 400,
                 height: {Height},
@@ -122,7 +101,7 @@ function LoginForm() {
 
             <DialogTitle sx={{textAlign: 'center', m: 0, pt: theme.spacing(5)}}>
                 <IconButton
-                    aria-label="close"
+                    aria-label='close'
                     onClick={handleClose}
                     sx={{
                         position: 'absolute',
@@ -140,7 +119,7 @@ function LoginForm() {
                     left: '50%',
                     transform: 'translateX(-50%)',
                 }}></ImageComp>
-                <Typography component="div" variant="h6" sx={{
+                <Typography component='div' variant='h6' sx={{
                     flex: 1,
                     textAlign: 'center',
                     fontWeight: theme.typography.fontWeightBold,
@@ -148,9 +127,9 @@ function LoginForm() {
                 }}>
                     Log in
                 </Typography>
-                <Typography component="div" sx={{mb: 2}}>
+                <Typography component='div' sx={{mb: 2}}>
                     Not a member yet?
-                    <Link href="#" sx={{
+                    <Link href='#' sx={{
                         color: '#00798A',
                         textDecoration: 'none',
                         '&:hover': {
@@ -166,54 +145,29 @@ function LoginForm() {
 
                 <Box component={"form"} noValidate onSubmit={handleSubmit(onSubmit)}>
 
-                    <Controller
-                        name="email"
+                    <FormField name='email'
+                               control={control}
+                               errors={errors}
+                               label='Email'
+                               type='email'
+                               required/>
+                    <FormField name='password'
+                               control={control}
+                               errors={errors}
+                               label='Password'
+                               type='password'
+                               required/>
+
+                    <FormCheckbox
+                        label={'Keep me signed in'}
+                        name={'keepSignedIn'}
                         control={control}
-                        render={({ field }) => (
-                            <CustomTextField
-                                {...field}
-                                label="Email"
-                                type="email"
-                                required
-                                autoComplete="email"
-                                error={Boolean(errors.email)}
-                                helperText={errors.email?.message || ''}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="password"
-                        control={control}
-                        render={({ field }) => (
-                            <CustomPasswordTextField
-                                {...field}
-                                label="Password"
-                                autoComplete="current-password"
-                                required
-                                error={Boolean(errors.password)}
-                                helperText={errors.password?.message || ''}
-                            />
-                        )}
                     />
 
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                sx={{
-                                    padding: theme.spacing(2),
-                                    color: '#00798A', // 未选中时的颜色
-                                    '&.Mui-checked': {
-                                        color: '#00798A', // 选中时的颜色
-                                    },
-                                }}
-                            />
-                        }
-                        label="Keep me signed in"
-                    />
                     <Button
-                        type="submit"
-                        variant="contained"
-                        color="secondary"
+                        type='submit'
+                        variant='contained'
+                        color='secondary'
                         fullWidth
                         sx={{
                             mb: 2,
@@ -229,15 +183,19 @@ function LoginForm() {
 
                 <Divider sx={{mt: 2, mb: 2}}>or</Divider>
 
-                <Typography component="div" align="center" variant="body2">
-                    Issues with log in? <Link href="#" sx={{
-                    color: '#00798A',
-                    textDecoration: 'none',
-                    '&:hover': {
-                        textDecoration: '#3e8da0',
-                    }
-                }}>Help</Link>
+                <Typography component='div' align='center' variant='body2'>
+                    Issues with log in?
+                    <Link href='#' sx={{
+                        color: '#00798A',
+                        textDecoration: 'none',
+                        '&:hover': {
+                            textDecoration: '#3e8da0',
+                        }
+                    }}>
+                        Help
+                    </Link>
                 </Typography>
+
             </DialogContent>
         </Dialog>
     );

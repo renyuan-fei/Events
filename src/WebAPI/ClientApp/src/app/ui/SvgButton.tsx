@@ -10,7 +10,7 @@ interface SvgButtonProps {
     path?: string;
 }
 
-function SvgButton({svg, title, path}: SvgButtonProps) {
+const SvgButton = ({svg, title, path}: SvgButtonProps) => {
 
     // const navigate = useNavigate(); // Hook to get navigate function
 

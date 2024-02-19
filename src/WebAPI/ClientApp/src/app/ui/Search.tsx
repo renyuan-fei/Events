@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 
-function SearchComponent() {
+const SearchComponent = () => {
     return (
         <Box
             component="form"

@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import {Avatar, Grid, useTheme} from "@mui/material";
 import Divider from "@mui/material/Divider";
 
-function stringToColor(string: string) {
+const stringToColor = (string: string) => {
     let hash = 0;
     let i;
 
@@ -23,7 +23,7 @@ function stringToColor(string: string) {
     return color;
 }
 
-function stringAvatar(name: string) {
+const stringAvatar = (name: string) => {
     let initials = '';
     const nameParts = name.split(' ');
 
@@ -51,7 +51,7 @@ interface DetailTitleProps {
     hostUser: { username: string; id: string; };
 }
 
-export function DetailTitle({title, hostUser}: DetailTitleProps) {
+const DetailTitle = ({title, hostUser}: DetailTitleProps) => {
     const theme = useTheme();
     return (
         <Box>
@@ -88,3 +88,5 @@ export function DetailTitle({title, hostUser}: DetailTitleProps) {
         </Box>
     );
 }
+
+export default DetailTitle;

@@ -9,7 +9,7 @@ interface customSelectProps {
     value: string[];
 }
 
-export default function customSelect(props: customSelectProps) {
+const customSelect = (props: customSelectProps) =>{
     const { type, value } = props;
     const [selectedValue, setSelectedValue] = React.useState('');
 
@@ -44,3 +44,5 @@ export default function customSelect(props: customSelectProps) {
         </div>
     );
 }
+
+export default customSelect;
