@@ -14,19 +14,19 @@ import LogoImg from "@assets/logo.png";
 import {useSelector} from "react-redux";
 import {RootState, useAppDispatch} from "@store/store.ts";
 import Box from "@mui/material/Box";
-import {useEffect, useState} from "react";
 import {
     setLoginForm,
     setSignUpForm
 } from "@features/commonSlice.ts";
 import {z} from 'zod';
-import {FieldErrors, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useLoginMutation from "@features/user/hooks/useLoginMutation.ts";
 import FormField from "@ui/FormField.tsx";
 import FormCheckbox from "@ui/FormCheckbox.tsx";
-import ImageComp from "@ui/Image.tsx";
+import ImageComponent from "@ui/Image.tsx";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
+import useDynamicFormHeight from "@hooks/useDynamicFormHeight.ts";
 
 interface FormValues {
     email: string;
@@ -43,7 +43,7 @@ const LoginForm = () => {
     const theme = useTheme();
     const dispatch = useAppDispatch()
     const open = useSelector((state: RootState) => state.common.LoginOpen);
-    const [Height, setHeight] = useState(580)
+    const {mutateAsync: loginMutate, isLoading} = useLoginMutation();
     const {control, reset, handleSubmit, formState: {errors}} = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -54,8 +54,6 @@ const LoginForm = () => {
             keepSignedIn: false,
         }
     });
-
-    const {mutateAsync: loginMutate, isLoading} = useLoginMutation();
 
     function handleClose(): void {
         dispatch(setLoginForm(false))
@@ -75,18 +73,7 @@ const LoginForm = () => {
         });
     };
 
-    useEffect(() => {
-        const countErrors = (errors: FieldErrors<FormValues>) => {
-            // 计算具有实际错误信息的字段数量
-            return Object.values(errors).filter(error => error).length;
-        };
-
-        const baseDialogHeight = 580; // 基础高度
-        const errorHeightIncrement = 20; // 每个错误增加的高度
-        const errorCount = countErrors(errors);
-        setHeight(baseDialogHeight + errorHeightIncrement * errorCount);
-    }, [errors]); // 监听 errors 对象
-
+    const Height = useDynamicFormHeight(errors, 580, 20);
 
     return (
         <Dialog open={open} maxWidth='xs' fullWidth sx={{
@@ -111,14 +98,16 @@ const LoginForm = () => {
                 >
                     <CloseIcon/>
                 </IconButton>
-                <ImageComp Src={LogoImg} Alt={"logo"} Sx={{
+
+                <ImageComponent Src={LogoImg} Alt={"logo"} Sx={{
                     width: 40,
                     height: 40,
                     position: 'absolute',
                     top: theme.spacing(2),
                     left: '50%',
                     transform: 'translateX(-50%)',
-                }}></ImageComp>
+                }}/>
+
                 <Typography component='div' variant='h6' sx={{
                     flex: 1,
                     textAlign: 'center',
@@ -127,6 +116,7 @@ const LoginForm = () => {
                 }}>
                     Log in
                 </Typography>
+
                 <Typography component='div' sx={{mb: 2}}>
                     Not a member yet?
                     <Link href='#' sx={{
@@ -139,6 +129,7 @@ const LoginForm = () => {
                         Sign up
                     </Link>
                 </Typography>
+
             </DialogTitle>
 
             <DialogContent dividers>
@@ -151,6 +142,7 @@ const LoginForm = () => {
                                label='Email'
                                type='email'
                                required/>
+
                     <FormField name='password'
                                control={control}
                                errors={errors}

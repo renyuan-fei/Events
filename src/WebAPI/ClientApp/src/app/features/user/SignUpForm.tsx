@@ -1,4 +1,3 @@
-import {useEffect, useRef, useState} from 'react';
 import {
     Button, Dialog,
     DialogContent,
@@ -12,52 +11,39 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Box from "@mui/material/Box";
-import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import {useSelector, useDispatch} from "react-redux";
 import {RootState} from "@store/store.ts";
-import { setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
+import {setLoginForm, setSignUpForm} from "@features/commonSlice.ts";
 import {
     checkEmailRegistered,
 } from "@apis/Account.ts";
 import {z} from "zod";
-import {Controller, FieldErrors, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import LogoImg from "@assets/logo.png";
 import useRegisterMutation from "@features/user/hooks/useRegisterMutation.ts";
-import CustomPasswordTextField from "@ui/Custom/CustomPasswordTextField.tsx";
-import ImageComp from "@ui/Image.tsx";
+import ImageComponent from "@ui/Image.tsx";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
+import FormField from "@ui/FormField.tsx";
+import useDynamicFormHeight from "@hooks/useDynamicFormHeight.ts";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const schema = z.object({
-    displayName: z.string().optional().refine((val) => val === undefined || val === '' || val.length >= 1, {
-        message: "This field is required"
-    }),
-    email: z.string().optional().refine((val) => val === undefined || val === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
-        message: "Email address is invalid"
-    }),
-    password: z.string().optional().refine((val) => {
-        // 当密码字段不为空时，应用所有的密码规则
-        if(val === undefined || val === '') return true;
-        return val.length >= 10 && /[a-z]/.test(val) && /\d/.test(val);
-    }, {
-        message: "Password must be at least 10 characters long, contain at least one lowercase letter, and one digit"
-    }),
-    confirmPassword: z.string(),
-    phoneNumber: z.string().optional().refine((val) => val === undefined || val === '' || /^04\d{8}$/.test(val), {
-        message: "Phone number must be 04xxxxxxx"
-    }),
-}).refine(data => data.password === data.confirmPassword || data.confirmPassword === undefined || data.confirmPassword === '', {
+    displayName: z.string().min(1, "This field is required"),
+    email: z.string().min(1, "This field is required").email("Email address is invalid"),
+    password: z.string().min(10, "Password must be at least 10 characters long")
+        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+        .regex(/\d/, "Password must contain at least one digit"),
+    confirmPassword: z.string().min(1, "This field is required"),
+    phoneNumber: z.string().min(1, "This field is required").regex(/^04\d{8}$/, "Phone number must be 04xxxxxxx"),
+}).refine(data => data.password === data.confirmPassword || data.confirmPassword === '' || data.confirmPassword === undefined, {
     message: "Passwords must match",
     path: ["confirmPassword"],
 }).refine(async (data) => {
-
-    if(data.email === undefined || data.email === '') return true;
+    if (!emailRegex.test(data.email)) {return true;}
 
     const isRegistered = await checkEmailRegistered(data.email);
-
-    console.log(isRegistered);
-
     return !isRegistered;
 }, {
     message: "Email is already registered",
@@ -74,12 +60,18 @@ interface FormValues {
 }
 
 const SignUpForm = () => {
-    const abortControllerRef = useRef(new AbortController());
     const theme = useTheme();
-    const open = useSelector((state: RootState) => state.common.signUpOpen);
     const dispatch = useDispatch();
+    const open = useSelector((state: RootState) => state.common.signUpOpen);
+    const {mutateAsync: registerMutate, isLoading} = useRegisterMutation();
 
-    const { control,reset, watch, trigger, handleSubmit,formState: { errors } } = useForm<FormValues>({
+    const {
+        control,
+        reset,
+        trigger,
+        handleSubmit,
+        formState: {errors}
+    } = useForm<FormValues>({
         resolver: zodResolver(schema),
         // defaultValues: {
         //     displayName: 'TestEmail@example.com',
@@ -97,38 +89,9 @@ const SignUpForm = () => {
         }
     });
 
-    const email = watch("email");
-    const confirmPassword = watch("confirmPassword");
-    const phoneNumber = watch("phoneNumber");
-
-    useEffect(() => {
-        return () => {
-            // 组件卸载时取消所有挂起的请求
-            abortControllerRef.current.abort();
-        };
-    }, []);
-
-    useEffect(() => {
-        // 当 email 变化时，触发验证
-        trigger("email");
-    }, [email, trigger]);
-
-    useEffect(() => {
-        trigger("confirmPassword");
-    }, [confirmPassword, trigger]);
-
-    useEffect(() => {
-        trigger("phoneNumber");
-    }, [phoneNumber,trigger]);
-
-
-    const [Height, setHeight] = useState(780)
-
-    const { mutateAsync: registerMutate, isLoading} = useRegisterMutation();
 
     function handleClose(): void {
         dispatch(setSignUpForm(false));
-
         reset()
     }
 
@@ -138,7 +101,11 @@ const SignUpForm = () => {
     }
 
     async function onSubmit(data: FormValues) {
-        await registerMutate(data,{
+        const isValid = await trigger(); // 手动触发验证
+        if (!isValid) {
+            return; // 如果验证失败，则不继续执行
+        }
+        await registerMutate(data, {
             onSuccess: () => {
                 reset()
             },
@@ -148,21 +115,10 @@ const SignUpForm = () => {
         });
     }
 
-
-    useEffect(() => {
-        const countErrors = (errors : FieldErrors<FormValues>) => {
-            // 计算具有实际错误信息的字段数量
-            return Object.values(errors).filter(error => error).length;
-        };
-
-        const baseDialogHeight = 580; // 基础高度
-        const errorHeightIncrement = 20; // 每个错误增加的高度
-        const errorCount = countErrors(errors);
-        setHeight(baseDialogHeight + errorHeightIncrement * errorCount);
-    }, [errors]); // 监听 errors 对象
+    const Height = useDynamicFormHeight(errors, 580, 20);
 
     return (
-        <Dialog open={open} maxWidth="xs" fullWidth sx={{
+        <Dialog open={open} maxWidth='xs' fullWidth sx={{
             '& .MuiDialog-paper': {
                 width: 400,
                 height: {Height},
@@ -171,10 +127,10 @@ const SignUpForm = () => {
         }}>
             {isLoading && <LoadingComponent/>}
 
-            <DialogTitle sx={{textAlign: 'center' , m: 0, pt: theme.spacing(6)}}>
+            <DialogTitle sx={{textAlign: 'center', m: 0, pt: theme.spacing(6)}}>
                 <IconButton
                     onClick={handleClose}
-                    aria-label="close"
+                    aria-label='close'
                     sx={{
                         position: 'absolute',
                         right: theme.spacing(2),
@@ -183,15 +139,15 @@ const SignUpForm = () => {
                 >
                     <CloseIcon/>
                 </IconButton>
-                <ImageComp Src={LogoImg} Alt={"logo"} Sx={{
+                <ImageComponent Src={LogoImg} Alt={"logo"} Sx={{
                     width: 40,
                     height: 40,
                     position: 'absolute',
                     top: theme.spacing(2),
                     left: '50%',
                     transform: 'translateX(-50%)',
-                }}></ImageComp>
-                <Typography component={"div"} variant="h6" sx={{
+                }}></ImageComponent>
+                <Typography component={"div"} variant='h6' sx={{
                     flex: 1,
                     textAlign: 'center',
                     fontWeight: theme.typography.fontWeightBold,
@@ -202,89 +158,48 @@ const SignUpForm = () => {
             </DialogTitle>
 
             <DialogContent dividers>
-                <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{mt: 1}}>
-                    <Controller
-                        name="displayName"
-                        control={control}
-                        render={({ field }) => (
-                            <CustomTextField
-                                {...field}
-                                label="Your name"
-                                required
-                                autoFocus
-                                error={!!errors.displayName}
-                                helperText={errors.displayName?.message || ''}
-                            />
-                        )}
-                    />
+                <Box component='form'
+                     noValidate
+                     onSubmit={handleSubmit(onSubmit)}
+                     sx={{mt: 1}}>
 
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                            <CustomTextField
-                                {...field}
-                                label="Email address"
-                                type="email"
-                                required
-                                autoComplete="email"
-                                error={!!field.value && !!errors.email}
-                                helperText={errors.email?.message || ''}
-                            />
-                        )}
-                    />
+                    <FormField name='displayName'
+                               control={control}
+                               errors={errors}
+                               label='Your name'
+                               required/>
 
-                    <Controller
-                        name="password"
-                        control={control}
-                        render={({ field }) => (
-                            <CustomPasswordTextField
-                                {...field}
-                                label="Password"
-                                type="password"
-                                required
-                                autoComplete="new-password"
-                                error={!!errors.password}
-                                helperText={errors.password?.message || ''}
-                            />
-                        )}
-                    />
+                    <FormField name='email'
+                               control={control}
+                               errors={errors}
+                               label='Email address'
+                               required
+                               type='email'/>
 
-                    <Controller
-                        name="confirmPassword"
-                        control={control}
-                        render={({ field }) => (
-                            <CustomPasswordTextField
-                                {...field}
-                                label="Confirm Password"
-                                type="password"
-                                required
-                                error={!!errors.confirmPassword}
-                                helperText={errors.confirmPassword?.message || ''}
-                            />
-                        )}
-                    />
+                    <FormField name='password'
+                               control={control}
+                               errors={errors}
+                               label='Password'
+                               required
+                               type='password'/>
 
-                    <Controller
-                        name="phoneNumber"
-                        control={control}
-                        render={({ field }) => (
-                            <CustomTextField
-                                {...field}
-                                label="Phone Number"
-                                type="text"
-                                required
-                                error={!!errors.phoneNumber}
-                                helperText={errors.phoneNumber?.message || ''}
-                            />
-                        )}
-                    />
+                    <FormField name='confirmPassword'
+                               control={control}
+                               errors={errors}
+                               label='Confirm Password'
+                               required
+                               type='password'/>
 
-                    {/* Implement reCAPTCHA here */}
+                    <FormField name='phoneNumber'
+                               control={control}
+                               errors={errors}
+                               label='Phone Number'
+                               required/>
+
                     <Button
-                        type="submit"
-                        variant="contained"
-                        color="secondary"
+                        type='submit'
+                        variant='contained'
+                        color='secondary'
                         fullWidth
                         sx={{
                             mb: 2,
@@ -295,19 +210,19 @@ const SignUpForm = () => {
                         sign Up
                     </Button>
 
-                    <Typography component={"div"} variant="body2" align="center">
+                    <Typography component={"div"} variant='body2' align='center'>
                         By signing up, you agree to our
-                        <Link href="#" underline="none">Terms of Service</Link>,
-                        <Link href="#" underline="none">Privacy Policy</Link>, and
-                        <Link href="#" underline="none">Cookie Policy</Link>.
+                        <Link href='#' underline='none'>Terms of Service</Link>,
+                        <Link href='#' underline='none'>Privacy Policy</Link>, and
+                        <Link href='#' underline='none'>Cookie Policy</Link>.
                     </Typography>
                 </Box>
 
                 <Divider sx={{mt: 2, mb: 2}}>or</Divider>
 
-                <Typography component={"div"} variant={"body2"} align="center"
+                <Typography component={"div"} variant={"body2"} align='center'
                             sx={{mt: 2}}>
-                    Not a member yet? <Link href="#" sx={{
+                    Not a member yet? <Link href='#' sx={{
                     color: '#00798A',
                     textDecoration: 'none',
                 }} onClick={handleOpenLogin}>Sign

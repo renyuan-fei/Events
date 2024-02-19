@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {RootState, useAppDispatch} from "@store/store.ts";
 import {setSignUpForm} from "@features/commonSlice.ts";
 import React from "react";
-import ImageComp from "@ui/Image.tsx";
+import ImageComponent from "@ui/Image.tsx";
 
 const JoinEvents = () => {
     const theme = useTheme();
@@ -75,7 +75,7 @@ const JoinEvents = () => {
             <Box sx={{
                 display: isMobile ? 'none' : 'flex',
             }}>
-                <ImageComp Src={JoinEventsImg} Alt={"JoinEvents"} Sx={{
+                <ImageComponent Src={JoinEventsImg} Alt={"JoinEvents"} Sx={{
                     width: 500,
                     height: 250,
                 }}/>

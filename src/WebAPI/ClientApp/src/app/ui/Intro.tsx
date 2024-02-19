@@ -2,7 +2,7 @@ import {Box, Button, Grid, Typography, useTheme} from '@mui/material';
 import IntroImg from '@assets/IntroImg.png';
 import {useSelector} from "react-redux";
 import {RootState} from "@store/store.ts";
-import ImageComp from "@ui/Image.tsx";
+import ImageComponent from "@ui/Image.tsx";
 
 const Intro = () => {
     const theme = useTheme();
@@ -49,7 +49,7 @@ const Intro = () => {
                     display: 'flex',
                     justifyContent: {xs: 'center', sm: 'flex-end'},
                 }}>
-                    <ImageComp Src={IntroImg} Alt={"mainPage"} Sx={{
+                    <ImageComponent Src={IntroImg} Alt={"mainPage"} Sx={{
                         maxWidth: '100%', maxHeight: 650,
                         paddingTop: isMobile && theme.spacing(2),
                     }}/>
