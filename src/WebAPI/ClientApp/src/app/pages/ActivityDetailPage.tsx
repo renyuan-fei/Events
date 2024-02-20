@@ -2,7 +2,6 @@ import {useNavigate, useParams} from "react-router";
 import Box from "@mui/material/Box";
 import {Grid, useTheme} from "@mui/material";
 import DetailComments from "@ui/DetailComments.tsx";
-import {useGetActivityQuery} from "@apis/Activities.ts";
 import {useEffect} from "react";
 import {Photo} from "@type/Photo.ts";
 import CustomImageList from "@ui/Custom/CustomImageList.tsx";
@@ -10,6 +9,8 @@ import DetailSidebar from "@ui/DetailSidebar.tsx";
 import DetailAttendees from "@ui/DetailAttendees.tsx";
 import DetailBody from "@ui/DetailBody.tsx";
 import DetailTitle from "@ui/DetailTitle.tsx";
+import {useGetActivityQuery} from "@features/activity/hooks/useGetActivityQuery.ts";
+import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 const ActivityDetailPage = () => {
     const theme = useTheme();
@@ -26,11 +27,10 @@ const ActivityDetailPage = () => {
     }, [activityId, isError, navigate]);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <LoadingComponent/>;
     }
 
     if (!data) {
-        // Render some UI or redirect if the activity is null
         navigate('/notfound');
         return null;
     }
@@ -45,7 +45,7 @@ const ActivityDetailPage = () => {
                     <Grid item md={7.5}>
                         <DetailBody title={data.title} imageUrl={data.imageUrl} description={data.description}/>
                         <DetailAttendees attendees={data.attendees}/>
-                        <CustomImageList images={new Array<Photo>} Id={activityId} isUser={true}/>
+                        <CustomImageList photos={new Array<Photo>} id={activityId} isCurrentUser={true} remainingCount={0}/>
                         <DetailComments activityId={activityId}/>
                     </Grid>
 

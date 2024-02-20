@@ -2,6 +2,6 @@ namespace Application.common.DTO;
 
 public class TopPhotosWithRemainingCountDto
 {
-  public List<PhotoDto> TopPhotos      { get; set; }
+  public List<PhotoDto> Photos      { get; set; }
   public int            RemainingCount { get; set; }
 }

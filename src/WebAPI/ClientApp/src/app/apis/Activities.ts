@@ -2,7 +2,6 @@ import apiClient from "@apis/BaseApi.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
 import {Activity} from "@type/Activity.ts";
-import {useQuery} from "react-query";
 
 export const GetActivities = async ({
                                  page = 1,
@@ -32,17 +31,4 @@ export const GetActivities = async ({
 export const GetActivity = async (id: string) => {
     const response = await apiClient.get<ApiResponse<Activity>>(`/api/Activities/${id}`)
     return handleResponse(response);
-}
-
-// const { data, isLoading, error } = useQuery<ApiResponse<paginatedResponse>, Error>(['upcomingActivities', 1, 8], () => GetActivities({ page: 1, pageSize: 8 }));
-
-export const useGetActivitiesQuery = () => {
-    return useQuery(['paginatedActivities', 1, 8], () => GetActivities({ page: 1, pageSize: 8 }), {
-    })
-}
-
-export const useGetActivityQuery = (id: string) => {
-    return useQuery(['activities', id], () => GetActivity(id), {
-        enabled: !!id
-    })
 }

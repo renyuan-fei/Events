@@ -27,6 +27,7 @@ import FormCheckbox from "@ui/FormCheckbox.tsx";
 import ImageComponent from "@ui/Image.tsx";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import useDynamicFormHeight from "@hooks/useDynamicFormHeight.ts";
+import React from "react";
 
 interface FormValues {
     email: string;
@@ -39,11 +40,11 @@ const schema = z.object({
     password: z.string().min(1, 'Password is required'),
 });
 
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
     const theme = useTheme();
     const dispatch = useAppDispatch()
     const open = useSelector((state: RootState) => state.common.LoginOpen);
-    const {mutateAsync: loginMutate, isLoading} = useLoginMutation();
+    const {loginMutate, isLoading} = useLoginMutation();
     const {control, reset, handleSubmit, formState: {errors}} = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {

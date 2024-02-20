@@ -2,7 +2,6 @@ import {AuthResponse, LoginRequest, RegisterRequest} from "@type/Account.ts";
 import apiClient from "@apis/BaseApi.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
-import {UserProfile} from "@type/UserProfile.ts";
 
 // 登录请求
 export const login = async (requestData: LoginRequest): Promise<AuthResponse> => {
@@ -21,14 +20,6 @@ export const logout = async (): Promise<void> => {
 
 export const getCurrentUser = async (): Promise<AuthResponse> => {
     const response = await apiClient.get<ApiResponse<AuthResponse>>('/api/Account/')
-    return handleResponse(response);
-}
-
-export const GetUserProfile = async (id: string): Promise<UserProfile> => {
-    if (!id) {
-        id = ''
-    }
-    const response = await apiClient.get<ApiResponse<UserProfile>>(`/api/Users/${id}`);
     return handleResponse(response);
 }
 

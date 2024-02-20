@@ -32,6 +32,8 @@ public class DeletePhotoHandler : IRequestHandler<DeleteUserPhotoCommand, Result
   {
     try
     {
+      //TODO check the photo is owned by the user
+
       return await _photoService.RemovePhotoAsync(request.PublicId,
                                                   request
                                                       .UserId);

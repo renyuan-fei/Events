@@ -1,6 +1,8 @@
 import ActivityCard from '@features/activity/ActivityCard.tsx';
 import { Grid, Typography, Box, useTheme } from '@mui/material';
-import {useGetActivitiesQuery} from "@apis/Activities.ts";
+import {
+    useGetActivitiesQuery
+} from "@features/activity/hooks/useGetPaginatedActivitiesQuery.ts";
 
 const UpcomingActivitiesList = () => {
     const theme = useTheme();

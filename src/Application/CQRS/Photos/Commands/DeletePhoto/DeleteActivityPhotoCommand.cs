@@ -38,6 +38,8 @@ public class
   {
     try
     {
+      // TODO check the photo is owned by the activity
+
       return await _photoService.RemovePhotoAsync(request.PublicId,
                                                   request
                                                       .ActivityId);

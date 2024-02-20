@@ -22,10 +22,10 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 const apiClient: AxiosInstance = axios.create({
     baseURL: BASE_URL, // 替换为你的 API 基础 URL
     withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-        // 可以根据需要添加其他默认请求头
-    },
+    // headers: {
+    //     'Content-Type': 'application/json',
+    //     // 可以根据需要添加其他默认请求头
+    // },
     // 你可以在这里添加其他默认配置
 });
 
@@ -35,6 +35,14 @@ apiClient.interceptors.request.use(config => {
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (!(config.data instanceof FormData)) {
+        config.headers["Content-Type"] = 'application/json';
+    }
+    else
+    {
+        config.headers["Content-Type"] = 'multipart/form-data';
     }
 
     return config;

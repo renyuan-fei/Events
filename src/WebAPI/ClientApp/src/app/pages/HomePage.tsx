@@ -1,18 +1,21 @@
 import Box from "@mui/material/Box";
 import {Grid, Paper, useTheme} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useGetActivitiesQuery} from "@apis/Activities.ts";
 import {ActivityItem} from "@features/activity/ActivitiyItem.tsx";
 import HomePageTitle from "@ui/HomePageTitle.tsx";
 import ActivitiesCalendar from "@features/activity/ActivitiesCalendar.tsx";
 import ActivitiesList from "@features/activity/ActivitiesList.tsx";
+import {
+    useGetActivitiesQuery
+} from "@features/activity/hooks/useGetPaginatedActivitiesQuery.ts";
+import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 const HomePage = () => {
     const theme = useTheme();
 
-    const getActivitiesQuery = useGetActivitiesQuery();
+    const {isLoading,data} = useGetActivitiesQuery();
 
-    if (getActivitiesQuery.isLoading) return <div>Loading...</div>;
+    if (isLoading) return <LoadingComponent/>;
 
     return (
         <>
@@ -20,7 +23,6 @@ const HomePage = () => {
                 <HomePageTitle/>
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={2}>
-                        {/* 左侧栏 */}
                         <Grid item md={4.5} sx={{ display: { sm: 'none', md: 'block' } }}>
                             <ActivitiesCalendar/>
                             <Paper sx={{ marginTop: theme.spacing(2), padding: theme.spacing(2) }}>
@@ -28,12 +30,11 @@ const HomePage = () => {
                             </Paper>
                         </Grid>
 
-                        {/* 右侧栏 */}
                         <Grid item xs={12} md={7.5} justifyContent="center" alignItems="center">
                             <Paper sx={{ padding: theme.spacing(2) , marginTop: theme.spacing(2), marginBottom: theme.spacing(4)}}>
                                 <ActivitiesList>
                                     {
-                                        getActivitiesQuery.data?.items.map((activity) => (
+                                        data?.items.map((activity) => (
                                             <ActivityItem key={activity.id} {...activity}/>
                                         ))
                                     }

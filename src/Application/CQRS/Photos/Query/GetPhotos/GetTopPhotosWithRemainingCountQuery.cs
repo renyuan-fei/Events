@@ -43,9 +43,13 @@ public class GetTopPhotosWithRemainingCountQueryHandler : IRequestHandler<
     {
       var photos =
           _photoRepository.GetPhotosWithoutMainPhotoByOwnerIdQueryable(request.OwnerId,
-                                                       cancellationToken);
+            cancellationToken);
 
-      var topPhotos = await photos.Take(6).ToListAsync(cancellationToken);
+      // get top 6 photos excluding the main photo
+      var topPhotos = await photos.Where(photo => photo.Details.IsMain != true)
+                                  .Take(6)
+                                  .ToListAsync(cancellationToken);
+
       var remainingCount = 0;
 
       if (photos.Count() > 6) { remainingCount = photos.Count() - topPhotos.Count; }
@@ -54,7 +58,7 @@ public class GetTopPhotosWithRemainingCountQueryHandler : IRequestHandler<
 
       return new TopPhotosWithRemainingCountDto
       {
-          TopPhotos = photoDtos, RemainingCount = remainingCount
+          Photos = photoDtos, RemainingCount = remainingCount
       };
     }
     catch (Exception ex)

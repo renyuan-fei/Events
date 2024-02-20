@@ -1,11 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.common.Models;
-
-using CloudinaryDotNet.Actions;
 
 using Domain.Constant;
 using Domain.Repositories;
@@ -26,8 +25,6 @@ namespace WebAPI.Controllers;
 public class AccountController : BaseController
 {
   private readonly IPhotoRepository               _photoRepository;
-  private readonly IUserService                   _userService;
-  private readonly IIdentityService               _identityService;
   private readonly IJwtTokenService               _jwtTokenService;
   private readonly SignInManager<ApplicationUser> _signInManager;
   private readonly UserManager<ApplicationUser>   _userManager;
@@ -44,23 +41,17 @@ public class AccountController : BaseController
   ///   SignInManager class for managing instances of the SignIn
   ///   operations
   /// </param>
-  /// <param name="identityService">A service providing identity related utility methods</param>
   /// <param name="jwtTokenService">A service for JWT token generation and validation</param>
-  /// <param name="userService"></param>
   /// <param name="photoRepository"></param>
   public AccountController(
       UserManager<ApplicationUser>   userManager,
       SignInManager<ApplicationUser> signInManager,
-      IIdentityService               identityService,
       IJwtTokenService               jwtTokenService,
-      IUserService                   userService,
       IPhotoRepository               photoRepository)
   {
     _userManager = userManager;
     _signInManager = signInManager;
-    _identityService = identityService;
     _jwtTokenService = jwtTokenService;
-    _userService = userService;
     _photoRepository = photoRepository;
   }
 
@@ -130,6 +121,7 @@ public class AccountController : BaseController
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   [HttpPost("login")]
+  [ SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands", MessageId = "count: 94") ]
   public async Task<ActionResult<AccountResponseDto>> Login([FromBody] LoginDto loginDTO)
   {
     if (!ModelState.IsValid)

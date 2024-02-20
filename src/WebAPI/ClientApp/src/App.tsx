@@ -48,28 +48,23 @@ function App() {
     useEffect(() => {
         const checkMobile = () => dispatch(setIsMobile(window.innerWidth < 600));
 
-        // 监听窗口尺寸变化
         window.addEventListener('resize', checkMobile);
 
-        // 初次检查
         checkMobile();
 
         return () => {
-            // 清理监听器
             window.removeEventListener('resize', checkMobile);
         };
     }, [dispatch]);
 
 
     useEffect(() => {
-        // 检查本地存储中是否有JWT令牌
         if (localStorage.getItem('jwt' )) {
             dispatch(setLoginForm(false))
             refetch();
         }
     }, []);
 
-    // 使用 currentUserQuery 的状态来控制加载组件的显示
     if (isRefetching) {
         return <LoadingComponent />;
     }

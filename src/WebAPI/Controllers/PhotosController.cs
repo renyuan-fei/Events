@@ -19,8 +19,9 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class PhotosController : BaseController
 {
-  [ HttpGet("top/{id:required}") ]
-  public async Task<ApiResponse<TopPhotosWithRemainingCountDto?>> GetTopPhotosWithRemainingCountAsync(string id)
+  [ HttpGet("top/{id}") ]
+  public async Task<ApiResponse<TopPhotosWithRemainingCountDto?>>
+      GetTopPhotosWithRemainingCountAsync(string id)
   {
     var result =
         await Mediator!.Send(new GetTopPhotosWithRemainingCountQuery { OwnerId = id });
@@ -28,14 +29,17 @@ public class PhotosController : BaseController
     return ApiResponse<TopPhotosWithRemainingCountDto>.Success(result);
   }
 
-  [HttpGet("{id}")]
-  public async Task<ActionResult<PaginatedList<PhotoDto>>> GetPaginatedPhotos([FromQuery] PaginatedListParams paginatedListParams, string id)
+  [ HttpGet("{id}") ]
+  public async Task<ActionResult<PaginatedList<PhotoDto>>> GetPaginatedPhotos(
+      [ FromQuery ] PaginatedListParams paginatedListParams,
+      string                            id)
   {
     var result = await Mediator!.Send(new GetPaginatedPhotos
     {
         paginatedListParams = paginatedListParams,
         OwnerId = id
     });
+
     return Ok(result);
   }
 
@@ -55,7 +59,6 @@ public class PhotosController : BaseController
   ///   form <see>
   ///     <cref>Ok(result)</cref>
   ///   </see>
-  ///   .
   /// </remarks>
   [ HttpPost ]
   [ Authorize ]
@@ -68,9 +71,12 @@ public class PhotosController : BaseController
     })!;
 
     return StatusCode(StatusCodes.Status201Created,
-                      ApiResponse<Result>.Success(data: result,
+                      ApiResponse<Result>.Success(data:
+                                                  result,
                                                   statusCode:
-                                                  StatusCodes.Status201Created));
+                                                  StatusCodes.Status201Created,
+                                                  message:
+                                                  "Photo uploaded successfully."));
   }
 
   [ HttpPost("activity/{id}") ]
@@ -88,7 +94,9 @@ public class PhotosController : BaseController
     return StatusCode(StatusCodes.Status201Created,
                       ApiResponse<Result>.Success(data: result,
                                                   statusCode:
-                                                  StatusCodes.Status201Created));
+                                                  StatusCodes.Status201Created,
+                                                  message:
+                                                  "Photo uploaded successfully."));
   }
 
   // PUT: api/Photo/5
@@ -133,7 +141,7 @@ public class PhotosController : BaseController
   /// <returns>An <see cref="IActionResult" /> representing the result of the operation.</returns>
   [ Authorize ]
   [ HttpDelete("{id:required}") ]
-  public async Task<IActionResult> DeleteUsrPhoto(string id)
+  public async Task<IActionResult> DeleteUserPhoto(string id)
   {
     var result = await Mediator?.Send(new DeleteUserPhotoCommand
     {
@@ -145,6 +153,7 @@ public class PhotosController : BaseController
   }
 
   [ Authorize ]
+  [ Authorize(Policy = "IsActivityHost") ]
   [ HttpDelete("activity/{id:required}/{publicId:required}") ]
   public async Task<IActionResult> DeleteActivityPhoto(string id, string publicId)
   {
