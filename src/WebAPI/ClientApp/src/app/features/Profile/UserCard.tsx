@@ -9,6 +9,7 @@ import Card from "@mui/material/Card";
 import {PhotoCamera} from "@mui/icons-material";
 import PhotoUploadModal from "@ui/PhotoUploadModal.tsx";
 import {useState} from "react";
+import useUploadUserAvatarMutation from "@hooks/useUploadUserAvatarMutation.ts";
 
 interface UserCardProps {
     id: string;
@@ -34,10 +35,10 @@ const UserCard = (props: UserCardProps) => {
 
     return (
         <>
-            <PhotoUploadModal userId={id!}
+            <PhotoUploadModal
                               open={isUploadModalOpen}
                               onClose={handleCloseModal}
-                              uploadType={'avatar'}
+                              uploadHook={useUploadUserAvatarMutation(id)}
             />
             <Card sx={{
             width: 400,

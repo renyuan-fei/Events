@@ -11,10 +11,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {useDropzone} from 'react-dropzone';
-import useUploadUserPhotoMutation from "@hooks/useUploadUserPhotoMutation.ts";
 import {useAppDispatch} from "@store/store.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
-import useUploadUserAvatarMutation from "@hooks/useUploadUserAvatarMutation.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 const style = {
@@ -30,28 +28,31 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+
 };
 
-interface PhotoUploadModalProps {
-    userId: string;
-    open: boolean;
-    onClose: () => void;
-    uploadType: 'avatar' | 'photo';
+interface UploadHook {
+    isUploading: boolean;
+    upload: (formData: FormData, callbacks: { onSuccess?: () => void }) => void;
 }
 
-const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({userId, open, onClose,uploadType}) => {
+interface PhotoUploadModalProps {
+    open: boolean;
+    onClose: () => void;
+    uploadHook: UploadHook;
+}
+
+const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({open, onClose, uploadHook }) => {
     const dispatch = useAppDispatch();
-    const { isUploading, upload } = uploadType === 'avatar' ?
-        useUploadUserAvatarMutation(userId) :
-        useUploadUserPhotoMutation(userId);
+    const { isUploading, upload } = uploadHook;
     const [file, setFile] = useState<File | null>(null);
-    const [fileError, setFileError] = useState(false); // 新增的文件错误状态
+    const [fileError, setFileError] = useState(false);
 
     const handleClose = useCallback(() => {
         if (!fileError && !isUploading) {
             onClose();
         }
-    }, [onClose, fileError]);
+    }, [onClose, fileError, isUploading]);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles[0].size > 5242880) { // 5MB
@@ -68,11 +69,10 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({userId, open, onClos
         }
     }, [dispatch]);
 
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         multiple: false
     });
-
 
     const handleUpload = () => {
         if (!file || fileError) {
@@ -85,7 +85,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({userId, open, onClos
         upload(formData, {
             onSuccess() {
                 setFile(null);
-                setFileError(false); // 成功后清除错误状态
+                setFileError(false);
                 onClose();
             }
         });
@@ -95,48 +95,48 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({userId, open, onClos
         <>
             {isUploading && <LoadingComponent/>}
             <Modal open={open} onClose={handleClose} hideBackdrop={isUploading}>
-            <Paper sx={style}>
-                <IconButton onClick={handleClose}
-                            disabled={isDragActive || isUploading}>
-                    <CloseIcon/>
-                </IconButton>
-                {fileError && (
-                    <Alert severity='error' sx={{width: '100%', mb: 2}}>File size exceeds
-                        5MB</Alert>
-                )}
-                <Box {...getRootProps()} sx={{
-                    p: 4,
-                    border: '2px dashed grey',
-                    width: '100%',
-                    textAlign: 'center'
-                }}>
-                    <input {...getInputProps()} />
-                    {isDragActive ? (
-                        <Typography variant='h6'>Drop the files here ...</Typography>
-                    ) : (
-                        <Typography variant='h6'>Drag 'n' drop a file here, or click to
-                            select a file</Typography>
+                <Paper sx={style}>
+                    <IconButton onClick={handleClose}
+                                disabled={isDragActive || isUploading}>
+                        <CloseIcon/>
+                    </IconButton>
+                    {fileError && (
+                        <Alert severity='error' sx={{width: '100%', mb: 2}}>File size exceeds
+                            5MB</Alert>
                     )}
-                </Box>
-                <Button
-                    variant='contained'
-                    onClick={handleUpload}
-                    disabled={isUploading || !file || isDragActive || fileError}
-                    sx={{mt: 2}}
-                >
-                    {isUploading ? <CircularProgress size={24}/> : 'Upload Photo'}
-                </Button>
-                {file && (
-                    <Typography variant='subtitle1' sx={{mt: 2}}>
-                        Selected file: {file.name}
+                    <Box {...getRootProps()} sx={{
+                        p: 4,
+                        border: '2px dashed grey',
+                        width: '100%',
+                        textAlign: 'center'
+                    }}>
+                        <input {...getInputProps()} />
+                        {isDragActive ? (
+                            <Typography variant='h6'>Drop the files here ...</Typography>
+                        ) : (
+                            <Typography variant='h6'>Drag 'n' drop a file here, or click to
+                                select a file</Typography>
+                        )}
+                    </Box>
+                    <Button
+                        variant='contained'
+                        onClick={handleUpload}
+                        disabled={isUploading || !file || isDragActive || fileError}
+                        sx={{mt: 2}}
+                    >
+                        {isUploading ? <CircularProgress size={24}/> : 'Upload Photo'}
+                    </Button>
+                    {file && (
+                        <Typography variant='subtitle1' sx={{mt: 2}}>
+                            Selected file: {file.name}
+                        </Typography>
+                    )}
+                    <Typography variant='caption' sx={{mt: 2}}>
+                        These photos must be in JPEG, GIF, or PNG format, be less than 5MB in
+                        size.
                     </Typography>
-                )}
-                <Typography variant='caption' sx={{mt: 2}}>
-                    These photos must be in JPEG, GIF, or PNG format, be less than 15MB in
-                    size, and adhere to the Meetup's Terms of Service.
-                </Typography>
-            </Paper>
-        </Modal></>
+                </Paper>
+            </Modal></>
     );
 };
 

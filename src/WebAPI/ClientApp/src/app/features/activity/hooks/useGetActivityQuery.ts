@@ -6,5 +6,5 @@ export const useGetActivityQuery = (id: string) => {
         ['activity', id],
         () => GetActivity(id));
 
-    return {isLoading, isError,data};
+    return {isGettingActivity:isLoading, isError,activityDetail:data};
 }

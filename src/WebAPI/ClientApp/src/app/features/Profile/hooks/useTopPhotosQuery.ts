@@ -14,7 +14,7 @@ const userTopPhotos = (id: string) => {
             }
         }
     )
-    return {data, isLoading};
+    return {data, isPhotosLoading:isLoading};
 }
 
 export default userTopPhotos;
