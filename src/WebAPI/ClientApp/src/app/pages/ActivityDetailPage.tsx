@@ -1,19 +1,19 @@
 import {useNavigate, useParams} from "react-router";
 import Box from "@mui/material/Box";
 import {Grid, useTheme} from "@mui/material";
-import DetailComments from "@ui/DetailComments.tsx";
 import PhotoGallery from "@ui/Custom/PhotoGallery.tsx";
-import DetailSidebar from "@ui/DetailSidebar.tsx";
-import DetailAttendees from "@ui/DetailAttendees.tsx";
-import DetailBody from "@ui/DetailBody.tsx";
-import DetailTitle from "@ui/DetailTitle.tsx";
 import {useGetActivityQuery} from "@features/activity/hooks/useGetActivityQuery.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
-import useTopPhotosQuery from "@features/Profile/hooks/useTopPhotosQuery.ts";
 import {queryClient} from "@apis/queryClient.ts";
-import {userInfo} from "@type/userInfo.ts";
+import {userInfo} from "@type/UserInfo.ts";
 import useUploadActivityPhotoMutation from "@hooks/useUploadActivityPhotoMutation.ts";
 import useDeleteActivityPhotoMutation from "@hooks/useDeleteActivityPhotoMutation.ts";
+import DetailTitle from "@features/activity/DetailTitle.tsx";
+import DetailBody from "@features/activity/DetailBody.tsx";
+import DetailAttendees from "@features/activity/DetailAttendees.tsx";
+import DetailComments from "@features/activity/DetailComments.tsx";
+import DetailSidebar from "@features/activity/DetailSidebar.tsx";
+import useTopPhotosQuery from "@features/profile/hooks/useTopPhotosQuery.ts";
 
 const ActivityDetailPage = () => {
     const theme = useTheme();

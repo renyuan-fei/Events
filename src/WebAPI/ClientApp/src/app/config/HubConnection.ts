@@ -6,7 +6,7 @@ import {
     clearComments,
     loadComments,
     receiveComments
-} from "@features/Comment/CommentSlice.ts";
+} from "@features/comment/CommentSlice.ts";
 
 enum SignalRActionTypes {
     START_CONNECTION = 'SIGNALR_START_CONNECTION',

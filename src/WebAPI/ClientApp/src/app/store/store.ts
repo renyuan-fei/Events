@@ -3,8 +3,8 @@ import {useDispatch} from 'react-redux'
 import userReducer from '@features/user/userSlice';
 import commonReducer from '@features/commonSlice';
 import {createSignalRMiddleware} from "@config/HubConnection.ts";
-import commentSlice from "@features/Comment/CommentSlice.ts";
 import activitySlice from "@features/activity/activitySlice.ts";
+import commentSlice from "@features/comment/CommentSlice.ts";
 
 const signalRMiddleware = createSignalRMiddleware(); // 创建 SignalR 中间件实例
 

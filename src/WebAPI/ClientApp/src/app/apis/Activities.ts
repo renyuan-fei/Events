@@ -11,7 +11,7 @@ export const GetActivities = async ({
     page: number,
     pageSize: number,
     searchTerm?: string[]
-} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<paginatedResponse<Item>> => {
+} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<PaginatedResponse<Item>> => {
 
     const params = new URLSearchParams();
     params.append("page", page.toString());
@@ -24,7 +24,7 @@ export const GetActivities = async ({
         url += `?${params.toString()}`;
     }
 
-    const response = await apiClient.get<ApiResponse<paginatedResponse<Item>>>(url);
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<Item>>>(url);
 
     return handleResponse(response);
 }

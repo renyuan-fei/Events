@@ -124,10 +124,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Image, opt => opt.Ignore());
 
     CreateMap<UserDto, UserProfileDto>()
-        .ForMember(dest => dest.Id,
-                   opt =>
-                       opt.MapFrom(src =>
-                                       new Guid(src.Id))) // Assuming src.Id is a string that can be converted to Guid
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
         .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
         .ForMember(dest => dest.Bio, opt => opt.MapFrom(src => src.Bio))
         .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))

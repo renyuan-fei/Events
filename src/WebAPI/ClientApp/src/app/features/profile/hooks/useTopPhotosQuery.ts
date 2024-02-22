@@ -1,11 +1,11 @@
 import {useQuery} from "react-query";
-import {TopPhotosWithRemainCount} from "@type/TopPhotosWithRemainCount.ts";
+import {TopPhotos} from "@type/TopPhotos.ts";
 import {AxiosError} from "axios";
 import {ApiResponse} from "@type/ApiResponse.ts";
 import {getTopPhotos} from "@apis/Photos.ts";
 
-const userTopPhotos = (id: string) => {
-    const {data, isLoading} = useQuery<TopPhotosWithRemainCount,AxiosError<ApiResponse<any>>>(
+const useTopPhotosQuery = (id: string) => {
+    const {data, isLoading} = useQuery<TopPhotos,AxiosError<ApiResponse<any>>>(
         ["TopPhotos",id],
         () => getTopPhotos(id),
         {
@@ -17,4 +17,4 @@ const userTopPhotos = (id: string) => {
     return {data, isPhotosLoading:isLoading};
 }
 
-export default userTopPhotos;
+export default useTopPhotosQuery;

@@ -21,14 +21,14 @@ public class FollowController : BaseController
   /// </summary>
   /// <returns>A paginated list of followers.</returns>
   [ Authorize ]
-  [ HttpGet("Follower/{pageNumber:int}/{pageSize:int?}") ]
-  public async Task<IActionResult> GetFollower(int pageNumber, int? pageSize)
+  [ HttpGet("Follower") ]
+  public async Task<IActionResult> GetFollower(
+      [ FromQuery ] PaginatedListParams paginatedListParams)
   {
     var result = await Mediator!.Send(new GetFollowerQuery
     {
         UserId = CurrentUserService!.Id!,
-        PaginatedListParams =
-            new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
+        PaginatedListParams = paginatedListParams
     });
 
     return Ok(ApiResponse<PaginatedList<FollowerDto>>.Success(result));
@@ -39,14 +39,14 @@ public class FollowController : BaseController
   /// </summary>
   /// <returns>A paginated list of followee.</returns>
   [ Authorize ]
-  [ HttpGet("Following/{pageNumber:int}/{pageSize:int?}") ]
-  public async Task<IActionResult> GetFollowing(int pageNumber, int? pageSize)
+  [ HttpGet("Following") ]
+  public async Task<IActionResult> GetFollowing(
+      [ FromQuery ] PaginatedListParams paginatedListParams)
   {
     var result = await Mediator!.Send(new GetFollowingQuery
     {
         UserId = CurrentUserService!.Id!,
-        PaginatedListParams =
-            new PaginatedListParams { PageNumber = pageNumber, PageSize = pageSize ?? 10 }
+        PaginatedListParams = paginatedListParams
     });
 
     return Ok(ApiResponse<PaginatedList<FollowingDTO>>.Success(result));
@@ -66,9 +66,9 @@ public class FollowController : BaseController
     return Ok(ApiResponse<Result>.Success(data: result));
   }
 
-  [Authorize]
-  [HttpGet("IsFollowing/{targetUserId}")]
-  public async Task<IActionResult> IsFollowing(string targetUserId)
+  [ Authorize ]
+  [ HttpGet("IsFollowing") ]
+  public async Task<IActionResult> IsFollowing([ FromQuery ] string targetUserId)
   {
     var result = await Mediator!.Send(new IsFollowingQuery
     {
@@ -79,27 +79,28 @@ public class FollowController : BaseController
     return Ok(ApiResponse<bool>.Success(result));
   }
 
-  [Authorize]
+  [ Authorize ]
   [ HttpPost ]
-  public async Task<IActionResult> CreateFollowing([FromQuery]string id)
+  public async Task<IActionResult> CreateFollowing([ FromQuery ] string targetUserId)
   {
     var result = await Mediator!.Send(new CreateFollowingCommand
     {
         UserId = CurrentUserService!.Id!,
-        TargetUserId = id
+        TargetUserId = targetUserId
     });
 
-    return StatusCode(StatusCodes.Status201Created,ApiResponse<Result>.Success(data: result));
+    return StatusCode(StatusCodes.Status201Created,
+                      ApiResponse<Result>.Success(data: result));
   }
 
-  [Authorize]
+  [ Authorize ]
   [ HttpDelete ]
-  public async Task<IActionResult> DeleteFollowing([FromQuery] string id)
+  public async Task<IActionResult> DeleteFollowing([ FromQuery ] string targetUserId)
   {
     var result = await Mediator!.Send(new DeleteFollowingCommand
     {
         UserId = CurrentUserService!.Id!,
-        TargetUserId = id
+        TargetUserId = targetUserId
     });
 
     return Ok(ApiResponse<Result>.Success(data: result));

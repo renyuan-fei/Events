@@ -17,11 +17,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@store/store.ts";
 import {useEffect} from "react";
 import {startConnection, stopConnection} from "@config/HubConnection.ts";
+import {useNavigate} from "react-router";
 
 
 const DetailComments = ({activityId} : { activityId : string | undefined}) => {
+    const navigate = useNavigate();
     const comments = useSelector((state : RootState) => state.comment.comments);
     const dispatch = useDispatch();
+
+    const handleJump = (id:string) => {
+        navigate(`/user/${id}`);
+    }
 
     useEffect(() => {
         if (activityId)
@@ -52,7 +58,10 @@ const DetailComments = ({activityId} : { activityId : string | undefined}) => {
                     <Box key={comment.id}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar alt={comment.userName} src={comment.image}/>
+                                <Avatar
+                                    onClick={() => handleJump(comment.userId)}
+                                    alt={comment.userName}
+                                    src={comment.image}/>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={comment.userName}

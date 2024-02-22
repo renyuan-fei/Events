@@ -1,10 +1,10 @@
 import apiClient from "./BaseApi";
 import {ApiResponse} from "../types/ApiResponse";
-import {TopPhotosWithRemainCount} from "@type/TopPhotosWithRemainCount.ts";
+import {TopPhotos} from "@type/TopPhotos.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 
 export const getTopPhotos = async (id: string) => {
-    const response = await apiClient.get<ApiResponse<TopPhotosWithRemainCount>>(`/api/Photos/Top/${id}`);
+    const response = await apiClient.get<ApiResponse<TopPhotos>>(`/api/Photos/Top/${id}`);
     return handleResponse(response);
 }
 

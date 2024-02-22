@@ -21,16 +21,15 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class ActivitiesController : BaseController
 {
-  /// <summary>
-  ///   Retrieves a paginated list of activities.
-  /// </summary>
-  /// <param name="pageSize"></param>
-  /// <param name="filterParams"></param>
-  /// <param name="pageNumber"></param>
-  /// <returns>An ActionResult containing the paginated list of activities.</returns>
-  [ HttpGet ]
+    /// <summary>
+    ///   Retrieves a paginated list of activities.
+    /// </summary>
+    /// <param name="paginatedListParams"></param>
+    /// <param name="filterParams"></param>
+    /// <returns>An ActionResult containing the paginated list of activities.</returns>
+    [ HttpGet ]
   public async Task<OkObjectResult> GetPaginatedListActivities(
-      [FromQuery]   PaginatedListParams paginatedListParams,
+      [ FromQuery ] PaginatedListParams paginatedListParams,
       [ FromQuery ] FilterParams?       filterParams)
   {
     var result = await Mediator!.Send(new GetPaginatedActivitiesQuery
@@ -135,7 +134,7 @@ public class ActivitiesController : BaseController
 
   [ HttpGet("{activityId}/attendees") ]
   public async Task<IActionResult> GetPaginatedListAttendees(
-      string activityId,
+      string              activityId,
       PaginatedListParams paginatedListParams)
   {
     var result = await Mediator!.Send(new GetPaginatedListAttendeesQuery

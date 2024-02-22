@@ -11,7 +11,7 @@ public class UserProfileDto
   /// <value>
   ///   The unique identifier.
   /// </value>
-  public Guid Id { get; set; }
+  public string Id { get; set; }
 
   /// <summary>
   ///   Gets or sets the display name.

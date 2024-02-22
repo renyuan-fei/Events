@@ -8,7 +8,7 @@ const useIsFollowingQuery = (targetUserId: string, currentUserId: string) => {
     const isEnabled = currentUserId !== targetUserId;
 
     const {isLoading, data} = useQuery<boolean, AxiosError<ApiResponse<any>>>(
-        ["IsFollowing",currentUserId,targetUserId],
+        ["IsFollowing",targetUserId],
         () => isFollowing(targetUserId),
         {
             onError(error: AxiosError<ApiResponse<any>>) {

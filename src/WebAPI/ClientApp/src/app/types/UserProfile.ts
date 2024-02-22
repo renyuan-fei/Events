@@ -1,5 +1,5 @@
 export interface UserProfile {
-    id: string; // Assuming Guid is represented as a string in TypeScript
+    id: string;
     displayName: string;
     bio: string;
     userName: string;

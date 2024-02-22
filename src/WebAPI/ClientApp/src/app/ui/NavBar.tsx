@@ -9,7 +9,7 @@ import {useSelector} from "react-redux";
 import {queryClient} from "@apis/queryClient.ts";
 import UserBar from "@ui/UserBar.tsx";
 import AuthLanguageControl from "@ui/AuthLanguageControl.tsx";
-import {userInfo} from "@type/userInfo.ts";
+import {userInfo} from "@type/UserInfo.ts";
 
 
 

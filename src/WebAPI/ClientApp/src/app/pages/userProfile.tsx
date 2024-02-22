@@ -3,15 +3,15 @@ import Box from "@mui/material/Box";
 import {Grid, Stack, useTheme} from "@mui/material";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {queryClient} from "@apis/queryClient.ts";
-import {userInfo} from "@type/userInfo.ts";
-import useIsFollowingQuery from "@features/Profile/hooks/useIsFollowingQuery.ts";
-import useGetUserProfileQuery from "@features/Profile/hooks/useGetUserProfileQuery.ts";
-import useTopPhotos from "@features/Profile/hooks/useTopPhotosQuery.ts";
-import PhotoGallery from "@ui/Custom/PhotoGallery.tsx";
-import UserCard from "@features/Profile/UserCard.tsx";
-import UserInformation from "@features/Profile/UserInformation.tsx";
+import {userInfo} from "@type/UserInfo.ts";
 import useUploadUserPhotoMutation from "@hooks/useUploadUserPhotoMutation.ts";
 import useDeleteUserPhotoMutation from "@hooks/useDeleteUserPhotoMutation.ts";
+import useGetUserProfileQuery from "@features/profile/hooks/useGetUserProfileQuery.ts";
+import useIsFollowingQuery from "@features/profile/hooks/useIsFollowingQuery.ts";
+import useTopPhotosQuery from "@features/profile/hooks/useTopPhotosQuery.ts";
+import UserInformation from "@features/profile/UserInformation.tsx";
+import PhotoGallery from "@ui/Custom/PhotoGallery.tsx";
+import UserCard from "@features/profile/UserCard.tsx";
 
 const UserProfile = () => {
     const theme = useTheme();
@@ -21,7 +21,7 @@ const UserProfile = () => {
         data: userProfile,
         isLoading: isUserProfileLoading
     } = useGetUserProfileQuery(userId!);
-    const {data: Photos, isPhotosLoading} = useTopPhotos(userId!);
+    const {data: Photos, isPhotosLoading} = useTopPhotosQuery(userId!);
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const isCurrentUser = currentUserId === userId;
     const uploadHook = useUploadUserPhotoMutation(userId!)

@@ -1,8 +1,4 @@
-export interface Attendee {
-    userId: string;
+export interface Attendee extends UserDetailBase {
     isHost: boolean;
-    displayName: string;
-    userName: string;
-    bio: string;
     image: string;
 }

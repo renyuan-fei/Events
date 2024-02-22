@@ -1,6 +1,6 @@
 import {Photo} from "@type/Photo.ts";
 
-export interface TopPhotosWithRemainCount {
+export interface TopPhotos {
     photos: Photo[];
     remainingCount: number;
 }

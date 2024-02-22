@@ -13,7 +13,7 @@ type Item = {
     };
 };
 
-type paginatedResponse<T> = {
+type PaginatedResponse<T> = {
     items: T[];
     pageNumber: number;
     totalPages: number;

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {theme} from "@config/CustomTheme.ts";
 import {queryClient} from "@apis/queryClient.ts";
-import {userInfo} from "@type/userInfo.ts";
+import {userInfo} from "@type/UserInfo.ts";
 
 const HomePageTitle = () => {
 
