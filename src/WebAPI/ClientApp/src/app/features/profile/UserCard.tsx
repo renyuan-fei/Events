@@ -92,6 +92,7 @@ const UserCard = (props: UserCardProps) => {
                         Change profile photo
                     </Button>
                 )}
+
                 <CardContent sx={{
                     width: 336,
                     marginTop: theme.spacing(2),
@@ -102,7 +103,7 @@ const UserCard = (props: UserCardProps) => {
                         spacing={2}
                     >
 
-                        <Box sx={{textAlign: 'center', width: '33%'}}>
+                        <Box sx={{textAlign: 'center', width: 'auto'}}>
                             <Typography variant='h6'
                                         component={"div"}
                                         sx={{
@@ -114,7 +115,7 @@ const UserCard = (props: UserCardProps) => {
                                         component={"div"}>Follower</Typography>
                         </Box>
 
-                        <Box sx={{textAlign: 'center', width: '33%'}}>
+                        <Box sx={{textAlign: 'center', width: 'auto'}}>
                             <Typography variant='h6'
                                         component={"div"}
                                         sx={{
@@ -126,7 +127,7 @@ const UserCard = (props: UserCardProps) => {
                                         component={"div"}>Following</Typography>
                         </Box>
 
-                        <Box sx={{textAlign: 'center', width: '33%'}}>
+                        <Box sx={{textAlign: 'center', width: 'auto'}}>
                             <Typography variant='h6'
                                         component={"div"}
                                         sx={{
@@ -137,8 +138,8 @@ const UserCard = (props: UserCardProps) => {
                             <Typography variant='subtitle1'
                                         component={"div"}>Events</Typography>
                         </Box>
-
                     </Stack>
+
                     <Box sx={{
                         display: 'flex',
                         justifyContent: 'center',

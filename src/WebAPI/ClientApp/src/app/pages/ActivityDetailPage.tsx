@@ -14,16 +14,19 @@ import DetailAttendees from "@features/activity/DetailAttendees.tsx";
 import DetailComments from "@features/activity/DetailComments.tsx";
 import DetailSidebar from "@features/activity/DetailSidebar.tsx";
 import useTopPhotosQuery from "@features/profile/hooks/useTopPhotosQuery.ts";
+import useUploadActivityMainPhotoMutation
+    from "@hooks/useUploadActivityMainPhotoMutation.ts";
 
 const ActivityDetailPage = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const {activityId} = useParams<{ activityId: string }>();
+    const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const {activityDetail, isGettingActivity} = useGetActivityQuery(activityId!);
     const {data, isPhotosLoading} = useTopPhotosQuery(activityId!);
-    const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const uploadHook = useUploadActivityPhotoMutation(activityId!)
     const deleteHook = useDeleteActivityPhotoMutation(activityId!)
+    const updateHook = useUploadActivityMainPhotoMutation(activityId!);
 
     if (isPhotosLoading || isGettingActivity) {
         return <LoadingComponent/>;
@@ -60,7 +63,10 @@ const ActivityDetailPage = () => {
                     <Grid item md={7.5}>
                         <DetailBody title={title}
                                     imageUrl={imageUrl}
-                                    description={description}/>
+                                    description={description}
+                                    isCurrentUser={isCurrentUser}
+                                    uploadHook={updateHook}/>
+                        />
                         <DetailAttendees attendees={attendees}/>
                         <PhotoGallery uploadHook={uploadHook}
                                       deleteHook={deleteHook}

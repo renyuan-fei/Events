@@ -120,7 +120,7 @@ public class PhotosController : BaseController
 
   [ Authorize ]
   [ Authorize(Policy = "IsActivityHost") ]
-  [ HttpPut("activity/{id:required}") ]
+  [ HttpPut("activity/{id}") ]
   public async Task<IActionResult> UpdateActivityMainPhoto(
       [ FromForm ] IFormFile file,
       string                 id)
