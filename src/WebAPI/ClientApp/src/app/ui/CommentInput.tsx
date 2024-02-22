@@ -4,7 +4,11 @@ import SendIcon from '@mui/icons-material/Send';
 import {useAppDispatch} from "@store/store.ts";
 import {sendMessage} from "@config/HubConnection.ts";
 
-const CommentInput = () => {
+interface CommentInputProps {
+    image: string;
+}
+
+const CommentInput:React.FC<CommentInputProps> = ({image}) => {
     const [comment, setComment] = useState<string>('');
     const dispatch = useAppDispatch()
 
@@ -29,7 +33,10 @@ const CommentInput = () => {
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Avatar sx={{ bgcolor: 'salmon' }}>U</Avatar>
+            <Avatar
+                sx={{ bgcolor: 'salmon' }}
+                src={image}
+            />
             <TextField
                 fullWidth
                 value={comment}

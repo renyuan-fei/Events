@@ -18,6 +18,11 @@ export const uploadUserAvatar = async (photo: FormData) => {
     return handleResponse(response);
 }
 
+export const uploadActivityMainPhoto = async (photo: FormData, id: string) => {
+    const response = await apiClient.put<ApiResponse<string>>(`/api/Photos/activity/${id}`, photo);
+    return handleResponse(response);
+}
+
 export const uploadActivityPhoto = async (photo: FormData, id: string) => {
     const response = await apiClient.post<ApiResponse<string>>(`/api/Photos/activity/${id}`, photo);
     return handleResponse(response);

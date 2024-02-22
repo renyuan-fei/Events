@@ -18,20 +18,22 @@ import {RootState} from "@store/store.ts";
 import {useEffect} from "react";
 import {startConnection, stopConnection} from "@config/HubConnection.ts";
 import {useNavigate} from "react-router";
+import {queryClient} from "@apis/queryClient.ts";
+import {userInfo} from "@type/UserInfo.ts";
 
 
-const DetailComments = ({activityId} : { activityId : string | undefined}) => {
+const DetailComments = ({activityId}: { activityId: string | undefined }) => {
     const navigate = useNavigate();
-    const comments = useSelector((state : RootState) => state.comment.comments);
+    const comments = useSelector((state: RootState) => state.comment.comments);
     const dispatch = useDispatch();
+    const image = queryClient.getQueryData<userInfo>("userInfo")?.image;
 
-    const handleJump = (id:string) => {
+    const handleJump = (id: string) => {
         navigate(`/user/${id}`);
     }
 
     useEffect(() => {
-        if (activityId)
-        {
+        if (activityId) {
             dispatch(startConnection(activityId))
         }
         return () => {
@@ -43,7 +45,7 @@ const DetailComments = ({activityId} : { activityId : string | undefined}) => {
 
     return (
         <Paper sx={{width: '100%', padding: theme.spacing(2)}}>
-            <Typography component="div" variant="h2" sx={{
+            <Typography component='div' variant='h2' sx={{
                 fontSize: '20px',
                 fontWeight: theme.typography.fontWeightBold,
                 fontFamily: '"Graphik Meetup", -apple-system, sans-serif',
@@ -51,14 +53,17 @@ const DetailComments = ({activityId} : { activityId : string | undefined}) => {
                 Comments
             </Typography>
 
-            <CommentInput/>
+            <CommentInput image={image!}/>
 
             <List>
                 {comments.map((comment, index) => (
                     <Box key={comment.id}>
-                        <ListItem alignItems="flex-start">
+                        <ListItem alignItems='flex-start'>
                             <ListItemAvatar>
                                 <Avatar
+                                    sx={{
+                                        cursor: 'pointer'
+                                    }}
                                     onClick={() => handleJump(comment.userId)}
                                     alt={comment.userName}
                                     src={comment.image}/>
@@ -67,22 +72,22 @@ const DetailComments = ({activityId} : { activityId : string | undefined}) => {
                                 primary={comment.userName}
                                 secondary={
                                     <Typography
-                                        variant="body2"
-                                        color="text.primary"
+                                        variant='body2'
+                                        color='text.primary'
                                     >
                                         {comment.body}
                                     </Typography>
                                 }
                             />
-                            <IconButton aria-label="like">
+                            <IconButton aria-label='like'>
                                 <FavoriteBorderIcon/>
                             </IconButton>
-                            <IconButton aria-label="more">
+                            <IconButton aria-label='more'>
                                 <MoreHorizIcon/>
                             </IconButton>
                         </ListItem>
                         {index < comments.length - 1 &&
-                            <Divider variant="inset" component="li"/>}
+                            <Divider variant='inset' component='li'/>}
                     </Box>
                 ))}
             </List>
