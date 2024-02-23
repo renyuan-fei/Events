@@ -1,16 +1,16 @@
 import ActivityCard from '@features/activity/ActivityCard.tsx';
 import { Grid, Typography, Box, useTheme } from '@mui/material';
-import {
-    useGetActivitiesQuery
-} from "@features/activity/hooks/useGetPaginatedActivitiesQuery.ts";
+import {Item} from "@type/PaginatedResponse.ts";
+import useGetPaginatedActivitiesQuery
+    from "@features/activity/hooks/useGetPaginatedActivitiesQuery.ts";
+import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 const UpcomingActivitiesList = () => {
     const theme = useTheme();
 
-    // 使用 useQuery 并指定返回数据的类型
-    const getActivitiesQuery = useGetActivitiesQuery();
+    const {isActivitiesLoading, activities} = useGetPaginatedActivitiesQuery(1,8,[]);
 
-    if (getActivitiesQuery.isLoading) return <div>Loading...</div>;
+    if (isActivitiesLoading) return <LoadingComponent/>;
 
     return (
         <Box sx={{ padding: theme.spacing(5) }}>
@@ -18,7 +18,7 @@ const UpcomingActivitiesList = () => {
                 Upcoming events
             </Typography>
             <Grid container>
-                {getActivitiesQuery.data?.items.map((activity) => (
+                {activities?.map((activity: Item) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={activity.id}>
                         <ActivityCard {...activity} />
                     </Grid>

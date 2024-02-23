@@ -1,72 +1,70 @@
 import LogoImg from "@assets/logo.png";
 import Typography from "@mui/material/Typography";
-import {Box, Grid, useMediaQuery} from "@mui/material";
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {useNavigate} from "react-router";
-import {useCallback} from "react";
+import { Box, Grid, useMediaQuery } from "@mui/material";
+import { useNavigate } from "react-router";
+import React, { useCallback } from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
 
-// 创建一个主题，其中包括自定义的字体
-const theme = createTheme({
-    typography: {
-        fontFamily: [
-            'Marker Felt', // 这里可以替换成您喜欢的字体
-            'sans-serif',
-        ].join(','),
-        fontSize: 25,
-    },
-});
-
-export function Logo() {
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+const Logo = () => {
     const navigate = useNavigate();
+    const isLogin = useSelector((state: RootState) => state.user.isLogin);
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const onBoxClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        navigate('/');
-    }, [navigate]);
+        if (isLogin) {
+            navigate('/home');
+        } else {
+            navigate('/');
+        }
 
+    }, [navigate, isLogin]);
+
+    const mobileStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        width: 80,
+        cursor: 'pointer',
+        '& img': {
+            maxWidth: 50,
+            maxHeight: 50,
+        },
+        '& .MuiTypography-root': { // 使用Mui的类选择器
+            fontFamily: '"Marker Felt", sans-serif',
+            fontSize: '1.25rem', // 相当于25px
+        },
+    };
+
+    const desktopStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        width: 150,
+        cursor: 'pointer',
+        '& img': {
+            maxWidth: 70,
+            maxHeight: 70,
+        },
+        '& .MuiTypography-root': {
+            fontFamily: '"Marker Felt", sans-serif',
+            fontSize: '2.25rem',
+        },
+    };
 
     return (
-        <ThemeProvider theme={theme}>
-            {isMobile ?
-                <Box sx={{
-                    flexGrow: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: 80,
-                    cursor: 'pointer',
-                }}>
-                    <Grid container spacing={6} alignItems='center'>
-                        <Grid item xs={6}>
-                            <img src={LogoImg} alt={"Logo"}
-                                 style={{maxWidth: 50, maxHeight: 50}}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant='h6' component='div'>
-                                Events
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </Box> :
-                <Box sx={{
-                    flexGrow: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: 150,
-                    cursor: 'pointer',
-                }} onClick={onBoxClick}>
-                    <Grid container spacing={6} alignItems='center'>
-                        <Grid item xs={6}>
-                            <img src={LogoImg} alt={"Logo"}
-                                 style={{maxWidth: 70, maxHeight: 70}}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant='h6' component='div'>
-                                Events
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </Box>}
-        </ThemeProvider>
+        <Box sx={isMobile ? mobileStyle : desktopStyle} onClick={onBoxClick}>
+            <Grid container spacing={6} alignItems='center'>
+                <Grid item xs={6}>
+                    <img src={LogoImg} alt="Logo"/>
+                </Grid>
+                <Grid item xs={6}>
+                    <Typography variant='h6' component='div'>
+                        Events
+                    </Typography>
+                </Grid>
+            </Grid>
+        </Box>
     );
 }
+
+export default Logo;

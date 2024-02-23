@@ -15,7 +15,6 @@ const DetailAttendees = (props: DetailAttendeesProps) => {
     const theme = useTheme();
     const navigate = useNavigate();
 
-    // @ts-ignore
     const {attendees} = props;
 
     const handleSeeAllClick = () => {
@@ -50,7 +49,7 @@ const DetailAttendees = (props: DetailAttendeesProps) => {
             <Paper sx={{flexGrow: 1, padding: theme.spacing(3)}}>
                 <Stack direction="row" spacing={2} alignItems="center" sx={{}}>
                     {attendees.map((attendee) => (
-                        <Box key={attendee.userId} sx={{
+                        <Box key={attendee.useId} sx={{
                             textAlign: 'center',
                             backgroundColor: 'rgb(246,247,248)',
                             height: '182px',

@@ -63,7 +63,7 @@ function App() {
             dispatch(setLoginForm(false))
             refetch();
         }
-    }, []);
+    }, [dispatch,refetch]);
 
     if (isRefetching) {
         return <LoadingComponent />;

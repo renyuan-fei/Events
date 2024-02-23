@@ -28,7 +28,7 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
     const dispatch = useDispatch();
     const image = queryClient.getQueryData<userInfo>("userInfo")?.image;
 
-    const handleJump = (id: string) => {
+    const handleNavigateToUserProfile = (id: string) => {
         navigate(`/user/${id}`);
     }
 
@@ -39,7 +39,7 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
         return () => {
             dispatch(stopConnection())
         }
-    }, [activityId]);
+    }, [dispatch,activityId]);
 
     const theme = useTheme();
 
@@ -64,7 +64,7 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
                                     sx={{
                                         cursor: 'pointer'
                                     }}
-                                    onClick={() => handleJump(comment.userId)}
+                                    onClick={() => handleNavigateToUserProfile(comment.userId)}
                                     alt={comment.userName}
                                     src={comment.image}/>
                             </ListItemAvatar>

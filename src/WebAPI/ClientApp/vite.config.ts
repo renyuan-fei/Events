@@ -28,7 +28,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
         },
         preview:
             {
-                port: 5173,
+                port: 5174,
                 host: true,
                 strictPort: true
             }

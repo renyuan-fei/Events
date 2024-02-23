@@ -59,7 +59,6 @@ const ActivityDetailPage = () => {
 
             <Box sx={{flexGrow: 1, marginBottom: theme.spacing(2)}}>
                 <Grid container spacing={2}>
-
                     <Grid item md={7.5}>
                         <DetailBody title={title}
                                     imageUrl={imageUrl}

@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import {CardActionArea, useTheme} from "@mui/material";
 import {useNavigate} from "react-router";
 import React, {useCallback} from "react";
+import {Item} from "@type/PaginatedResponse.ts";
 
 // Correct the function signature to accept a prop of type Item
 const ActivityCard = ({

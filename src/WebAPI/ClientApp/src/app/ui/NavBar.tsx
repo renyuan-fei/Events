@@ -2,7 +2,6 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import {Grid, useMediaQuery, useTheme} from "@mui/material";
 // 确保导入正确的路径
-import {Logo} from "./Logo";
 import SearchComponent from "@ui/Search.tsx";
 import {RootState} from "@store/store.ts";
 import {useSelector} from "react-redux";
@@ -10,6 +9,7 @@ import {queryClient} from "@apis/queryClient.ts";
 import UserBar from "@ui/UserBar.tsx";
 import AuthLanguageControl from "@ui/AuthLanguageControl.tsx";
 import {userInfo} from "@type/UserInfo.ts";
+import Logo from "@ui/Logo.tsx";
 
 
 

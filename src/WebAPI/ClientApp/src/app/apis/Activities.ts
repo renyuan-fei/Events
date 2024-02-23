@@ -2,32 +2,30 @@ import apiClient from "@apis/BaseApi.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
 import {Activity} from "@type/Activity.ts";
+import {Item, PaginatedResponse} from "@type/PaginatedResponse.ts";
 
-export const GetActivities = async ({
-                                 page = 1,
-                                 pageSize = 10,
-                                 searchTerm = []
-                             }: {
-    page: number,
-    pageSize: number,
-    searchTerm?: string[]
-} = { page: 1, pageSize: 10, searchTerm: [] }): Promise<PaginatedResponse<Item>> => {
+export const GetPaginatedActivities = async (
+    pageNumber: number = 1,
+    pageSize: number = 10,
+    searchTerm: string[] = [],
+    extraParams: Record<string, string | string[]> = {}
+): Promise<PaginatedResponse<Item>> => {
+    const params = new URLSearchParams({
+        ...extraParams,
+        PageNumber: pageNumber.toString(),
+        PageSize: pageSize.toString(),
+        ...searchTerm.reduce((acc, term, index) => ({
+            ...acc,
+            [`searchTerm[${index}]`]: term
+        }), {}),
+    });
 
-    const params = new URLSearchParams();
-    params.append("page", page.toString());
-    params.append("pageSize", pageSize.toString());
-
-    searchTerm.forEach(term => params.append("searchTerm", term));
-
-    let url = `/api/Activities`;
-    if (params.toString()) {
-        url += `?${params.toString()}`;
-    }
+    const url = `/api/Activities${params.toString() ? `?${params}` : ''}`;
 
     const response = await apiClient.get<ApiResponse<PaginatedResponse<Item>>>(url);
-
     return handleResponse(response);
 }
+
 export const GetActivity = async (id: string) => {
     const response = await apiClient.get<ApiResponse<Activity>>(`/api/Activities/${id}`)
     return handleResponse(response);

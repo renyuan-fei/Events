@@ -12,6 +12,7 @@ import {useState} from "react";
 import useUploadUserAvatarMutation from "@hooks/useUploadUserAvatarMutation.ts";
 import useFollowMutation from "@features/follow/hooks/useFollowMutation.ts";
 import useUnfollowMutation from "@features/follow/hooks/useUnfollowMutation.ts";
+import { useNavigate } from "react-router";
 
 interface UserCardProps {
     id: string;
@@ -22,8 +23,10 @@ interface UserCardProps {
     following: number;
 }
 
+// TODO refactor this component
 const UserCard = (props: UserCardProps) => {
     const theme = useTheme();
+    const navigate = useNavigate();
     const [isUploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
     const {id, image, isCurrentUser, isFollowed, following, followers} = props;
     const {isFollowing, follow} = useFollowMutation(id);
@@ -43,6 +46,14 @@ const UserCard = (props: UserCardProps) => {
 
     const handleCloseModal = () => {
         setUploadModalOpen(false);
+    };
+
+    const handleNavigateToFollower = () => {
+        navigate(`/follower/${id}`);
+    };
+
+    const handleNavigateToFollowing = () => {
+        navigate(`/following/${id}`);
     };
 
     return (
@@ -103,7 +114,7 @@ const UserCard = (props: UserCardProps) => {
                         spacing={2}
                     >
 
-                        <Box sx={{textAlign: 'center', width: 'auto'}}>
+                        <Box sx={{textAlign: 'center', width: 'auto'}} onClick={handleNavigateToFollower}>
                             <Typography variant='h6'
                                         component={"div"}
                                         sx={{
@@ -111,11 +122,18 @@ const UserCard = (props: UserCardProps) => {
                                             fontSize: 30
                                             , height: 36
                                         }}>{followers}</Typography>
-                            <Typography variant='subtitle1'
+                            <Typography
+                                sx={{
+                                    '&:hover': {
+                                        color: theme.palette.primary.main
+                                    },
+                                    cursor: 'pointer',
+                                }}
+                                variant='subtitle1'
                                         component={"div"}>Follower</Typography>
                         </Box>
 
-                        <Box sx={{textAlign: 'center', width: 'auto'}}>
+                        <Box sx={{textAlign: 'center', width: 'auto'}} onClick={handleNavigateToFollowing}>
                             <Typography variant='h6'
                                         component={"div"}
                                         sx={{
@@ -123,7 +141,13 @@ const UserCard = (props: UserCardProps) => {
                                             fontSize: 30
                                             , height: 36
                                         }}>{following}</Typography>
-                            <Typography variant='subtitle1'
+                            <Typography sx={{
+                                '&:hover': {
+                                    color: theme.palette.primary.main
+                                },
+                                cursor: 'pointer',
+                            }}
+                                        variant='subtitle1'
                                         component={"div"}>Following</Typography>
                         </Box>
 
@@ -135,7 +159,13 @@ const UserCard = (props: UserCardProps) => {
                                             fontSize: 30
                                             , height: 36
                                         }}>11</Typography>
-                            <Typography variant='subtitle1'
+                            <Typography sx={{
+                                '&:hover': {
+                                  color: theme.palette.primary.main
+                                },
+                                cursor: 'pointer',
+                            }}
+                                variant='subtitle1'
                                         component={"div"}>Events</Typography>
                         </Box>
                     </Stack>

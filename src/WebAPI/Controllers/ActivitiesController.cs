@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Application.common.DTO;
 using Application.common.Models;
 using Application.CQRS.Activities.Commands.CreateActivity;
@@ -28,7 +30,7 @@ public class ActivitiesController : BaseController
     /// <param name="filterParams"></param>
     /// <returns>An ActionResult containing the paginated list of activities.</returns>
     [ HttpGet ]
-  public async Task<OkObjectResult> GetPaginatedListActivities(
+    public async Task<OkObjectResult> GetPaginatedListActivities(
       [ FromQuery ] PaginatedListParams paginatedListParams,
       [ FromQuery ] FilterParams?       filterParams)
   {

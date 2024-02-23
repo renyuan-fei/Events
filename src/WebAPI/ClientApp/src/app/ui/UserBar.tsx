@@ -32,7 +32,7 @@ const UserBar = ({id ,displayName, image}: User) => {
         setAnchorElUser(event.currentTarget);
     }
 
-    function handleJump() {
+    function handleNavigateToUserProfile() {
         navigate(`/user/${id}`);
     }
 
@@ -108,7 +108,7 @@ const UserBar = ({id ,displayName, image}: User) => {
 
                             <MenuItem key={"Profile"} onClick=
                                 {
-                                    () => handleJump()
+                                    () => handleNavigateToUserProfile()
                                 }>
                                 <Typography textAlign='center'>Profile</Typography>
                             </MenuItem>

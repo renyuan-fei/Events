@@ -82,7 +82,8 @@ export function ActivityItem(props: ActivityItemProps) {
                          src={imageUrl}
                          sx={{
                              height: '80%',
-                             width: 'auto',
+                             width: '80%',
+                             objectFit: 'scale-up',
                              borderRadius: theme.shape.borderRadius,
                          }}>
                     </Box>

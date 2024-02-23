@@ -10,7 +10,7 @@ interface SnackbarProps {
     message: string;
 }
 
-const AlterComponent = ({
+const AlertComponent = ({
                                    vertical = 'top',
                                    horizontal = 'center',
                                    severity = 'info',
@@ -36,4 +36,4 @@ const AlterComponent = ({
     );
 }
 
-export default AlterComponent
+export default AlertComponent

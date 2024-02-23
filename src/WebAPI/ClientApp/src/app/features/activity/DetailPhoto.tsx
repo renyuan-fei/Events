@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {PhotoCamera} from "@mui/icons-material";
 import React, {useState} from "react";
-import useUploadUserAvatarMutation from "@hooks/useUploadUserAvatarMutation.ts";
 import PhotoUploadModal from "@ui/PhotoUploadModal.tsx";
 
 interface UploadHook {
@@ -44,8 +43,10 @@ const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser,uploadHook
                     component='img'
                     src={src}
                     sx={{
-                        width: "100%",
-                        height: "auto",
+                        width: '100%', // 可以指定固定宽度
+                        height: 400, // 可以指定固定高度
+                        // width: "100%",
+                        // height: "auto",
                         objectFit: "cover",
                         borderRadius: theme.shape.borderRadius, // 圆角
                     }}

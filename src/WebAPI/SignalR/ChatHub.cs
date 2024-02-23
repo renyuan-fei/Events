@@ -25,6 +25,7 @@ public class ChatHub : Hub
   ///   An instance of the IMediator interface to handle communication
   ///   with the mediator.
   /// </param>
+  /// <param name="currentUserService"></param>
   /// /
   public ChatHub(IMediator mediator, ICurrentUserService currentUserService)
   {

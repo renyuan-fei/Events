@@ -1,4 +1,4 @@
-type Item = {
+export interface Item {
     id: string;
     title: string;
     imageUrl: string;
@@ -13,7 +13,7 @@ type Item = {
     };
 };
 
-type PaginatedResponse<T> = {
+export interface PaginatedResponse<T> {
     items: T[];
     pageNumber: number;
     totalPages: number;

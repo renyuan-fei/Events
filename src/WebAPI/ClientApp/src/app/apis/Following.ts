@@ -1,10 +1,12 @@
 import apiClient from "@apis/BaseApi.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
 import {handleResponse} from "@apis/ApiHandler.ts";
+import {UserDetailBase} from "@type/UserDetailBase.ts";
+import {PaginatedResponse} from "@type/PaginatedResponse.ts";
 
 export const isFollowing = async (targetUserId: string): Promise<boolean> => {
     const response = await apiClient.get<ApiResponse<boolean>>('/api/Follow/IsFollowing', {
-        params: { targetUserId }
+        params: {targetUserId}
     });
     return handleResponse(response);
 };
@@ -12,7 +14,7 @@ export const isFollowing = async (targetUserId: string): Promise<boolean> => {
 
 export const follow = async (targetUserId: string) => {
     const response = await apiClient.post<ApiResponse<any>>('/api/Follow', null, {
-        params: { targetUserId }
+        params: {targetUserId}
     });
     return handleResponse(response);
 }
@@ -20,21 +22,27 @@ export const follow = async (targetUserId: string) => {
 
 export const unfollow = async (targetUserId: string) => {
     const response = await apiClient.delete<ApiResponse<any>>('/api/Follow', {
-        params: { targetUserId }
+        params: {targetUserId}
     });
     return handleResponse(response);
 }
 
-// export const getFollowers = async (targetUserId: string): Promise<ApiResponse<string[]>> => {
-//
-// }
+export const getPaginatedFollowers = async (targetUserId: string, pageSize: number, page:number): Promise<PaginatedResponse<UserDetailBase>> => {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDetailBase>>>('/api/Follow/Follower', {
+        params: {
+            targetUserId,
+            pageSize,
+            page
+        }});
+    return handleResponse(response);
+}
 
-// async function FollowUser(userId :string): Promise<IsFollowing> {
-//     const response = await apiClient.post<ApiResponse<IsFollowing>>('/api/Follow/'+ userId);
-//     return handleResponse(response);
-// }
-//
-// async function UnFollowUser(userId :string): Promise<IsFollowing> {
-//     const response = await apiClient.delete<ApiResponse<IsFollowing>>('/api/Follow/'+ userId);
-//     return handleResponse(response);
-// }
+export const getPaginatedFollowing = async (targetUserId: string, pageSize: number, page:number): Promise<PaginatedResponse<UserDetailBase>> => {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDetailBase>>>('/api/Follow/Following', {
+        params: {
+            targetUserId,
+            pageSize,
+            page
+        }});
+    return handleResponse(response);
+}
