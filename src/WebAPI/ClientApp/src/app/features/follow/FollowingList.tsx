@@ -6,7 +6,7 @@ import {Follower} from "@features/follow/Follower.tsx";
 import {ListContainer} from "@features/follow/ListContainer.tsx";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
-import {Typography} from "@mui/material";
+import {Divider, Typography} from "@mui/material";
 
 interface FollowingListProps {
     userId: string;
@@ -30,7 +30,7 @@ export const FollowingList: React.FC<FollowingListProps> = ({userId, page, pageS
 
     if (following?.items.length === 0) {
         return (
-            <Typography sx={{ margin: 2 }} variant="subtitle1">
+            <Typography sx={{margin: 2}} variant='subtitle1'>
                 {isCurrentUser ? 'No following yet, Try following someone!' : 'No following yet'}
             </Typography>
         );
@@ -39,17 +39,19 @@ export const FollowingList: React.FC<FollowingListProps> = ({userId, page, pageS
     return (
         <>
             <ListContainer>
-                {following?.items.map((follower) => (
-                    <Follower
-                        isCurrentUser={isCurrentUser}
-                        isFollowing={true}
-                        key={follower.userId}
-                        userId={follower.userId}
-                        userName={follower.userName}
-                        displayName={follower.displayName}
-                        image={follower.image}
-                        bio={follower.bio}
-                    />
+                {following?.items.map((follower,index,array) => (
+                    <React.Fragment key={follower.userId}>
+                        <Follower
+                            isCurrentUser={isCurrentUser}
+                            isFollowing={true}
+                            userId={follower.userId}
+                            userName={follower.userName}
+                            displayName={follower.displayName}
+                            image={follower.image}
+                            bio={follower.bio}
+                        />
+                        {index < array.length - 1 && <Divider variant="inset" component="li" />}
+                    </React.Fragment>
                 ))}
             </ListContainer>
         </>

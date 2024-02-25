@@ -4,8 +4,16 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Button from "@mui/material/Button";
 
-const DetailSidebar = () => {
+interface DetailSidebarProps {
+
+}
+const DetailSidebar:React.FC<DetailSidebarProps> = () => {
     const theme = useTheme();
+
+    const handelAttendClick = () => {
+
+    }
+
     return (
         <Paper sx={{
             padding: theme.spacing(2),
@@ -38,7 +46,7 @@ const DetailSidebar = () => {
                 </Stack>
 
                 <Stack direction="row" alignItems="flex-start" spacing={2} justifyContent={"center"}>
-                    <Button variant={"contained"} color={"secondary"}>
+                    <Button variant={"contained"} color={"secondary"} onClick={handelAttendClick}>
                         Attend
                     </Button>
                 </Stack>

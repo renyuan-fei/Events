@@ -4,7 +4,7 @@ import useGetPaginatedFollowersQuery
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {ListContainer} from "@features/follow/ListContainer.tsx";
 import {Follower} from "@features/follow/Follower.tsx";
-import { Typography } from "@mui/material";
+import {Divider, Typography } from "@mui/material";
 
 interface FollowerListProps {
     userId: string;
@@ -33,14 +33,17 @@ export const FollowerList: React.FC<FollowerListProps> = ({userId, page, pageSiz
 
     return (
         <ListContainer>
-            {followers?.items.map((follower) => (
-                <Follower key={follower.userId}
-                          userId={follower.userId}
-                          userName={follower.userName}
-                          displayName={follower.displayName}
-                          image={follower.image}
-                          bio={follower.bio}
+            {followers?.items.map((follower,index) => (
+                <React.Fragment key={follower.userId}>
+                    <Follower
+                             userId={follower.userId}
+                             userName={follower.userName}
+                             displayName={follower.displayName}
+                             image={follower.image}
+                             bio={follower.bio}
                 />
+                    {index < followers.items.length - 1 && <Divider variant="inset" component="li" />}
+                </React.Fragment>
             ))}
         </ListContainer>
     );

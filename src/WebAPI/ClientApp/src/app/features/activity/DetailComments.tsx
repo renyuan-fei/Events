@@ -65,15 +65,22 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
                                         cursor: 'pointer'
                                     }}
                                     onClick={() => handleNavigateToUserProfile(comment.userId)}
-                                    alt={comment.userName}
+                                    alt={comment.displayName}
                                     src={comment.image}/>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={comment.userName}
+                                primary={comment.displayName}
                                 secondary={
                                     <Typography
                                         variant='body2'
                                         color='text.primary'
+                                        sx={{
+                                            display: 'block', // Or 'inline-block' if needed
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            wordWrap: 'break-word', // Ensures that long words will break and wrap onto the next line
+                                        }}
+
                                     >
                                         {comment.body}
                                     </Typography>

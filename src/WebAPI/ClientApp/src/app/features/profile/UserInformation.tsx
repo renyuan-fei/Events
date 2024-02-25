@@ -30,7 +30,12 @@ const UserInformation = (props: UserInformation) => {
                         <ListItemText primary="phoneNumber" secondary={phoneNumber} primaryTypographyProps={{ fontWeight: 'bold' }} />
                     </ListItem>
                     <ListItem sx={{ padding: theme.spacing(1, 0) }}>
-                        <ListItemText primary="Bio" secondary={bio} primaryTypographyProps={{ fontWeight: 'bold' }} />
+                        <ListItemText sx={{
+                            display: 'inline',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            wordWrap: 'break-word', // Ensures that long words will break and wrap onto the next line
+                        }} primary="Bio" secondary={bio} primaryTypographyProps={{ fontWeight: 'bold' }} />
                     </ListItem>
                 </List>
             </CardContent>

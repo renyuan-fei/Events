@@ -39,33 +39,41 @@ export const Follower: React.FC<FollowerProps> = ({
     }
 
     return (
-        <ListItem alignItems='flex-start' sx={{
-            cursor: 'pointer',
-            '&:hover': {
-                backgroundColor: 'rgba(0, 0, 0, 0.04)'
-            }
-        }}>
+        <ListItem alignItems='flex-start'>
             <ListItemAvatar
                 onClick={handleNavigateToUserDetail}
                 sx={{
                     cursor: 'pointer',
                 }}>
                 <Avatar alt='Remy Sharp' src={image} sx={{
-                    width: 56, // 增大 Avatar 大小
-                    height: 56,
-                    marginRight: 2, // 为了对齐文本，可能需要调整间距
+                    width: 66, // 增大 Avatar 大小
+                    height: 66,
+                    marginRight: 3, // 为了对齐文本，可能需要调整间距
                 }}
                 />
             </ListItemAvatar>
             <ListItemText
-                primary={<Typography variant="h6" component="span" sx={{ fontWeight: 'bold' }}>{displayName}</Typography>}
+                primary={<Typography variant="h6" component="span" sx={{
+                    fontWeight: 'bold',
+                    display: 'block', // 或者 'inline-block' 都可以，取决于布局需求
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    width: '100%', // 可以调整为实际需要的宽度
+                    marginTop:0.5
+                }}>{displayName}</Typography>}
                 secondary={
                     <>
                         <Typography
-                            sx={{display: 'inline'}}
                             component='span'
-                            variant='body2'
+                            variant='body1'
                             color='text.primary'
+                            sx={{
+                                display: 'inline',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                wordWrap: 'break-word', // Ensures that long words will break and wrap onto the next line
+                            }}
                         >
                             {bio}
                         </Typography>
