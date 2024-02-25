@@ -27,20 +27,18 @@ export const unfollow = async (targetUserId: string) => {
     return handleResponse(response);
 }
 
-export const getPaginatedFollowers = async (targetUserId: string, pageSize: number, page:number): Promise<PaginatedResponse<UserDetailBase>> => {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDetailBase>>>('/api/Follow/Follower', {
+export const getPaginatedFollowers = async (id: string, pageSize: number, page:number): Promise<PaginatedResponse<UserDetailBase>> => {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDetailBase>>>(`/api/Follow/Follower/${id}`, {
         params: {
-            targetUserId,
             pageSize,
             page
         }});
     return handleResponse(response);
 }
 
-export const getPaginatedFollowing = async (targetUserId: string, pageSize: number, page:number): Promise<PaginatedResponse<UserDetailBase>> => {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDetailBase>>>('/api/Follow/Following', {
+export const getPaginatedFollowing = async (id: string, pageSize: number, page:number): Promise<PaginatedResponse<UserDetailBase>> => {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDetailBase>>>(`/api/Follow/Following/${id}`, {
         params: {
-            targetUserId,
             pageSize,
             page
         }});

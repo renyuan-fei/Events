@@ -8,7 +8,7 @@ import LoadingComponent from "@ui/LoadingComponent.tsx";
 const UpcomingActivitiesList = () => {
     const theme = useTheme();
 
-    const {isActivitiesLoading, activities} = useGetPaginatedActivitiesQuery(1,8,[]);
+    const {isActivitiesLoading, activities} = useGetPaginatedActivitiesQuery();
 
     if (isActivitiesLoading) return <LoadingComponent/>;
 

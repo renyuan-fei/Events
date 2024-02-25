@@ -61,7 +61,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({open, onClose, uploa
             dispatch(setAlertInfo({
                 open: true,
                 message: "File size exceeds 5MB",
-                variant: "error"
+                severity: "error"
             }));
         } else {
             setFileError(false);

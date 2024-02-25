@@ -47,6 +47,7 @@ public class GetTopPhotosWithRemainingCountQueryHandler : IRequestHandler<
 
       // get top 6 photos excluding the main photo
       var topPhotos = await photos.Where(photo => photo.Details.IsMain != true)
+                                  .OrderByDescending(photo => photo.Created)
                                   .Take(6)
                                   .ToListAsync(cancellationToken);
 

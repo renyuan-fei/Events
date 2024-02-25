@@ -6,8 +6,8 @@ import {RootState} from "@store/store.ts";
 interface SnackbarProps {
     vertical?: 'top' | 'bottom';
     horizontal?: 'center' | 'left' | 'right';
-    severity: 'error' | 'success' | 'warning' | 'info';
-    message: string;
+    severity?: 'error' | 'success' | 'warning' | 'info';
+    message?: string;
 }
 
 const AlertComponent = ({

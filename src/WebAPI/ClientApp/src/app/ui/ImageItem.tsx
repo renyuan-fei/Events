@@ -8,7 +8,7 @@ interface ImageItemProps {
     photo: Photo;
     isCurrentUser: boolean;
     isLoading: boolean;
-    onDelete: (publicId: string) => Promise<void>;
+    onDelete: (publicId: string) => void;
 }
 
 const ImageItem: React.FC<ImageItemProps> = ({
@@ -23,7 +23,8 @@ const ImageItem: React.FC<ImageItemProps> = ({
     const handleOpenDeleteModal = () => setDeleteModalOpen(true);
     const handleCloseDeleteModal = () => setDeleteModalOpen(false);
     const handleConfirmDelete = () => {
-        onDelete(photo.publicId).then(() => setDeleteModalOpen(false));
+        onDelete(photo.publicId)
+        setDeleteModalOpen(false);
     };
 
     return (

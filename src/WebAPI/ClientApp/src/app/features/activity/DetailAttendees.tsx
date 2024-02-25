@@ -49,7 +49,7 @@ const DetailAttendees = (props: DetailAttendeesProps) => {
             <Paper sx={{flexGrow: 1, padding: theme.spacing(3)}}>
                 <Stack direction="row" spacing={2} alignItems="center" sx={{}}>
                     {attendees.map((attendee) => (
-                        <Box key={attendee.useId} sx={{
+                        <Box key={attendee.userId} sx={{
                             textAlign: 'center',
                             backgroundColor: 'rgb(246,247,248)',
                             height: '182px',

@@ -1,35 +1,34 @@
-import React from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import { Pagination } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import {setPageNumber} from "@features/commonSlice.ts";
+import React from "react";
 
 interface PaginationComponentProps {
-    currentPage: number;
-    pageCount: number;
+    pageCount: number; // 总页数由父组件传入
 }
 
-const PaginationComponent: React.FC<PaginationComponentProps> = ({
-                                                                     currentPage,
-                                                                     pageCount,
-                                                                 }) => {
-    const dispatch = useDispatch();
+const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageCount }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
     const handleChange = (event: React.ChangeEvent<unknown>, page: number) => {
-        console.log(page);
         event.preventDefault();
-        dispatch(setPageNumber(page)); // 使用dispatch设置pageNumber到Redux中
+        // 更新URL中的page参数
+        searchParams.set('page', page.toString());
+        navigate({ search: searchParams.toString() });
     };
 
     return (
         <Pagination
-            page={currentPage} // 当前页码
-            count={pageCount} // 总页数
+            page={currentPage}
+            count={pageCount}
             variant="outlined"
-            onChange={handleChange} // 修正后的事件处理函数
+            onChange={handleChange}
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                marginY: 2, // 上下的 margin
+                marginY: 2,
             }}
         />
     );

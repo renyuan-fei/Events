@@ -1,14 +1,18 @@
 import {useQuery} from 'react-query';
 import {getPaginatedFollowing} from '@apis/Following.ts';
+import {queryClient} from "@apis/queryClient.ts";
 
 
-const useGetPaginatedFollowingQuery = (targetUserId: string, pageSize: number, page:number) => {
+const useGetPaginatedFollowingQuery = (Id: string, pageSize: number, page:number) => {
     // 使用 useQuery 钩子请求分页数据
     const {data, isLoading} = useQuery(
-        ['getPaginatedFollowing', targetUserId, pageSize, page],
-        () => getPaginatedFollowing(targetUserId, pageSize, page),
+        ['following', Id, pageSize, page],
+        () => getPaginatedFollowing(Id, pageSize, page),
         {
-            keepPreviousData: true, // 保持上一页数据直到新的数据加载
+            keepPreviousData: true,
+            onSuccess: () => {
+                queryClient.invalidateQueries(['following', Id, pageSize, page]);
+            }
         }
     );
 

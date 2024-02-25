@@ -16,14 +16,14 @@ const useUploadActivityPhotoMutation = (id: string) => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Activity photo uploaded successfully",
-                    variant: "success"
+                    severity: "success"
                 }));
             },
             onError() {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Activity photo upload failed",
-                    variant: "error"
+                    severity: "error"
                 }));
             }
         });

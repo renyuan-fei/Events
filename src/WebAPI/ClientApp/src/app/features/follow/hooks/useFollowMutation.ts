@@ -15,8 +15,8 @@ const useFollowMutation = (id: string) => {
                 queryClient.invalidateQueries(["IsFollowing", id]);
                 dispatch(setAlertInfo({
                     open: true,
-                    type: 'success',
-                    message: 'You are now following this user'
+                    message: 'You are now following this user',
+                    severity: 'success'
                 }));
             },
             onError() {

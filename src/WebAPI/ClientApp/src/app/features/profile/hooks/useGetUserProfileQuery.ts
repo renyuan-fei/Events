@@ -13,7 +13,7 @@ const useGetUserProfileQuery = (id: string) => {
         () => GetUserProfile(id || ''),
         {
             onError(error: AxiosError) {
-                dispatch(setAlertInfo({open: true,message: error.message, variant: "error"}));
+                dispatch(setAlertInfo({open: true,message: error.message, severity: "error"}));
             },
             enabled: !!id // 只有在 id 非空时才启用查询
         }

@@ -8,31 +8,30 @@ import ActivitiesList from "@features/activity/ActivitiesList.tsx";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {Item} from "@type/PaginatedResponse.ts";
 import PaginationComponent from "@ui/PaginationComponent.tsx";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@store/store.ts";
 import useGetPaginatedActivitiesQuery
     from "@features/activity/hooks/useGetPaginatedActivitiesQuery.ts";
-import {resetPagination} from "@features/commonSlice.ts";
 import {useEffect} from "react";
+import {useNavigate} from "react-router";
+import {useLocation} from "react-router-dom";
 
 const HomePage = () => {
     const theme = useTheme();
-    const dispatch = useDispatch();
-    const {
-        pageNumber,
-        pageCount,
-        pageSize,
-        searchTerm
-    } = useSelector((state:RootState) => state.common);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        // 组件卸载时的清理函数
-        return () => {
-            dispatch(resetPagination());
-        };
-    }, [dispatch]);
+        const searchParams = new URLSearchParams(location.search);
+        if (!searchParams.get('page')) {
+            searchParams.set('page', '1');
+        }
+        if (!searchParams.get('pageSize')) {
+            searchParams.set('pageSize', '10');
+        }
+        navigate({ search: searchParams.toString() }, { replace: true });
+    }, [navigate]);
 
-    const {isActivitiesLoading, activities} = useGetPaginatedActivitiesQuery(pageNumber,pageSize,searchTerm);
+
+    const {isActivitiesLoading, activities,pageCount} = useGetPaginatedActivitiesQuery();
 
     if (isActivitiesLoading) return <LoadingComponent/>;
 
@@ -69,9 +68,7 @@ const HomePage = () => {
                                         ))
                                     }
                                 </ActivitiesList>
-                                <PaginationComponent currentPage={pageNumber}
-                                                     pageCount={pageCount}
-                                                    />
+                                <PaginationComponent pageCount={pageCount}/>
                             </Paper>
                         </Grid>
                     </Grid>

@@ -43,7 +43,7 @@ const useRegisterMutation = () => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: error.response?.data.message || 'Registration failed',
-                    variant: "error"
+                    severity: "error"
                 }));
             },
             onSettled: () => {

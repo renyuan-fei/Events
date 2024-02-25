@@ -10,7 +10,7 @@ interface PhotoListProps {
     photos: Photo[];
     isCurrentUser: boolean;
     isDeleting: boolean;
-    deletePhoto: (publicId: string) => Promise<void>;
+    deletePhoto: (publicId: string) => void;
     remainingCount: number;
     addPhoto: () => void;
 }

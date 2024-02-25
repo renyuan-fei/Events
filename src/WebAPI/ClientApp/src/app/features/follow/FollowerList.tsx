@@ -4,6 +4,7 @@ import useGetPaginatedFollowersQuery
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {ListContainer} from "@features/follow/ListContainer.tsx";
 import {Follower} from "@features/follow/Follower.tsx";
+import { Typography } from "@mui/material";
 
 interface FollowerListProps {
     userId: string;
@@ -20,6 +21,15 @@ export const FollowerList: React.FC<FollowerListProps> = ({userId, page, pageSiz
     if (isFollowersLoading) {
         return <LoadingComponent/>
     }
+
+    if (followers?.items.length === 0) {
+        return (
+            <Typography sx={{ margin: 2 }} variant="subtitle1">
+                No followers yet
+            </Typography>
+        );
+    }
+
 
     return (
         <ListContainer>

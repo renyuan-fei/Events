@@ -37,9 +37,9 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = (props: PhotoGalleryProps) => 
         navigate(`/photos/${id}`);
     };
 
-    const handleDeletePhoto = async (publicId: string) => {
+    const handleDeletePhoto = (publicId: string) => {
         if (isCurrentUser && !isDeleting) {
-            await deletePhoto(publicId);
+            deletePhoto(publicId);
         }
     }
 

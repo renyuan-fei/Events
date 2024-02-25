@@ -15,14 +15,14 @@ const useUploadUserPhotoMutation = (userId: string) => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Photo uploaded successfully",
-                    variant: "success"
+                    severity: "success"
                 }));
             },
             onError() {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Photo upload failed",
-                    variant: "error"
+                    severity: "error"
                 }));
             }
         }

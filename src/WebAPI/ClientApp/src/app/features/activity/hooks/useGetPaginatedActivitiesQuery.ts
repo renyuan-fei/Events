@@ -1,23 +1,22 @@
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import {GetPaginatedActivities} from "@apis/Activities.ts";
-import {setPageCount} from "@features/commonSlice.ts";
+import {useLocation} from "react-router-dom";
 
-const useGetPaginatedActivitiesQuery = (pageNumber: number = 1,pageSize: number = 10, searchItem: string[]) => {
-    const dispatch = useDispatch();
+const useGetPaginatedActivitiesQuery =() => {
+    const location = useLocation();
+
+    const pageNumber = new URLSearchParams(location.search).get('page') || '1';
+    const pageSize = new URLSearchParams(location.search).get('pageSize') || '8';
 
     const { isLoading, data } = useQuery(
-        ['paginatedActivities', pageNumber, pageSize, searchItem.sort().join(',')],
-        () => GetPaginatedActivities( pageNumber,pageSize, searchItem),
+        ['paginatedActivities', pageNumber, pageSize],
+        () => GetPaginatedActivities(parseInt(pageNumber), parseInt(pageSize)),
         {
-            keepPreviousData: true, // 保留上一页数据直到新数据被获取
-            onSuccess: (data) => {
-                dispatch(setPageCount(data.totalPages));
-            },
+            keepPreviousData: true,
         }
     );
 
-    return { activities: data?.items, isActivitiesLoading: isLoading};
+    return { activities: data?.items, isActivitiesLoading: isLoading,pageCount:data?.totalPages || 0};
 };
 
 export default useGetPaginatedActivitiesQuery;

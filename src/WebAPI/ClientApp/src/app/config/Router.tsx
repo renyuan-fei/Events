@@ -8,6 +8,7 @@ import UserProfile from "@pages/userProfile.tsx";
 import {FollowerPage} from "@pages/FollowerPage.tsx";
 import {FollowingPage} from "@pages/FollowingPage.tsx";
 import {useEffect} from "react";
+import {AllPhotosPage} from "@pages/AllPhotosPage.tsx";
 
 
 const ScrollToTop = () => {
@@ -40,7 +41,8 @@ export const router = createHashRouter([
                     {path: "/activity/:activityId", element: <ActivityDetailPage/>},
                     {path: "/user/:userId", element: <UserProfile/>},
                     {path: "/follower/:userId", element: <FollowerPage/>},
-                    {path: "/following/:userId", element: <FollowingPage/>}
+                    {path: "/following/:userId", element: <FollowingPage/>},
+                    {path: "/photos/:Id", element: <AllPhotosPage/>},
                 ]
             },
         ]

@@ -37,7 +37,7 @@ const useLoginMutation = () => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: error.response?.data.message || 'Login failed',
-                    variant: "error"
+                    severity: "error"
                 }));
             },
             onSettled: () => {

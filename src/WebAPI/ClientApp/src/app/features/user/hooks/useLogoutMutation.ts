@@ -21,7 +21,7 @@ const useLogoutMutation = () => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: error.response?.data.message || 'Logout failed',
-                    variant: "error"
+                    severity: "error"
                 }));
             },
         });

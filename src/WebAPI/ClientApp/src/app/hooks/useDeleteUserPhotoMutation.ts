@@ -18,14 +18,14 @@ const useDeleteUserPhotoMutation = () => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Photo deleted successfully",
-                    variant: "success"
+                    severity: "success"
                 }))
             },
             onError() {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Photo delete failed",
-                    variant: "error"
+                    severity: "error"
                 }))
             }
         });

@@ -1,4 +1,4 @@
-import {FollowerList} from "@features/follow/FollowList.tsx";
+import {FollowerList} from "@features/follow/FollowerList.tsx";
 import {useParams} from "react-router";
 import {useSearchParams} from "react-router-dom";
 import {Box, Typography} from "@mui/material";

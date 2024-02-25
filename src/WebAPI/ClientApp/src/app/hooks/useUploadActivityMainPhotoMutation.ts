@@ -16,14 +16,14 @@ const useUploadActivityMainPhotoMutation = (id: string) => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Activity's main photo updated successfully",
-                    variant: "success"
+                    severity: "success"
                 }));
             },
             onError() {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Activity's main photo updated failed",
-                    variant: "error"
+                    severity: "error"
                 }));
             }
         });

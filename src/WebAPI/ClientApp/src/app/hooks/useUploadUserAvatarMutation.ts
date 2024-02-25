@@ -15,14 +15,14 @@ const useUploadUserAvatarMutation = (userId: string) => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Avatar uploaded successfully",
-                    variant: "success"
+                    severity: "success"
                 }));
             },
             onError() {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Avatar upload failed",
-                    variant: "error"
+                    severity: "error"
                 }));
             }
         });

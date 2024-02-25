@@ -1,15 +1,19 @@
 import {useQuery} from 'react-query';
 import {getPaginatedFollowers} from '@apis/Following.ts';
+import {queryClient} from "@apis/queryClient.ts";
 
-const useGetPaginatedFollowersQuery = (userId: string, pageSize: number, page: number) => {
+const useGetPaginatedFollowersQuery = (Id: string, pageSize: number, page: number) => {
     const {
         isLoading,
         data
     } = useQuery(
-        ['followers', userId, pageSize, page],
-        () => getPaginatedFollowers(userId, pageSize, page),
+        ['followers', Id, page, pageSize],
+        () => getPaginatedFollowers(Id, pageSize, page),
         {
-            keepPreviousData: true, // keep privious page data,until new data is fetched
+            keepPreviousData: true,
+            onSuccess: () => {
+                queryClient.invalidateQueries(['followers', Id, pageSize, page]);
+            }
         }
     );
 

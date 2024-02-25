@@ -25,7 +25,7 @@ const useGetCurrentUserQuery = () => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: error.message,
-                    variant: "error"
+                    severity: "error"
                 }));
             }
         })

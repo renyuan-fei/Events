@@ -17,14 +17,14 @@ const useUnfollowMutation = (id :string) => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Unfollowed successfully",
-                    variant: "success"
+                    severity: "success"
                 }));
             },
             onError: () => {
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Unfollow failed",
-                    variant: "error"
+                    severity: "error"
                 }));
             }
     });

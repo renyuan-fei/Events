@@ -11,7 +11,6 @@ export const FollowingPage = () => {
 
     return (
         <>
-            {/* 使用 Box 组件包裹 Typography 以确保它单独一行 */}
             <Box sx={{ textAlign: 'center', my: 4 }}>
                 <Typography variant="h4" component="h1">
                     Following

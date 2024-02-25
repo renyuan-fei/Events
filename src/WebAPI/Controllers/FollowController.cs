@@ -21,13 +21,14 @@ public class FollowController : BaseController
   /// </summary>
   /// <returns>A paginated list of followers.</returns>
   [ Authorize ]
-  [ HttpGet("Follower") ]
+  [ HttpGet("Follower/{id}") ]
   public async Task<IActionResult> GetFollower(
+      string id,
       [ FromQuery ] PaginatedListParams paginatedListParams)
   {
     var result = await Mediator!.Send(new GetFollowerQuery
     {
-        UserId = CurrentUserService!.Id!,
+        UserId = id,
         PaginatedListParams = paginatedListParams
     });
 
@@ -39,13 +40,14 @@ public class FollowController : BaseController
   /// </summary>
   /// <returns>A paginated list of followee.</returns>
   [ Authorize ]
-  [ HttpGet("Following") ]
+  [ HttpGet("Following/{id}") ]
   public async Task<IActionResult> GetFollowing(
+      string id,
       [ FromQuery ] PaginatedListParams paginatedListParams)
   {
     var result = await Mediator!.Send(new GetFollowingQuery
     {
-        UserId = CurrentUserService!.Id!,
+        UserId = id,
         PaginatedListParams = paginatedListParams
     });
 
