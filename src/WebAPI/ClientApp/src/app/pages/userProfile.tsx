@@ -4,8 +4,6 @@ import {Grid, Stack, useTheme} from "@mui/material";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
-import useUploadUserPhotoMutation from "@hooks/useUploadUserPhotoMutation.ts";
-import useDeleteUserPhotoMutation from "@hooks/useDeleteUserPhotoMutation.ts";
 import useGetUserProfileQuery from "@features/profile/hooks/useGetUserProfileQuery.ts";
 import useIsFollowingQuery from "@features/profile/hooks/useIsFollowingQuery.ts";
 import useTopPhotosQuery from "@features/profile/hooks/useTopPhotosQuery.ts";
@@ -24,8 +22,6 @@ const UserProfile = () => {
     const {data: Photos, isPhotosLoading} = useTopPhotosQuery(userId!);
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const isCurrentUser = currentUserId === userId;
-    const uploadHook = useUploadUserPhotoMutation(userId!)
-    const deleteHook = useDeleteUserPhotoMutation();
     const {
         isLoading: isFollowingLoading,
         isFollowing
@@ -80,9 +76,7 @@ const UserProfile = () => {
                                          bio={bio}
                                          phoneNumber={phoneNumber}/>
 
-                        <PhotoGallery uploadHook={uploadHook}
-                                      deleteHook={deleteHook}
-                                      id={id}
+                        <PhotoGallery id={id}
                                       isCurrentUser={isCurrentUser}
                                       photos={photos}
                                       remainingCount={remainingCount}/>

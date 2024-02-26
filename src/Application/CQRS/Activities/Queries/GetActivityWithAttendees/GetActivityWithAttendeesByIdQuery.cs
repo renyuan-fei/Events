@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Activities.Queries.GetActivityWithAttendees;
 
+// TODO Do not return Photos in the response
 [ BypassAuthorization ]
 public record GetActivityWithAttendeesByIdQuery : IRequest<ActivityWithAttendeeDto>
 {

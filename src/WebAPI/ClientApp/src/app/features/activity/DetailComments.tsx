@@ -1,7 +1,6 @@
 import {
     Avatar,
     Box,
-    IconButton,
     Typography,
     List,
     ListItem,
@@ -10,24 +9,27 @@ import {
     Divider,
     useTheme, Paper
 } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CommentInput from "@ui/CommentInput.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@store/store.ts";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {startConnection, stopConnection} from "@config/HubConnection.ts";
 import {useNavigate} from "react-router";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
 
+interface DetailCommentsProps {
+    activityId: string | undefined;
+}
 
-const DetailComments = ({activityId}: { activityId: string | undefined }) => {
+const DetailComments: React.FC<DetailCommentsProps> = ({activityId}) => {
     const navigate = useNavigate();
     const comments = useSelector((state: RootState) => state.comment.comments);
     const dispatch = useDispatch();
     const image = queryClient.getQueryData<userInfo>("userInfo")?.image;
 
+    // TODO implement pagination
+    // TODO delete comment (only for comment owner)
     const handleNavigateToUserProfile = (id: string) => {
         navigate(`/user/${id}`);
     }
@@ -39,7 +41,7 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
         return () => {
             dispatch(stopConnection())
         }
-    }, [dispatch,activityId]);
+    }, [dispatch, activityId]);
 
     const theme = useTheme();
 
@@ -69,7 +71,28 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
                                     src={comment.image}/>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={comment.displayName}
+                                primary={
+                                    <>
+                                        <Typography variant='h6' component='span' sx={{
+                                            fontWeight: 'bold',
+                                            fontSize: '16px',
+                                            display: 'inline',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            width: '30%',
+                                        }}>
+                                            {comment.displayName}
+                                        </Typography>
+                                        <Typography variant="body2" component="span" sx={{ color: 'text.secondary', marginLeft: '8px' }}>
+                                            &bull; {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                        })}
+                                        </Typography>
+                                    </>
+                                }
                                 secondary={
                                     <Typography
                                         variant='body2'
@@ -86,12 +109,7 @@ const DetailComments = ({activityId}: { activityId: string | undefined }) => {
                                     </Typography>
                                 }
                             />
-                            <IconButton aria-label='like'>
-                                <FavoriteBorderIcon/>
-                            </IconButton>
-                            <IconButton aria-label='more'>
-                                <MoreHorizIcon/>
-                            </IconButton>
+
                         </ListItem>
                         {index < comments.length - 1 &&
                             <Divider variant='inset' component='li'/>}

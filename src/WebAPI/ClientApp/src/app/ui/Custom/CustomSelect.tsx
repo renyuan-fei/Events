@@ -3,6 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
+import {useLocation, useNavigate} from "react-router-dom";
 
 interface customSelectProps {
     type: string;
@@ -11,9 +12,13 @@ interface customSelectProps {
 
 const CustomSelect: React.FC<customSelectProps> = ({type, value}) => {
     const [selectedValue, setSelectedValue] = React.useState<string>('');
-
+    const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
     const handleChange = (event: SelectChangeEvent) => {
         setSelectedValue(event.target.value);
+        searchParams.set(type, event.target.value);
+        navigate({ search: searchParams.toString() });
     };
 
     return (
@@ -34,7 +39,7 @@ const CustomSelect: React.FC<customSelectProps> = ({type, value}) => {
                     {
                         value.map((item, index) => (
                             <MenuItem key={index} value={item}>
-                                {item}
+                                {item.replace(/And/g, ' • ')}
                             </MenuItem>
                         ))
                     }

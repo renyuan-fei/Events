@@ -193,7 +193,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
     };
 
-    var response = ApiResponse<ProblemDetails>.Failure("An unexpected error occurred",
+    var response = ApiResponse<ProblemDetails>.Failure(context.Exception?.Message ?? "An error occurred",
                                                        StatusCodes
                                                            .Status500InternalServerError,
                                                        problemDetails);

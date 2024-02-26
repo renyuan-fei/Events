@@ -6,8 +6,6 @@ import {useGetActivityQuery} from "@features/activity/hooks/useGetActivityQuery.
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
-import useUploadActivityPhotoMutation from "@hooks/useUploadActivityPhotoMutation.ts";
-import useDeleteActivityPhotoMutation from "@hooks/useDeleteActivityPhotoMutation.ts";
 import DetailTitle from "@features/activity/DetailTitle.tsx";
 import DetailBody from "@features/activity/DetailBody.tsx";
 import DetailAttendees from "@features/activity/DetailAttendees.tsx";
@@ -24,8 +22,6 @@ const ActivityDetailPage = () => {
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const {activityDetail, isGettingActivity} = useGetActivityQuery(activityId!);
     const {data, isPhotosLoading} = useTopPhotosQuery(activityId!);
-    const uploadHook = useUploadActivityPhotoMutation(activityId!)
-    const deleteHook = useDeleteActivityPhotoMutation(activityId!)
     const updateHook = useUploadActivityMainPhotoMutation(activityId!);
 
     if (isPhotosLoading || isGettingActivity) {
@@ -66,9 +62,7 @@ const ActivityDetailPage = () => {
                                     isCurrentUser={isCurrentUser}
                                     uploadHook={updateHook}/>
                         <DetailAttendees attendees={attendees}/>
-                        <PhotoGallery uploadHook={uploadHook}
-                                      deleteHook={deleteHook}
-                                      photos={photos}
+                        <PhotoGallery photos={photos}
                                       id={activityId}
                                       isCurrentUser={isCurrentUser}
                                       remainingCount={remainingCount}/>
@@ -76,7 +70,7 @@ const ActivityDetailPage = () => {
                     </Grid>
 
                     <Grid item xs={12} md={4.5} sx={{display: {xs: 'none', md: 'block'}}}>
-                        <DetailSidebar/>
+                        <DetailSidebar activityId={activityId!}/>
                     </Grid>
                 </Grid>
             </Box>

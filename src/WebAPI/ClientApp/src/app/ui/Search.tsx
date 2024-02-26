@@ -5,6 +5,8 @@ import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 
 const SearchComponent = () => {
+    // TODO after search , navigate to activity display page
+
     return (
         <Box
             component="form"

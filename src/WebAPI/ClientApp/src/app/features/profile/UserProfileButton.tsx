@@ -15,6 +15,8 @@ const UserProfileButton: React.FC<UserProfileButtonProps> = ({
                                                                  isFollowed,
                                                                  id
                                                              }) => {
+    // TODO implement edit profile
+
     const {isFollowing, follow} = useFollowMutation(id);
     const {isUnfollowing, unfollow} = useUnfollowMutation(id);
     const handleFollowClick = async () => {

@@ -86,6 +86,8 @@ public class ActivitiesController : BaseController
     return Ok(ApiResponse<Result>.Success(result));
   }
 
+  //TODO cancel activity
+
   // POST: api/Activities
   // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
   /// <summary>
@@ -155,13 +157,13 @@ public class ActivitiesController : BaseController
   /// <param name="userId"></param>
   /// <returns>An IActionResult representing the status of the update.</returns>
   [ Authorize ]
-  [ HttpDelete("{activityId}/attendees/{userId}") ]
-  public async Task<IActionResult> DeleteAttendee(string activityId, string userId)
+  [ HttpDelete("{activityId}/attendee") ]
+  public async Task<IActionResult> DeleteAttendee(string activityId)
   {
     var result =
         await Mediator!.Send(new RemoveAttendeeCommand
         {
-            ActivityId = activityId, UserId = userId
+            ActivityId = activityId, UserId = CurrentUserService!.Id!
         });
 
     return Ok(ApiResponse<Result>.Success(data: result,
@@ -169,13 +171,13 @@ public class ActivitiesController : BaseController
   }
 
   [ Authorize ]
-  [ HttpPost("{activityId}/attendees/{userId}") ]
-  public async Task<IActionResult> AddAttendee(string activityId, string userId)
+  [ HttpPost("{activityId}/attendee") ]
+  public async Task<IActionResult> AddAttendee(string activityId)
   {
     var result =
         await Mediator!.Send(new AddAttendeeCommand
         {
-            ActivityId = activityId, UserId = userId
+            ActivityId = activityId, UserId = CurrentUserService!.Id!
         });
 
     return StatusCode(StatusCodes.Status201Created,

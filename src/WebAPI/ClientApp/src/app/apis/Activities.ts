@@ -30,3 +30,19 @@ export const GetActivity = async (id: string) => {
     const response = await apiClient.get<ApiResponse<Activity>>(`/api/Activities/${id}`)
     return handleResponse(response);
 }
+
+export const AddAttendee = async (activityId: string): Promise<any> => {
+    const response = await apiClient.post<ApiResponse<any>>(`/api/Activities/${activityId}/attendee`);
+    return handleResponse(response);
+}
+
+export const RemoveAttendee = async (activityId: string): Promise<any> => {
+    const response = await apiClient.delete<ApiResponse<any>>(`/api/Activities/${activityId}/attendee`);
+    return handleResponse(response);
+}
+
+// TODO cancel attend activity (only for host user)
+
+// TODO create activity
+
+// TODO update activity

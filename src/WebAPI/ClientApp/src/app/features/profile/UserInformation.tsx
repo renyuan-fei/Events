@@ -35,7 +35,7 @@ const UserInformation = (props: UserInformation) => {
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             wordWrap: 'break-word', // Ensures that long words will break and wrap onto the next line
-                        }} primary="Bio" secondary={bio} primaryTypographyProps={{ fontWeight: 'bold' }} />
+                        }} primary="What's Up" secondary={bio} primaryTypographyProps={{ fontWeight: 'bold' }} />
                     </ListItem>
                 </List>
             </CardContent>

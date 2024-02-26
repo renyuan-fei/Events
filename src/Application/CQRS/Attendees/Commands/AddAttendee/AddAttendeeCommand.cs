@@ -52,7 +52,7 @@ public class
 
       if (isExisting)
       {
-        throw new InvalidOperationException("Attendee already exists.");
+        throw new InvalidOperationException("You are already exists.");
       }
 
       var attendee = Attendee.Create(new UserId(userId),false,new ActivityId(activityId), activity);

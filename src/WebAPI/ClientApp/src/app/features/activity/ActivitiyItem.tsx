@@ -27,7 +27,6 @@ const formatToLocalTimezone = (dateString: string): string => {
     return new Intl.DateTimeFormat('en-AU', options).format(date);
 }
 
-
 interface ActivityItemProps {
     id: string;
     title: string;
@@ -134,7 +133,7 @@ export function ActivityItem(props: ActivityItemProps) {
                                 borderRadius: '4px',
                                 padding: '2px 5px'
                             }}>
-                                {category}
+                                {category.replace(/And/g, ' • ')}
                             </Typography>
                         </Box>
 

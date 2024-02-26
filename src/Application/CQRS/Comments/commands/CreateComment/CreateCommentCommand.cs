@@ -82,6 +82,7 @@ public class
       var value = _mapper.Map<CommentDto>(newComment);
 
       value.UserName = user.UserName;
+      value.DisplayName = user.DisplayName;
 
       value.Image = photo == null
           ? DefaultImage.DefaultUserImageUrl

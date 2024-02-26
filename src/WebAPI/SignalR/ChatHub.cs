@@ -1,5 +1,6 @@
 using Application.common.interfaces;
 using Application.CQRS.Comments.commands.CreateComment;
+using Application.CQRS.Comments.commands.DeleteComment;
 using Application.CQRS.Comments.Queries.GetComments;
 
 using Microsoft.AspNetCore.Authorization;
@@ -51,6 +52,25 @@ public class ChatHub : Hub
 
     await Clients.Group(activityId!)
                  .SendAsync("ReceiveComment", comment);
+  }
+
+  /// <summary>
+  /// Deletes a comment and notifies the group about the deleted comment.
+  /// </summary>
+  /// <param name="commentId">The ID of the comment to delete.</param>
+  public async Task DeleteComment(string commentId)
+  {
+    var httpContext = Context.GetHttpContext();
+    var activityId = httpContext!.Request.Query["activityId"];
+
+    await _mediator.Send(new DeleteCommentCommand
+    {
+        CommentId = commentId,
+        UserId = _currentUserService.Id!
+    });
+
+    await Clients.Group(activityId!)
+                 .SendAsync("DeleteComment", commentId);
   }
 
   /// <summary>

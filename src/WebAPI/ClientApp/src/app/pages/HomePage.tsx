@@ -27,6 +27,12 @@ const HomePage = () => {
         if (!searchParams.get('pageSize')) {
             searchParams.set('pageSize', '10');
         }
+        if (!searchParams.get('category')) {
+            searchParams.set('category', '');
+        }
+        if (!searchParams.get('startDate')) {
+            searchParams.set('startDate', '');
+        }
         navigate({ search: searchParams.toString() }, { replace: true });
     }, [navigate]);
 

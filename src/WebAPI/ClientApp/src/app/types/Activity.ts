@@ -1,4 +1,5 @@
-import {Attendee} from "./Attendee.ts";
+import {Attendee} from "@type/Attendee.ts";
+import {Category} from "@type/Category.ts";
 
 export interface Activity {
     id: string;
@@ -6,7 +7,7 @@ export interface Activity {
     imageUrl: string;
     date: string; // or Date if you plan to convert the string to a Date object
     description: string;
-    category: string;
+    category: Category;
     city: string;
     venue: string;
     hostUser: {

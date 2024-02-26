@@ -2,14 +2,16 @@ import {Grid} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CustomSelect from "@ui/Custom/CustomSelect.tsx";
-import React from "react";
+import React, {useState} from "react";
 import Divider from "@mui/material/Divider";
-
-// TODO add status to redux and implement reset
-const CategoryValue : string[] = [];
-const CityValue: string[] = [];
+import {Category} from "@type/Category.ts";
 
 const ActivityFilter = () => {
+    const initialCategoryValues = Object.values(Category);
+    const [categoryValue] = useState<string[]>(initialCategoryValues);
+    const [cityValue] = useState<string[]>([]);
+
+    // TODO use react router to set url params and reset page to 1 each time a filter is changed
 
     function handleClear(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault();
@@ -23,10 +25,10 @@ const ActivityFilter = () => {
         }}>
             <Grid container>
                 <Grid item xs={5}>
-                    <CustomSelect type={"category"} value={CategoryValue}/>
+                    <CustomSelect type={"category"} value={categoryValue}/>
                 </Grid>
                 <Grid item xs={5}>
-                    <CustomSelect type={"city"} value={CityValue}/>
+                    <CustomSelect type={"city"} value={cityValue}/>
                 </Grid>
                 <Grid item xs={2}>
                     <Button onClick={handleClear} variant={"text"} color={"primary"}>

@@ -13,6 +13,8 @@ interface FollowerListProps {
 }
 
 export const FollowerList: React.FC<FollowerListProps> = ({userId, page, pageSize}) => {
+
+    //TODO user can follow user when view other user's Following list
     const {
         followers,
         isFollowersLoading

@@ -20,7 +20,6 @@
         <Folder Include="Common\Mappings\"/>
         <Folder Include="Common\Models\"/>
         <Folder Include="Common\Security\"/>
-        <Folder Include="CQRS\Comments\commands\DeleteComment\"/>
         <Folder Include="CQRS\Comments\commands\UpdateComment\"/>
         <Folder Include="CQRS\Users\Command\UpdateUser\"/>
     </ItemGroup>

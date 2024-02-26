@@ -19,6 +19,7 @@ interface DetailHeaderProps {
 const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser,uploadHook}) => {
     const theme = useTheme();
     const [isUploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
+
     const handleAddPhotoClick = () => {
         setUploadModalOpen(true);
     };
