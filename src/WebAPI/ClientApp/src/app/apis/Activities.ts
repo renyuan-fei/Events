@@ -7,17 +7,12 @@ import {Item, PaginatedResponse} from "@type/PaginatedResponse.ts";
 export const GetPaginatedActivities = async (
     pageNumber: number = 1,
     pageSize: number = 10,
-    searchTerm: string[] = [],
-    extraParams: Record<string, string | string[]> = {}
+    filters: Record<string, string>
 ): Promise<PaginatedResponse<Item>> => {
     const params = new URLSearchParams({
-        ...extraParams,
+        ...filters,
         PageNumber: pageNumber.toString(),
         PageSize: pageSize.toString(),
-        ...searchTerm.reduce((acc, term, index) => ({
-            ...acc,
-            [`searchTerm[${index}]`]: term
-        }), {}),
     });
 
     const url = `/api/Activities${params.toString() ? `?${params}` : ''}`;

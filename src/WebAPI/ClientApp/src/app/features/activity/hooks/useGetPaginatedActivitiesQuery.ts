@@ -1,16 +1,11 @@
 import { useQuery } from 'react-query';
 import {GetPaginatedActivities} from "@apis/Activities.ts";
-import {useLocation} from "react-router-dom";
 
-const useGetPaginatedActivitiesQuery =() => {
-    const location = useLocation();
-
-    const pageNumber = new URLSearchParams(location.search).get('page') || '1';
-    const pageSize = new URLSearchParams(location.search).get('pageSize') || '8';
+const useGetPaginatedActivitiesQuery =(pageNumber:number, pageSize:number,filters?: Record<string, string>) => {
 
     const { isLoading, data } = useQuery(
-        ['paginatedActivities', pageNumber, pageSize],
-        () => GetPaginatedActivities(parseInt(pageNumber), parseInt(pageSize)),
+        ['paginatedActivities', pageNumber, pageSize, filters],
+        () => GetPaginatedActivities(pageNumber, pageSize,filters!),
         {
             keepPreviousData: true,
         }

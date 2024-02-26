@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import EventIcon from "@mui/icons-material/Event";
 import PeopleIcon from "@mui/icons-material/People";
 import Divider from "@mui/material/Divider";
-import {  } from 'react-router-dom';
 import {useNavigate} from "react-router";
+
 
 const formatToLocalTimezone = (dateString: string): string => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -44,13 +44,6 @@ export function ActivityItem(props: ActivityItemProps) {
     const navigate = useNavigate();
 
     const {id, title, imageUrl, date, category, goingCount, hostUser} = props;
-
-    // const imageUrl = "https://res.cloudinary.com/dxwtrnpqi/image/upload/v1702382811/sample.jpg"
-    // const date = "2024-01-17 00:00:00.0000000"
-    // const category = "Category"
-    // const goingCount = 24
-    // const hostUser = {username: "test"}
-    // const title = "Friday Night drinks / language exchange"
 
     const handleClick = () => {
         // Navigate to the route with the activity's ID

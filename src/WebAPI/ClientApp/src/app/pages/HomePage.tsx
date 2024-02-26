@@ -13,11 +13,15 @@ import useGetPaginatedActivitiesQuery
 import {useEffect} from "react";
 import {useNavigate} from "react-router";
 import {useLocation} from "react-router-dom";
+import {useFilters} from "@hooks/useFilters.ts";
 
 const HomePage = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const pageNumber = parseInt(new URLSearchParams(location.search).get('page') || '1');
+    const pageSize = parseInt(new URLSearchParams(location.search).get('pageSize') || '8');
+    const filters = useFilters();
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -27,17 +31,11 @@ const HomePage = () => {
         if (!searchParams.get('pageSize')) {
             searchParams.set('pageSize', '10');
         }
-        if (!searchParams.get('category')) {
-            searchParams.set('category', '');
-        }
-        if (!searchParams.get('startDate')) {
-            searchParams.set('startDate', '');
-        }
         navigate({ search: searchParams.toString() }, { replace: true });
     }, [navigate]);
 
 
-    const {isActivitiesLoading, activities,pageCount} = useGetPaginatedActivitiesQuery();
+    const {isActivitiesLoading, activities,pageCount} = useGetPaginatedActivitiesQuery(pageNumber,pageSize,filters);
 
     if (isActivitiesLoading) return <LoadingComponent/>;
 
