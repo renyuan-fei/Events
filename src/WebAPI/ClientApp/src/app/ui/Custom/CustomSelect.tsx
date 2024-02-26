@@ -16,8 +16,17 @@ const CustomSelect: React.FC<customSelectProps> = ({type, value}) => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const handleChange = (event: SelectChangeEvent) => {
-        setSelectedValue(event.target.value);
-        searchParams.set(type, event.target.value);
+        const newValue = event.target.value;
+        setSelectedValue(newValue);
+        searchParams.set(type, newValue);
+
+        if (searchParams.has('page')) {
+            searchParams.set('page', '1');
+        }
+        if (searchParams.has('pageSize')) {
+            searchParams.set('pageSize', '8');
+        }
+
         navigate({ search: searchParams.toString() });
     };
 
