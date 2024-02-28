@@ -14,6 +14,7 @@ import {useEffect} from "react";
 import {useNavigate} from "react-router";
 import {useLocation} from "react-router-dom";
 import {useFilters} from "@hooks/useFilters.ts";
+import Button from "@mui/material/Button";
 
 const HomePage = () => {
     const theme = useTheme();
@@ -31,28 +32,40 @@ const HomePage = () => {
         if (!searchParams.get('pageSize')) {
             searchParams.set('pageSize', '10');
         }
-        navigate({ search: searchParams.toString() }, { replace: true });
+        navigate({search: searchParams.toString()}, {replace: true});
     }, [navigate]);
 
+    const handleNavigateToCreateActivity = () => {
+        navigate('/activity');
+    }
 
-    const {isActivitiesLoading, activities,pageCount} = useGetPaginatedActivitiesQuery(pageNumber,pageSize,filters);
+    const {
+        isActivitiesLoading,
+        activities,
+        pageCount
+    } = useGetPaginatedActivitiesQuery(pageNumber, pageSize, filters);
 
     if (isActivitiesLoading) return <LoadingComponent/>;
+
+    const hasActivities = activities && activities.length > 0;
 
     return (
         <>
             <Box sx={{width: '100%'}}>
                 <HomePageTitle/>
-                <Box sx={{flexGrow: 1}}>
+                <Box sx={{flexGrow: 1,marginTop:theme.spacing(2)}}>
                     <Grid container spacing={2}>
-                        <Grid item md={4.5} sx={{display: {sm: 'none', md: 'block'}}}>
+                        <Grid item md={4.5} sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center', // This centers vertically if there is height to work with
+                            height: '100%' // Make sure the grid item takes full height
+                        }}>
                             <ActivitiesCalendar/>
-                            <Paper sx={{
-                                marginTop: theme.spacing(2),
-                                padding: theme.spacing(2)
-                            }}>
-                                <Typography variant='h6'>Your next events</Typography>
-                            </Paper>
+                            <Button variant={'contained'} color={'secondary'} sx={{ marginTop: 2 }} onClick={handleNavigateToCreateActivity}>
+                                Create Activity
+                            </Button>
                         </Grid>
 
                         <Grid item
@@ -60,27 +73,28 @@ const HomePage = () => {
                               md={7.5}
                               justifyContent='center'
                               alignItems='center'>
-                            <Paper sx={{
-                                padding: theme.spacing(2),
-                                marginTop: theme.spacing(2),
-                                marginBottom: theme.spacing(4)
-                            }}>
+                            <Paper sx={{padding: theme.spacing(2), marginTop: theme.spacing(2), marginBottom: theme.spacing(4)}}>
                                 <ActivitiesList>
-                                    {
-                                        activities?.map((activity: Item) => (
-                                            <ActivityItem key={activity.id} {...activity}/>
+                                    {hasActivities ? (
+                                        activities.map((activity: Item) => (
+                                            <ActivityItem key={activity.id} {...activity} />
                                         ))
-                                    }
+                                        ) : (
+                                        <Typography sx={{ textAlign: 'center', mt: 4 }}>
+                                            No activities found. Try adjusting your filters or check back later!
+                                        </Typography>
+                                        )}
                                 </ActivitiesList>
-                                <PaginationComponent pageCount={pageCount}/>
+
+                                {hasActivities && <PaginationComponent pageCount={pageCount} />}
                             </Paper>
                         </Grid>
                     </Grid>
                 </Box>
-
             </Box>
         </>
-    );
+    )
+        ;
 }
 
 export default HomePage;

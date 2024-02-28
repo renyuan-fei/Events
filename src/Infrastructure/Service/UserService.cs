@@ -81,7 +81,24 @@ public class UserService : IUserService
 
   public Task AddUserAsync(UserDto userDto) { throw new NotImplementedException(); }
 
-  public Task UpdateUserAsync(UserDto userDto) { throw new NotImplementedException(); }
+  public async Task UpdateUserAsync(UserDto userDto)
+  {
+    var user = await _userManager.FindByIdAsync(userDto.Id);
+    Guard.Against.Null(user, nameof(userDto.Id), "User to update not found.");
+
+    // Map the DTO to the user entity and apply the updated values
+    _mapper.Map(userDto, user);
+
+    // Attempt to update the user with the new values
+    var result = await _userManager.UpdateAsync(user);
+    if (!result.Succeeded)
+    {
+      _logger.LogError("User update failed: {Errors}", result.Errors);
+      throw new InvalidOperationException("Could not update user.");
+    }
+
+    _logger.LogInformation("User {UserId} updated successfully", user.Id);
+  }
 
   public Task DeleteUserAsync(Guid userId) { throw new NotImplementedException(); }
 

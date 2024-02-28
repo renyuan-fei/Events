@@ -4,17 +4,23 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import {useLocation, useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 interface customSelectProps {
     type: string;
     value: string[];
+    defaultValue?: string;
 }
 
-const CustomSelect: React.FC<customSelectProps> = ({type, value}) => {
-    const [selectedValue, setSelectedValue] = React.useState<string>('');
+const CustomSelect: React.FC<customSelectProps> = ({type, value,defaultValue = ''}) => {
+    const [selectedValue, setSelectedValue] = React.useState<string>(defaultValue);
     const navigate = useNavigate();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
+
+    useEffect(() => {
+        setSelectedValue(defaultValue);
+    }, [defaultValue]);
     const handleChange = (event: SelectChangeEvent) => {
         const newValue = event.target.value;
         setSelectedValue(newValue);
@@ -43,7 +49,7 @@ const CustomSelect: React.FC<customSelectProps> = ({type, value}) => {
                     label={type}
                 >
                     <MenuItem value=''>
-                        <em>None</em>
+                        <em>All</em>
                     </MenuItem>
                     {
                         value.map((item, index) => (

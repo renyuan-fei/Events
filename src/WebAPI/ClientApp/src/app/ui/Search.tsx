@@ -3,13 +3,27 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
+import {useNavigate} from "react-router";
+import { useState } from 'react';
 
 const SearchComponent = () => {
     // TODO after search , navigate to activity display page
+    const [searchValue, setSearchValue] = useState<string>('');
+
+    const navigate = useNavigate();
+    // const searchParams = new URLSearchParams(location.search);
+
+    const handleSearch = (event: React.FormEvent<HTMLDivElement>) => {
+        event.preventDefault(); // Prevent the default form submit action
+        // Assuming you want to navigate to '/home' and pass the search value as a URL parameter
+        navigate(`/home?title=${encodeURIComponent(searchValue)}`);
+    };
+
 
     return (
         <Box
             component="form"
+            onSubmit={handleSearch}
             sx={{
                 p: '2px 4px',
                 display: 'flex',
@@ -31,17 +45,10 @@ const SearchComponent = () => {
                 sx={{ml: 1, flex: 1}}
                 placeholder="Search events"
                 inputProps={{'aria-label': 'search events'}}
+                onChange={(e) => setSearchValue(e.target.value)}
             />
 
             <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-
-            <InputBase
-                sx={{ml: 1, flex: 1}}
-                placeholder="Neighborhood, city or zip"
-                inputProps={{'aria-label': 'search google maps'}}
-            />
-
-            <Divider sx={{m: 0.5}} orientation={"vertical"} flexItem/>
 
             <IconButton
                 type="submit"

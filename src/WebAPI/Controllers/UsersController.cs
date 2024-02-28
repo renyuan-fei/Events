@@ -1,6 +1,7 @@
 using Application.common.DTO;
 using Application.common.interfaces;
 using Application.common.Models;
+using Application.CQRS.Users.Command.UpdateUser;
 using Application.CQRS.Users.Queries.GetUser;
 
 using Microsoft.AspNetCore.Authorization;
@@ -14,8 +15,7 @@ public class UsersController : BaseController
   [ HttpGet ]
   public async Task<IActionResult> GetUser()
   {
-    var result =
-        await Mediator.Send(new GetUserQuery { UserId = CurrentUserService!.Id! });
+    var result = await Mediator!.Send(new GetUserQuery { UserId = CurrentUserService!.Id! });
 
     return Ok(ApiResponse<UserProfileDto>.Success(result));
   }
@@ -24,7 +24,7 @@ public class UsersController : BaseController
   [ HttpGet("{id:required}") ]
   public async Task<IActionResult> GetUser(string id)
   {
-    var result = await Mediator.Send(new GetUserQuery { UserId = id });
+    var result = await Mediator!.Send(new GetUserQuery { UserId = id });
 
     return Ok(ApiResponse<UserProfileDto>.Success(result));
   }
@@ -33,7 +33,13 @@ public class UsersController : BaseController
   [ HttpPut ]
   public async Task<IActionResult> Put([ FromBody ] UserDto user)
   {
-    throw new NotImplementedException();
+    var result = await Mediator!.Send(new UpdateUserCommand
+    {
+        UserId = CurrentUserService!.Id!,
+        User = user
+    });
+
+    return Ok(ApiResponse<UserDto>.Success(statusCode: StatusCodes.Status200OK, message: "User updated successfully."));
   }
 
   // DELETE: api/Users/5

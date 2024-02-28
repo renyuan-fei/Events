@@ -12,6 +12,7 @@ using Domain.Constant;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
+using Domain.ValueObjects;
 
 using MediatR;
 
@@ -22,6 +23,7 @@ namespace Application.CQRS.Activities.Queries.GetPaginatedActivities;
 public record
     GetPaginatedActivitiesQuery : IRequest<PaginatedList<ActivityWithHostUserDto>>
 {
+  public string?             userId              { get; init; }
   public PaginatedListParams PaginatedListParams { get; init; }
 
   public FilterParams? FilterParams { get; init; }
@@ -51,58 +53,92 @@ public class
     _photoRepository = photoRepository;
   }
 
-public async Task<PaginatedList<ActivityWithHostUserDto>> Handle(
-    GetPaginatedActivitiesQuery request,
-    CancellationToken cancellationToken)
-{
+  public async Task<PaginatedList<ActivityWithHostUserDto>> Handle(
+      GetPaginatedActivitiesQuery request,
+      CancellationToken           cancellationToken)
+  {
     try
     {
-        var query = _activityRepository.GetAllActivitiesWithAttendeesQueryable();
-        query = ApplyFilters(query, request.FilterParams);
+      var query = _activityRepository.GetAllActivitiesWithAttendeesQueryable();
 
-        var pageNumber = request.PaginatedListParams.PageNumber;
-        var pageSize = request.PaginatedListParams.PageSize;
+      query = ApplyFilters(query, request.FilterParams);
 
-        var paginatedActivitiesDto = await query
-            .ProjectTo<ActivityWithHostUserDto>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(pageNumber, pageSize);
-
-        if (!paginatedActivitiesDto.Items.Any())
+      if (request.userId is not null)
+      {
+        if (request.FilterParams!.IsHost)
         {
-            return paginatedActivitiesDto;
+          query = query.Where(activity => activity.Attendees.Any(attendee => attendee
+                                      .Identity.UserId
+                               == new UserId(request.userId)
+                               && attendee.Identity.IsHost));
         }
 
-        var userIds = paginatedActivitiesDto.Items.Select(a => a.HostUser.Id).Distinct
-            ().ToList();
-        var activityIds = paginatedActivitiesDto.Items.Select(a => a.Id).ToList();
-
-        GuardValidation.AgainstNullOrEmpty(userIds, "Error occurred while getting user ids");
-        GuardValidation.AgainstNullOrEmpty(activityIds, "Error occurred while getting activity ids");
-
-        var users = await _userService.GetUsersByIdsAsync(userIds, cancellationToken);
-        var activityPhotos = await _photoRepository.GetMainPhotosByOwnerIdAsync(activityIds, cancellationToken);
-
-        var usersDictionary = users.ToDictionary(user => user.Id);
-        var activityPhotosDictionary = activityPhotos.ToDictionary(photo => photo.OwnerId);
-
-        paginatedActivitiesDto.Items.ForAll(activity =>
+        if (request.FilterParams!.IsGoing)
         {
-            var hostUser = activity.HostUser;
-            if (usersDictionary.TryGetValue(hostUser.Id, out var user))
-            {
-                hostUser.Username = user.DisplayName;
-            }
-            activity.ImageUrl = activityPhotosDictionary.GetValueOrDefault(activity.Id)?.Details.Url ?? DefaultImage.DefaultActivityImageUrl;
-        });
+          query = query.Where(activity => activity.Attendees.Any(attendee =>
+                                  attendee.Identity.UserId
+                               == new UserId(request.userId)));
+        }
+      }
 
-        return paginatedActivitiesDto;
+      var pageNumber = request.PaginatedListParams.PageNumber;
+      var pageSize = request.PaginatedListParams.PageSize;
+
+      var paginatedActivitiesDto = await query
+                                         .ProjectTo<
+                                             ActivityWithHostUserDto>(_mapper
+                                                 .ConfigurationProvider)
+                                         .PaginatedListAsync(pageNumber, pageSize);
+
+      if (!paginatedActivitiesDto.Items.Any()) { return paginatedActivitiesDto; }
+
+      var userIds = paginatedActivitiesDto.Items.Select(a => a.HostUser.Id)
+                                          .Distinct()
+                                          .ToList();
+
+      var activityIds = paginatedActivitiesDto.Items.Select(a => a.Id).ToList();
+
+      GuardValidation.AgainstNullOrEmpty(userIds,
+                                         "Error occurred while getting user ids");
+
+      GuardValidation.AgainstNullOrEmpty(activityIds,
+                                         "Error occurred while getting activity ids");
+
+      var users = await _userService.GetUsersByIdsAsync(userIds, cancellationToken);
+
+      var activityPhotos =
+          await _photoRepository.GetMainPhotosByOwnerIdAsync(activityIds,
+            cancellationToken);
+
+      var usersDictionary = users.ToDictionary(user => user.Id);
+      var activityPhotosDictionary = activityPhotos.ToDictionary(photo => photo.OwnerId);
+
+      paginatedActivitiesDto.Items.ForAll(activity =>
+      {
+        var hostUser = activity.HostUser;
+
+        if (usersDictionary.TryGetValue(hostUser.Id, out var user))
+        {
+          hostUser.Username = user.DisplayName;
+        }
+
+        activity.ImageUrl =
+            activityPhotosDictionary.GetValueOrDefault(activity.Id)?.Details.Url
+         ?? DefaultImage.DefaultActivityImageUrl;
+      });
+
+      return paginatedActivitiesDto;
     }
     catch (Exception ex)
     {
-        _logger.LogError(ex, "Error occurred in {Name}: {ExMessage}", nameof(GetPaginatedActivitiesQuery), ex.Message);
-        throw;
+      _logger.LogError(ex,
+                       "Error occurred in {Name}: {ExMessage}",
+                       nameof(GetPaginatedActivitiesQuery),
+                       ex.Message);
+
+      throw;
     }
-}
+  }
 
   private static IQueryable<Activity> ApplyFilters(
       IQueryable<Activity> query,

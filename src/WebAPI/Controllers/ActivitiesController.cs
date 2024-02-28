@@ -23,19 +23,22 @@ namespace WebAPI.Controllers;
 /// </summary>
 public class ActivitiesController : BaseController
 {
-    /// <summary>
-    ///   Retrieves a paginated list of activities.
-    /// </summary>
-    /// <param name="paginatedListParams"></param>
-    /// <param name="filterParams"></param>
-    /// <returns>An ActionResult containing the paginated list of activities.</returns>
-    [ HttpGet ]
-    public async Task<OkObjectResult> GetPaginatedListActivities(
+  /// <summary>
+  ///   Retrieves a paginated list of activities.
+  /// </summary>
+  /// <param name="paginatedListParams"></param>
+  /// <param name="filterParams"></param>
+  /// <returns>An ActionResult containing the paginated list of activities.</returns>
+  [ HttpGet ]
+  // [ Authorize ]
+  public async Task<OkObjectResult> GetPaginatedListActivities(
       [ FromQuery ] PaginatedListParams paginatedListParams,
       [ FromQuery ] FilterParams?       filterParams)
   {
+      string userId = User.Identity.IsAuthenticated ? CurrentUserService!.Id : null;
     var result = await Mediator!.Send(new GetPaginatedActivitiesQuery
     {
+        userId = userId,
         PaginatedListParams = paginatedListParams,
         FilterParams = filterParams
     });
@@ -163,7 +166,8 @@ public class ActivitiesController : BaseController
     var result =
         await Mediator!.Send(new RemoveAttendeeCommand
         {
-            ActivityId = activityId, UserId = CurrentUserService!.Id!
+            ActivityId = activityId,
+            UserId = CurrentUserService!.Id!
         });
 
     return Ok(ApiResponse<Result>.Success(data: result,
@@ -177,7 +181,8 @@ public class ActivitiesController : BaseController
     var result =
         await Mediator!.Send(new AddAttendeeCommand
         {
-            ActivityId = activityId, UserId = CurrentUserService!.Id!
+            ActivityId = activityId,
+            UserId = CurrentUserService!.Id!
         });
 
     return StatusCode(StatusCodes.Status201Created,

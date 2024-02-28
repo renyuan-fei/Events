@@ -121,7 +121,6 @@ public class AccountController : BaseController
   ///   Returns an ActionResult instance of the AccountResponseDTO in JSON format.
   /// </returns>
   [HttpPost("login")]
-  [ SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands", MessageId = "count: 94") ]
   public async Task<ActionResult<AccountResponseDto>> Login([FromBody] LoginDto loginDTO)
   {
     if (!ModelState.IsValid)
