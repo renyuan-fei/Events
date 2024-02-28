@@ -1,8 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-ENV ASPNETCORE_URLS=https://+:7095;http://+:5058
-EXPOSE 7095
-EXPOSE 5058
+ENV ASPNETCORE_URLS=https://+:443;http://+:80
+EXPOSE 443
+EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release

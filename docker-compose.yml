@@ -23,8 +23,8 @@ services:
       - ~/.aspnet/https:/https:ro
       - data_protection_keys:/root/.aspnet/DataProtection-Keys
     ports: # 端口映射
-      - "7095:7095"
-      - "5058:5058"                         # http一般不使用
+      - "5080:80"                         # http一般不使用
+      - "7095:443"
     depends_on: # 依赖的服务
       - db
       - seq
