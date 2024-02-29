@@ -7,6 +7,7 @@ export interface Item {
     city: string;
     venue: string;
     goingCount: number;
+    isCancelled: boolean;
     hostUser: {
         username: string;
         id: string;

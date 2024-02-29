@@ -90,6 +90,13 @@ public class ActivitiesController : BaseController
   }
 
   //TODO cancel activity
+  [ HttpPut("{id}/cancel") ]
+  public async Task<IActionResult> CancelActivity(string id)
+  {
+    var result = await Mediator!.Send(new CancelActivityCommand { Id = id });
+
+    return Ok(ApiResponse<Result>.Success(result));
+  }
 
   // POST: api/Activities
   // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

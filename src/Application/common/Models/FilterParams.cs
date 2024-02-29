@@ -6,6 +6,8 @@ public class FilterParams
 
   public bool IsHost { get; set; } = false;
 
+  public bool IsCancelled { get; set; } = false;
+
   public string?   Title     { get; init; }
   public string?   Category  { get; init; }
   public string?   City      { get; init; }

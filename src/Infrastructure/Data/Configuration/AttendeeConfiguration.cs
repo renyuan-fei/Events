@@ -6,7 +6,7 @@ using Domain.ValueObjects.ActivityAttendee;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configuration;
+namespace Infrastructure.Data.Configuration;
 
 public class AttendeeConfiguration : IEntityTypeConfiguration<Attendee>
 {

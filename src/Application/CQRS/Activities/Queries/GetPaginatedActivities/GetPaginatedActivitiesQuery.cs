@@ -154,6 +154,17 @@ public class
       categoryEnum = parsedCategory;
     }
 
+    if (filterParams.IsCancelled)
+    {
+      Console.WriteLine(filterParams.IsCancelled);
+      Console.WriteLine(ActivityStatus.Canceled);
+      query = query.Where(activity => activity.Status == ActivityStatus.Canceled);
+    }
+    else
+    {
+      query = query.Where(activity => activity.Status != ActivityStatus.Canceled);
+    }
+
     return query
            .Where(activity => string.IsNullOrWhiteSpace(filterParams.Title)
                            || activity.Title.Contains(filterParams.Title))

@@ -20,6 +20,5 @@ export const FollowingPage = () => {
                 <FollowingList userId={userId!} page={page} pageSize={pageSize} />
             </Box>
         </>
-
     );
 };

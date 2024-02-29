@@ -56,7 +56,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Bio, opt => opt.Ignore())         // fill in later
         .ForMember(dest => dest.Image, opt => opt.Ignore());      // fill in later
 
-    CreateMap<Following, FollowingDTO>()
+    CreateMap<Following, FollowingDto>()
         .ForMember(dest => dest.UserId,
                    opt => opt.MapFrom(src => src.Relationship
                                                 .FollowingId.Value))
@@ -97,8 +97,10 @@ public class MappingProfile : Profile
                    opt => opt.MapFrom(src => src.Category.ToString()))
         .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Location.City))
         .ForMember(dest => dest.Venue, opt => opt.MapFrom(src => src.Location.Venue))
-        .ForMember(dest => dest.goingCount,
+        .ForMember(dest => dest.GoingCount,
                    opt => opt.MapFrom(src => src.Attendees.Count))
+        .ForMember(dest => dest.IsCancelled,
+                   opt => opt.MapFrom(src => src.Status == ActivityStatus.Canceled))
         .ForMember(dest => dest.HostUser,
                    opt => opt.MapFrom(src =>
                                           new HostUserDTO

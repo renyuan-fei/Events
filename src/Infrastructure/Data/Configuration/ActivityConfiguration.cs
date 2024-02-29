@@ -5,7 +5,7 @@ using Domain.ValueObjects.Activity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configuration;
+namespace Infrastructure.Data.Configuration;
 
 public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
 {

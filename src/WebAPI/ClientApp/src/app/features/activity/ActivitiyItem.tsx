@@ -5,27 +5,10 @@ import EventIcon from "@mui/icons-material/Event";
 import PeopleIcon from "@mui/icons-material/People";
 import Divider from "@mui/material/Divider";
 import {useNavigate} from "react-router";
+import React from "react";
+import useFormatToLocalTimezone from "../../utils/useFormatToLocalTimezone.ts";
 
 
-const formatToLocalTimezone = (dateString: string): string => {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const date = new Date(dateString + 'Z'); // Parse the date string as UTC
-
-    // Set up the options for formatting
-    const options: Intl.DateTimeFormatOptions = {
-        weekday: 'short', // e.g., "Fri"
-        month: 'short',   // e.g., "Jan"
-        day: 'numeric',   // e.g., "19"
-        hour: 'numeric',  // e.g., "7"
-        minute: '2-digit', // e.g., "30"
-        timeZoneName: 'short', // e.g., "ACDT"
-        hour12: true,     // 12-hour time
-        timeZone: timeZone, // Set the desired timezone
-    };
-
-    // Format the date in the given timezone
-    return new Intl.DateTimeFormat('en-AU', options).format(date);
-}
 
 interface ActivityItemProps {
     id: string;
@@ -36,15 +19,21 @@ interface ActivityItemProps {
     city: string;
     venue: string;
     goingCount: number;
+    isCancelled: boolean;
     hostUser: { username: string; id: string; };
-    key: string;
 }
 
-export function ActivityItem(props: ActivityItemProps) {
+const ActivityItem: React.FC<ActivityItemProps> = ({
+                                                       id,
+                                                       title,
+                                                       imageUrl,
+                                                       date,
+                                                       category,
+                                                       goingCount,
+                                                       hostUser,
+                                                       isCancelled
+                                                   }) => {
     const navigate = useNavigate();
-
-    const {id, title, imageUrl, date, category, goingCount, hostUser} = props;
-
     const handleClick = () => {
         // Navigate to the route with the activity's ID
         navigate(`/activity/${id}`);
@@ -54,8 +43,6 @@ export function ActivityItem(props: ActivityItemProps) {
     return (
         <Box component={"div"}
              sx={{
-                 // height: '162px',
-                 // width: '604px',
                  height: '162px',
                  width: '90%',
                  paddingTop: theme.spacing(2),
@@ -64,6 +51,7 @@ export function ActivityItem(props: ActivityItemProps) {
              }}
              onClick={handleClick}>
             <Grid container>
+
                 <Grid
                     item
                     xs={3.35}
@@ -80,22 +68,38 @@ export function ActivityItem(props: ActivityItemProps) {
                          }}>
                     </Box>
                 </Grid>
+
                 <Grid item xs={0.3}/>
+
                 <Grid item xs={8.35}>
                     <Box>
-                        <Box display="flex" alignItems="center" mb={1}>
-                            <EventIcon color="action" sx={{marginRight: '5px'}}/>
-                            <Typography variant="caption" sx={{
-                                color: '#7c6f50',
-                                fontSize: theme.typography.fontSize,
-                                fontWeight: theme.typography.fontWeightBold
-                            }}>{formatToLocalTimezone(date)}</Typography>
+                        <Box display='flex' justifyContent='space-between' alignItems='center' mb={1}>
+                            <Box display='flex' alignItems='center'>
+                                <EventIcon color='action' sx={{ marginRight: '5px' }}/>
+                                <Typography variant='caption' sx={{
+                                    color: '#7c6f50',
+                                    fontSize: theme.typography.fontSize,
+                                    fontWeight: theme.typography.fontWeightBold
+                                }}>
+                                    {useFormatToLocalTimezone(date)}
+                                </Typography>
+                            </Box>
+                            {isCancelled && (
+                                <Typography variant='caption' component='span' sx={{
+                                    backgroundColor: theme.palette.error.main,
+                                    color: 'white',
+                                    borderRadius: '4px',
+                                    padding: '2px 5px'
+                                }}>
+                                    Cancelled
+                                </Typography>
+                            )}
                         </Box>
 
                         <Box>
                             <Typography
                                 gutterBottom
-                                component="div"
+                                component='div'
                                 sx={{
                                     wordWrap: 'break-word',
                                     overflow: 'hidden',
@@ -107,8 +111,8 @@ export function ActivityItem(props: ActivityItemProps) {
                             </Typography>
                         </Box>
 
-                        <Box display="flex" alignItems="center" mb={1}>
-                            <Typography variant="caption" sx={{
+                        <Box display='flex' alignItems='center' mb={1}>
+                            <Typography variant='caption' sx={{
                                 fontWeight: 600,
                                 fontSize: 14,
                                 color: theme.palette.text.secondary,
@@ -116,12 +120,12 @@ export function ActivityItem(props: ActivityItemProps) {
                             }}>Hosted by: {hostUser.username}</Typography>
                         </Box>
 
-                        <Box display="flex" alignItems="center">
-                            <PeopleIcon color="action" sx={{marginRight: '5px'}}/>
+                        <Box display='flex' alignItems='center'>
+                            <PeopleIcon color='action' sx={{marginRight: '5px'}}/>
                             <Typography
-                                variant="caption">{goingCount} attendees</Typography>
+                                variant='caption'>{goingCount} attendees</Typography>
                             <Box flexGrow={1}/>
-                            <Typography variant="caption" component="span" sx={{
+                            <Typography variant='caption' component='span' sx={{
                                 backgroundColor: 'lightgrey',
                                 borderRadius: '4px',
                                 padding: '2px 5px'
@@ -140,3 +144,5 @@ export function ActivityItem(props: ActivityItemProps) {
         </Box>
     );
 }
+
+export default ActivityItem;

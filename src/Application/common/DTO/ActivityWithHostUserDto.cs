@@ -40,7 +40,9 @@ public class ActivityWithHostUserDto
   /// </summary>
   public string Venue { get; set; }
 
-  public int goingCount { get; set; }
+  public int GoingCount { get; set; }
+
+  public bool IsCancelled { get; set; }
 
   /// <summary>
   /// Host user details for the activity.

@@ -12,14 +12,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Followers.Queries;
 
-public record GetFollowingQuery : IRequest<PaginatedList<FollowingDTO>>
+public record GetFollowingQuery : IRequest<PaginatedList<FollowingDto>>
 {
   public PaginatedListParams PaginatedListParams { get; init; }
   public string              UserId              { get; init; }
 }
 
 public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
-    PaginatedList<FollowingDTO>>
+    PaginatedList<FollowingDto>>
 {
   private readonly IUserService                          _userService;
   private readonly IPhotoRepository                      _photoRepository;
@@ -41,7 +41,7 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
     _userService = userService;
   }
 
-  public async Task<PaginatedList<FollowingDTO>> Handle(
+  public async Task<PaginatedList<FollowingDto>> Handle(
       GetFollowingQuery request,
       CancellationToken cancellationToken)
   {
@@ -53,12 +53,12 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
 
       var query = _followingRepository.GetFollowingsByIdQueryable(id);
       var paginatedFollowingDto = await query
-                                        .ProjectTo<FollowingDTO>(_mapper.ConfigurationProvider)
+                                        .ProjectTo<FollowingDto>(_mapper.ConfigurationProvider)
                                         .PaginatedListAsync(pageNumber, pageSize);
 
       if (!paginatedFollowingDto.Items.Any())
       {
-        return new PaginatedList<FollowingDTO>();
+        return new PaginatedList<FollowingDto>();
       }
 
 

@@ -37,6 +37,10 @@ export const RemoveAttendee = async (activityId: string): Promise<any> => {
 }
 
 // TODO cancel attend activity (only for host user)
+export const CancelActivity = async (activityId: string): Promise<any> => {
+    const response = await apiClient.put<ApiResponse<any>>(`/api/Activities/${activityId}/cancel`);
+    return handleResponse(response);
+}
 
 // TODO create activity
 

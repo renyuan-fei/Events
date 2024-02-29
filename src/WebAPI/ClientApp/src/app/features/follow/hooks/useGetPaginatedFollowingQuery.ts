@@ -1,6 +1,5 @@
 import {useQuery} from 'react-query';
 import {getPaginatedFollowing} from '@apis/Following.ts';
-import {queryClient} from "@apis/queryClient.ts";
 
 
 const useGetPaginatedFollowingQuery = (Id: string, pageSize: number, page:number) => {
@@ -10,9 +9,6 @@ const useGetPaginatedFollowingQuery = (Id: string, pageSize: number, page:number
         () => getPaginatedFollowing(Id, pageSize, page),
         {
             keepPreviousData: true,
-            onSuccess: () => {
-                queryClient.invalidateQueries(['following', Id, pageSize, page]);
-            }
         }
     );
 

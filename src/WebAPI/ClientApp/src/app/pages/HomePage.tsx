@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import {Grid, Paper, useTheme} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {ActivityItem} from "@features/activity/ActivitiyItem.tsx";
 import HomePageTitle from "@ui/HomePageTitle.tsx";
 import ActivitiesCalendar from "@features/activity/ActivitiesCalendar.tsx";
 import ActivitiesList from "@features/activity/ActivitiesList.tsx";
@@ -15,6 +14,7 @@ import {useNavigate} from "react-router";
 import {useLocation} from "react-router-dom";
 import {useFilters} from "@hooks/useFilters.ts";
 import Button from "@mui/material/Button";
+import ActivityItem from "@features/activity/ActivitiyItem.tsx";
 
 const HomePage = () => {
     const theme = useTheme();
@@ -24,13 +24,14 @@ const HomePage = () => {
     const pageSize = parseInt(new URLSearchParams(location.search).get('pageSize') || '8');
     const filters = useFilters();
 
+    console.log(filters);
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         if (!searchParams.get('page')) {
             searchParams.set('page', '1');
         }
         if (!searchParams.get('pageSize')) {
-            searchParams.set('pageSize', '10');
+            searchParams.set('pageSize', '8');
         }
         navigate({search: searchParams.toString()}, {replace: true});
     }, [navigate]);

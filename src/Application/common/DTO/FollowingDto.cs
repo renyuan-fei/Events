@@ -5,7 +5,7 @@ namespace Application.common.DTO;
 /// <summary>
 ///   The data transfer object representing a user's following.
 /// </summary>
-public class FollowingDTO : IUserDetail
+public class FollowingDto : IUserDetail
 {
   /// <summary>
   ///   Gets or sets the unique identifier of the user.

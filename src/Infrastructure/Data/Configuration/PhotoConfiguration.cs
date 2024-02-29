@@ -1,11 +1,10 @@
 using Domain.Entities;
-using Domain.ValueObjects;
 using Domain.ValueObjects.Photo;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configuration;
+namespace Infrastructure.Data.Configuration;
 
 public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 {

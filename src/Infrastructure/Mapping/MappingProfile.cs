@@ -16,7 +16,7 @@ public class MappingProfile : Profile
 
     CreateMap<ApplicationUser, UserProfileDto>();
 
-    CreateMap<ApplicationUser, FollowingDTO>();
+    CreateMap<ApplicationUser, FollowingDto>();
 
     CreateMap<UserDto, ApplicationUser>()
         .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))

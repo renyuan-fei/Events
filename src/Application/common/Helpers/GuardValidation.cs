@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Ardalis.GuardClauses;
 
+using Domain.Entities;
+
 namespace Application.Common.Helpers
 {
     public static class GuardValidation
@@ -12,7 +14,10 @@ namespace Application.Common.Helpers
             Guard.Against.Null(value, parameterName, message);
         }
 
-        public static void AgainstNullOrEmpty(string value, string message = null, string parameterName = null)
+        public static void AgainstNullOrEmpty(
+                string    value,
+                string    message       = null,
+                string    parameterName = null)
         {
             Guard.Against.NullOrEmpty(value, parameterName, message);
         }

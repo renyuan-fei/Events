@@ -81,12 +81,8 @@ public class Activity : BaseAuditableEntity<ActivityId>
     AddDomainEvent(new ActivitySetCategoryDomainEvent(Id, category));
   }
 
-  public void Cancel(DateTime utcNow)
+  public void Cancel()
   {
-    var currentDate = DateOnly.FromDateTime(utcNow);
-
-    if (currentDate > DateOnly.FromDateTime(Date)) { }
-
     Status = ActivityStatus.Canceled;
 
     AddDomainEvent(new ActivityCanceledDomainEvent(Id));

@@ -5,13 +5,13 @@ using Domain.ValueObjects.Following;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configuration;
+namespace Infrastructure.Data.Configuration;
 
 public class FollowingConfiguration : IEntityTypeConfiguration<Following>
 {
   public void Configure(EntityTypeBuilder<Following> builder)
   {
-    builder.ToTable("Followings");
+    builder.ToTable("Following");
 
     builder.HasKey(following => following.Id);
 

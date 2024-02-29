@@ -51,7 +51,7 @@ public class FollowController : BaseController
         PaginatedListParams = paginatedListParams
     });
 
-    return Ok(ApiResponse<PaginatedList<FollowingDTO>>.Success(result));
+    return Ok(ApiResponse<PaginatedList<FollowingDto>>.Success(result));
   }
 
   // PUT: api/Follow/5

@@ -16,20 +16,20 @@ public class FollowingRepository : Repository<Following, FollowingId>,
 
   public async Task<Following?> IsFollowingAsync(UserId followerId, UserId followingId)
   {
-    return await DbContext.Followings.FirstOrDefaultAsync(
+    return await DbContext.Following.FirstOrDefaultAsync(
         f => f.Relationship.FollowerId == followerId &&
              f.Relationship.FollowingId == followingId);
   }
 
   public IQueryable<Following> GetFollowersByIdQueryable(UserId id)
   {
-    return DbContext.Followings.Where(follow => follow.Relationship.FollowingId ==
+    return DbContext.Following.Where(follow => follow.Relationship.FollowingId ==
         id).AsQueryable();
   }
 
   public IQueryable<Following> GetFollowingsByIdQueryable(UserId id)
   {
-    return DbContext.Followings.Where(follow => follow.Relationship.FollowerId ==
+    return DbContext.Following.Where(follow => follow.Relationship.FollowerId ==
         id).AsQueryable();
   }
 

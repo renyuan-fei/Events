@@ -2,6 +2,7 @@ import {Paper, Typography, Stack, useTheme} from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import useAddAttendeeMutation from "@features/activity/hooks/useAddAttendeeMutation.ts";
 import React from "react";
 import useRemoveAttendeeMutation
@@ -11,6 +12,8 @@ import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
 import {Activity} from "@type/Activity.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
+import useFormatToLocalTimezone from "../../utils/useFormatToLocalTimezone.ts";
+import useCancelActivity from "@features/activity/hooks/useCancelActivity.ts";
 
 interface DetailSidebarProps {
     activityId: string;
@@ -21,12 +24,19 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const activity = queryClient.getQueryData<Activity>(['activity', activityId]);
     const isCurrentUserInActivity = activity?.attendees?.some((attendee) => attendee.userId === currentUserId) ?? false;
+    const isCanceled = activity?.isCancelled;
     const isHost = activity?.hostUser?.id === currentUserId;
+
+    const {
+        isCanceling,
+        cancelActivity
+    } = useCancelActivity(activityId);
 
     const {
         isAddingAttendee,
         addAttendee
     } = useAddAttendeeMutation(activityId);
+
     const {
         isRemovingAttendee,
         removeAttendee
@@ -35,6 +45,10 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     // TODO Refactor this component
     // TODO implement hook useAttendEvent
     // TODO according to different status of event and user, show different button
+
+    const handleCancelActivityClick = async () => {
+        await cancelActivity();
+    }
     const handleAddAttendeeClick = async () => {
         await addAttendee();
     };
@@ -54,14 +68,17 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
         }}>
             <Stack spacing={2}>
                 <Stack direction='row' alignItems='flex-start' spacing={2}>
-                    <CheckCircleIcon color='success'/>
+                    {isCanceled ? <CancelIcon color={'error'}/> :
+                        <CheckCircleIcon color='success'/>}
                     <Typography component='div' variant='h6' sx={{
                         fontFamily: '"Graphik Meetup",' +
                             ' -apple-system',
                         fontSize: '16px',
                         fontWeight: theme.typography.fontWeightBold
                     }}>
-                        Respond by Wednesday, 24 January 2024 12:00 pm
+                        {
+                            isCanceled ? 'This event has been canceled' : 'This event is active'
+                        }
                     </Typography>
                 </Stack>
 
@@ -74,8 +91,7 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                         fontSize: '16px',
                         fontWeight: theme.typography.fontWeightBold
                     }}>
-                        Friday, 26 January 2024 at 12:00 pm to Friday, 26 January 2024 at
-                        4:00 pm ACDT
+                        {useFormatToLocalTimezone(activity?.date!)}
                     </Typography>
                 </Stack>
 
@@ -88,7 +104,7 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                         fontSize: '16px',
                         fontWeight: theme.typography.fontWeightBold
                     }}>
-                        Eastwood Community Centre 95 Glen Osmond Rd - Eastwood, SA
+                        {activity?.venue} - {} {activity?.city}
                     </Typography>
                 </Stack>
 
@@ -98,15 +114,24 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                        justifyContent={"center"}>
 
                     {isHost ?
-                        <LoadingButton
-                            loading={isAddingAttendee}
-                            variant={"outlined"}
-                            color={"primary"}>
-                            Cancel
-                        </LoadingButton> :
+                        isCanceled ?
+                            <LoadingButton
+                                loading={isAddingAttendee}
+                                variant={"contained"}
+                                color={"primary"}>
+                                Reactivate
+                            </LoadingButton> :
+                            <LoadingButton
+                                loading={isCanceling}
+                                variant={"outlined"}
+                                color={"secondary"}
+                                onClick={handleCancelActivityClick}>
+                                Cancel
+                            </LoadingButton> :
                         isCurrentUserInActivity ?
                             <LoadingButton
                                 loading={isRemovingAttendee}
+                                disabled={isCanceled}
                                 variant={"outlined"}
                                 color={"primary"}
                                 onClick={handleRemoveAttendeeClick}>
@@ -114,6 +139,7 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                             </LoadingButton> :
                             <LoadingButton
                                 loading={isAddingAttendee}
+                                disabled={isCanceled}
                                 variant={"contained"}
                                 color={"secondary"}
                                 onClick={handleAddAttendeeClick}>

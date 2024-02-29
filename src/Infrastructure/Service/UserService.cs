@@ -48,11 +48,6 @@ public class UserService : IUserService
     return _mapper.Map<UserDto>(user);
   }
 
-  public Task<IEnumerable<UserDto>> GetAllUsersAsync()
-  {
-    throw new NotImplementedException();
-  }
-
   public async Task<IEnumerable<UserDto>> GetUsersByIdsAsync(IEnumerable<string> userIds, CancellationToken cancellationToken)
   {
     var enumerable = userIds.ToList();
@@ -74,13 +69,6 @@ public class UserService : IUserService
     }
   }
 
-  public Task<IEnumerable<UserDto>> SearchUsersAsync(string searchTerm)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task AddUserAsync(UserDto userDto) { throw new NotImplementedException(); }
-
   public async Task UpdateUserAsync(UserDto userDto)
   {
     var user = await _userManager.FindByIdAsync(userDto.Id);
@@ -98,34 +86,5 @@ public class UserService : IUserService
     }
 
     _logger.LogInformation("User {UserId} updated successfully", user.Id);
-  }
-
-  public Task DeleteUserAsync(Guid userId) { throw new NotImplementedException(); }
-
-  public Task<bool> ValidateUserCredentialsAsync(string username, string password)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task ChangePasswordAsync(Guid userId, string oldPassword, string newPassword)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task ResetPasswordAsync(Guid userId) { throw new NotImplementedException(); }
-
-  public Task<bool> IsUserInRoleAsync(Guid userId, string roleName)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task AddUserToRoleAsync(Guid userId, string roleName)
-  {
-    throw new NotImplementedException();
-  }
-
-  public Task RemoveUserFromRoleAsync(Guid userId, string roleName)
-  {
-    throw new NotImplementedException();
   }
 }
