@@ -27,8 +27,7 @@ export const DetailContext:React.FC<DetailContextProps> = ({title,description}) 
             }}>
                 {title}
             </Typography>
-            <Typography variant={"body1"} component={"strong"} sx={{}}>
-                {description}
+            <Typography variant={"body1"} component={"strong"} dangerouslySetInnerHTML={{__html: description}} >
             </Typography>
         </Box>
     );

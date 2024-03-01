@@ -119,7 +119,7 @@ public class ActivitiesController : BaseController
     });
 
     return StatusCode(StatusCodes.Status201Created,
-                      ApiResponse<Result>.Success(data: result,
+                      ApiResponse<string>.Success(data: result,
                                                   message:
                                                   "Activity created successfully",
                                                   statusCode:

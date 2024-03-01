@@ -1,14 +1,14 @@
-import {uploadActivityMainPhoto} from "@apis/Photos.ts";
-import {useMutation} from "react-query";
-import {queryClient} from "@apis/queryClient.ts";
 import {useAppDispatch} from "@store/store.ts";
+import {useMutation} from "react-query";
+import {uploadActivityMainPhoto} from "@apis/Photos.ts";
+import {queryClient} from "@apis/queryClient.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 
-const useUploadActivityMainPhotoMutation = (id: string) => {
+const useUploadActivityMainPhotoMutation = (id?: string) => {
     const dispatch = useAppDispatch();
 
     const {isLoading, mutateAsync} = useMutation(
-        (photo: FormData) => uploadActivityMainPhoto(photo, id),
+        ({photo,id}:{photo:FormData,id?:string}) => uploadActivityMainPhoto(photo, id!),
         {
             onSuccess() {
                 queryClient.fetchQuery(['activity', id]);

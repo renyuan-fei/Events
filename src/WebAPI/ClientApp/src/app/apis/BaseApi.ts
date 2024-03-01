@@ -8,19 +8,13 @@ import axios, {
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// 定义接口以扩展 Axios 请求配置（如果需要）
-// interface CustomAxiosRequestConfig {
-//     // 你可以添加任何自定义配置，例如:
-//     // apiVersion?: string;
-// }
-
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
     _retry?: boolean;
 }
 
 // build a custom axios request interceptor
 const apiClient: AxiosInstance = axios.create({
-    baseURL: BASE_URL, // 替换为你的 API 基础 URL
+    baseURL: BASE_URL,
     withCredentials: true,
 });
 

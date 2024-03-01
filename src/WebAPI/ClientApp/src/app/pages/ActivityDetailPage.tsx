@@ -48,7 +48,6 @@ const ActivityDetailPage = () => {
         return null;
     }
 
-
     return (
         <Box>
             <DetailTitle title={title} hostUser={hostUser}/>

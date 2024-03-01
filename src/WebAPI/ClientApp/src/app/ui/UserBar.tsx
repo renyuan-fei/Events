@@ -9,6 +9,7 @@ import {setAlertInfo, setLoginForm} from "@features/commonSlice.ts";
 import {useAppDispatch} from "@store/store.ts";
 import {useNavigate} from "react-router";
 import useLogoutMutation from "@features/user/hooks/useLogoutMutation.ts";
+import Button from "@mui/material/Button";
 
 
 
@@ -40,6 +41,10 @@ const UserBar = ({id ,displayName, image}: User) => {
         setAnchorElUser(null);
     }
 
+    const handleNavigateToCreateActivity = () => {
+        navigate('/activity');
+    }
+
     async function handleLogout() {
         await logoutMutation(undefined, {
             onSuccess: () => {
@@ -66,17 +71,15 @@ const UserBar = ({id ,displayName, image}: User) => {
             width: 390,
         }}>
             <Grid container spacing={2}>
-                <Grid item xs={3}>
-                    <SvgButton svg={svg[0]} title={"Connection"}></SvgButton>
-                </Grid>
-                <Grid item xs={3}>
-                    <SvgButton svg={svg[1]} title={"Messages"}></SvgButton>
+                <Grid item xs={6}>
+                    <Button variant={'contained'} color={'secondary'} sx={{ marginTop: 2 }} onClick={handleNavigateToCreateActivity}>
+                        Create Activity
+                    </Button>
                 </Grid>
                 <Grid item xs={3}>
                     <SvgButton svg={svg[2]} title={"Notifications"}></SvgButton>
                 </Grid>
                 <Grid item xs={3}>
-
                     <Box sx={{
                         display: 'flex',
                         alignItems: 'center', // Center vertically

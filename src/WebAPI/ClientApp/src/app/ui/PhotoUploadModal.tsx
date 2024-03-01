@@ -114,8 +114,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({open, onClose, uploa
                         {isDragActive ? (
                             <Typography variant='h6'>Drop the files here ...</Typography>
                         ) : (
-                            <Typography variant='h6'>Drag 'n' drop a file here, or click to
-                                select a file</Typography>
+                            <Typography variant='h6'>Drag your image here or click to select an image</Typography>
                         )}
                     </Box>
                     <Button

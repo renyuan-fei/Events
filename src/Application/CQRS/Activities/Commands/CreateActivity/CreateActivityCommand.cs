@@ -16,14 +16,14 @@ namespace Application.CQRS.Activities.Commands.CreateActivity;
 /// <summary>
 ///   Represents the command for creating a new activity.
 /// </summary>
-public record CreateActivityCommand : IRequest<Result>
+public record CreateActivityCommand : IRequest<String>
 {
   public string      CurrentUserId { get; init; }
   public ActivityDto ActivityDTO   { get; init; }
 }
 
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
-    Result>
+    String>
 {
   private readonly IActivityRepository                   _activityRepository;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
@@ -42,7 +42,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     _unitOfWork = unitOfWork;
   }
 
-  public async Task<Result> Handle(
+  public async Task<String> Handle(
       CreateActivityCommand request,
       CancellationToken     cancellationToken)
   {
@@ -67,7 +67,9 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
-      if (result) return Result.Success();
+      var activityId = activity.Id.Value;
+
+      if (result) return activityId;
 
       throw new DbUpdateException("There was an error saving data to the database");
     }

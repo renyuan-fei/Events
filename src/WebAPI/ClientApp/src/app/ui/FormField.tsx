@@ -11,6 +11,7 @@ interface FormFieldProps {
     required?: boolean;
 }
 
+// TODO use useFormContext to get control
 const FormField = ({
                        name,
                        control,
@@ -21,6 +22,7 @@ const FormField = ({
                    }: FormFieldProps) => {
     // 根据 type 选择要使用的组件
     const Component = type === 'password' ? CustomPasswordTextField : CustomTextField;
+
     return (
         <Controller
             name={name}

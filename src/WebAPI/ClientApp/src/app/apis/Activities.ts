@@ -3,6 +3,7 @@ import {handleResponse} from "@apis/ApiHandler.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
 import {Activity} from "@type/Activity.ts";
 import {Item, PaginatedResponse} from "@type/PaginatedResponse.ts";
+import {NewActivity} from "@type/NewActivity.ts";
 
 export const GetPaginatedActivities = async (
     pageNumber: number = 1,
@@ -43,5 +44,10 @@ export const CancelActivity = async (activityId: string): Promise<any> => {
 }
 
 // TODO create activity
+export const CreateActivity = async (activity: NewActivity): Promise<any> => {
+    const response = await apiClient.post<ApiResponse<any>>(`/api/Activities`, activity);
+    return handleResponse(response);
+}
+
 
 // TODO update activity

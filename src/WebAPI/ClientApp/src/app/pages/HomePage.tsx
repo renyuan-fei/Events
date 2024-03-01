@@ -13,7 +13,6 @@ import {useEffect} from "react";
 import {useNavigate} from "react-router";
 import {useLocation} from "react-router-dom";
 import {useFilters} from "@hooks/useFilters.ts";
-import Button from "@mui/material/Button";
 import ActivityItem from "@features/activity/ActivitiyItem.tsx";
 
 const HomePage = () => {
@@ -35,10 +34,6 @@ const HomePage = () => {
         }
         navigate({search: searchParams.toString()}, {replace: true});
     }, [navigate]);
-
-    const handleNavigateToCreateActivity = () => {
-        navigate('/activity');
-    }
 
     const {
         isActivitiesLoading,
@@ -64,9 +59,7 @@ const HomePage = () => {
                             height: '100%' // Make sure the grid item takes full height
                         }}>
                             <ActivitiesCalendar/>
-                            <Button variant={'contained'} color={'secondary'} sx={{ marginTop: 2 }} onClick={handleNavigateToCreateActivity}>
-                                Create Activity
-                            </Button>
+
                         </Grid>
 
                         <Grid item
