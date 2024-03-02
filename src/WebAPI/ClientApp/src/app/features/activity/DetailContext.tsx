@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {useTheme} from "@mui/material";
 import React from "react";
+import parse from "react-html-parser"
 
 interface DetailContextProps {
     title: string;
@@ -27,7 +28,12 @@ export const DetailContext:React.FC<DetailContextProps> = ({title,description}) 
             }}>
                 {title}
             </Typography>
-            <Typography variant={"body1"} component={"strong"} dangerouslySetInnerHTML={{__html: description}} >
+            <Typography variant={"body1"} component={"div"} sx={{
+                whiteSpace: 'normal', // 允许换行
+                wordBreak: 'break-word', // 在必要时断词
+                marginBottom: theme.spacing(0.5), // 根据需要添加适当的底部外边距
+            }}>
+                {parse(description)}
             </Typography>
         </Box>
     );

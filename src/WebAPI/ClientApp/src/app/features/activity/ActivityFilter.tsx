@@ -5,14 +5,13 @@ import CustomSelect from "@ui/Custom/CustomSelect.tsx";
 import Divider from "@mui/material/Divider";
 import {Category} from "@type/Category.ts";
 import {useNavigate} from "react-router";
+import React from "react";
 
 const ActivityFilter = () => {
     const initialCategoryValues = Object.values(Category);
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
 
-    // TODO use react router to set url params and reset page to 1 each time a filter is changed
-    // TODO implement a HOC to manage
 
     const handleClear = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -38,6 +37,7 @@ const ActivityFilter = () => {
         if (searchParams.has('pageSize')) {
             searchParams.set('pageSize', '8');
         }
+
         searchParams.delete('category');
         searchParams.delete('startdate');
 

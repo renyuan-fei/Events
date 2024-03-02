@@ -18,8 +18,6 @@ const FormField = ({
     const Component = type === 'password' ? CustomPasswordTextField : CustomTextField;
     const { control, formState: { errors } } = useFormContext();
 
-    console.log(errors);
-
     return (
         <Controller
             name={name}
