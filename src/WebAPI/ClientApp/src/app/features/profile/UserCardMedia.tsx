@@ -12,7 +12,8 @@ interface UserCardMediaProps {
     isCurrentUser: boolean;
     image: string;
 }
-const UserCardMedia:React.FC<UserCardMediaProps> = ({isCurrentUser,image}) => {
+
+const UserCardMedia: React.FC<UserCardMediaProps> = ({isCurrentUser, image}) => {
     const theme = useTheme();
     const [isUploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
     const id = queryClient.getQueryData<userInfo>('userInfo')?.id!;
@@ -34,15 +35,15 @@ const UserCardMedia:React.FC<UserCardMediaProps> = ({isCurrentUser,image}) => {
                 uploadHook={useUploadUserAvatarMutation(id)}
             />
             <CardMedia
-            image={image}
-            title={"Profile Picture"}
-            sx={{
-                borderRadius: theme.shape.borderRadius,
-                objectFit: 'cover',
-                width: 336,
-                height: 403,
-                position: 'relative', // 确保Media组件相对定位
-            }}/>
+                image={image}
+                title={"Profile Picture"}
+                sx={{
+                    borderRadius: theme.shape.borderRadius,
+                    objectFit: 'cover',
+                    width: 336,
+                    height: 403,
+                    position: 'relative', // 确保Media组件相对定位
+                }}/>
             {isCurrentUser && ( // 仅当isCurrentUser为true时显示按钮
                 <Button
                     variant='contained'

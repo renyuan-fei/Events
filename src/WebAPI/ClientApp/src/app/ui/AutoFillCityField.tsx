@@ -5,12 +5,11 @@ import {useEffect} from "react"; // 假设你已经有一个基础的 FormField 
 
 const AutoFillCityField = () => {
     const { cityName} = useCityInfo();
-    const { setValue,control,formState: { errors } } = useFormContext(); // 使用 useFormContext 来获取 setValue 方法
+    const { setValue} = useFormContext();
 
-    // 当 cityName 有值时，自动填充表单的城市字段
     useEffect(() => {
         if (cityName) {
-            setValue('city', cityName); // 假设表单中城市字段的名称为 'city'
+            setValue('city', cityName);
         }
     }, [cityName, setValue]);
 
@@ -19,9 +18,6 @@ const AutoFillCityField = () => {
             name='city'
             label='City'
             type='text'
-            control={control}
-            required={true}
-            errors={errors}
         />
     );
 };

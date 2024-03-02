@@ -4,17 +4,17 @@ import {useAppDispatch} from "@store/store.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {queryClient} from "@apis/queryClient.ts";
 
-const useDeleteActivityPhotoMutation = (activityId: string) => {
+const useDeleteActivityPhotoMutation = (id: string) => {
     const dispatch = useAppDispatch();
 
     const {
         isLoading,
         mutateAsync
     } = useMutation(
-        (publicId: string) => deleteActivityPhoto(activityId,publicId),
+        (publicId: string) => deleteActivityPhoto(id,publicId),
         {
             onSuccess() {
-                queryClient.invalidateQueries('TopPhotos');
+                queryClient.invalidateQueries(['TopPhotos',id]);
 
                 dispatch(setAlertInfo({
                     open: true,

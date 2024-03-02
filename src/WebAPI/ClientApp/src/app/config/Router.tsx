@@ -39,7 +39,8 @@ export const router = createHashRouter([
                 ),
                 children: [
                     {path: "/home", element: <HomePage/>},
-                    {path: "/activity", element: <CreateActivity/>},
+                    {path: "/activity/new", element: <CreateActivity/>},
+                    {path: "/activity/new/:activityId", element: <CreateActivity/>},
                     {path: "/activity/:activityId", element: <ActivityDetailPage/>},
                     {path: "/user/:userId", element: <UserProfile/>},
                     {path: "/follower/:userId", element: <FollowerPage/>},

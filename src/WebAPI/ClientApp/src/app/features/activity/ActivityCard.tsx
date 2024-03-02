@@ -9,6 +9,7 @@ import {CardActionArea, useTheme} from "@mui/material";
 import {useNavigate} from "react-router";
 import React, {useCallback} from "react";
 import {Item} from "@type/PaginatedResponse.ts";
+import useFormatToLocalTimezone from "../../utils/useFormatToLocalTimezone.ts";
 
 // Correct the function signature to accept a prop of type Item
 const ActivityCard = ({
@@ -71,7 +72,9 @@ const ActivityCard = ({
 
                     <Box display="flex" alignItems="center" mb={1}>
                         <EventIcon color="action" sx={{marginRight: '5px'}}/>
-                        <Typography variant="caption">{date}</Typography>
+                        <Typography variant="caption">
+                            {useFormatToLocalTimezone(date)}
+                        </Typography>
                     </Box>
 
                     <Box display="flex" alignItems="center">
@@ -83,7 +86,7 @@ const ActivityCard = ({
                             borderRadius: '4px',
                             padding: '2px 5px'
                         }}>
-                            {category}
+                            {category.replace(/And/g, ' • ')}
                         </Typography>
                     </Box>
 

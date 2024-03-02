@@ -14,7 +14,7 @@ interface DetailBodyProps {
     title: string;
     description: string;
     isCurrentUser: boolean;
-    uploadHook: UploadHook;
+    uploadHook: UploadHook | any;
 }
 
 const DetailBody: React.FC<DetailBodyProps> = ({

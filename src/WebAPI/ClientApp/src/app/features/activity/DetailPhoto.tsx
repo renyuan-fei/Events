@@ -44,12 +44,10 @@ const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser,uploadHook
                     component='img'
                     src={src}
                     sx={{
-                        width: '100%', // 可以指定固定宽度
-                        height: 400, // 可以指定固定高度
-                        // width: "100%",
-                        // height: "auto",
+                        width: '100%',
+                        height: 400,
                         objectFit: "cover",
-                        borderRadius: theme.shape.borderRadius, // 圆角
+                        borderRadius: theme.shape.borderRadius,
                     }}
                 />
                 {isCurrentUser && <Button
@@ -69,7 +67,7 @@ const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser,uploadHook
                             backgroundColor: "rgba(0,0,0,0.55)",
                         },
                         textTransform: "none",
-                        borderRadius: theme.shape.borderRadius, // 圆角
+                        borderRadius: theme.shape.borderRadius,
                     }}
                 >
                   Change profile photo

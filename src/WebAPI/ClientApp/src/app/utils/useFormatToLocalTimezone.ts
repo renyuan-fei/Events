@@ -1,8 +1,8 @@
-const useFormatToLocalTimezone = (dateString: string): string => {
+const useFormatToLocalTimezone = (dateInput: Date | string): string => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const date = new Date(dateString + 'Z'); // Parse the date string as UTC
+    // 检查dateInput类型并相应处理
+    const date = new Date(typeof dateInput === 'string' ? dateInput + 'Z' : dateInput.toISOString() + 'Z');
 
-    // Set up the options for formatting
     const options: Intl.DateTimeFormatOptions = {
         weekday: 'short', // e.g., "Fri"
         month: 'short',   // e.g., "Jan"
@@ -14,8 +14,7 @@ const useFormatToLocalTimezone = (dateString: string): string => {
         timeZone: timeZone, // Set the desired timezone
     };
 
-    // Format the date in the given timezone
     return new Intl.DateTimeFormat('en-AU', options).format(date);
-}
+};
 
 export default useFormatToLocalTimezone;

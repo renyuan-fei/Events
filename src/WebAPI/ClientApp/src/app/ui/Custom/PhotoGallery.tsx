@@ -8,24 +8,31 @@ import GalleryTitle from "@ui/Custom/GalleryTitle.tsx";
 import GalleryContainer from "@ui/Custom/GalleryContainer.tsx";
 import GalleryDisplay from "@ui/Custom/GalleryDisplay.tsx";
 import PhotoList from "@ui/Custom/PhotoList.tsx";
-import useDeleteActivityPhotoMutation from "@hooks/useDeleteActivityPhotoMutation.ts";
-import useUploadActivityPhotoMutation from "@hooks/useUploadActivityPhotoMutation.ts";
+
+interface UploadHook {
+    isUploading: boolean;
+    upload: (formData: FormData, callbacks: { onSuccess?: () => void }) => void;
+}
+
+interface DeleteHook {
+    isDeleting: boolean;
+    delete: (publicId: string) => void;
+}
 
 interface PhotoGalleryProps {
     id: string | undefined;
     isCurrentUser: boolean
     photos: Array<Photo>;
     remainingCount: number;
+    uploadHook: UploadHook;
+    deleteHook: DeleteHook;
 }
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = (props: PhotoGalleryProps) => {
-
     const navigate = useNavigate();
     const [isUploadModalOpen, setUploadModalOpen] = useState(false);
-    const {id, photos, isCurrentUser, remainingCount} = props;
-    const {isDeleting, delete: deletePhoto} = useDeleteActivityPhotoMutation(id!);
-    const uploadHook = useUploadActivityPhotoMutation(id!)
-
+    const {id, photos, isCurrentUser, remainingCount, uploadHook, deleteHook} = props;
+    const {isDeleting, delete: deletePhoto} = deleteHook;
     const handleSeeAllClick = () => {
         navigate(`/photos/${id}`);
     };

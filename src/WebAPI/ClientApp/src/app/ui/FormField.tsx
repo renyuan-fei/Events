@@ -1,27 +1,24 @@
 import CustomTextField from "@ui/Custom/CustomTextField.tsx";
 import CustomPasswordTextField from "@ui/Custom/CustomPasswordTextField.tsx"; // 假设您有一个这样的组件
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface FormFieldProps {
     name: string;
-    control: any;
-    errors: Record<string, any>;
     label: string;
-    type?: string;
+    type?: 'text' | 'password' | 'email' | 'number';
     required?: boolean;
 }
 
-// TODO use useFormContext to get control
 const FormField = ({
                        name,
-                       control,
-                       errors,
                        label,
                        type = 'text',
-                       required = false,
+                       required = true,
                    }: FormFieldProps) => {
-    // 根据 type 选择要使用的组件
     const Component = type === 'password' ? CustomPasswordTextField : CustomTextField;
+    const { control, formState: { errors } } = useFormContext();
+
+    console.log(errors);
 
     return (
         <Controller
@@ -33,7 +30,7 @@ const FormField = ({
                     label={label}
                     required={required}
                     error={!!errors[name]}
-                    helperText={errors[name]?.message || ''}
+                    helperText={(errors[name]?.message || '') as string}
                 />
             )}
         />

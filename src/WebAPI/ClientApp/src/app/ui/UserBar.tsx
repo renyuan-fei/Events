@@ -42,7 +42,7 @@ const UserBar = ({id ,displayName, image}: User) => {
     }
 
     const handleNavigateToCreateActivity = () => {
-        navigate('/activity');
+        navigate('/activity/new');
     }
 
     async function handleLogout() {

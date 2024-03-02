@@ -8,7 +8,7 @@ const useUploadActivityMainPhotoMutation = (id?: string) => {
     const dispatch = useAppDispatch();
 
     const {isLoading, mutateAsync} = useMutation(
-        ({photo,id}:{photo:FormData,id?:string}) => uploadActivityMainPhoto(photo, id!),
+        (photo:FormData) => uploadActivityMainPhoto(photo, id!),
         {
             onSuccess() {
                 queryClient.fetchQuery(['activity', id]);

@@ -6,6 +6,8 @@ import {useGetActivityQuery} from "@features/activity/hooks/useGetActivityQuery.
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
+import useUploadActivityPhotoMutation from "@hooks/useUploadActivityPhotoMutation.ts";
+import useDeleteActivityPhotoMutation from "@hooks/useDeleteActivityPhotoMutation.ts";
 import DetailTitle from "@features/activity/DetailTitle.tsx";
 import DetailBody from "@features/activity/DetailBody.tsx";
 import DetailAttendees from "@features/activity/DetailAttendees.tsx";
@@ -22,6 +24,8 @@ const ActivityDetailPage = () => {
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const {activityDetail, isGettingActivity} = useGetActivityQuery(activityId!);
     const {data, isPhotosLoading} = useTopPhotosQuery(activityId!);
+    const uploadHook = useUploadActivityPhotoMutation(activityId!)
+    const deleteHook = useDeleteActivityPhotoMutation(activityId!)
     const updateHook = useUploadActivityMainPhotoMutation(activityId!);
 
     if (isPhotosLoading || isGettingActivity) {
@@ -48,12 +52,14 @@ const ActivityDetailPage = () => {
         return null;
     }
 
+
     return (
         <Box>
             <DetailTitle title={title} hostUser={hostUser}/>
 
             <Box sx={{flexGrow: 1, marginBottom: theme.spacing(2)}}>
                 <Grid container spacing={2}>
+
                     <Grid item md={7.5}>
                         <DetailBody title={title}
                                     imageUrl={imageUrl}
@@ -61,7 +67,9 @@ const ActivityDetailPage = () => {
                                     isCurrentUser={isCurrentUser}
                                     uploadHook={updateHook}/>
                         <DetailAttendees attendees={attendees}/>
-                        <PhotoGallery photos={photos}
+                        <PhotoGallery uploadHook={uploadHook}
+                                      deleteHook={deleteHook}
+                                      photos={photos}
                                       id={activityId}
                                       isCurrentUser={isCurrentUser}
                                       remainingCount={remainingCount}/>

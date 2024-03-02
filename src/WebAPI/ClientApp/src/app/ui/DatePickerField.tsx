@@ -10,7 +10,7 @@ interface DatePickerFieldProps {
 }
 
 const DatePickerField: React.FC<DatePickerFieldProps> = ({ name, label }) => {
-    const { control } = useFormContext();
+    const { control,formState: {errors}} = useFormContext();
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -24,6 +24,12 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({ name, label }) => {
                         {...restField}
                         onChange={(newValue) => {
                             restField.onChange(newValue);
+                        }}
+                        slotProps={{
+                            textField: {
+                                error: !!errors[name], // 如果存在错误，则设置error属性为true
+                                helperText: !!errors[name]?.message || null, // 仅当存在错误消息时显示，否则为null
+                            }
                         }}
                     />
                 )}

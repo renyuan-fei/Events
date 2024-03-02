@@ -14,6 +14,7 @@ import {Activity} from "@type/Activity.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import useFormatToLocalTimezone from "../../utils/useFormatToLocalTimezone.ts";
 import useCancelActivity from "@features/activity/hooks/useCancelActivity.ts";
+import {useNavigate} from "react-router";
 
 interface DetailSidebarProps {
     activityId: string;
@@ -21,6 +22,7 @@ interface DetailSidebarProps {
 
 const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     const theme = useTheme();
+    const navigate = useNavigate();
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const activity = queryClient.getQueryData<Activity>(['activity', activityId]);
     const isCurrentUserInActivity = activity?.attendees?.some((attendee) => attendee.userId === currentUserId) ?? false;
@@ -46,6 +48,9 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     // TODO implement hook useAttendEvent
     // TODO according to different status of event and user, show different button
 
+    const handelNavigateToManagePage = () => {
+        navigate(`/activity/new/${activityId}`);
+    }
     const handleCancelActivityClick = async () => {
         await cancelActivity();
     }
@@ -112,7 +117,6 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                        alignItems='flex-start'
                        spacing={2}
                        justifyContent={"center"}>
-
                     {isHost ?
                         isCanceled ?
                             <LoadingButton
@@ -121,13 +125,22 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                                 color={"primary"}>
                                 Reactivate
                             </LoadingButton> :
-                            <LoadingButton
-                                loading={isCanceling}
-                                variant={"outlined"}
-                                color={"secondary"}
-                                onClick={handleCancelActivityClick}>
-                                Cancel
-                            </LoadingButton> :
+                            <>
+                                <LoadingButton
+                                    loading={isCanceling}
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    onClick={handelNavigateToManagePage}>
+                                    Manage your activity
+                                </LoadingButton>
+                                <LoadingButton
+                                    loading={isCanceling}
+                                    variant={"outlined"}
+                                    color={"secondary"}
+                                    onClick={handleCancelActivityClick}>
+                                    Cancel
+                                </LoadingButton>
+                            </> :
                         isCurrentUserInActivity ?
                             <LoadingButton
                                 loading={isRemovingAttendee}

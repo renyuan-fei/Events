@@ -19,7 +19,7 @@ import {
     setSignUpForm
 } from "@features/commonSlice.ts";
 import {z} from 'zod';
-import {useForm} from "react-hook-form";
+import {FormProvider, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useLoginMutation from "@features/user/hooks/useLoginMutation.ts";
 import FormField from "@ui/FormField.tsx";
@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
     const dispatch = useAppDispatch()
     const open = useSelector((state: RootState) => state.common.LoginOpen);
     const {loginMutate, isLoading} = useLoginMutation();
-    const {control, reset, handleSubmit, formState: {errors}} = useForm<FormValues>({
+    const methods = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
             // email: '',
@@ -55,6 +55,11 @@ const LoginForm: React.FC = () => {
             keepSignedIn: false,
         }
     });
+    const {
+        reset,
+        handleSubmit,
+        formState: {errors}
+    } = methods;
 
     function handleClose(): void {
         dispatch(setLoginForm(false))
@@ -135,44 +140,41 @@ const LoginForm: React.FC = () => {
 
             <DialogContent dividers>
 
-                <Box component={"form"} noValidate onSubmit={handleSubmit(onSubmit)}>
+                <FormProvider {...methods}>
+                    <Box component={"form"} noValidate onSubmit={handleSubmit(onSubmit)}>
 
-                    <FormField name='email'
-                               control={control}
-                               errors={errors}
-                               label='Email'
-                               type='email'
-                               required/>
+                        <FormField name='email'
+                                   label='Email'
+                                   type='email'
+                        />
 
-                    <FormField name='password'
-                               control={control}
-                               errors={errors}
-                               label='Password'
-                               type='password'
-                               required/>
+                        <FormField name='password'
+                                   label='Password'
+                                   type='password'
+                        />
 
-                    <FormCheckbox
-                        label={'Keep me signed in'}
-                        name={'keepSignedIn'}
-                        control={control}
-                    />
+                        <FormCheckbox
+                            label={'Keep me signed in'}
+                            name={'keepSignedIn'}
+                        />
 
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        color='secondary'
-                        fullWidth
-                        sx={{
-                            mb: 2,
-                            fontSize: 18,
-                            fontWeight: 700,
-                            borderRadius: 2,
-                        }}
-                    >
-                        Log in
-                    </Button>
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            color='secondary'
+                            fullWidth
+                            sx={{
+                                mb: 2,
+                                fontSize: 18,
+                                fontWeight: 700,
+                                borderRadius: 2,
+                            }}
+                        >
+                            Log in
+                        </Button>
 
-                </Box>
+                    </Box>
+                </FormProvider>
 
                 <Divider sx={{mt: 2, mb: 2}}>or</Divider>
 

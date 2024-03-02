@@ -11,11 +11,10 @@ interface RadioGroupFieldProps {
     name: string;
     label: string;
     options: Option[];
-    defaultValue?: string;
 }
 
-const RadioGroupField: React.FC<RadioGroupFieldProps> = ({ name, label, options, defaultValue }) => {
-    const { control } = useFormContext(); // 使用 useFormContext 来访问 react-hook-form 的控制器
+const RadioGroupField: React.FC<RadioGroupFieldProps> = ({ name, label, options}) => {
+    const { control, } = useFormContext(); // 使用 useFormContext 来访问 react-hook-form 的控制器
 
     return (
         <FormControl component="fieldset">
@@ -23,11 +22,9 @@ const RadioGroupField: React.FC<RadioGroupFieldProps> = ({ name, label, options,
             <Controller
                 name={name}
                 control={control}
-                defaultValue={defaultValue}
                 render={({ field }) => (
                     <RadioGroup
                         {...field}
-                        defaultValue={defaultValue}
                     >
                         {options.map((option) => (
                             <FormControlLabel

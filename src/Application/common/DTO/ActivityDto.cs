@@ -52,7 +52,7 @@ public class ActivityDto
   /// The description as a string.
   /// </value>
   [ Required ]
-  [ MaxWordCount(100, ErrorMessage = "Description must be at most 100 words long.") ]
+  [ MaxWordCount(500, ErrorMessage = "Description must be at most 100 words long.") ]
   public string Description { get; set; }
 
   /// <summary>

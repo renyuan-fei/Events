@@ -18,7 +18,7 @@ import {
     checkEmailRegistered,
 } from "@apis/Account.ts";
 import {z} from "zod";
-import {useForm} from "react-hook-form";
+import {FormProvider, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import LogoImg from "@assets/logo.png";
 import useRegisterMutation from "@features/user/hooks/useRegisterMutation.ts";
@@ -41,7 +41,9 @@ const schema = z.object({
     message: "Passwords must match",
     path: ["confirmPassword"],
 }).refine(async (data) => {
-    if (!emailRegex.test(data.email)) {return true;}
+    if (!emailRegex.test(data.email)) {
+        return true;
+    }
 
     const isRegistered = await checkEmailRegistered(data.email);
     return !isRegistered;
@@ -65,13 +67,7 @@ const SignUpForm = () => {
     const open = useSelector((state: RootState) => state.common.signUpOpen);
     const {mutateAsync: registerMutate, isLoading} = useRegisterMutation();
 
-    const {
-        control,
-        reset,
-        trigger,
-        handleSubmit,
-        formState: {errors}
-    } = useForm<FormValues>({
+    const methods = useForm<FormValues>({
         resolver: zodResolver(schema),
         // defaultValues: {
         //     displayName: 'TestEmail@example.com',
@@ -88,6 +84,13 @@ const SignUpForm = () => {
             phoneNumber: '',
         }
     });
+
+    const {
+        reset,
+        trigger,
+        handleSubmit,
+        formState: {errors}
+    } = methods
 
 
     function handleClose(): void {
@@ -158,65 +161,56 @@ const SignUpForm = () => {
             </DialogTitle>
 
             <DialogContent dividers>
-                <Box component='form'
-                     noValidate
-                     onSubmit={handleSubmit(onSubmit)}
-                     sx={{mt: 1}}>
+                <FormProvider {...methods}>
+                    <Box component='form'
+                         noValidate
+                         onSubmit={handleSubmit(onSubmit)}
+                         sx={{mt: 1}}>
 
-                    <FormField name='displayName'
-                               control={control}
-                               errors={errors}
-                               label='Your name'
-                               required/>
+                        <FormField name='displayName'
+                                   label='Your name'
+                        />
 
-                    <FormField name='email'
-                               control={control}
-                               errors={errors}
-                               label='Email address'
-                               required
-                               type='email'/>
+                        <FormField name='email'
+                                   label='Email address'
+                                   type='email'/>
 
-                    <FormField name='password'
-                               control={control}
-                               errors={errors}
-                               label='Password'
-                               required
-                               type='password'/>
+                        <FormField name='password'
+                                   label='Password'
+                                   required
+                                   type='password'/>
 
-                    <FormField name='confirmPassword'
-                               control={control}
-                               errors={errors}
-                               label='Confirm Password'
-                               required
-                               type='password'/>
+                        <FormField name='confirmPassword'
+                                   label='Confirm Password'
+                                   required
+                                   type='password'/>
 
-                    <FormField name='phoneNumber'
-                               control={control}
-                               errors={errors}
-                               label='Phone Number'
-                               required/>
+                        <FormField name='phoneNumber'
+                                   label='Phone Number'
+                                   required/>
 
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        color='secondary'
-                        fullWidth
-                        sx={{
-                            mb: 2,
-                            fontSize: 18,
-                            fontWeight: 700,
-                        }}
-                    >
-                        sign Up
-                    </Button>
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            color='secondary'
+                            fullWidth
+                            sx={{
+                                mb: 2,
+                                fontSize: 18,
+                                fontWeight: 700,
+                            }}
+                        >
+                            sign Up
+                        </Button>
+                    </Box>
+                </FormProvider>
 
-                    <Typography component={"div"} variant='body2' align='center'>
-                        By signing up, you agree to our
-                        <Link href='#' underline='none'>Terms of Service</Link>,
-                        <Link href='#' underline='none'>Privacy Policy</Link>, and
-                        <Link href='#' underline='none'>Cookie Policy</Link>.
-                    </Typography>
-                </Box>
+                <Typography component={"div"} variant='body2' align='center'>
+                    By signing up, you agree to our
+                    <Link href='#' underline='none'>Terms of Service</Link>,
+                    <Link href='#' underline='none'>Privacy Policy</Link>, and
+                    <Link href='#' underline='none'>Cookie Policy</Link>.
+                </Typography>
 
                 <Divider sx={{mt: 2, mb: 2}}>or</Divider>
 

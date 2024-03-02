@@ -5,7 +5,7 @@ export interface Activity {
     id: string;
     title: string;
     imageUrl: string;
-    date: string; // or Date if you plan to convert the string to a Date object
+    date: Date;
     description: string;
     category: Category;
     city: string;

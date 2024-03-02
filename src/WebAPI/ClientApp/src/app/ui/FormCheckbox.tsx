@@ -1,14 +1,14 @@
 import React from "react";
-import { Controller } from "react-hook-form";
-import { Checkbox, FormControlLabel, useTheme } from "@mui/material";
+import {Controller, useFormContext} from "react-hook-form";
+import {Checkbox, FormControlLabel, useTheme} from "@mui/material";
 interface FormCheckboxProps {
     name: string;
-    control: any;
     label?: string;
 }
 
-const FormCheckbox: React.FC<FormCheckboxProps> = ({ name, control, label = "Keep me signed in" }) => {
+const FormCheckbox: React.FC<FormCheckboxProps> = ({ name, label = '' }) => {
     const theme = useTheme();
+    const {control} = useFormContext();
 
     return (
         <Controller

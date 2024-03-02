@@ -1,5 +1,5 @@
 import React from 'react';
-import {useForm, SubmitHandler} from 'react-hook-form';
+import {useForm, SubmitHandler, FormProvider} from 'react-hook-form';
 import {Modal, Box, Typography, IconButton, Divider, useTheme} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
 import {UserProfile} from "@type/UserProfile.ts";
@@ -13,6 +13,7 @@ import {checkEmailRegistered} from "@apis/Account.ts";
 import FormField from "@ui/FormField.tsx";
 import Card from "@mui/material/Card";
 import CloseIcon from "@mui/icons-material/Close";
+import CardContent from "@mui/material/CardContent";
 
 interface UserUpdateModalProps {
     open: boolean;
@@ -58,10 +59,11 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
         path: ["email"],
     });
 
-    const { control, handleSubmit,formState: { errors }} = useForm<UserProfile>({
+    const methods = useForm<UserProfile>({
         resolver: zodResolver(schema),
         defaultValues: userInfo,
     });
+    const {handleSubmit} = methods;
     const {isUpdating, update} = useUpdateUserProfileMutation(currentUserId!);
 
     const updateUserInfo = async (data: UserProfile) => {
@@ -88,9 +90,10 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
             aria-labelledby='modal-modal-title'
             aria-describedby='modal-modal-description'
         >
+
             <Card sx={style} component='form' onSubmit={handleSubmit(onSubmit)}>
                 <IconButton
-                    aria-label="close"
+                    aria-label='close'
                     onClick={handleClose}
                     sx={{
                         position: 'absolute',
@@ -98,43 +101,42 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
                         top: 8,
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
-                <Typography id='modal-modal-title' variant='h4' component='h2' sx={{
-                    marginY: 2,
-                }}>
-                    Update your profile
-                </Typography>
-                <FormField name='displayName'
-                           control={control}
-                           errors={errors}
-                           label='Name'
-                           required/>
-                <FormField name='email'
-                           control={control}
-                           errors={errors}
-                           label='Email'
-                           required/>
-                <FormField name='phoneNumber'
-                           control={control}
-                           errors={errors}
-                           label='Phone Number'/>
-                <FormField name='bio'
-                           control={control}
-                           errors={errors}
-                           label="What's Up"/>
-                <Divider sx={{ my: 2 }} />
-                <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-                    <LoadingButton
-                        type="submit"
-                        loading={isUpdating}
-                        variant="contained"
-                        sx={{ width: theme.spacing(30),height: theme.spacing(6)}}
-                        onClick={handleSubmit(onSubmit)}
-                    >
-                        Update
-                    </LoadingButton>
-                </Box>
+                <CardContent>
+                    <Typography id='modal-modal-title' variant='h4' component='h2' sx={{
+                        marginY: 2,
+                    }}>
+                        Update your profile
+                    </Typography>
+                    <FormProvider {...methods}>
+
+                        <Box component={'form'} noValidate>
+                            <FormField name='displayName'
+                                       label='Name'
+                                       required/>
+                            <FormField name='email'
+                                       label='Email'
+                                       required/>
+                            <FormField name='phoneNumber'
+                                       label='Phone Number'/>
+                            <FormField name='bio'
+                                       label="What's Up"/>
+                            <Divider sx={{my: 2}}/>
+                            <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                                <LoadingButton
+                                    type='submit'
+                                    loading={isUpdating}
+                                    variant='contained'
+                                    sx={{width: theme.spacing(30), height: theme.spacing(6)}}
+                                    onClick={handleSubmit(onSubmit)}
+                                >
+                                    Update
+                                </LoadingButton>
+                            </Box>
+                        </Box>
+                    </FormProvider>
+                </CardContent>
             </Card>
         </Modal>
     );

@@ -51,3 +51,7 @@ export const CreateActivity = async (activity: NewActivity): Promise<any> => {
 
 
 // TODO update activity
+export const UpdateActivity = async (activityId: string, activity: NewActivity): Promise<any> => {
+    const response = await apiClient.put<ApiResponse<any>>(`/api/Activities/${activityId}`, activity);
+    return handleResponse(response);
+}
