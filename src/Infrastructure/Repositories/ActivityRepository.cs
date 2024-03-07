@@ -42,11 +42,12 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
                                                cancellationToken);
   }
 
-  public IQueryable<Activity> GetAllActivitiesWithAttendeesQueryable()
+  public IQueryable<Activity> GetAllActivitiesQueryable()
   {
     return DbContext.Activities
                     .Include(activity =>
                                  activity.Attendees.OrderBy(attendee => attendee.Created))
+                    .OrderBy(activity => activity.Date)
                     .AsQueryable();
   }
 

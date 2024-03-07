@@ -23,7 +23,6 @@ const HomePage = () => {
     const pageSize = parseInt(new URLSearchParams(location.search).get('pageSize') || '8');
     const filters = useFilters();
 
-    console.log(filters);
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         if (!searchParams.get('page')) {

@@ -18,7 +18,7 @@ public interface IActivityRepository
 
   Task<bool> IsActivityExistingAsync(ActivityId id, CancellationToken cancellationToken = default);
 
-  IQueryable<Activity> GetAllActivitiesWithAttendeesQueryable();
+  IQueryable<Activity> GetAllActivitiesQueryable();
 
   public Task<bool> IsHostAsync(
           ActivityId activityId,

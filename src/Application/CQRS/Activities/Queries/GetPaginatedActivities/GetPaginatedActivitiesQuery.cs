@@ -59,7 +59,7 @@ public class
   {
     try
     {
-      var query = _activityRepository.GetAllActivitiesWithAttendeesQueryable();
+      var query = _activityRepository.GetAllActivitiesQueryable();
 
       query = ApplyFilters(query, request.FilterParams);
 
