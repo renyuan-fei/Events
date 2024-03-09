@@ -6,6 +6,7 @@ using Application.common.Interfaces;
 using Application.Common.Interfaces;
 using Application.common.Security;
 
+using Domain.Entities;
 using Domain.Repositories;
 
 using Infrastructure.DatabaseContext;
@@ -63,6 +64,8 @@ public static class DependencyInjection
     services.AddScoped<IFollowingRepository, FollowingRepository>();
     services.AddScoped<IPhotoRepository, PhotoRepository>();
     services.AddScoped<ICommentRepository, CommentRepository>();
+    services.AddScoped<IUserNotificationRepository, UserNotificationRepository>();
+    services.AddScoped<INotificationRepository, INotificationRepository>();
 
     #endregion
 

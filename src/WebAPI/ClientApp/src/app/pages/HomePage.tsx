@@ -58,7 +58,6 @@ const HomePage = () => {
                             height: '100%' // Make sure the grid item takes full height
                         }}>
                             <ActivitiesCalendar/>
-
                         </Grid>
 
                         <Grid item

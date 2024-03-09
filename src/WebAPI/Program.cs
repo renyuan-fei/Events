@@ -48,6 +48,7 @@ app.MapControllers();
 
 // Map the SignalR hubs
 app.MapHub<ChatHub>("/chat");
+app.MapHub<NotificationHub>("/notifications");
 
 // When running the application
 // Initialize the database.

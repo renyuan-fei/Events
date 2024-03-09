@@ -60,7 +60,7 @@ public class Activity : BaseAuditableEntity<ActivityId>
                                    address,
                                    ActivityStatus.Confirmed);
 
-    newActivity.AddDomainEvent(new ActivityCreatedDomainEvent(newActivity.Id));
+    newActivity.AddDomainEvent(new ActivityCreatedDomainEvent(newActivity));
 
     return newActivity;
   }
@@ -73,19 +73,14 @@ public class Activity : BaseAuditableEntity<ActivityId>
     Description = updatedActivity.Description;
     Location = updatedActivity.Location;
 
-    AddDomainEvent(new ActivityUpdatedDomainEvent(updatedActivity));
-  }
-
-  public void SetCategory(Category category)
-  {
-    AddDomainEvent(new ActivitySetCategoryDomainEvent(Id, category));
+    AddDomainEvent(new ActivityUpdatedDomainEvent(Id,Title));
   }
 
   public void Cancel()
   {
     Status = ActivityStatus.Canceled;
 
-    AddDomainEvent(new ActivityCanceledDomainEvent(Id));
+    AddDomainEvent(new ActivityCanceledDomainEvent(Id,Title));
   }
 
   public void AddAttendee(Attendee attendee)

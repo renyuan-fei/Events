@@ -68,4 +68,15 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
                                                cancellationToken)
         != null;
   }
+
+  public async Task<UserId?> GetHostIdAsync(ActivityId activityId)
+  {
+    return await DbContext.Activities
+                               .Where(a => a.Id == activityId)
+                               .SelectMany(a => a.Attendees)
+                               .Where(a => a.Identity.IsHost)
+                               .Select(a => a.Identity.UserId)
+                               .SingleOrDefaultAsync();
+
+  }
 }

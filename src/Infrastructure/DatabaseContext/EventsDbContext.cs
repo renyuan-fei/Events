@@ -23,6 +23,10 @@ public class EventsDbContext : DbContext, IEventsDbContext, IUnitOfWork
 
   public DbSet<Comment> Comments => Set<Comment>();
 
+  public DbSet<UserNotification> UserNotifications => Set<UserNotification>();
+
+  public DbSet<Notification> Notifications => Set<Notification>();
+
   protected override void OnModelCreating(ModelBuilder builder)
   {
     builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

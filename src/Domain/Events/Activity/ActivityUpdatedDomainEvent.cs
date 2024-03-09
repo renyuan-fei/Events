@@ -1,11 +1,15 @@
+using Domain.ValueObjects.Activity;
+
 namespace Domain.Events.Activity;
 
 public sealed class ActivityUpdatedDomainEvent : BaseEvent
 {
-  public ActivityUpdatedDomainEvent(Entities.Activity activity)
+  public ActivityUpdatedDomainEvent(ActivityId id, string title)
   {
-    this.activity = activity;
+    ActivityId = id;
+    Title = title;
   }
 
-  public Entities.Activity activity { get; private set; }
+  public ActivityId ActivityId { get; }
+  public string Title { get; set; }
 }

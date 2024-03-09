@@ -43,7 +43,6 @@ public class ChatHub : Hub
     var httpContext = Context.GetHttpContext();
     var activityId = httpContext!.Request.Query["activityId"];
 
-    ////TODO 用户Id获取问题
     var comment =
         await _mediator.Send(new CreateCommentCommand
         {

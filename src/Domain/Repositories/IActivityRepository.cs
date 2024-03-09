@@ -27,5 +27,7 @@ public interface IActivityRepository
                   cancellationToken =
                   default);
 
+  public Task<UserId?> GetHostIdAsync(ActivityId activityId);
+
   void Remove(Activity activity);
 }
