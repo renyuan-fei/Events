@@ -1,7 +1,10 @@
 using Application.Common.Helpers;
 using Application.common.Interfaces;
+using Application.CQRS.Notifications.Commands;
 
+using Domain.Enums;
 using Domain.Events.Following;
+using Domain.ValueObjects;
 
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +12,7 @@ namespace Application.CQRS.Followers.EventHandlers;
 
 public class FollowedDomainEventHandler : INotificationHandler<FollowedDomainEvent>
 {
+  private readonly IMediator _mediator;
   private readonly IUserService                        _userService;
   private readonly INotificationService                _notificationService;
   private readonly ILogger<FollowedDomainEventHandler> _logger;
@@ -16,11 +20,13 @@ public class FollowedDomainEventHandler : INotificationHandler<FollowedDomainEve
   public FollowedDomainEventHandler(
       ILogger<FollowedDomainEventHandler> logger,
       INotificationService                notificationService,
-      IUserService                        userService)
+      IUserService                        userService,
+      IMediator                           mediator)
   {
     _logger = logger;
     _notificationService = notificationService;
     _userService = userService;
+    _mediator = mediator;
   }
 
   public async Task Handle(
@@ -42,11 +48,15 @@ public class FollowedDomainEventHandler : INotificationHandler<FollowedDomainEve
 
     var message = $"Dear user, you have a new follower: {follower!.DisplayName}.";
 
-    // add Notification to database
-
-    // get all user
-
     // add UserNotification to database
+    await _mediator.Send(new CreateNewNotificationCommand
+    {
+        Context = message,
+        RelatedId = followerId.Value,
+        NotificationType = NotificationType.UserFollowed,
+        UserIds = new List<UserId> {followerId}
+    },
+    cancellationToken);
 
     await _notificationService.SendMessageToUser(methodName,
                                                  followingId.Value,

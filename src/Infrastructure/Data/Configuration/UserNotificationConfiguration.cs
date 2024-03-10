@@ -13,12 +13,10 @@ public class UserNotificationConfiguration : IEntityTypeConfiguration<UserNotifi
   {
     builder.ToTable("UserNotifications");
 
-    // 设置复合主键
     builder.HasKey(un => un.Id);
 
-    // 配置关系
     builder.HasOne(un => un.Notification)
-           .WithMany()
+           .WithMany(n => n.UserNotifications) // 明确指明导航属性的名称
            .HasForeignKey(un => un.NotificationId)
            .IsRequired();
 

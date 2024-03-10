@@ -6,6 +6,8 @@ public interface IActivityRepository
 {
   Task AddAsync(Activity activity, CancellationToken cancellationToken = default);
 
+  Task<List<UserId>> GetAllAttendeeIdsByActivityIdAsync(ActivityId activityId, CancellationToken cancellationToken = default);
+
   Task<Activity?> GetByIdAsync(
       ActivityId        id,
       CancellationToken cancellationToken = default);

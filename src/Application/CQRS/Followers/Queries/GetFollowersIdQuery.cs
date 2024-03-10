@@ -12,21 +12,21 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Followers.Queries;
 
-public record GetFollowingIdQuery : IRequest<List<string>>
+public record GetFollowersIdQuery : IRequest<List<string>>
 {
   public string UserId { get; init; }
 }
 
 public class
-    GetFollowingIdQueryHandler : IRequestHandler<GetFollowingIdQuery, List<string>>
+    GetFollowersIdQueryHandler : IRequestHandler<GetFollowersIdQuery, List<string>>
 {
   private readonly IFollowingRepository                _followingRepository;
   private readonly IMapper                             _mapper;
-  private readonly ILogger<GetFollowingIdQueryHandler> _logger;
+  private readonly ILogger<GetFollowersIdQueryHandler> _logger;
 
-  public GetFollowingIdQueryHandler(
+  public GetFollowersIdQueryHandler(
       IMapper                             mapper,
-      ILogger<GetFollowingIdQueryHandler> logger,
+      ILogger<GetFollowersIdQueryHandler> logger,
       IFollowingRepository                followingRepository)
   {
     _mapper = mapper;
@@ -35,24 +35,24 @@ public class
   }
 
   public async Task<List<string>> Handle(
-      GetFollowingIdQuery request,
+      GetFollowersIdQuery request,
       CancellationToken   cancellationToken)
   {
     try
     {
-      var followingId =
+      var followerIds =
           await _followingRepository
-                .GetFollowersByIdQueryable(new UserId(request.UserId))
-                .Select(following => following.Relationship.FollowingId.Value)
-                .ToListAsync(cancellationToken: cancellationToken);
+              .GetFollowersByIdQueryable(new UserId(request.UserId))
+              .Select(following => following.Relationship.FollowingId.Value)
+              .ToListAsync(cancellationToken: cancellationToken);
 
-      return followingId;
+      return followerIds;
     }
     catch (Exception ex)
     {
       _logger.LogError(ex,
                        "Error occurred in {Name}: {ExMessage}",
-                       nameof(GetFollowingIdQuery),
+                       nameof(GetFollowersIdQuery),
                        ex.Message);
 
       throw;

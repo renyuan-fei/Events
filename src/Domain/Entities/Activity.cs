@@ -10,7 +10,25 @@ namespace Domain.Entities;
 
 public class Activity : BaseAuditableEntity<ActivityId>
 {
-  private Activity(
+  public string Title { get; private set; }
+
+  public DateTime Date { get; private set; }
+
+  public Category Category { get; private set; }
+
+  public string Description { get; private set; }
+
+  public Address Location { get; private set; }
+
+  public ActivityStatus Status { get; private set; }
+
+  private readonly List<Attendee> _attendees = new List<Attendee>();
+  private readonly List<Comment>  _comments  = new List<Comment>();
+
+  public IReadOnlyCollection<Attendee> Attendees => _attendees.AsReadOnly();
+  public IReadOnlyCollection<Comment>  Comments  => _comments.AsReadOnly();
+
+  public Activity(
       ActivityId     id,
       string         title,
       DateTime       date,
@@ -29,21 +47,6 @@ public class Activity : BaseAuditableEntity<ActivityId>
   }
 
   private Activity() { }
-
-  public string Title { get; private set; }
-
-  public DateTime Date { get; private set; }
-
-  public Category Category { get; private set; }
-
-  public string Description { get; private set; }
-
-  public Address Location { get; private set; }
-
-  public ActivityStatus Status { get; private set; }
-
-  public ICollection<Attendee> Attendees { get; set; } = new List<Attendee>();
-  public ICollection<Comment>  Comments  { get; set; } = new List<Comment>();
 
   public static Activity Create(
       string   title,
@@ -73,45 +76,49 @@ public class Activity : BaseAuditableEntity<ActivityId>
     Description = updatedActivity.Description;
     Location = updatedActivity.Location;
 
-    AddDomainEvent(new ActivityUpdatedDomainEvent(Id,Title));
+    AddDomainEvent(new ActivityUpdatedDomainEvent(Id, Title));
   }
 
   public void Cancel()
   {
     Status = ActivityStatus.Canceled;
 
-    AddDomainEvent(new ActivityCanceledDomainEvent(Id,Title));
+    AddDomainEvent(new ActivityCanceledDomainEvent(Id, Title));
   }
 
   public void AddAttendee(Attendee attendee)
   {
-    Attendees.Add(attendee);
-
-    AddDomainEvent(new AttendeeAddedDomainEvent(attendee));
+    _attendees.Add(attendee);
+    // AddDomainEvent(new AttendeeAddedDomainEvent(attendee));
   }
 
-  public void RemoveAttendee(UserId userId)
+  public bool RemoveAttendee(UserId userId)
   {
-    var attendee = Attendees.First(a => a.Identity.UserId == userId);
+    var attendee = _attendees.SingleOrDefault(a => a.Identity.UserId == userId);
 
-    Attendees.Remove(attendee);
+    if (attendee == null) return false;
 
+    _attendees.Remove(attendee);
     AddDomainEvent(new AttendeeRemovedDomainEvent(Id, userId));
+
+    return true;
   }
 
   public void AddComment(Comment comment)
   {
-    Comments.Add(comment);
-
+    _comments.Add(comment);
     AddDomainEvent(new CommentAddedDomainEvent(comment));
   }
 
-  public void RemoveComment(CommentId commentId)
+  public bool RemoveComment(CommentId commentId)
   {
-    var comment = Comments.First(c => c.Id == commentId);
+    var comment = _comments.SingleOrDefault(c => c.Id == commentId);
 
-    Comments.Remove(comment);
+    if (comment == null) return false;
 
+    _comments.Remove(comment);
     AddDomainEvent(new CommentRemovedDomainEvent(Id, commentId));
+
+    return true;
   }
 }

@@ -1,3 +1,4 @@
+using Application.Common.Helpers;
 using Application.common.interfaces;
 using Application.CQRS.Activities.Queries.GetUserParticipatedActivitiesQuery;
 using Application.CQRS.Followers.Queries;
@@ -50,20 +51,19 @@ public class NotificationHub : Hub
     // add all async tasks results to the hub context
 
     // add user to his personal group, which will be used to send notifications to him
-    await Groups.AddToGroupAsync(Context.ConnectionId, $"user-{userId}");
+    await Groups.AddToGroupAsync(Context.ConnectionId, userId);
 
     foreach (var activityId in activityIds)
     {
-      await Groups.AddToGroupAsync(Context.ConnectionId, activityId);
+      await Groups.AddToGroupAsync(Context.ConnectionId, $"activity-{activityId}");
     }
 
     foreach (var followingId in followingIds)
     {
-      await Groups.AddToGroupAsync(Context.ConnectionId, followingId);
+      await Groups.AddToGroupAsync(Context.ConnectionId, $"following-{followingId}");
     }
 
-    await Clients.Caller.SendAsync("LoadUnreadNotificationNumber",
-                                   unreadNotificationCount);
+    await Clients.Caller.SendAsync("LoadUnreadNotificationNumber", unreadNotificationCount);
   }
 
   public async Task ReadNotification(string notificationId)
@@ -73,10 +73,12 @@ public class NotificationHub : Hub
     var httpContext = Context.GetHttpContext();
     var userNotificationId = httpContext!.Request.Query["userNotificationId"];
 
+    GuardValidation.AgainstNull(userNotificationId,"notification with id cannot be null");
+
     // update notification status to read
     await _mediator.Send(new UpdateNotificationStatusCommand
     {
-        UserNotificationId = userNotificationId,
+        UserNotificationId = userNotificationId!
     });
 
     // get new unread notification count

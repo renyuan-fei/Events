@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
+using Domain.Common.Contracts;
+
 namespace Domain.Common;
 
-public abstract class BaseEntity <TEntityId>
+public abstract class BaseEntity <TEntityId> : IBaseEntity
 {
   private readonly List<BaseEvent> _domainEvents = new();
 

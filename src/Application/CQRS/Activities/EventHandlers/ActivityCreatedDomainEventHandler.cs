@@ -1,7 +1,12 @@
+using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.CQRS.Activities.Queries.GetActivityHostIdQuery;
+using Application.CQRS.Followers.Queries;
+using Application.CQRS.Notifications.Commands;
 
+using Domain.Enums;
 using Domain.Events.Activity;
+using Domain.ValueObjects;
 
 using Microsoft.Extensions.Logging;
 
@@ -35,13 +40,11 @@ public class
 
     var activity = notification.Activity;
 
-    var userId = await _mediator.Send(new GetActivityHostIdQuery
-                                      {
-                                          activityId = activity.Id
-                                      },
-                                      cancellationToken);
+    var userId = activity.Attendees.FirstOrDefault(attendee => attendee.Identity.IsHost)?.Identity.UserId;
 
-    var host = await _userService.GetUserByIdAsync(userId.Value, cancellationToken);
+    GuardValidation.AgainstNull(userId, "host user not found");
+
+    var host = await _userService.GetUserByIdAsync(userId!.Value, cancellationToken);
 
     const string methodName = "ReceiveActivityCreatedMessage";
 
@@ -49,11 +52,20 @@ public class
         $"New Activity Alert: '{activity.Title}' is scheduled for {activity.Date:yyyy-MM-dd HH:mm} at '{activity.Location}'. "
       + $"Brief: {activity.Description}. Hosted by {host?.DisplayName}.";
 
-    // add Notification to database
-
     // get all user
+    var userIds = await _mediator.Send(new GetFollowersIdQuery
+    {
+        UserId = userId.Value
+    }, cancellationToken);
 
     // add UserNotification to database
+    await _mediator.Send(new CreateNewNotificationCommand
+    {
+            Context = message,
+            RelatedId = activity.Id.Value,
+            NotificationType = NotificationType.ActivityCreated,
+            UserIds = userIds.Select(id => new UserId(id)).ToList()
+    }, cancellationToken);
 
     await _notificationService.SendActivityNotificationToAll(methodName,
       userId.Value,

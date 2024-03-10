@@ -24,7 +24,7 @@ public interface IEventsDbContext
   /// <value>
   ///   The DbSet of ActivityAttendees entities.
   /// </value>
-  DbSet<Attendee> ActivityAttendees { get; }
+  DbSet<Attendee> Attendees { get; }
 
   /// <summary>
   ///   Asynchronously saves all changes made in this context to the underlying database.

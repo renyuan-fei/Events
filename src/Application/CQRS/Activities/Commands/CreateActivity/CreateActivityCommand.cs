@@ -16,14 +16,14 @@ namespace Application.CQRS.Activities.Commands.CreateActivity;
 /// <summary>
 ///   Represents the command for creating a new activity.
 /// </summary>
-public record CreateActivityCommand : IRequest<String>
+public record CreateActivityCommand : IRequest<string>
 {
   public string      CurrentUserId { get; init; }
   public ActivityDto ActivityDTO   { get; init; }
 }
 
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand,
-    String>
+    string>
 {
   private readonly IActivityRepository                   _activityRepository;
   private readonly ILogger<CreateActivityCommandHandler> _logger;
@@ -42,7 +42,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
     _unitOfWork = unitOfWork;
   }
 
-  public async Task<String> Handle(
+  public async Task<string> Handle(
       CreateActivityCommand request,
       CancellationToken     cancellationToken)
   {
@@ -57,8 +57,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
       var attendee = Attendee.Create(new UserId(request.CurrentUserId),
                                      true,
-                                     activity
-                                         .Id,
+                                     activity.Id,
                                      activity);
 
       activity.AddAttendee(attendee);

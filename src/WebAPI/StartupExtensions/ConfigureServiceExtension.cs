@@ -42,6 +42,7 @@ public static class ConfigureServiceExtension
 
     // Current user service
     services.AddSingleton<ICurrentUserService, CurrentUserService>();
+    services.AddSingleton<INotificationService, NotificationService>();
 
     // AppIdentityDbContext
     services.AddScoped<IEventsDbContext, EventsDbContext>();

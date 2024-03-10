@@ -1,3 +1,4 @@
+using Application.common.DTO;
 using Application.common.Interfaces;
 
 using Microsoft.AspNetCore.SignalR;
@@ -21,7 +22,12 @@ public class NotificationService : INotificationService
       string activityId,
       string message)
   {
-    await _hubContext.Clients.Group(groupName).SendAsync(methodName, activityId, message);
+    await _hubContext.Clients.Group(groupName).SendAsync(methodName, new NotificationDto
+    {
+        Status = false,
+        Context = message,
+        RelatedId = activityId
+    });
   }
 
   public async Task SendMessageToUser(
@@ -31,7 +37,12 @@ public class NotificationService : INotificationService
       string message)
   {
     // 使用SignalR的User方法定位用户，这里假设userId即为SignalR分配给用户的组名（通常可以在用户连接时设置）
-    await _hubContext.Clients.Group($"user-{userId}").SendAsync(methodName, parameter,message);
+    await _hubContext.Clients.User(userId).SendAsync(methodName, new NotificationDto
+    {
+        Status = false,
+        Context = message,
+        RelatedId = parameter
+    });
   }
 
 }

@@ -2,7 +2,7 @@ using Domain.ValueObjects.Message;
 
 namespace Domain.Entities;
 
-public class UserNotification: BaseAuditableEntity<UserNotificationId>
+public class UserNotification : BaseAuditableEntity<UserNotificationId>
 {
   public UserId         UserId         { get; set; }
   public NotificationId NotificationId { get; set; }
@@ -10,29 +10,30 @@ public class UserNotification: BaseAuditableEntity<UserNotificationId>
 
   public Notification Notification { get; set; }
 
-  private UserNotification(UserId userId, NotificationId notificationId, bool isRead,
-      Notification notification)
+  private UserNotification() {}
+
+  private UserNotification(
+      UserNotificationId id,
+      UserId         userId,
+      bool           isRead,
+      Notification   notification)
   {
+    Id = id;
     UserId = userId;
-    NotificationId = notificationId;
+    NotificationId = notification.Id;
     IsRead = isRead;
     Notification = notification;
   }
 
-  public UserNotification Create(UserId userId, string content, NotificationType type)
+  public static UserNotification Create(
+      UserId           userId,
+      Notification notification,
+      NotificationType type)
   {
-    var notification = Notification.Create(content, type);
-    return new UserNotification(userId, notification.Id, false, notification);
+    return new UserNotification(UserNotificationId.New(),userId, false, notification);
   }
 
-  public void MarkAsRead()
-  {
-    IsRead = true;
-  }
+  public void MarkAsRead() { IsRead = true; }
 
-  public void MarkAsUnread()
-  {
-    IsRead = false;
-  }
-
+  public void MarkAsUnread() { IsRead = false; }
 }

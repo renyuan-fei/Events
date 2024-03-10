@@ -15,7 +15,7 @@ public class EventsDbContext : DbContext, IEventsDbContext, IUnitOfWork
 
   public DbSet<Activity> Activities => Set<Activity>();
 
-  public DbSet<Attendee> ActivityAttendees => Set<Attendee>();
+  public DbSet<Attendee> Attendees => Set<Attendee>();
 
   public DbSet<Photo> Photos => Set<Photo>();
 

@@ -9,6 +9,7 @@ public interface INotificationService
   /// Sends an activity notification to all users in a specified activity group.
   /// </summary>
   /// <param name="methodName">The name of the method to trigger in the clients.</param>
+  /// <param name="groupName"></param>
   /// <param name="activityId">The id of the activity group.</param>
   /// <param name="message">The message to send in the notification.</param>
   /// <returns>A task that represents the asynchronous operation.</returns>

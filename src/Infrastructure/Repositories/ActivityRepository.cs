@@ -13,6 +13,17 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
 {
   public ActivityRepository(EventsDbContext dbContext) : base(dbContext) { }
 
+  public async Task<List<UserId>> GetAllAttendeeIdsByActivityIdAsync(
+      ActivityId        activityId,
+      CancellationToken cancellationToken = default)
+  {
+    var userIds = await DbContext.Activities.Where(x => x.Id == activityId)
+                                 .SelectMany(x => x.Attendees)
+                                 .Select(attendee => attendee.Identity.UserId)
+                                 .ToListAsync(cancellationToken);
+    return userIds;
+  }
+
   public Task<Activity?> GetActivityWithAttendeesByIdAsync(
       ActivityId        id,
       CancellationToken cancellationToken = default)

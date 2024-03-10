@@ -49,7 +49,7 @@ public class
 
       GuardValidation.AgainstNull(activity, "Activity with Id: {Id} not found.", request.Id);
 
-      activity.Update(_mapper.Map<Activity>(request.Activity));
+      activity!.Update(_mapper.Map<Activity>(request.Activity));
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
 
