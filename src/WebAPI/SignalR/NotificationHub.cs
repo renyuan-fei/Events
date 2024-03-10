@@ -1,5 +1,6 @@
 using Application.Common.Helpers;
 using Application.common.interfaces;
+using Application.common.Security;
 using Application.CQRS.Activities.Queries.GetUserParticipatedActivitiesQuery;
 using Application.CQRS.Followers.Queries;
 using Application.CQRS.Notifications.Commands;
@@ -9,44 +10,50 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace WebAPI.SignalR;
 
+[Authorize]
 public class NotificationHub : Hub
 {
+  private readonly ILogger<NotificationHub> _logger;
   private readonly IMediator           _mediator;
   private readonly ICurrentUserService _currentUserService;
 
-  public NotificationHub(IMediator mediator, ICurrentUserService currentUserService)
+  public NotificationHub(IMediator mediator, ICurrentUserService currentUserService, ILogger<NotificationHub> logger)
   {
     _mediator = mediator;
     _currentUserService = currentUserService;
+    _logger = logger;
   }
 
   public async override Task OnConnectedAsync()
   {
     var userId = _currentUserService.Id!;
 
+    var activityIds = await _mediator.Send(new GetUserParticipatedActivitiesQuery { UserId = userId });
+    var followingIds = await _mediator.Send(new GetFollowingIdQuery { UserId = userId });
+    var unreadNotificationCount = await _mediator.Send(new GetUnreadNotificationNumberQuery { UserId = userId });
     // start all async tasks
-    var activityIdsTask = _mediator.Send(new GetUserParticipatedActivitiesQuery
-    {
-        UserId = userId
-    });
-
-    var followingIdsTask = _mediator.Send(new GetFollowingIdQuery
-    {
-        UserId = userId
-    });
-
-    var unreadNotificationCountTask = _mediator.Send(new GetUnreadNotificationNumberQuery
-    {
-        UserId = userId
-    });
-
-    // wait for all async tasks to complete
-    await Task.WhenAll(activityIdsTask, followingIdsTask, unreadNotificationCountTask);
-
-    // get all async tasks results
-    var activityIds = await activityIdsTask;
-    var followingIds = await followingIdsTask;
-    var unreadNotificationCount = await unreadNotificationCountTask;
+    // var activityIdsTask = _mediator.Send(new GetUserParticipatedActivitiesQuery
+    // {
+    //     UserId = userId
+    // });
+    //
+    // var followingIdsTask = _mediator.Send(new GetFollowingIdQuery
+    // {
+    //     UserId = userId
+    // });
+    //
+    // var unreadNotificationCountTask = _mediator.Send(new GetUnreadNotificationNumberQuery
+    // {
+    //     UserId = userId
+    // });
+    //
+    // // wait for all async tasks to complete
+    // await Task.WhenAll(activityIdsTask, followingIdsTask, unreadNotificationCountTask);
+    //
+    // // get all async tasks results
+    // var activityIds = await activityIdsTask;
+    // var followingIds = await followingIdsTask;
+    // var unreadNotificationCount = await unreadNotificationCountTask;
 
     // add all async tasks results to the hub context
 

@@ -138,7 +138,11 @@ public static class ConfigureServiceExtension
                     var path = context.HttpContext.Request.Path;
 
                     if (!string.IsNullOrEmpty(accessToken)
-                     && path.StartsWithSegments("/chat")) { context.Token = accessToken; }
+                     && (path.StartsWithSegments("/chat")
+                      || path.StartsWithSegments("/notifications")))
+                    {
+                      context.Token = accessToken;
+                    }
 
                     return Task.CompletedTask;
                   }

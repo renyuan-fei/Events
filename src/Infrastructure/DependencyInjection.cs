@@ -109,10 +109,7 @@ public static class DependencyInjection
                                                       .FullName));
       });
 
-      services.AddDbContext<AppIdentityDbContext>(options =>
-                                                      options
-                                                          .UseSqlServer(identityDbConnection,
-                                                               b =>
+      services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityDbConnection, b =>
                                                                    b.MigrationsAssembly(typeof
                                                                                 (AppIdentityDbContext)
                                                                             .Assembly

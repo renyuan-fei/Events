@@ -35,7 +35,7 @@ public class
     var activityId = notification.ActivityId;
     var activityTitle = notification.Title;
 
-    const string methodName = "ReceiveActivityUpdatedMessage";
+    const string methodName = "ReceiveNotificationMessage";
 
     var message = $"Activity {activityTitle} was updated.";
 
@@ -56,7 +56,7 @@ public class
     }, cancellationToken);
 
     await _notificationService.SendActivityNotificationToAll(methodName,
-      activityId.Value,
+      $"activity-{activityId.Value}",
       activityId.Value,
       message);
   }

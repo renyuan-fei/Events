@@ -38,7 +38,7 @@ public class
     var activityId = notification.ActivityId;
     var activityTitle = notification.Title;
 
-    const string methodName = "ReceiveActivityCancelledMessage";
+    const string methodName = "ReceiveNotificationMessage";
 
     var message = $"Activity {activityTitle} has been cancelled.";
 
@@ -59,7 +59,7 @@ public class
     }, cancellationToken);
 
     await _notificationService.SendActivityNotificationToAll(methodName,
-      activityId.Value,
+      $"activity-{activityId.Value}",
       activityId.Value,
       message);
   }

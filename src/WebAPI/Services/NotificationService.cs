@@ -28,6 +28,8 @@ public class NotificationService : INotificationService
         Context = message,
         RelatedId = activityId
     });
+
+    await _hubContext.Clients.Group(groupName).SendAsync("UpdateUnreadNotificationNumber");
   }
 
   public async Task SendMessageToUser(

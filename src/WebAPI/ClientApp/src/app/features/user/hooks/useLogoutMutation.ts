@@ -6,6 +6,7 @@ import {AxiosError} from "axios";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {queryClient} from "@apis/queryClient.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
+import {stopNotificationConnection} from "@config/NotificationHubConnection.ts";
 
 const useLogoutMutation = () => {
     const dispatch = useAppDispatch()
@@ -16,6 +17,7 @@ const useLogoutMutation = () => {
             onSuccess() {
                 queryClient.invalidateQueries();
                 dispatch(logoutAction());
+                dispatch(stopNotificationConnection())
             },
             onError(error: AxiosError<ApiResponse<any>>) {
                 dispatch(setAlertInfo({

@@ -9,6 +9,7 @@ import {queryClient} from "@apis/queryClient.ts";
 import {useState} from "react";
 import {useNavigate} from "react-router";
 import {ApiResponse} from "@type/ApiResponse.ts";
+import {startNotificationConnection} from "@config/NotificationHubConnection.ts";
 
 const useLoginMutation = () => {
     const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ const useLoginMutation = () => {
             },
             onSuccess: async (data: AuthResponse) => {
                 dispatch(loginAction({token: data.token}));
+                dispatch(startNotificationConnection())
                 await queryClient.refetchQueries('userInfo');
 
                 dispatch(setAlertInfo({

@@ -46,7 +46,7 @@ public class
 
     var host = await _userService.GetUserByIdAsync(userId!.Value, cancellationToken);
 
-    const string methodName = "ReceiveActivityCreatedMessage";
+    const string methodName = "ReceiveNotificationMessage";
 
     var message =
         $"New Activity Alert: '{activity.Title}' is scheduled for {activity.Date:yyyy-MM-dd HH:mm} at '{activity.Location}'. "
@@ -68,7 +68,7 @@ public class
     }, cancellationToken);
 
     await _notificationService.SendActivityNotificationToAll(methodName,
-      userId.Value,
+      $"following-{userId.Value}",
       activity.Id.Value,
       message);
   }

@@ -16,6 +16,7 @@ public class ChatHub : Hub
   /// <summary>
   ///   Represents a mediator used for handling communication between components.
   /// </summary>
+  private readonly ILogger<ChatHub> _logger;
   private readonly IMediator _mediator;
   private readonly ICurrentUserService _currentUserService;
 
@@ -28,10 +29,11 @@ public class ChatHub : Hub
   /// </param>
   /// <param name="currentUserService"></param>
   /// /
-  public ChatHub(IMediator mediator, ICurrentUserService currentUserService)
+  public ChatHub(IMediator mediator, ICurrentUserService currentUserService, ILogger<ChatHub> logger)
   {
     _mediator = mediator;
     _currentUserService = currentUserService;
+    _logger = logger;
   }
 
   /// <summary>

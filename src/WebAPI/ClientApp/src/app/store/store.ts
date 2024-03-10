@@ -2,21 +2,26 @@ import {configureStore} from '@reduxjs/toolkit'
 import {useDispatch} from 'react-redux'
 import userReducer from '@features/user/userSlice';
 import commonReducer from '@features/commonSlice';
-import {createSignalRMiddleware} from "@config/HubConnection.ts";
+import {ChatHubSignalRMiddleware} from "@config/ChatHubConnection.ts";
+import {NotificationHubSignalRMiddleware} from "@config/NotificationHubConnection.ts";
 import activitySlice from "@features/activity/activitySlice.ts";
 import commentSlice from "@features/comment/CommentSlice.ts";
+import notificationSlice from "@features/notification/NotificationSlice.ts";
 
-const signalRMiddleware = createSignalRMiddleware(); // 创建 SignalR 中间件实例
+const chatHubMiddleware = ChatHubSignalRMiddleware(); // 创建 SignalR 中间件实例
+const notificationHubMiddleware = NotificationHubSignalRMiddleware();
+
 
 const store = configureStore({
     reducer: {
         activity: activitySlice,
         comment: commentSlice,
+        notification: notificationSlice,
         common: commonReducer,
         user: userReducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(signalRMiddleware),
+        getDefaultMiddleware().concat(chatHubMiddleware, notificationHubMiddleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

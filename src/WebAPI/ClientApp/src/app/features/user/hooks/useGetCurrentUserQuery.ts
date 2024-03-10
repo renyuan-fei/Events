@@ -6,6 +6,7 @@ import {getCurrentUser} from "@apis/Account.ts";
 import {AxiosError} from "axios";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {ApiResponse} from "@type/ApiResponse.ts";
+import {startNotificationConnection} from "@config/NotificationHubConnection.ts";
 
 const useGetCurrentUserQuery = () => {
     const dispatch = useAppDispatch()
@@ -20,6 +21,8 @@ const useGetCurrentUserQuery = () => {
                     userName: data.displayName,
                     imageUrl: data.image
                 }));
+
+                dispatch(startNotificationConnection())
             },
             onError(error: AxiosError<ApiResponse<any>>) {
                 dispatch(setAlertInfo({

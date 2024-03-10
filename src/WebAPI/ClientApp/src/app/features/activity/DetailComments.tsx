@@ -13,7 +13,7 @@ import CommentInput from "@ui/CommentInput.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@store/store.ts";
 import React, {useEffect} from "react";
-import {startConnection, stopConnection} from "@config/HubConnection.ts";
+import {startConnection, stopConnection} from "@config/ChatHubConnection.ts";
 import {useNavigate} from "react-router";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
