@@ -142,5 +142,12 @@ public class MappingProfile : Profile
     CreateMap<Photo, PhotoDto>()
         .ForMember(dest => dest.PublicId, opt => opt.MapFrom(src => src.Details.PublicId))
         .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Details.Url));
+
+    CreateMap<Notification,NotificationDto>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
+        .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.RelatedId))
+        .ForMember(dest => dest.Status, opt => opt.Ignore())
+        .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()));
   }
 }

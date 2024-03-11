@@ -1,3 +1,4 @@
+using Application.common.DTO;
 using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.CQRS.Activities.Queries.GetActivityHostIdQuery;
@@ -15,6 +16,7 @@ namespace Application.CQRS.Activities.EventHandlers;
 public class
     ActivityCreatedDomainEventHandler : INotificationHandler<ActivityCreatedDomainEvent>
 {
+  private readonly IMapper                                    _mapper;
   private readonly IUserService                               _userService;
   private readonly IMediator                                  _mediator;
   private readonly INotificationService                       _notificationService;
@@ -24,12 +26,14 @@ public class
       ILogger<ActivityCreatedDomainEventHandler> logger,
       INotificationService                       notificationService,
       IMediator                                  mediator,
-      IUserService                               userService)
+      IUserService                               userService,
+      IMapper                                    mapper)
   {
     _logger = logger;
     _notificationService = notificationService;
     _mediator = mediator;
     _userService = userService;
+    _mapper = mapper;
   }
 
   public async Task Handle(
@@ -40,7 +44,8 @@ public class
 
     var activity = notification.Activity;
 
-    var userId = activity.Attendees.FirstOrDefault(attendee => attendee.Identity.IsHost)?.Identity.UserId;
+    var userId = activity.Attendees.FirstOrDefault(attendee => attendee.Identity.IsHost)
+                         ?.Identity.UserId;
 
     GuardValidation.AgainstNull(userId, "host user not found");
 
@@ -53,23 +58,24 @@ public class
       + $"Brief: {activity.Description}. Hosted by {host?.DisplayName}.";
 
     // get all user
-    var userIds = await _mediator.Send(new GetFollowersIdQuery
-    {
-        UserId = userId.Value
-    }, cancellationToken);
+    var userIds = await _mediator.Send(new GetFollowersIdQuery { UserId = userId.Value },
+                                       cancellationToken);
 
     // add UserNotification to database
-    await _mediator.Send(new CreateNewNotificationCommand
-    {
-            Context = message,
-            RelatedId = activity.Id.Value,
-            NotificationType = NotificationType.ActivityCreated,
-            UserIds = userIds.Select(id => new UserId(id)).ToList()
-    }, cancellationToken);
+    var newNotification = await _mediator.Send(new CreateNewNotificationCommand
+                                              {
+                                                  Context = message,
+                                                  RelatedId = activity.Id.Value,
+                                                  NotificationType = NotificationType.ActivityCreated,
+                                                  UserIds = userIds.Select(id => new UserId(id)).ToList()
+                                              },
+                                              cancellationToken);
+
+    var notificationDto = _mapper.Map<NotificationDto>(newNotification);
 
     await _notificationService.SendActivityNotificationToAll(methodName,
-      $"following-{userId.Value}",
-      activity.Id.Value,
-      message);
+      $"follower-{userId.Value}",
+      notificationDto,
+      new List<string> { userId.Value });
   }
 }

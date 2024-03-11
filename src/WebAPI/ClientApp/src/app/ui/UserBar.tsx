@@ -5,11 +5,12 @@ import Typography from "@mui/material/Typography";
 import React, {useState} from "react";
 import {User} from "@type/Account.ts";
 import SvgButton from "@ui/SvgButton.tsx";
-import {setAlertInfo, setLoginForm} from "@features/commonSlice.ts";
-import {useAppDispatch} from "@store/store.ts";
+import {setLoginForm} from "@features/commonSlice.ts";
+import {RootState, useAppDispatch} from "@store/store.ts";
 import {useNavigate} from "react-router";
 import useLogoutMutation from "@features/user/hooks/useLogoutMutation.ts";
 import Button from "@mui/material/Button";
+import {useSelector} from "react-redux";
 
 
 
@@ -19,7 +20,6 @@ const svg = [
     , "M12 3.5C11.7239 3.5 11.5 3.72386 11.5 4C11.5 4.72952 11.0442 5.50811 10.1914 5.75452C7.48024 6.53792 5.5 9.03965 5.5 12V14C5.5 14.7325 5.18017 15.3107 4.84079 15.7064C4.50796 16.0945 4.10557 16.3718 3.7613 16.5602C3.60235 16.6472 3.5 16.8127 3.5 17C3.5 17.2761 3.72386 17.5 4 17.5H20C20.2761 17.5 20.5 17.2761 20.5 17C20.5 16.8127 20.3976 16.6472 20.2387 16.5602C19.8944 16.3718 19.492 16.0945 19.1592 15.7064C18.8198 15.3107 18.5 14.7325 18.5 14V12C18.5 9.03965 16.5198 6.53792 13.8086 5.75452C12.9558 5.50811 12.5 4.72953 12.5 4C12.5 3.72386 12.2761 3.5 12 3.5ZM10 4C10 2.89543 10.8954 2 12 2C13.1046 2 14 2.89543 14 4C14 4.1422 14.0883 4.274 14.225 4.31347C17.5607 5.27734 20 8.3538 20 12V14C20 14.5523 20.4745 14.9793 20.959 15.2445C21.5793 15.5841 22 16.2429 22 17C22 18.1046 21.1046 19 20 19H4C2.89543 19 2 18.1046 2 17C2 16.2429 2.42067 15.5841 3.04103 15.2445C3.52548 14.9793 4 14.5523 4 14V12C4 8.3538 6.43931 5.27734 9.77504 4.31347C9.91165 4.274 10 4.1422 10 4Z"
 ]
 
-// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const UserBar = ({id ,displayName, image}: User) => {
     const dispatch = useAppDispatch()
@@ -28,7 +28,7 @@ const UserBar = ({id ,displayName, image}: User) => {
 
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-
+    const unreadNotificationsCount = useSelector((state: RootState) => state.notification.unReadNotificationCount);
     function handleOpenUserMenu(event: React.MouseEvent<HTMLElement>) {
         setAnchorElUser(event.currentTarget);
     }
@@ -47,19 +47,7 @@ const UserBar = ({id ,displayName, image}: User) => {
 
     async function handleLogout() {
         await logoutMutation(undefined, {
-            onSuccess: () => {
-                dispatch(setAlertInfo({
-                    open: true,
-                    message: 'You have been logged out',
-                    severity: 'success',
-                }));
-            },
-            onError: (error) => {
-                dispatch(setAlertInfo({
-                    open: true,
-                    message: error.message,
-                    severity: 'error',
-                }));
+            onError: () => {
                 navigate('/');
                 dispatch(setLoginForm(false))
             }
@@ -77,7 +65,7 @@ const UserBar = ({id ,displayName, image}: User) => {
                     </Button>
                 </Grid>
                 <Grid item xs={3}>
-                    <SvgButton svg={svg[2]} title={"Notifications"}></SvgButton>
+                    <SvgButton svg={svg[2]} title={"Notifications"} path={'/notification'} badgeContext={unreadNotificationsCount}></SvgButton>
                 </Grid>
                 <Grid item xs={3}>
                     <Box sx={{

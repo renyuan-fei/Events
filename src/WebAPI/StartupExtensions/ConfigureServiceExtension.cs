@@ -40,7 +40,8 @@ public static class ConfigureServiceExtension
     #region DI
     services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
-    // Current user service
+    // service
+    services.AddSingleton<IConnectionManager, ConnectionManager>();
     services.AddSingleton<ICurrentUserService, CurrentUserService>();
     services.AddSingleton<INotificationService, NotificationService>();
 

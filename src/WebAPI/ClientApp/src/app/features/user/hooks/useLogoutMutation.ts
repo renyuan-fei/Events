@@ -16,8 +16,13 @@ const useLogoutMutation = () => {
         {
             onSuccess() {
                 queryClient.invalidateQueries();
-                dispatch(logoutAction());
                 dispatch(stopNotificationConnection())
+                dispatch(logoutAction());
+                dispatch(setAlertInfo({
+                    open: true,
+                    message: 'You have been logged out',
+                    severity: 'success',
+                }));
             },
             onError(error: AxiosError<ApiResponse<any>>) {
                 dispatch(setAlertInfo({

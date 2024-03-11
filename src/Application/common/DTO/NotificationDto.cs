@@ -1,8 +1,12 @@
+using Domain.Enums;
+
 namespace Application.common.DTO;
 
 public class NotificationDto
 {
-  public string Context { get; set; } = string.Empty;
+  public string Id { get; set; } = string.Empty;
+  public string Content { get; set; } = string.Empty;
   public string RelatedId { get; set; } = string.Empty;
+  public NotificationType Type { get; set; } = NotificationType.Default;
   public bool Status { get; set; }
 }

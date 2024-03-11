@@ -43,7 +43,7 @@ public class
       var followerIds =
           await _followingRepository
               .GetFollowersByIdQueryable(new UserId(request.UserId))
-              .Select(following => following.Relationship.FollowingId.Value)
+              .Select(following => following.Relationship.FollowerId.Value)
               .ToListAsync(cancellationToken: cancellationToken);
 
       return followerIds;

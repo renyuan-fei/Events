@@ -1,7 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {NotificationMessage} from "@type/NotificationMessage.ts";
 
 type NotificationState = {
-    notifications: Notification[];
+    notifications: NotificationMessage[];
     unReadNotificationCount: number;
 };
 
@@ -14,13 +15,13 @@ const notificationSlice = createSlice({
     name: 'notification',
     initialState,
     reducers: {
-        loadAllNotifications: (state, action: PayloadAction<Notification[]>) => {
+        loadAllNotifications: (state, action: PayloadAction<NotificationMessage[]>) => {
             state.notifications = action.payload;
         },
         updateUnreadNotificationCount: (state) => {
             state.unReadNotificationCount += 1;
         },
-        receiveNotification: (state, action: PayloadAction<Notification>) => {
+        receiveNotification: (state, action: PayloadAction<NotificationMessage>) => {
             state.notifications.push(action.payload);
         },
         clearNotifications: (state) => {

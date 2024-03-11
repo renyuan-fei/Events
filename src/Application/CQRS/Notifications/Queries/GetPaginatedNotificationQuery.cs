@@ -36,7 +36,10 @@ public class
       GetPaginatedNotificationQuery request,
       CancellationToken              cancellationToken)
   {
-    try { throw new NotImplementedException(); }
+    try
+    {
+      throw new NotImplementedException();
+    }
     catch (Exception ex)
     {
       _logger.LogError(ex,

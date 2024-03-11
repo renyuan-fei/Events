@@ -1,5 +1,6 @@
 using System;
 
+using Application.common.DTO;
 using Application.common.Interfaces;
 using Application.CQRS.Activities.Queries.GetAllAttendeeIdsByActivityIdQuery;
 using Application.CQRS.Notifications.Commands;
@@ -15,6 +16,7 @@ public class
     ActivityCancelledDomainEventHandler : INotificationHandler<
     ActivityCanceledDomainEvent>
 {
+  private readonly IMapper                                      _mapper;
   private readonly IMediator                                    _mediator;
   private readonly INotificationService                         _notificationService;
   private readonly ILogger<ActivityCancelledDomainEventHandler> _logger;
@@ -22,11 +24,13 @@ public class
   public ActivityCancelledDomainEventHandler(
       ILogger<ActivityCancelledDomainEventHandler> logger,
       INotificationService                         notificationService,
-      IMediator                                    mediator)
+      IMediator                                    mediator,
+      IMapper                                      mapper)
   {
     _logger = logger;
     _notificationService = notificationService;
     _mediator = mediator;
+    _mapper = mapper;
   }
 
   public async Task Handle(
@@ -43,24 +47,27 @@ public class
     var message = $"Activity {activityTitle} has been cancelled.";
 
     // get all user
-    var userIds = await _mediator.Send(new GetAllAttendeeIdsByActivityIdQuery
-                                 {
-                                     ActivityId = activityId
-                                 }, cancellationToken);
+    var userIds =
+        await _mediator.Send(new GetAllAttendeeIdsByActivityIdQuery
+                             {
+                                 ActivityId = activityId
+                             },
+                             cancellationToken);
 
     // add UserNotification to database
-    await _mediator.Send(new CreateNewNotificationCommand
-    {
-            Context = message,
-            RelatedId = activityId.Value,
-            NotificationType =
-                    NotificationType.ActivityCanceled,
-            UserIds = userIds
-    }, cancellationToken);
+    var newNotification = await _mediator.Send(new CreateNewNotificationCommand
+                                               {
+                                                   Context = message,
+                                                   RelatedId = activityId.Value,
+                                                   NotificationType = NotificationType.ActivityCanceled,
+                                                   UserIds = userIds
+                                               },
+                                               cancellationToken);
+
+    var notificationDto = _mapper.Map<NotificationDto>(newNotification);
 
     await _notificationService.SendActivityNotificationToAll(methodName,
       $"activity-{activityId.Value}",
-      activityId.Value,
-      message);
+      notificationDto);
   }
 }
