@@ -61,6 +61,12 @@ public class
     var userIds = await _mediator.Send(new GetFollowersIdQuery { UserId = userId.Value },
                                        cancellationToken);
 
+    // no user notification
+    if (userIds.Count == 0)
+    {
+      return;
+    }
+
     // add UserNotification to database
     var newNotification = await _mediator.Send(new CreateNewNotificationCommand
                                               {

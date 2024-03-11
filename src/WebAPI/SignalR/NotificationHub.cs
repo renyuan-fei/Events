@@ -1,6 +1,7 @@
 using Application.Common.Helpers;
 using Application.common.interfaces;
 using Application.common.Interfaces;
+using Application.common.Models;
 using Application.common.Security;
 using Application.CQRS.Activities.Queries.GetUserParticipatedActivitiesQuery;
 using Application.CQRS.Followers.Queries;
@@ -37,40 +38,12 @@ public class NotificationHub : Hub
 
     _connectionManager.AddConnection(userId, Context.ConnectionId);
 
-    var activityIds =
-        await _mediator.Send(new GetUserParticipatedActivitiesQuery { UserId = userId });
+    var activityIds = await _mediator.Send(new GetUserParticipatedActivitiesQuery { UserId = userId });
 
     var followerIds = await _mediator.Send(new GetFollowersIdQuery { UserId = userId });
 
-    var unreadNotificationCount =
-        await _mediator.Send(new GetUnreadNotificationNumberQuery { UserId = userId });
-    // start all async tasks
-    // var activityIdsTask = _mediator.Send(new GetUserParticipatedActivitiesQuery
-    // {
-    //     UserId = userId
-    // });
-    //
-    // var followingIdsTask = _mediator.Send(new GetFollowingIdQuery
-    // {
-    //     UserId = userId
-    // });
-    //
-    // var unreadNotificationCountTask = _mediator.Send(new GetUnreadNotificationNumberQuery
-    // {
-    //     UserId = userId
-    // });
-    //
-    // // wait for all async tasks to complete
-    // await Task.WhenAll(activityIdsTask, followingIdsTask, unreadNotificationCountTask);
-    //
-    // // get all async tasks results
-    // var activityIds = await activityIdsTask;
-    // var followingIds = await followingIdsTask;
-    // var unreadNotificationCount = await unreadNotificationCountTask;
+    var unreadNotificationCount = await _mediator.Send(new GetUnreadNotificationNumberQuery { UserId = userId });
 
-    // add all async tasks results to the hub context
-
-    // add user to his personal group, which will be used to send notifications to him
     await Groups.AddToGroupAsync(Context.ConnectionId, userId);
     await Groups.AddToGroupAsync(Context.ConnectionId, $"follower-{userId}");
 
@@ -84,8 +57,7 @@ public class NotificationHub : Hub
       await Groups.AddToGroupAsync(Context.ConnectionId, $"activity-{activityId}");
     }
 
-    await Clients.Caller.SendAsync("LoadUnreadNotificationNumber",
-                                   unreadNotificationCount);
+    await Clients.Caller.SendAsync("LoadUnreadNotificationNumber", unreadNotificationCount);
   }
 
   public async override Task OnDisconnectedAsync(Exception exception)
@@ -94,12 +66,11 @@ public class NotificationHub : Hub
     await base.OnDisconnectedAsync(exception);
   }
 
-  public async Task ReadNotification(string notificationId)
+  public async Task ReadNotification(string userNotificationId)
   {
     var userId = _currentUserService.Id!;
 
     var httpContext = Context.GetHttpContext();
-    var userNotificationId = httpContext!.Request.Query["userNotificationId"];
 
     GuardValidation.AgainstNull(userNotificationId,
                                 "notification with id cannot be null");
@@ -107,7 +78,7 @@ public class NotificationHub : Hub
     // update notification status to read
     await _mediator.Send(new UpdateNotificationStatusCommand
     {
-        UserNotificationId = userNotificationId!
+        UserNotificationId = userNotificationId
     });
 
     // get new unread notification count
@@ -120,4 +91,25 @@ public class NotificationHub : Hub
     await Clients.Caller.SendAsync("UpdateUnreadNotificationNumber",
                                    unreadNotificationCount);
   }
+
+  public async Task LoadPaginatedNotifications(int pageNumber, int pageSize)
+  {
+    var userId = _currentUserService.Id!;
+
+    var query = new GetPaginatedNotificationQuery
+    {
+        UserId = userId,
+        PaginatedListParams = new PaginatedListParams
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }
+    };
+
+    var paginatedNotifications = await _mediator.Send(query);
+
+    // 发送分页结果回客户端
+    await Clients.Caller.SendAsync("ReceivePaginatedNotifications", paginatedNotifications);
+  }
+
 }

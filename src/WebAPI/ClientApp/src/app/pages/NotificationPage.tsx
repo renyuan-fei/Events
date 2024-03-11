@@ -5,9 +5,11 @@ import {useSelector} from "react-redux";
 import {Box, Typography} from "@mui/material";
 
 export const NotificationPage:React.FC = () => {
+    // const dispatch = useDispatch();
     const notifications = useSelector((state: RootState) => state.notification.notifications);
 
     useEffect(() => {
+        // dispatch()
     }, []);
 
     return (

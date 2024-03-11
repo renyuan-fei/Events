@@ -55,6 +55,14 @@ public class
     var hostId = await _mediator.Send(new GetActivityHostIdQuery { activityId = activityId },
                                       cancellationToken);
 
+    userIds.Remove(hostId);
+
+    // no user notification
+    if (userIds.Count == 0)
+    {
+        return;
+    }
+
     // add UserNotification to database
     var newNotification = await _mediator.Send(new CreateNewNotificationCommand
                                                {

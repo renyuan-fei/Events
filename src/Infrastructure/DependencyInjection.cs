@@ -58,6 +58,9 @@ public static class DependencyInjection
     services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
     services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
+    // used for auditing data that changed in domain events
+    services.AddScoped<ISaveChangesInterceptor, PostDomainEventAuditingInterceptor>();
+
     // repository
     services.AddScoped<IActivityRepository, ActivityRepository>();
     services.AddScoped<IAttendeeRepository, AttendeeRepository>();

@@ -5,6 +5,8 @@ import {
     loadUnreadNotificationCount,
     receiveNotification, updateUnreadNotificationCount
 } from "@features/notification/NotificationSlice.ts";
+import {NotificationMessage} from "@type/NotificationMessage.ts";
+import {PaginatedResponse} from "@type/PaginatedResponse.ts";
 
 //TODO receive new notification
 //TODO load all notifications
@@ -62,7 +64,7 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
                     });
 
                     // Define how to handle incoming notifications
-                    connection.on('ReceiveNotificationMessage', (notification: Notification) => {
+                    connection.on('ReceiveNotificationMessage', (notification: NotificationMessage) => {
                         console.log(notification);
                         store.dispatch(receiveNotification(notification));
                     });
@@ -75,8 +77,8 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
                 break;
             case SignalRNotificationActionTypes.LOAD_NOTIFICATIONS:
                 if (connection !== null) {
-                    connection.invoke('LoadNotification').then((r:Notification[]) => {
-                        store.dispatch(loadAllNotifications(r));
+                    connection.invoke('LoadNotification').then((r:PaginatedResponse<NotificationMessage>) => {
+                        store.dispatch(loadAllNotifications(r.items));
                     });
                 }
                 break;

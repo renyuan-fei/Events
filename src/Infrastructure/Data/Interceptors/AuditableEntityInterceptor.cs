@@ -70,7 +70,6 @@ public static class Extensions
     return entry.References.Any(r =>
                                     r.TargetEntry != null
                                  && r.TargetEntry.Metadata.IsOwned()
-                                 && (r.TargetEntry.State == EntityState.Added
-                                  || r.TargetEntry.State == EntityState.Modified));
+                                 && r.TargetEntry.State is EntityState.Added or EntityState.Modified);
   }
 }

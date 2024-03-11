@@ -2,6 +2,7 @@ using System;
 
 using Application.common.DTO;
 using Application.common.Interfaces;
+using Application.CQRS.Activities.Queries.GetActivityHostIdQuery;
 using Application.CQRS.Activities.Queries.GetAllAttendeeIdsByActivityIdQuery;
 using Application.CQRS.Notifications.Commands;
 
@@ -53,6 +54,17 @@ public class
                                  ActivityId = activityId
                              },
                              cancellationToken);
+
+    var hostId = await _mediator.Send(new GetActivityHostIdQuery { activityId = activityId },
+                                      cancellationToken);
+
+    userIds.Remove(hostId);
+
+    // no user notification
+    if (userIds.Count == 0)
+    {
+        return;
+    }
 
     // add UserNotification to database
     var newNotification = await _mediator.Send(new CreateNewNotificationCommand
