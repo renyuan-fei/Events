@@ -148,6 +148,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.RelatedId))
         .ForMember(dest => dest.Status, opt => opt.Ignore())
         .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()));
+        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
+        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type));
   }
 }

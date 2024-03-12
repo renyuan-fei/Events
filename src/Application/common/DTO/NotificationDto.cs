@@ -8,5 +8,7 @@ public class NotificationDto
   public string Content { get; set; } = string.Empty;
   public string RelatedId { get; set; } = string.Empty;
   public NotificationType Type { get; set; } = NotificationType.Default;
+
+  public DateTimeOffset Created { get; set; } = DateTimeOffset.MaxValue;
   public bool Status { get; set; }
 }

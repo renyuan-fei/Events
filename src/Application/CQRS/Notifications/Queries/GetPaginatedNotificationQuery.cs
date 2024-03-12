@@ -41,17 +41,20 @@ public class
 
   public async Task<PaginatedList<NotificationDto>> Handle(
       GetPaginatedNotificationQuery request,
-      CancellationToken              cancellationToken)
+      CancellationToken             cancellationToken)
   {
     try
     {
       var userId = new UserId(request.UserId);
+      var initialTimestamp = request.PaginatedListParams.InitialTimestamp;
       var pageNumber = request.PaginatedListParams.PageNumber;
       var pageSize = request.PaginatedListParams.PageSize;
 
-      var notificationsQuery = _notificationRepository.GetUserNotificationQueryable(userId);
+      var notificationsQuery =
+          _notificationRepository.GetUserNotificationQueryable(userId,initialTimestamp);
 
-      var orderedQueryable = notificationsQuery.OrderBy(notification => notification.Created);
+      var orderedQueryable =
+          notificationsQuery.OrderBy(notification => notification.Created);
 
       var paginatedList = await orderedQueryable
                                 .ProjectTo<NotificationDto>(_mapper.ConfigurationProvider)
@@ -70,4 +73,3 @@ public class
     }
   }
 }
-

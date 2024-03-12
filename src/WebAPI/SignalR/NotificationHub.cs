@@ -2,17 +2,17 @@ using Application.Common.Helpers;
 using Application.common.interfaces;
 using Application.common.Interfaces;
 using Application.common.Models;
-using Application.common.Security;
 using Application.CQRS.Activities.Queries.GetUserParticipatedActivitiesQuery;
 using Application.CQRS.Followers.Queries;
 using Application.CQRS.Notifications.Commands;
 using Application.CQRS.Notifications.Queries;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace WebAPI.SignalR;
 
-[ Authorize ]
+[ Application.common.Security.Authorize ]
 public class NotificationHub : Hub
 {
   private readonly IConnectionManager       _connectionManager;
@@ -92,11 +92,30 @@ public class NotificationHub : Hub
                                    unreadNotificationCount);
   }
 
-  public async Task LoadPaginatedNotifications(int pageNumber, int pageSize)
+  public async Task GetPaginatedNotifications(int pageNumber, int pageSize, DateTimeOffset? initialTimestamp)
   {
     var userId = _currentUserService.Id!;
 
-    var query = new GetPaginatedNotificationQuery
+    var paginatedNotifications = await _mediator.Send(new GetPaginatedNotificationQuery
+    {
+        UserId = userId,
+        PaginatedListParams = new PaginatedListParams
+        {
+            InitialTimestamp = initialTimestamp ?? DateTimeOffset.MaxValue,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        }
+    });
+
+    // 发送分页结果回客户端
+    await Clients.Caller.SendAsync("LoadPaginatedNotifications", paginatedNotifications);
+  }
+
+  public async Task GetNotifications(int pageNumber, int pageSize)
+  {
+    var userId = _currentUserService.Id!;
+
+    var query = new GetNotificationQuery
     {
         UserId = userId,
         PaginatedListParams = new PaginatedListParams
@@ -106,10 +125,9 @@ public class NotificationHub : Hub
         }
     };
 
-    var paginatedNotifications = await _mediator.Send(query);
+    var Notifications = await _mediator.Send(query);
 
     // 发送分页结果回客户端
-    await Clients.Caller.SendAsync("ReceivePaginatedNotifications", paginatedNotifications);
+    await Clients.Caller.SendAsync("LoadNotifications", Notifications);
   }
-
 }

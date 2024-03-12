@@ -37,20 +37,16 @@ export const RemoveAttendee = async (activityId: string): Promise<any> => {
     return handleResponse(response);
 }
 
-// TODO cancel attend activity (only for host user)
 export const CancelActivity = async (activityId: string): Promise<any> => {
     const response = await apiClient.put<ApiResponse<any>>(`/api/Activities/${activityId}/cancel`);
     return handleResponse(response);
 }
 
-// TODO create activity
 export const CreateActivity = async (activity: NewActivity): Promise<any> => {
     const response = await apiClient.post<ApiResponse<any>>(`/api/Activities`, activity);
     return handleResponse(response);
 }
 
-
-// TODO update activity
 export const UpdateActivity = async (activityId: string, activity: NewActivity): Promise<any> => {
     const response = await apiClient.put<ApiResponse<any>>(`/api/Activities/${activityId}`, activity);
     return handleResponse(response);
