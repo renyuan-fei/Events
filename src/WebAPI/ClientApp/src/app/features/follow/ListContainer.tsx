@@ -10,7 +10,7 @@ export const ListContainer: React.FC<ListContainerProps> = ({children}) => {
     return (
         <List sx={{
             width: '100%',
-            maxWidth: 460,
+            maxWidth: 520,
             bgcolor: 'background.paper',
             borderRadius: theme.shape.borderRadius,
             paddingX: theme.spacing(2),

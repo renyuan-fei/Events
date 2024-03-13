@@ -1,6 +1,6 @@
 import React from "react";
 import {NotificationMessage} from "@type/NotificationMessage.ts";
-import {Badge, Box, ListItem, ListItemText, Typography} from "@mui/material";
+import {Badge, Box, ListItem, ListItemText, Typography, useTheme} from "@mui/material";
 import useFormatToLocalTimezone from "@utils/useFormatToLocalTimezone.ts";
 import IconButton from "@mui/material/IconButton";
 import MarkAsReadIcon from '@mui/icons-material/Done';
@@ -15,6 +15,7 @@ interface NotificationItemProps {
 
 export const NotificationItem: React.FC<NotificationItemProps> = ({notification}) => {
     const navigate = useNavigate();
+    const theme = useTheme();
 
     const {
         id,
@@ -42,7 +43,9 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({notification}
 
     return (
         <ListItem alignItems='flex-start'
-                  onClick={navigateToRelated}
+                  sx={{
+                      marginY: theme.spacing(1),
+                  }}
                   secondaryAction={
                       <IconButton edge='end'
                                   color={'secondary'}
@@ -50,13 +53,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({notification}
                                   disabled={status}>
                           <MarkAsReadIcon/>
                       </IconButton>
-                  }
-                  sx={{}}>
-
+                  }>
             <ListItemText
                 primary={
                     <Badge variant='dot'
                            badgeContent={status ? 0 : 1}
+                           onClick={handleMarkAsRead}
                            color={'secondary'}
                            anchorOrigin={{
                                vertical: 'top',
@@ -68,7 +70,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({notification}
                             alignItems: 'center'
                         }}>
                             <Typography variant='h6'
-                                        sx={{fontWeight: 'bold', marginRight: 2}}>
+                                        onClick={navigateToRelated}
+                                        sx={{
+                                            fontWeight: 'bold', marginRight: 2,
+                                            '&:hover': {color: theme.palette.primary.main},
+                                            cursor: 'pointer'
+                                        }}>
                                 {splitType}
                             </Typography>
                             <Typography

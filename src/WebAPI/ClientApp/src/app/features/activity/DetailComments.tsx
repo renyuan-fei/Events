@@ -29,6 +29,8 @@ const DetailComments: React.FC<DetailCommentsProps> = ({activityId}) => {
     const image = queryClient.getQueryData<userInfo>("userInfo")?.image;
 
     // TODO implement pagination
+    // TODO navigate to user profile page
+    // TODO quick check user profile
     // TODO delete comment (only for comment owner)
     const handleNavigateToUserProfile = (id: string) => {
         navigate(`/user/${id}`);

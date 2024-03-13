@@ -55,7 +55,7 @@ public class
 
     var message =
         $"New Activity Alert: '{activity.Title}' is scheduled for {activity.Date:yyyy-MM-dd HH:mm} at '{activity.Location}'. "
-      + $"Brief: {activity.Description}. Hosted by {host?.DisplayName}.";
+      + $"Hosted by {host?.DisplayName}.";
 
     // get all user
     var userIds = await _mediator.Send(new GetFollowersIdQuery { UserId = userId.Value },

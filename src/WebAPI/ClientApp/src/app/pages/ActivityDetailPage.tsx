@@ -66,7 +66,9 @@ const ActivityDetailPage = () => {
                                     description={description}
                                     isCurrentUser={isCurrentUser}
                                     uploadHook={updateHook}/>
-                        <DetailAttendees attendees={attendees}/>
+                        <DetailAttendees
+                            id={activityId!}
+                            attendees={attendees}/>
                         <PhotoGallery uploadHook={uploadHook}
                                       deleteHook={deleteHook}
                                       photos={photos}

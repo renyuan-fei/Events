@@ -14,6 +14,8 @@ import Logo from "@ui/Logo.tsx";
 
 
 export function NavBar() {
+    // TODO response design for each size
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const {isLogin} = useSelector((state: RootState) => state.user)

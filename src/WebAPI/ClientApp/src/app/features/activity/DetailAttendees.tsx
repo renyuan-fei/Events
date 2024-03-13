@@ -4,21 +4,20 @@ import {Attendee} from "@type/Attendee.ts";
 import {Avatar, Paper, Stack, useTheme} from "@mui/material";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router";
+import React from "react";
 
 // @ts-ignore
 interface DetailAttendeesProps {
+    id: string;
     attendees: Array<Attendee>;
 }
 
-// @ts-ignore
-const DetailAttendees = (props: DetailAttendeesProps) => {
+const DetailAttendees:React.FC<DetailAttendeesProps> = ({attendees,id}) => {
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const {attendees} = props;
-
     const handleSeeAllClick = () => {
-        navigate('/all-attendees/${id}');
+        navigate(`/activity/${id}/attendees`);
     };
 
     return (

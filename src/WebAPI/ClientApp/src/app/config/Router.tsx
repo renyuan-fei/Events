@@ -11,6 +11,7 @@ import {useEffect} from "react";
 import {AllPhotosPage} from "@pages/AllPhotosPage.tsx";
 import {CreateActivity} from "@pages/CreateActivity.tsx";
 import {NotificationPage} from "@pages/NotificationPage.tsx";
+import AttendeePage from "@pages/AttendeesPage.tsx";
 
 
 const ScrollToTop = () => {
@@ -43,6 +44,7 @@ export const router = createHashRouter([
                     {path: "/activity/new", element: <CreateActivity/>},
                     {path: "/activity/new/:activityId", element: <CreateActivity/>},
                     {path: "/activity/:activityId", element: <ActivityDetailPage/>},
+                    {path: "/activity/:activityId/attendees", element: <AttendeePage/>},
                     {path: "/user/:userId", element: <UserProfile/>},
                     {path: "/follower/:userId", element: <FollowerPage/>},
                     {path: "/following/:userId", element: <FollowingPage/>},

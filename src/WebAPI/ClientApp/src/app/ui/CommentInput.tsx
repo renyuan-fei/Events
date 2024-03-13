@@ -12,6 +12,8 @@ const CommentInput:React.FC<CommentInputProps> = ({image}) => {
     const [comment, setComment] = useState<string>('');
     const dispatch = useAppDispatch()
 
+    // TODO disable when use is not logged in or not attended
+    // TODO when disabled input, show message and attend button
     const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setComment(event.target.value);
     };
