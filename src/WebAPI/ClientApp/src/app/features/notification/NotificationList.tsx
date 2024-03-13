@@ -22,10 +22,11 @@ export const NotificationList: React.FC<NotificationListProps> = ({notifications
         <ListContainer>
             {notifications?.map((notification: NotificationMessage, index) => (
                 <React.Fragment key={notification.id}>
-                    <NotificationItem notification={notification}/>
-                    {index < notifications.length - 1 && <Divider variant="inset" component="li" />}
+                    <NotificationItem notification={notification} />
+                    {index < notifications.length - 1 && <Divider component="li" />} {/* 移除inset变体 */}
                 </React.Fragment>
             ))}
         </ListContainer>
+
     );
 };

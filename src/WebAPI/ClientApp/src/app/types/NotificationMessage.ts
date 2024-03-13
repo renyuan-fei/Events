@@ -5,6 +5,6 @@ export interface NotificationMessage {
     content: string;
     relatedId: string;
     type: NotificationType;
-    Created: string;
+    created: string;
     status: boolean;
 }

@@ -1,52 +1,93 @@
 import React from "react";
 import {NotificationMessage} from "@type/NotificationMessage.ts";
-import {Badge, ListItem, ListItemText, Typography} from "@mui/material";
-
+import {Badge, Box, ListItem, ListItemText, Typography} from "@mui/material";
+import useFormatToLocalTimezone from "@utils/useFormatToLocalTimezone.ts";
+import IconButton from "@mui/material/IconButton";
+import MarkAsReadIcon from '@mui/icons-material/Done';
+import useSplitCamelCase from "@utils/useSplitCamelCase.ts";
+import {useDispatch} from "react-redux";
+import {updateNotificationStatus} from "@config/NotificationHubConnection.ts";
+import {useNavigate} from "react-router";
 
 interface NotificationItemProps {
     notification: NotificationMessage
 }
-export const NotificationItem:React.FC<NotificationItemProps> = ({notification}) => {
+
+export const NotificationItem: React.FC<NotificationItemProps> = ({notification}) => {
+    const navigate = useNavigate();
+
     const {
+        id,
         content,
         type,
-        status
+        created,
+        status,
+        relatedId
     } = notification;
 
+    const dispatch = useDispatch();
+    const formattedTime = useFormatToLocalTimezone(new Date(created));
+    const splitType = useSplitCamelCase(type);
+
+    const navigateToRelated = () => {
+        const activityTypes = ['ActivityCreated', 'ActivityCanceled', 'ActivityJoined', 'ActivityUpdated'];
+        const dest = activityTypes.includes(type) ? 'activity' : 'user';
+
+        navigate(`/${dest}/${relatedId}`)
+    }
+
+    const handleMarkAsRead = () => {
+        dispatch(updateNotificationStatus(id))
+    }
+
     return (
-        <ListItem alignItems='flex-start'>
-            <Badge variant="dot" badgeContent={status ? 0 : 1} color={'secondary'} anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-            }}>
-                <ListItemText
-                primary={<Typography variant='h6' component='span' sx={{
-                    fontWeight: 'bold',
-                    display: 'block', // 或者 'inline-block' 都可以，取决于布局需求
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: '100%', // 可以调整为实际需要的宽度
-                    marginTop: 0.5
-                }}>{type}</Typography>}
-                secondary={
-                    <>
-                        <Typography
-                            component='span'
-                            variant='body1'
-                            color='text.primary'
-                            sx={{
-                                display: 'inline',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                wordWrap: 'break-word', // Ensures that long words will break and wrap onto the next line
-                            }}
-                        >
-                            {content}
-                        </Typography>
-                    </>
+        <ListItem alignItems='flex-start'
+                  onClick={navigateToRelated}
+                  secondaryAction={
+                      <IconButton edge='end'
+                                  color={'secondary'}
+                                  onClick={handleMarkAsRead}
+                                  disabled={status}>
+                          <MarkAsReadIcon/>
+                      </IconButton>
+                  }
+                  sx={{}}>
+
+            <ListItemText
+                primary={
+                    <Badge variant='dot'
+                           badgeContent={status ? 0 : 1}
+                           color={'secondary'}
+                           anchorOrigin={{
+                               vertical: 'top',
+                               horizontal: 'left',
+                           }}>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <Typography variant='h6'
+                                        sx={{fontWeight: 'bold', marginRight: 2}}>
+                                {splitType}
+                            </Typography>
+                            <Typography
+                                variant='body2'
+                                color='text.secondary'
+                                sx={{flexShrink: 0}}
+                            >
+                                {formattedTime}
+                            </Typography>
+                        </Box>
+                    </Badge>
+
                 }
-            /></Badge>
+                secondary={
+                    <Typography variant='body1' color='text.primary'>
+                        {content}
+                    </Typography>
+                }
+            />
         </ListItem>
     );
 };

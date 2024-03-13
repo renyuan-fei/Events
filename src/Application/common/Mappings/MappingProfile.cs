@@ -146,9 +146,18 @@ public class MappingProfile : Profile
     CreateMap<Notification,NotificationDto>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value))
         .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.RelatedId))
-        .ForMember(dest => dest.Status, opt => opt.Ignore())
+        .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.UserNotifications.First().IsRead))
         .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
-        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type));
+        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.UtcDateTime))
+        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()));
+
+    CreateMap<UserNotification,NotificationDto>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Notification.Id.Value))
+        .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.Notification.Id))
+        .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsRead))
+        .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Notification.Content))
+        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.UtcDateTime))
+        .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.Notification.RelatedId))
+        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Notification.Type.ToString()));
   }
 }

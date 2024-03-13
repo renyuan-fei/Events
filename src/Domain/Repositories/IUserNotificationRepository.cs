@@ -6,7 +6,9 @@ public interface IUserNotificationRepository
 {
   public Task<UserNotification?> GetByIdAsync(UserNotificationId id);
 
-  public IQueryable<UserNotification> GetNotificationsByUserIdQueryable(UserId userId);
+  public IQueryable<UserNotification> GetNotificationsByUserIdQueryable(
+      UserId         userId,
+      DateTimeOffset initialTimestamp);
 
-  Task<int> GetNotificationCountByUserIdAsync(UserId userId);
+  Task<int> GetUnreadNotificationCountByUserIdAsync(UserId userId);
 }

@@ -13,7 +13,8 @@ export const ListContainer: React.FC<ListContainerProps> = ({children}) => {
             maxWidth: 460,
             bgcolor: 'background.paper',
             borderRadius: theme.shape.borderRadius,
-            paddingX: theme.spacing(1),
+            paddingX: theme.spacing(2),
+            paddingY: theme.spacing(1),
         }}>
             {children}
         </List>

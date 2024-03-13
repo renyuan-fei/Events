@@ -4,7 +4,7 @@ import {
     clearNotifications,
     loadUnreadNotificationCount,
     receiveNotification,
-    setInitialTimestamp, setIsConnection,
+    setInitialTimestamp, setIsConnection, setNotificationStatusRead,
     setPaginatedNotifications,
     updateUnreadNotificationCount
 } from "@features/notification/NotificationSlice.ts";
@@ -28,9 +28,9 @@ const stopNotificationConnection = () => ({
     type: SignalRNotificationActionTypes.STOP_NOTIFICATION_CONNECTION,
 });
 
-const updateNotificationStatus = (id: string) => ({
+const updateNotificationStatus = (userNotificationId: string) => ({
     type: SignalRNotificationActionTypes.UPDATE_NOTIFICATION_STATUS,
-    payload: id,
+    payload: userNotificationId,
 });
 
 const loadPaginatedNotifications = () => ({
@@ -57,7 +57,7 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
 
                     connection.on('UpdateUnreadNotificationNumber', (r) => {
                         console.log(r);
-                        store.dispatch(updateUnreadNotificationCount())
+                        store.dispatch(updateUnreadNotificationCount(r))
                     })
 
                     connection.on("LoadUnreadNotificationNumber", (notificationNumber: number) => {
@@ -83,6 +83,16 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
                             store.dispatch((setIsConnection(true)));
                         })
                         .catch(err => console.error('Error while establishing Notification Hub connection:', err));
+                }
+                break;
+            case SignalRNotificationActionTypes.UPDATE_NOTIFICATION_STATUS:
+                if (connection!== null) {
+                    connection.invoke('ReadNotification', action.payload).then(() => {
+                        // 假设后端成功处理了标记为已读的请求
+                        // 更新本地Redux状态，标记通知为已读
+                        store.dispatch(setNotificationStatusRead(action.payload));
+                    })
+                        .catch(err => console.error('Error while updating notification status:', err));
                 }
                 break;
             case SignalRNotificationActionTypes.LOAD_PAGINATED_NOTIFICATIONS:

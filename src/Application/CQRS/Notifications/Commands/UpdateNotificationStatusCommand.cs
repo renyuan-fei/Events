@@ -7,6 +7,7 @@ using AutoMapper;
 
 using Domain.Entities;
 using Domain.Repositories;
+using Domain.ValueObjects;
 using Domain.ValueObjects.Message;
 
 using MediatR;
@@ -17,7 +18,8 @@ namespace Application.CQRS.Notifications.Commands;
 
 public record UpdateNotificationStatusCommand : IRequest<Result>
 {
-  public string UserNotificationId { get; init; }
+  public string NotificationId { get; init; }
+  public string UserId { get; init; }
 }
 
 public class
@@ -25,19 +27,19 @@ public class
     UpdateNotificationStatusCommand, Result>
 {
   private readonly IUnitOfWork _unitOfWork;
-  private readonly IUserNotificationRepository _userNotificationRepository;
+  private readonly INotificationRepository _notificationRepository;
   private readonly IMapper _mapper;
   private readonly ILogger<UpdateNotificationStatusCommandHandler> _logger;
 
   public UpdateNotificationStatusCommandHandler(
       IMapper                                         mapper,
       ILogger<UpdateNotificationStatusCommandHandler> logger,
-      IUserNotificationRepository                     userNotificationRepository,
+      INotificationRepository                     notificationRepository,
       IUnitOfWork                                     unitOfWork)
   {
     _mapper = mapper;
     _logger = logger;
-    _userNotificationRepository = userNotificationRepository;
+    _notificationRepository = notificationRepository;
     _unitOfWork = unitOfWork;
   }
 
@@ -47,12 +49,15 @@ public class
   {
     try
     {
-      var userNotification = await _userNotificationRepository.GetByIdAsync(new
-          UserNotificationId(request.UserNotificationId));
+      var notification = await _notificationRepository.GetNotificationWithUserByIdAsync(new NotificationId(request.NotificationId));
+
+      GuardValidation.AgainstNull(notification, "notification not found");
+
+      var userNotification = notification!.UserNotifications.FirstOrDefault(x => x.UserId == new UserId(request.UserId));
 
       GuardValidation.AgainstNull(userNotification, "notification not found");
 
-      userNotification.MarkAsRead();
+      userNotification!.MarkAsRead();
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) != 0;
 

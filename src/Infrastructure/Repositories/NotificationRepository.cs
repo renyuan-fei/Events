@@ -15,8 +15,23 @@ public class NotificationRepository : Repository<Notification, NotificationId>,
 {
   public NotificationRepository(EventsDbContext dbContext) : base(dbContext) { }
 
+  public async Task<Notification?> GetByIdAsync(NotificationId id)
+  {
+    return await DbContext.Notifications
+                          .Where(x => x.Id == id)
+                          .FirstOrDefaultAsync();
+  }
+
+  public async Task<Notification?> GetNotificationWithUserByIdAsync(NotificationId id)
+  {
+    return await DbContext.Notifications
+                          .Where(x => x.Id == id)
+                          .Include(x => x.UserNotifications)
+                          .FirstOrDefaultAsync();
+  }
+
   public IQueryable<Notification> GetUserNotificationQueryable(
-      UserId   userId,
+      UserId         userId,
       DateTimeOffset initialTimestamp)
   {
     // use timestamp to Anchoring pagination
@@ -24,7 +39,8 @@ public class NotificationRepository : Repository<Notification, NotificationId>,
                                              .Any(userNotification =>
                                                       userNotification.UserId == userId
                                                    && notification.Created
-                                                   <= initialTimestamp));
+                                                   <= initialTimestamp))
+                    .Include(notification => notification.UserNotifications);
   }
 
   public IQueryable<Notification> GetUserNotificationQueryable(UserId userId)

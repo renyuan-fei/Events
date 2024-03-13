@@ -20,7 +20,7 @@ const initialState: NotificationState = {
     initialTimestamp: new Date('9999-12-31T23:59:59Z').toISOString(),
     unReadNotificationCount: 0,
     pageNumber: 1,
-    pageSize: 10,
+    pageSize: 15,
     totalPages: 0,
     totalCount: 0,
     hasPreviousPage: false,
@@ -35,8 +35,8 @@ const notificationSlice = createSlice({
         loadAllNotifications: (state, action: PayloadAction<NotificationMessage[]>) => {
             state.notifications = action.payload;
         },
-        updateUnreadNotificationCount: (state) => {
-            state.unReadNotificationCount += 1;
+        updateUnreadNotificationCount: (state,action: PayloadAction<number>) => {
+            state.unReadNotificationCount += action.payload;
         },
         receiveNotification: (state, action: PayloadAction<NotificationMessage>) => {
             state.notifications.unshift(action.payload);
@@ -47,6 +47,13 @@ const notificationSlice = createSlice({
         },
         loadUnreadNotificationCount: (state, action: PayloadAction<number>) => {
             state.unReadNotificationCount = action.payload;
+        },
+        setNotificationStatusRead: (state, action: PayloadAction<string>) => {
+            // 查找并更新对应的通知状态为已读
+            const index = state.notifications.findIndex(n => n.id === action.payload);
+            if (index !== -1) {
+                state.notifications[index].status = true; // 假设status为true表示已读
+            }
         },
         setPaginatedNotifications: (state, action: PayloadAction<PaginatedResponse<NotificationMessage>>) => {
             if (action.payload.pageNumber === 1) {
@@ -79,7 +86,7 @@ const notificationSlice = createSlice({
             state.notifications = [];
             state.initialTimestamp = new Date('9999-12-31T23:59:59Z').toISOString();
             state.pageNumber = 1;
-            state.pageSize = 10;
+            state.pageSize = 15;
             state.totalPages = 0;
             state.totalCount = 0;
             state.hasPreviousPage = false;
@@ -98,7 +105,8 @@ export const {
     setInitialTimestamp,
     setPageNumber,
     setIsConnection,
-    reset
+    reset,
+    setNotificationStatusRead
 } = notificationSlice.actions;
 
 export type {NotificationState};

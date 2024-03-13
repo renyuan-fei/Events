@@ -33,8 +33,7 @@ public class NotificationService : INotificationService
     await _hubContext.Clients.GroupExcept(groupName,excludedConnectionIds).SendAsync(methodName,
         notification);
 
-    await _hubContext.Clients.GroupExcept(groupName, excludedConnectionIds).SendAsync
-        ("UpdateUnreadNotificationNumber");
+    await _hubContext.Clients.GroupExcept(groupName, excludedConnectionIds).SendAsync("UpdateUnreadNotificationNumber",1);
   }
 
   public async Task SendMessageToUser(
@@ -45,7 +44,7 @@ public class NotificationService : INotificationService
     // 使用SignalR的User方法定位用户，这里假设userId即为SignalR分配给用户的组名（通常可以在用户连接时设置）
     await _hubContext.Clients.User(userId).SendAsync(methodName, notification);
 
-    await _hubContext.Clients.User(userId).SendAsync("UpdateUnreadNotificationNumber");
+    await _hubContext.Clients.User(userId).SendAsync("UpdateUnreadNotificationNumber",1);
 
   }
 }

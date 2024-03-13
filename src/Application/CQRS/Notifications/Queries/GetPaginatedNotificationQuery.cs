@@ -25,18 +25,18 @@ public class
     GetPaginatedNotificationQueryHandler : IRequestHandler<GetPaginatedNotificationQuery
   , PaginatedList<NotificationDto>>
 {
-  private readonly INotificationRepository                       _notificationRepository;
+  private readonly IUserNotificationRepository _userNotificationRepository;
   private readonly IMapper                                       _mapper;
   private readonly ILogger<GetPaginatedNotificationQueryHandler> _logger;
 
   public GetPaginatedNotificationQueryHandler(
       IMapper                                       mapper,
       ILogger<GetPaginatedNotificationQueryHandler> logger,
-      INotificationRepository                       notificationRepository)
+      IUserNotificationRepository                   userNotificationRepository)
   {
     _mapper = mapper;
     _logger = logger;
-    _notificationRepository = notificationRepository;
+    _userNotificationRepository = userNotificationRepository;
   }
 
   public async Task<PaginatedList<NotificationDto>> Handle(
@@ -50,11 +50,9 @@ public class
       var pageNumber = request.PaginatedListParams.PageNumber;
       var pageSize = request.PaginatedListParams.PageSize;
 
-      var notificationsQuery =
-          _notificationRepository.GetUserNotificationQueryable(userId,initialTimestamp);
+      var notificationsQuery = _userNotificationRepository.GetNotificationsByUserIdQueryable(userId,initialTimestamp);
 
-      var orderedQueryable =
-          notificationsQuery.OrderBy(notification => notification.Created);
+      var orderedQueryable = notificationsQuery.OrderByDescending(notification => notification.Created);
 
       var paginatedList = await orderedQueryable
                                 .ProjectTo<NotificationDto>(_mapper.ConfigurationProvider)

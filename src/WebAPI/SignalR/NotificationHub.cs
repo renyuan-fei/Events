@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace WebAPI.SignalR;
 
+//当使用SignalR时，服务器可以发送一个广播给所有连接的客户端，通知他们未读通数已经改变。客户端可以基于这个信息来更新其本地状态。
+
 [ Application.common.Security.Authorize ]
 public class NotificationHub : Hub
 {
@@ -70,28 +72,18 @@ public class NotificationHub : Hub
   {
     var userId = _currentUserService.Id!;
 
-    var httpContext = Context.GetHttpContext();
-
     GuardValidation.AgainstNull(userNotificationId,
                                 "notification with id cannot be null");
 
     // update notification status to read
     await _mediator.Send(new UpdateNotificationStatusCommand
     {
-        UserNotificationId = userNotificationId
+        UserId = userId,
+        NotificationId = userNotificationId
     });
 
-    // get new unread notification count
-    var unreadNotificationCount = await _mediator.Send(new
-                                                           GetUnreadNotificationNumberQuery
-                                                           {
-                                                               UserId = userId
-                                                           });
-
-    await Clients.Caller.SendAsync("UpdateUnreadNotificationNumber",
-                                   unreadNotificationCount);
+    await Clients.Caller.SendAsync("UpdateUnreadNotificationNumber", -1);
   }
-
   public async Task GetPaginatedNotifications(int pageNumber, int pageSize, DateTimeOffset? initialTimestamp)
   {
     var userId = _currentUserService.Id!;

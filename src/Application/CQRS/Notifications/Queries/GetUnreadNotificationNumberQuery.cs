@@ -44,7 +44,7 @@ public class
     {
       var userId = new UserId(request.UserId);
 
-      var notificationCount = await _userNotificationRepository.GetNotificationCountByUserIdAsync(userId);
+      var notificationCount = await _userNotificationRepository.GetUnreadNotificationCountByUserIdAsync(userId);
 
       return notificationCount;
     }

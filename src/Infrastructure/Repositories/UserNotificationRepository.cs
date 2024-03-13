@@ -3,6 +3,7 @@ using Domain.Repositories;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Message;
 
+using Infrastructure.Data.Migrations;
 using Infrastructure.DatabaseContext;
 
 using Microsoft.EntityFrameworkCore;
@@ -22,14 +23,15 @@ public class UserNotificationRepository: Repository<UserNotification, UserNotifi
              .FirstOrDefaultAsync();
   }
 
-  public IQueryable<UserNotification> GetNotificationsByUserIdQueryable(UserId userId)
+  public IQueryable<UserNotification> GetNotificationsByUserIdQueryable(UserId userId,DateTimeOffset initialTimestamp)
   {
-    return DbContext.UserNotifications.Where(x => x.UserId == userId).AsQueryable();
+    return DbContext.UserNotifications.Where(x => x.UserId == userId && x.Created
+     <= initialTimestamp).Include(user => user.Notification).AsQueryable();
   }
 
-  public async Task<int> GetNotificationCountByUserIdAsync(UserId userId)
+  public async Task<int> GetUnreadNotificationCountByUserIdAsync(UserId userId)
   {
-    return await DbContext.UserNotifications.CountAsync(x => x.UserId == userId);
+    return await DbContext.UserNotifications.Where(userNotification => userNotification
+        .UserId == userId && userNotification.IsRead == false).CountAsync();
   }
-
 }
