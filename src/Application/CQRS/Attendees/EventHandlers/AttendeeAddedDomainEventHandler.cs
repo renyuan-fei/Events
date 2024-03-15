@@ -1,7 +1,11 @@
+using Application.common.DTO;
+using Application.Common.Helpers;
 using Application.common.Interfaces;
+using Application.CQRS.Notifications.Commands;
 
+using Domain.Enums;
 using Domain.Events.Attendee;
-using Domain.Repositories;
+using Domain.ValueObjects;
 
 using Microsoft.Extensions.Logging;
 
@@ -10,46 +14,70 @@ namespace Application.CQRS.Attendees.EventHandlers;
 public class
     AttendeeAddedDomainEventHandler : INotificationHandler<AttendeeAddedDomainEvent>
 {
-  private readonly IAttendeeRepository                      _attendeeRepository;
+  private readonly IMapper                                  _mapper;
+  private readonly INotificationService                     _notificationService;
+  private readonly IUserService                             _userService;
+  private readonly IMediator                                _mediator;
   private readonly ILogger<AttendeeAddedDomainEventHandler> _logger;
-  private readonly IUnitOfWork                              _unitOfWork;
 
   public AttendeeAddedDomainEventHandler(
       ILogger<AttendeeAddedDomainEventHandler> logger,
-      IAttendeeRepository                      attendeeRepository,
-      IUnitOfWork                              unitOfWork)
+      IMediator                                mediator,
+      IUserService                             userService,
+      INotificationService                     notificationService,
+      IMapper                                  mapper)
   {
     _logger = logger;
-    _attendeeRepository = attendeeRepository;
-    _unitOfWork = unitOfWork;
+    _mediator = mediator;
+    _userService = userService;
+    _notificationService = notificationService;
+    _mapper = mapper;
   }
 
   public async Task Handle(
       AttendeeAddedDomainEvent notification,
       CancellationToken        cancellationToken)
   {
-    try
+    var attendee = notification.Attendee;
+    var activity = notification.Activity;
 
-    {
-      _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
+    _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
 
-      await _attendeeRepository.AddAsync(notification.Attendee, cancellationToken);
+    var attendeeId = attendee.Identity.UserId;
 
-      var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
+    var attendeeInfo = await _userService.GetUserByIdAsync(attendeeId.Value, cancellationToken);
 
-      _logger.LogInformation("Attendee operation result in repository: {Result}, Attendee ID: {AttendeeId}",
-                             result
-                                 ? "added"
-                                 : "not added",
-                             notification.Attendee.Id);
-    }
-    catch (Exception e)
-    {
-      _logger.LogError(e,
-                       "Error occurred while handling {DomainEvent}",
-                       notification.GetType().Name);
+    GuardValidation.AgainstNull(attendeeInfo, $"can not found user {attendeeId}");
 
-      throw;
-    }
+    var hostId = activity.Attendees
+                         .FirstOrDefault(x => x.Identity.IsHost)!
+                         .Identity.UserId;
+
+    if (hostId == attendeeId) return;
+
+    const string methodName = "ReceiveNotificationMessage";
+
+    var message =
+        $"New attendee {attendeeInfo!.DisplayName} joined your activity {activity.Title}.";
+
+    var newNotification = await _mediator.Send(new CreateNewNotificationCommand
+                                               {
+                                                   Context = message,
+                                                   RelatedId = attendeeId.Value,
+                                                   NotificationType =
+                                                       NotificationType.AttendeeAdded,
+                                                   UserIds =
+                                                       new List<UserId>
+                                                       {
+                                                           hostId
+                                                       }
+                                               },
+                                               cancellationToken);
+
+    var notificationDto = _mapper.Map<NotificationDto>(newNotification);
+
+    await _notificationService.SendMessageToUser(methodName,
+                                                 hostId.Value,
+                                                 notificationDto);
   }
 }

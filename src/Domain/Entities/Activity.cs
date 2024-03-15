@@ -89,7 +89,8 @@ public class Activity : BaseAuditableEntity<ActivityId>
   public void AddAttendee(Attendee attendee)
   {
     _attendees.Add(attendee);
-    // AddDomainEvent(new AttendeeAddedDomainEvent(attendee));
+
+    AddDomainEvent(new AttendeeAddedDomainEvent(attendee,this));
   }
 
   public bool RemoveAttendee(UserId userId)

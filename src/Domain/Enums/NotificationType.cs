@@ -7,6 +7,7 @@ public enum NotificationType
   ActivityCanceled,
   ActivityJoined,
   ActivityUpdated,
+  AttendeeAdded,
   UserFollowed
 }
 

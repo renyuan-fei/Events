@@ -48,7 +48,7 @@ public class
 
       GuardValidation.AgainstNull(activity, nameof(activity));
 
-      var isExisting = activity.Attendees.Any(attendee => attendee.Identity.UserId == new UserId(userId));
+      var isExisting = activity!.Attendees.Any(attendee => attendee.Identity.UserId == new UserId(userId));
 
       if (isExisting)
       {
