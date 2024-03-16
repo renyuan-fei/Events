@@ -5,7 +5,7 @@ import {Box, Typography} from "@mui/material";
 import React, {useEffect} from "react";
 import {loadPaginatedNotifications} from "@config/NotificationHubConnection.ts";
 import {LoadingButton} from "@mui/lab";
-import {reset} from "@features/notification/NotificationSlice.ts";
+import {resetNotifications} from "@features/notification/NotificationSlice.ts";
 
 export const NotificationPage:React.FC = () => {
     const dispatch = useDispatch();
@@ -17,7 +17,7 @@ export const NotificationPage:React.FC = () => {
             dispatch(loadPaginatedNotifications())
         }
         return () => {
-            dispatch(reset())
+            dispatch(resetNotifications())
         }
     },[dispatch,isConnection])
 

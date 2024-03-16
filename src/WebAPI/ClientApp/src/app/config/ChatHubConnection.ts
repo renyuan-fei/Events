@@ -7,11 +7,14 @@ import {
     loadComments,
     receiveComments
 } from "@features/comment/CommentSlice.ts";
+import {setInitialTimestamp} from "@features/comment/CommentSlice.ts";
+import {PaginatedResponse} from "@type/PaginatedResponse.ts";
 
 enum SignalRChatActionTypes {
     START_CONNECTION = 'SIGNALR_START_CONNECTION',
     STOP_CONNECTION = 'SIGNALR_STOP_CONNECTION',
     SEND_MESSAGE = 'SIGNALR_SEND_MESSAGE',
+    LOAD_PAGINATED_COMMENTS = 'SIGNALR_LOAD_PAGINATED_COMMENTS',
 }
 
 // Action 创建函数
@@ -24,6 +27,10 @@ const stopConnection = () => ({type: SignalRChatActionTypes.STOP_CONNECTION});
 const sendMessage = (message: string) => ({
     type: SignalRChatActionTypes.SEND_MESSAGE,
     payload: message
+});
+
+const loadPaginatedComments = () => ({
+    type: SignalRChatActionTypes.LOAD_PAGINATED_COMMENTS,
 });
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -46,7 +53,8 @@ const ChatHubSignalRMiddleware = (): Middleware => {
                         .configureLogging(LogLevel.Information)
                         .build();
 
-                    connection.on('LoadComments', (comments: ChatComments[]) => {
+                    connection.on('LoadComments', (comments: PaginatedResponse<ChatComments>) => {
+                        store.dispatch(setInitialTimestamp( new Date().toISOString()));
                         console.log("LoadComments:", comments);
                         // 确保分发的 action 和 payload 与 slice 中的定义匹配
                         store.dispatch(loadComments(comments));
@@ -61,6 +69,17 @@ const ChatHubSignalRMiddleware = (): Middleware => {
                     connection.start()
                         .then(() => console.log('Connection started'))
                         .catch(err => console.error('Error while establishing connection', err));
+                }
+                break;
+            case SignalRChatActionTypes.LOAD_PAGINATED_COMMENTS:
+                const pageNumber = store.getState().comment.pageNumber;
+                const pageSize = store.getState().comment.pageSize;
+                const initialTimestamp = store.getState().comment.initialTimestamp;
+
+                console.log("LOAD_PAGINATED_COMMENTS:", pageNumber, pageSize, initialTimestamp);
+
+                if (connection!== null) {
+                    connection.invoke('LoadPaginatedComments',pageNumber,pageSize,initialTimestamp);
                 }
                 break;
             case SignalRChatActionTypes.SEND_MESSAGE:
@@ -84,4 +103,10 @@ const ChatHubSignalRMiddleware = (): Middleware => {
     };
 };
 
-export {ChatHubSignalRMiddleware, startConnection, stopConnection, sendMessage};
+export {
+    ChatHubSignalRMiddleware,
+    startConnection,
+    stopConnection,
+    sendMessage,
+    loadPaginatedComments
+};

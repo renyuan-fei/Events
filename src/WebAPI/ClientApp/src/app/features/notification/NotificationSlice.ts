@@ -82,7 +82,7 @@ const notificationSlice = createSlice({
         setIsConnection: (state, action: PayloadAction<boolean>) => {
             state.isConnection = action.payload;
         },
-        reset: (state) => {
+        resetNotifications: (state) => {
             state.notifications = [];
             state.initialTimestamp = new Date('9999-12-31T23:59:59Z').toISOString();
             state.pageNumber = 1;
@@ -105,7 +105,7 @@ export const {
     setInitialTimestamp,
     setPageNumber,
     setIsConnection,
-    reset,
+    resetNotifications,
     setNotificationStatusRead
 } = notificationSlice.actions;
 

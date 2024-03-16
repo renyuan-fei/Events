@@ -13,8 +13,13 @@ public class CommentRepository : Repository<Comment, CommentId>, ICommentReposit
 
   public List<Comment> GetCommentsByActivityId(ActivityId activityId)
   {
-    return DbContext.Comments.Where(comment => comment.ActivityId == activityId)
-                    .OrderBy(comment => comment.Created)
-                    .ToList();
+    return DbContext.Comments.Where(comment => comment.ActivityId == activityId).ToList();
+  }
+
+  public IQueryable<Comment> GetCommentsByActivityId(
+      ActivityId     activityId,
+      DateTimeOffset initialTimestamp)
+  {
+    return DbContext.Comments.Where(comment => comment.ActivityId == activityId && comment.Created < initialTimestamp);
   }
 }

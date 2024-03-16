@@ -53,12 +53,13 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
         return new List<CommentDto>();
       }
 
-      var userIds = comments.Select(c => c.UserId.Value).ToList();
+      var orderByDescending = comments!.OrderByDescending(comment => comment.Created);
+
+      var userIds = orderByDescending.Select(c => c.UserId.Value).ToList();
 
       var usersTask = _userService.GetUsersByIdsAsync(userIds,cancellationToken);
 
-      var photosTask =
-          _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+      var photosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
       await Task.WhenAll(usersTask, photosTask);
 
@@ -68,7 +69,7 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
       var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
-      var result = _mapper.Map<List<CommentDto>>(comments);
+      var result = _mapper.Map<List<CommentDto>>(orderByDescending);
 
       result.ForAll(comment => UserHelper.FillWithPhotoAndUserDetail(comment, usersDictionary, photosDictionary));
 

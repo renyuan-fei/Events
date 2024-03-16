@@ -1,7 +1,9 @@
 using Application.common.interfaces;
+using Application.common.Models;
 using Application.CQRS.Comments.commands.CreateComment;
 using Application.CQRS.Comments.commands.DeleteComment;
 using Application.CQRS.Comments.Queries.GetComments;
+using Application.CQRS.Comments.Queries.GetPaginatedComments;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -17,7 +19,8 @@ public class ChatHub : Hub
   ///   Represents a mediator used for handling communication between components.
   /// </summary>
   private readonly ILogger<ChatHub> _logger;
-  private readonly IMediator _mediator;
+
+  private readonly IMediator           _mediator;
   private readonly ICurrentUserService _currentUserService;
 
   /// <summary>
@@ -28,8 +31,12 @@ public class ChatHub : Hub
   ///   with the mediator.
   /// </param>
   /// <param name="currentUserService"></param>
+  /// <param name="logger"></param>
   /// /
-  public ChatHub(IMediator mediator, ICurrentUserService currentUserService, ILogger<ChatHub> logger)
+  public ChatHub(
+      IMediator           mediator,
+      ICurrentUserService currentUserService,
+      ILogger<ChatHub>    logger)
   {
     _mediator = mediator;
     _currentUserService = currentUserService;
@@ -48,7 +55,9 @@ public class ChatHub : Hub
     var comment =
         await _mediator.Send(new CreateCommentCommand
         {
-            Body = body, ActivityId = activityId!, UserId = _currentUserService.Id!
+            Body = body,
+            ActivityId = activityId!,
+            UserId = _currentUserService.Id!
         });
 
     await Clients.Group(activityId!)
@@ -66,12 +75,34 @@ public class ChatHub : Hub
 
     await _mediator.Send(new DeleteCommentCommand
     {
-        CommentId = commentId,
-        UserId = _currentUserService.Id!
+        CommentId = commentId, UserId = _currentUserService.Id!
     });
 
     await Clients.Group(activityId!)
                  .SendAsync("DeleteComment", commentId);
+  }
+
+  public async Task LoadPaginatedComments(
+      int             pageNumber,
+      int             pageSize,
+      DateTimeOffset initialTimestamp)
+  {
+    var httpContext = Context.GetHttpContext();
+    var activityId = httpContext!.Request.Query["activityId"];
+
+    var result = await _mediator.Send(new GetPaginatedCommentsQuery
+    {
+        ActivityId = activityId!,
+        PaginatedListParams =
+            new PaginatedListParams
+            {
+                InitialTimestamp = initialTimestamp,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            }
+    });
+
+    await Clients.Caller.SendAsync("LoadComments", result);
   }
 
   /// <summary>
@@ -85,9 +116,17 @@ public class ChatHub : Hub
 
     await Groups.AddToGroupAsync(Context.ConnectionId, activityId!);
 
-    var result = await _mediator.Send(new GetCommentsQuery
+    var result = await _mediator.Send(new GetPaginatedCommentsQuery
     {
-        ActivityId = activityId!
+        ActivityId = activityId!,
+        PaginatedListParams =
+            new PaginatedListParams
+            {
+                InitialTimestamp =
+                    DateTimeOffset.MaxValue,
+                PageNumber = 1,
+                PageSize = 15,
+            }
     });
 
     await Clients.Caller.SendAsync("LoadComments", result);
