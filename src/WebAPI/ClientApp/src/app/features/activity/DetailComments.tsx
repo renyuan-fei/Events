@@ -11,6 +11,7 @@ interface DetailCommentsProps {
 }
 
 const DetailComments: React.FC<DetailCommentsProps> = ({activityId}) => {
+
     // TODO quick check user profile
     // TODO delete comment (only for comment owner)
 

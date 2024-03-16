@@ -55,7 +55,7 @@ const ActivityDetailPage = () => {
 
     return (
         <Box>
-            <DetailTitle title={title} hostUser={hostUser}/>
+            <DetailTitle title={title} activityId={activityId!}/>
 
             <Box sx={{flexGrow: 1, marginBottom: theme.spacing(2)}}>
                 <Grid container spacing={2}>

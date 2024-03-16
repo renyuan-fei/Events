@@ -16,7 +16,7 @@ interface DetailHeaderProps {
     uploadHook: UploadHook;
 }
 
-const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser,uploadHook}) => {
+const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser, uploadHook}) => {
     const theme = useTheme();
     const [isUploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
 

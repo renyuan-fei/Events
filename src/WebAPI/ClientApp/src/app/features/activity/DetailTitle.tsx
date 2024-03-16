@@ -2,54 +2,22 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Avatar, Grid, useTheme} from "@mui/material";
 import Divider from "@mui/material/Divider";
-
-const stringToColor = (string: string) => {
-    let hash = 0;
-    let i;
-
-    for (i = 0; i < string.length; i += 1) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = '#';
-
-    for (i = 0; i < 3; i += 1) {
-        const value = (hash >> (i * 8)) & 0xff;
-        color += `00${value.toString(16)}`.slice(-2);
-    }
-
-    return color;
-}
-
-const stringAvatar = (name: string) => {
-    let initials = '';
-    const nameParts = name.split(' ');
-
-    // 获取第一个单词的首字母
-    if (nameParts[0]) {
-        initials += nameParts[0][0];
-    }
-
-    // 如果存在第二个单词，获取其首字母
-    if (nameParts.length > 1 && nameParts[1]) {
-        initials += nameParts[1][0];
-    }
-
-    return {
-        sx: {
-            bgcolor: stringToColor(name),
-        },
-        children: initials,
-    };
-}
+import {queryClient} from "@apis/queryClient.ts";
+import {Activity} from "@type/Activity.ts";
+import React from "react";
 
 
 interface DetailTitleProps {
     title: string;
-    hostUser: { username: string; id: string; };
+    activityId: string;
 }
 
-const DetailTitle = ({title, hostUser}: DetailTitleProps) => {
+const DetailTitle:React.FC<DetailTitleProps> = ({title,activityId}) => {
+    const activity = queryClient.getQueryData<Activity>(['activity', activityId]);
+    const hostUser = activity?.attendees.find((attendee) => attendee.isHost);
+    const hostUserName = hostUser!.displayName;
+    const hostUserAvatar = hostUser!.image;
+
     const theme = useTheme();
     return (
         <Box>
@@ -70,14 +38,14 @@ const DetailTitle = ({title, hostUser}: DetailTitleProps) => {
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <Avatar {...stringAvatar(hostUser.username)} />
+                        <Avatar src={hostUserAvatar} />
                     </Grid>
                     <Grid item>
                         <Typography component="div" sx={{}}>
                             Hosted By
                         </Typography>
                         <Typography component="div" sx={{fontWeight: 'bold'}}>
-                            {hostUser.username}
+                            {hostUserName}
                         </Typography>
                     </Grid>
                 </Grid>

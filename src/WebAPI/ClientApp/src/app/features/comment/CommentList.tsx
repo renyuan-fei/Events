@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Box, Divider, List, Typography} from "@mui/material";
+import {Box, Divider, List, Typography, useTheme} from "@mui/material";
 import CommentItem from "@features/comment/CommentItem.tsx";
 import {
     loadPaginatedComments,
@@ -15,6 +15,7 @@ interface CommentListProps {
 }
 
 const CommentList: React.FC<CommentListProps> = ({activityId}) => {
+    const theme = useTheme();
     const {comments, hasNextPage} = useSelector((state: RootState) => state.comment);
     const dispatch = useDispatch();
 
@@ -41,11 +42,22 @@ const CommentList: React.FC<CommentListProps> = ({activityId}) => {
                     </React.Fragment>
                 ))}
             </List>
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-                <Typography variant="h4" component="h1">
-                    {hasNextPage? <LoadingButton onClick={handleLoadMoreComments}>Load More</LoadingButton> : 'No More'}
-                </Typography>
-            </Box>
+            {hasNextPage &&
+                <>
+                  <Divider variant='inset'/>
+                  <Box sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      my: theme.spacing(1)
+                  }}>
+                    <Typography variant='h4' component='h1'>
+                      <LoadingButton onClick={handleLoadMoreComments}>
+                        Load More
+                      </LoadingButton>
+                    </Typography>
+                  </Box>
+                </>
+            }
         </>
     );
 };
