@@ -9,7 +9,7 @@ const useGetUserProfileQuery = (id: string) => {
     const dispatch = useAppDispatch()
 
     const {data,isLoading} = useQuery<UserProfile,AxiosError>(
-        ['UserProfile', id],
+        ['userProfile', id],
         () => GetUserProfile(id || ''),
         {
             onError(error: AxiosError) {

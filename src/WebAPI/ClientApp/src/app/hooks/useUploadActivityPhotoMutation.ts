@@ -11,7 +11,8 @@ const useUploadActivityPhotoMutation = (id: string) => {
         (photo: FormData) => uploadActivityPhoto(photo, id),
         {
             onSuccess() {
-                queryClient.fetchQuery(['TopPhotos', id]);
+                queryClient.invalidateQueries(['topPhotos', id]);
+                queryClient.invalidateQueries(['paginatedPhotos', id]);
 
                 dispatch(setAlertInfo({
                     open: true,

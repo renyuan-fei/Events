@@ -4,7 +4,7 @@ import {useAppDispatch} from "@store/store.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {queryClient} from "@apis/queryClient.ts";
 
-const useDeleteUserPhotoMutation = () => {
+const useDeleteUserPhotoMutation = (id:string) => {
     const dispatch = useAppDispatch();
 
     const {
@@ -14,7 +14,9 @@ const useDeleteUserPhotoMutation = () => {
         (publicId: string) => deleteUserPhoto(publicId),
         {
             onSuccess() {
-                queryClient.invalidateQueries('TopPhotos');
+                queryClient.invalidateQueries(['topPhotos',id]);
+                queryClient.invalidateQueries(['paginatedPhotos',id]);
+
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Photo deleted successfully",

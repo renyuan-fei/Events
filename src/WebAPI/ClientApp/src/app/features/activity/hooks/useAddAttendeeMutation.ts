@@ -1,5 +1,5 @@
 import {useMutation} from "react-query";
-import {AddAttendee} from "@apis/Activities.ts";
+import {addAttendee} from "@apis/Activities.ts";
 import {useDispatch} from "react-redux";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {AxiosError} from "axios";
@@ -10,7 +10,7 @@ const useAddAttendeeMutation = (activityId: string) => {
     const dispatch = useDispatch();
 
     const {isLoading, mutateAsync} = useMutation(
-        () => AddAttendee(activityId),
+        () => addAttendee(activityId),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['activity',activityId])

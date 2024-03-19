@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query';
-import {GetPaginatedActivities} from "@apis/Activities.ts";
+import {getPaginatedActivities} from "@apis/Activities.ts";
 
 const useGetPaginatedActivitiesQuery =(pageNumber:number, pageSize:number,filters?: Record<string, string>) => {
 
     const { isLoading, data } = useQuery(
         ['paginatedActivities', pageNumber, pageSize, filters],
-        () => GetPaginatedActivities(pageNumber, pageSize,filters!),
+        () => getPaginatedActivities(pageNumber, pageSize,filters!),
         {
             keepPreviousData: true,
         }

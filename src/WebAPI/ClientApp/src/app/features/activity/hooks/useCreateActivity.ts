@@ -1,4 +1,4 @@
-import {CreateActivity} from "@apis/Activities.ts";
+import {createActivity} from "@apis/Activities.ts";
 import {NewActivity} from "@type/NewActivity.ts";
 import {useAppDispatch} from "@store/store.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
@@ -8,7 +8,7 @@ const UseCreateActivity = () => {
     const dispatch = useAppDispatch();
 
     const {isLoading, data, mutateAsync} = useMutation(
-        (activity: NewActivity) => CreateActivity(activity),
+        (activity: NewActivity) => createActivity(activity),
         {
             onError: () => {
                 dispatch(setAlertInfo({

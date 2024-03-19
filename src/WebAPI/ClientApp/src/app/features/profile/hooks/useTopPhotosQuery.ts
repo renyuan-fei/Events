@@ -6,7 +6,7 @@ import {getTopPhotos} from "@apis/Photos.ts";
 
 const useTopPhotosQuery = (id: string) => {
     const {data, isLoading} = useQuery<TopPhotos,AxiosError<ApiResponse<any>>>(
-        ["TopPhotos",id],
+        ["topPhotos",id],
         () => getTopPhotos(id),
         {
             onError(error: AxiosError<ApiResponse<any>>) {

@@ -25,7 +25,7 @@ const UserProfile = () => {
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const isCurrentUser = currentUserId === userId;
     const uploadHook = useUploadUserPhotoMutation(userId!)
-    const deleteHook = useDeleteUserPhotoMutation();
+    const deleteHook = useDeleteUserPhotoMutation(userId!);
     const {
         isLoading: isFollowingLoading,
         isFollowing

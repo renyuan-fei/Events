@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import React, { useCallback } from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "@store/store.ts";
+import {format} from "date-fns";
 
 const Logo = () => {
     const navigate = useNavigate();
@@ -13,8 +14,10 @@ const Logo = () => {
 
     const onBoxClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
+        const formattedDate = format(new Date(), 'yyyy-MM-dd');
+        ;
         if (isLogin) {
-            navigate('/home');
+            navigate(`/home?page=1&pageSize=8&startDate=${formattedDate}`);
         } else {
             navigate('/');
         }

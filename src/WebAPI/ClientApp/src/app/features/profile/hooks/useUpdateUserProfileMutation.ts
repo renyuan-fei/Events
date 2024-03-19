@@ -10,7 +10,7 @@ const useUpdateUserProfileMutation = (id: string) => {
 
     const {isLoading,mutateAsync} = useMutation((data: UserProfile) => UpdateUserProfile(data), {
         onSuccess: () => {
-            queryClient.invalidateQueries(['UserProfile', id]);
+            queryClient.invalidateQueries(['userProfile', id]);
             dispatch(setAlertInfo({
                 open: true,
                 message: "Profile updated successfully",

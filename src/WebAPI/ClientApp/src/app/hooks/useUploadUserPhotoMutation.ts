@@ -11,7 +11,9 @@ const useUploadUserPhotoMutation = (userId: string) => {
         (photo: FormData) => uploadUserPhoto(photo),
         {
             onSuccess() {
-                queryClient.invalidateQueries(['TopPhotos', userId]);
+                queryClient.invalidateQueries(['topPhotos', userId]);
+                queryClient.refetchQueries(['paginatedPhotos', userId]);
+
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Photo uploaded successfully",

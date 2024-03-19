@@ -20,13 +20,12 @@ namespace WebAPI.Controllers;
 public class PhotosController : BaseController
 {
   [ HttpGet("top/{id}") ]
-  public async Task<ApiResponse<TopPhotosWithRemainingCountDto?>>
-      GetTopPhotosWithRemainingCountAsync(string id)
+  public async Task<OkObjectResult> GetTopPhotosWithRemainingCountAsync(string id)
   {
     var result =
         await Mediator!.Send(new GetTopPhotosWithRemainingCountQuery { OwnerId = id });
 
-    return ApiResponse<TopPhotosWithRemainingCountDto>.Success(result);
+    return Ok(ApiResponse<TopPhotosWithRemainingCountDto>.Success(result));
   }
 
   [ HttpGet("{id}") ]
@@ -40,7 +39,7 @@ public class PhotosController : BaseController
         OwnerId = id
     });
 
-    return Ok(result);
+    return Ok(ApiResponse<PaginatedList<PhotoDto>>.Success(result));
   }
 
   // POST: api/Photo

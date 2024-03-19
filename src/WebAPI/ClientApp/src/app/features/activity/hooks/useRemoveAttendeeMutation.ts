@@ -1,5 +1,5 @@
 import {useMutation} from "react-query";
-import {RemoveAttendee} from "@apis/Activities.ts";
+import {removeAttendee} from "@apis/Activities.ts";
 import {useDispatch} from "react-redux";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {AxiosError} from "axios";
@@ -10,7 +10,7 @@ const useRemoveAttendeeMutation = (activityId: string) => {
     const dispatch = useDispatch();
 
     const {isLoading, mutateAsync} = useMutation(
-        () => RemoveAttendee(activityId),
+        () => removeAttendee(activityId),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['activity',activityId])

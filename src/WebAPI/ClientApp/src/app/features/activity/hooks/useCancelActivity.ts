@@ -1,6 +1,6 @@
 import {useDispatch} from "react-redux";
 import {useMutation} from "react-query";
-import {CancelActivity} from "@apis/Activities.ts";
+import {cancelActivity} from "@apis/Activities.ts";
 import {queryClient} from "@apis/queryClient.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 
@@ -8,7 +8,7 @@ import {setAlertInfo} from "@features/commonSlice.ts";
 const CancelAttendActivity =  (activityId: string)=> {
     const dispatch = useDispatch();
 
-    const {isLoading, mutateAsync} = useMutation(() => CancelActivity(activityId),{
+    const {isLoading, mutateAsync} = useMutation(() => cancelActivity(activityId),{
         onSuccess: () => {
             queryClient.invalidateQueries(["activity", activityId]);
             dispatch(setAlertInfo({

@@ -14,7 +14,8 @@ const useDeleteActivityPhotoMutation = (id: string) => {
         (publicId: string) => deleteActivityPhoto(id,publicId),
         {
             onSuccess() {
-                queryClient.invalidateQueries(['TopPhotos',id]);
+                queryClient.invalidateQueries(['topPhotos',id]);
+                queryClient.invalidateQueries(['paginatedPhotos', id]);
 
                 dispatch(setAlertInfo({
                     open: true,

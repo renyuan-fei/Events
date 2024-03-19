@@ -11,7 +11,7 @@ const useUploadUserAvatarMutation = (userId: string) => {
         {
             onSuccess() {
                 queryClient.fetchQuery(['userInfo']);
-                queryClient.invalidateQueries(['UserProfile', userId]);
+                queryClient.invalidateQueries(['userProfile', userId]);
                 dispatch(setAlertInfo({
                     open: true,
                     message: "Avatar uploaded successfully",

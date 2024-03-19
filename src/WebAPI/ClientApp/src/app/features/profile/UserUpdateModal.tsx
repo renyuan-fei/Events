@@ -37,7 +37,7 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
                                                          }) => {
     const theme = useTheme();
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
-    const userInfo = queryClient.getQueryData<UserProfile>(["UserProfile", currentUserId])!;
+    const userInfo = queryClient.getQueryData<UserProfile>(["userProfile", currentUserId])!;
 
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -11,7 +11,7 @@ const useFollowMutation = (id: string) => {
         () => follow(id),
         {
             onSuccess() {
-                queryClient.invalidateQueries(["UserProfile", id]);
+                queryClient.invalidateQueries(["userProfile", id]);
                 queryClient.invalidateQueries(["IsFollowing", id]);
                 dispatch(setAlertInfo({
                     open: true,

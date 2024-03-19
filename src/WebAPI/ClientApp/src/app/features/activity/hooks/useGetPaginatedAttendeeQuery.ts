@@ -1,4 +1,4 @@
-import {GetPaginatedAttendee} from "@apis/Activities.ts";
+import {getPaginatedAttendee} from "@apis/Activities.ts";
 import {useRef} from "react";
 import {useInfiniteQuery} from "react-query";
 
@@ -8,9 +8,7 @@ const useGetPaginatedAttendeeQuery = (activityId: string, pageSize: number) => {
 
     const {data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
         ['paginatedAttendees', activityId],
-        async ({ pageParam = 1 }) => {
-            return GetPaginatedAttendee(activityId, pageParam, pageSize, initialTimestamp.current);
-        },
+        ({ pageParam = 1 }) => getPaginatedAttendee(activityId, pageParam, pageSize, initialTimestamp.current),
         {
             getNextPageParam: (lastPage) => {
                 return lastPage.pageNumber < lastPage.totalPages ? lastPage.pageNumber + 1 : undefined;

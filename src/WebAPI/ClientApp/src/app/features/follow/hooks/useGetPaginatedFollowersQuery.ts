@@ -12,7 +12,7 @@ const useGetPaginatedFollowersQuery = (id: string, pageSize: number) => {
         hasNextPage
     } = useInfiniteQuery(
         ['followers', id],
-        async ({ pageParam = 1 }) => getPaginatedFollowers(id, pageSize, pageParam,initialTimestamp.current),
+        ({ pageParam = 1 }) => getPaginatedFollowers(id, pageSize, pageParam,initialTimestamp.current),
         {
             getNextPageParam: (lastPage) => {
                 return lastPage.pageNumber < lastPage.totalPages ? lastPage.pageNumber + 1 : undefined;

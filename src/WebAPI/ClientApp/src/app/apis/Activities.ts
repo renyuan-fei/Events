@@ -6,7 +6,7 @@ import {Item, PaginatedResponse} from "@type/PaginatedResponse.ts";
 import {NewActivity} from "@type/NewActivity.ts";
 import {Attendee} from "@type/Attendee.ts";
 
-export const GetPaginatedActivities = async (
+export const getPaginatedActivities = async (
     pageNumber: number = 1,
     pageSize: number = 10,
     filters: Record<string, string>
@@ -23,22 +23,22 @@ export const GetPaginatedActivities = async (
     return handleResponse(response);
 }
 
-export const GetActivity = async (id: string) => {
+export const getActivity = async (id: string) => {
     const response = await apiClient.get<ApiResponse<Activity>>(`/api/Activities/${id}`)
     return handleResponse(response);
 }
 
-export const AddAttendee = async (activityId: string): Promise<any> => {
+export const addAttendee = async (activityId: string): Promise<any> => {
     const response = await apiClient.post<ApiResponse<any>>(`/api/Activities/${activityId}/attendee`);
     return handleResponse(response);
 }
 
-export const RemoveAttendee = async (activityId: string): Promise<any> => {
+export const removeAttendee = async (activityId: string): Promise<any> => {
     const response = await apiClient.delete<ApiResponse<any>>(`/api/Activities/${activityId}/attendee`);
     return handleResponse(response);
 }
 
-export const GetPaginatedAttendee = async (
+export const getPaginatedAttendee = async (
     activityId: string,
     pageNumber: number,
     pageSize: number,
@@ -55,17 +55,17 @@ export const GetPaginatedAttendee = async (
     return handleResponse(response);
 }
 
-export const CancelActivity = async (activityId: string): Promise<any> => {
+export const cancelActivity = async (activityId: string): Promise<any> => {
     const response = await apiClient.put<ApiResponse<any>>(`/api/Activities/${activityId}/cancel`);
     return handleResponse(response);
 }
 
-export const CreateActivity = async (activity: NewActivity): Promise<any> => {
+export const createActivity = async (activity: NewActivity): Promise<any> => {
     const response = await apiClient.post<ApiResponse<any>>(`/api/Activities`, activity);
     return handleResponse(response);
 }
 
-export const UpdateActivity = async (activityId: string, activity: NewActivity): Promise<any> => {
+export const updateActivity = async (activityId: string, activity: NewActivity): Promise<any> => {
     const response = await apiClient.put<ApiResponse<any>>(`/api/Activities/${activityId}`, activity);
     return handleResponse(response);
 }

@@ -46,10 +46,13 @@ public class GetPaginatedPhotosHandler : IRequestHandler<GetPaginatedPhotos,
       var ownerId = request.OwnerId;
       var pageNumber = request.paginatedListParams.PageNumber;
       var pageSize = request.paginatedListParams.PageSize;
+      var initialTimestamp = request.paginatedListParams.InitialTimestamp;
 
       var photos =
           _photoRepository.GetPhotosWithoutMainPhotoByOwnerIdQueryable(ownerId,
             cancellationToken);
+
+      photos = photos.Where(x => x.Created < initialTimestamp);
 
       var paginatedList = await photos.ProjectTo<PhotoDto>(_mapper.ConfigurationProvider)
                                 .PaginatedListAsync(pageNumber,pageSize);

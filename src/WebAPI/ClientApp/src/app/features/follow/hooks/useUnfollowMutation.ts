@@ -15,7 +15,7 @@ const useUnfollowMutation = (id :string) => {
         {
             onSuccess: () => {
                 console.log(id)
-                queryClient.invalidateQueries(["UserProfile", id]);
+                queryClient.invalidateQueries(["userProfile", id]);
                 queryClient.invalidateQueries(["IsFollowing", id]);
                 queryClient.invalidateQueries(["following", currentUserId]);
 
