@@ -4,10 +4,9 @@ import {useSearchParams} from "react-router-dom";
 import {Box, Typography} from "@mui/material";
 
 export const FollowingPage = () => {
-    const [searchParams] = useSearchParams();
     const {userId} = useParams<{ userId: string }>();
-    const page = Number(searchParams.get("page")) || 1;
-    const pageSize = Number(searchParams.get("pageSize")) || 10;
+    const [searchParams] = useSearchParams();
+    const pageSize = Number(searchParams.get("pageSize")) || 15;
 
     return (
         <>
@@ -17,7 +16,7 @@ export const FollowingPage = () => {
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <FollowingList userId={userId!} page={page} pageSize={pageSize} />
+                <FollowingList userId={userId!} pageSize={pageSize} />
             </Box>
         </>
     );

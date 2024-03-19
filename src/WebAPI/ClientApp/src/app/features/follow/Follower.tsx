@@ -46,8 +46,8 @@ export const Follower: React.FC<FollowerProps> = ({
                     cursor: 'pointer',
                 }}>
                 <Avatar alt='Remy Sharp' src={image} sx={{
-                    width: 66, // 增大 Avatar 大小
-                    height: 66,
+                    width: 56, // 增大 Avatar 大小
+                    height: 56,
                     marginRight: 3, // 为了对齐文本，可能需要调整间距
                 }}
                 />

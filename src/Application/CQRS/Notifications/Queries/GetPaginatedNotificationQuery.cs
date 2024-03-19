@@ -50,7 +50,9 @@ public class
       var pageNumber = request.PaginatedListParams.PageNumber;
       var pageSize = request.PaginatedListParams.PageSize;
 
-      var notificationsQuery = _userNotificationRepository.GetNotificationsByUserIdQueryable(userId,initialTimestamp);
+      var notificationsQuery = _userNotificationRepository.GetNotificationsByUserIdQueryable(userId);
+
+      notificationsQuery = notificationsQuery.Where(x => x.Created <= initialTimestamp);
 
       var orderedQueryable = notificationsQuery.OrderByDescending(notification => notification.Created);
 

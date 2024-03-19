@@ -24,6 +24,13 @@ public class ActivityRepository : Repository<Activity, ActivityId>, IActivityRep
     return userIds;
   }
 
+  public IQueryable<Attendee> GetAttendeeByActivityIdQueryable(ActivityId activityId)
+  {
+    return DbContext.Activities
+                    .Where(activity => activity.Id == activityId)
+                    .SelectMany(activity => activity.Attendees).AsQueryable();
+  }
+
   public Task<Activity?> GetActivityWithAttendeesByIdAsync(
       ActivityId        id,
       CancellationToken cancellationToken = default)

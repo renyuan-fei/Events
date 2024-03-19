@@ -1,19 +1,28 @@
-import {useQuery} from 'react-query';
-import {getPaginatedFollowers} from '@apis/Following.ts';
+import { useInfiniteQuery } from 'react-query';
+import { getPaginatedFollowers } from '@apis/Following.ts';
+import {useRef} from "react";
 
-const useGetPaginatedFollowersQuery = (id: string, pageSize: number, page: number) => {
+const useGetPaginatedFollowersQuery = (id: string, pageSize: number) => {
+    const initialTimestamp = useRef(new Date().toISOString());
+
     const {
-        isLoading,
-        data
-    } = useQuery(
-        ['followers', id, pageSize, page],
-        () => getPaginatedFollowers(id, pageSize, page),
+        isFetchingNextPage,
+        data,
+        fetchNextPage,
+        hasNextPage
+    } = useInfiniteQuery(
+        ['followers', id],
+        async ({ pageParam = 1 }) => getPaginatedFollowers(id, pageSize, pageParam,initialTimestamp.current),
         {
-            keepPreviousData: true, // keep privious page data,until new data is fetched
+            getNextPageParam: (lastPage) => {
+                return lastPage.pageNumber < lastPage.totalPages ? lastPage.pageNumber + 1 : undefined;
+            }
         }
     );
 
-    return {followers:data,isFollowersLoading:isLoading};
+    const followers = data?.pages.flatMap(page => page.items) ?? [];
+
+    return { followers, isFetchingNextPage, fetchNextPage, hasNextPage };
 };
 
 export default useGetPaginatedFollowersQuery;

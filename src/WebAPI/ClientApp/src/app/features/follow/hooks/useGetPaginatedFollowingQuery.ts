@@ -1,18 +1,29 @@
-import {useQuery} from 'react-query';
+import {useInfiniteQuery} from 'react-query';
 import {getPaginatedFollowing} from '@apis/Following.ts';
+import {useRef} from "react";
 
+const useGetPaginatedFollowingQuery = (Id: string, pageSize: number) => {
 
-const useGetPaginatedFollowingQuery = (Id: string, pageSize: number, page:number) => {
-    // 使用 useQuery 钩子请求分页数据
-    const {data, isLoading} = useQuery(
-        ['following', Id, pageSize, page],
-        () => getPaginatedFollowing(Id, pageSize, page),
+    const initialTimestamp = useRef(new Date().toISOString());
+
+    const {
+        isFetchingNextPage,
+        data,
+        fetchNextPage,
+        hasNextPage
+    } = useInfiniteQuery(
+        ['following', Id],
+        ({pageParam = 1}) => getPaginatedFollowing(Id, pageSize, pageParam, initialTimestamp.current),
         {
-            keepPreviousData: true,
+            getNextPageParam: (lastPage) => {
+                return lastPage.pageNumber < lastPage.totalPages ? lastPage.pageNumber + 1 : undefined;
+            }
         }
     );
 
-    return {following:data, isFollowingLoading:isLoading};
+    const following = data?.pages.flatMap(page => page.items) ?? [];
+
+    return {following, isFetchingNextPage, fetchNextPage, hasNextPage};
 };
 
 export default useGetPaginatedFollowingQuery;

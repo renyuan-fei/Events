@@ -148,12 +148,19 @@ public class ActivitiesController : BaseController
 
   [ HttpGet("{activityId}/attendees") ]
   public async Task<IActionResult> GetPaginatedListAttendees(
-      string              activityId,
-      PaginatedListParams paginatedListParams)
+      string                      activityId,
+      [FromQuery] int             pageNumber,
+      [FromQuery] int             pageSize,
+      [FromQuery] DateTimeOffset initialTimestamp)
   {
     var result = await Mediator!.Send(new GetPaginatedListAttendeesQuery
     {
-        PaginatedListParams = paginatedListParams,
+        PaginatedListParams = new PaginatedListParams
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            InitialTimestamp = initialTimestamp
+        },
         ActivityId = activityId
     });
 

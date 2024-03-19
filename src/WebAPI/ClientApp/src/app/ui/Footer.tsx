@@ -90,7 +90,7 @@ const Footer = () => {
                         <br/>
                         <Link href='#' color='inherit' underline='none'>Blog</Link>
                         <br/>
-                        <Link href='#' color='inherit' underline='none'>Meetup Pro</Link>
+                        <Link href='#' color='inherit' underline='none'>Events Pro</Link>
                         <br/>
                         <Link href='#' color='inherit' underline='none'>Careers</Link>
                         <br/>

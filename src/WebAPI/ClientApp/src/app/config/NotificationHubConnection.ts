@@ -5,7 +5,7 @@ import {
     loadUnreadNotificationCount,
     receiveNotification,
     setInitialTimestamp, setIsConnection, setNotificationStatusRead,
-    setPaginatedNotifications,
+    setPaginatedNotifications, startLoadingNotifications, stopLoadingNotifications,
     updateUnreadNotificationCount
 } from "@features/notification/NotificationSlice.ts";
 import {NotificationMessage} from "@type/NotificationMessage.ts";
@@ -97,6 +97,7 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
                 break;
             case SignalRNotificationActionTypes.LOAD_PAGINATED_NOTIFICATIONS:
                 if (connection !== null) {
+                    store.dispatch(startLoadingNotifications());
                     const pageNumber = store.getState().notification.pageNumber;
                     const pageSize = store.getState().notification.pageSize;
 
@@ -111,7 +112,9 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
                         initialTimestamp = store.getState().notification.initialTimestamp;
                     }
 
-                    connection.invoke('GetPaginatedNotifications', pageNumber, pageSize, initialTimestamp)
+                    connection.invoke('GetPaginatedNotifications', pageNumber, pageSize, initialTimestamp).finally(() => {
+                        store.dispatch(stopLoadingNotifications());
+                    });
                 }
                 break;
             case SignalRNotificationActionTypes.STOP_NOTIFICATION_CONNECTION:

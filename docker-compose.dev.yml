@@ -1,8 +1,8 @@
-﻿version: "3.4"
+version: "3.4"
 
 services:
   webapi:
-    image: arandomname/webapi                               # Image name to use
+    image: webapi                               # Image name to use
     platform: linux/amd64                       # Platform setting
     build:                                      # Build information
       context: .                                # Build context directory
@@ -11,8 +11,8 @@ services:
       - UseInMemoryDatabase=false               # Whether to use an in-memory database
       - ConnectionStrings__EventsConnection=Server=db;Database=Events;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true
       - ConnectionStrings__IdentityConnection=Server=db;Database=Identity;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true
-      - ASPNETCORE_ENVIRONMENT=Production       # ASP.NET Core environment
-      - IdentityServer__Key__Type=Production    # IdentityServer key type for development
+      - ASPNETCORE_ENVIRONMENT=Development      # ASP.NET Core environment
+      - IdentityServer__Key__Type=Development   # IdentityServer key type for development
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD} # Default certificate password for Kestrel server
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx # Certificate path for Kestrel server
       - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341 # Serilog logging configuration

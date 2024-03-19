@@ -4,7 +4,9 @@
     <attachedFolders>
       <Path>.github</Path>
     </attachedFolders>
-    <explicitIncludes />
+    <explicitIncludes>
+      <Path>docker-compose.dev.yml</Path>
+    </explicitIncludes>
     <explicitExcludes />
   </component>
 </project>

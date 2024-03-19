@@ -23,10 +23,9 @@ public class UserNotificationRepository: Repository<UserNotification, UserNotifi
              .FirstOrDefaultAsync();
   }
 
-  public IQueryable<UserNotification> GetNotificationsByUserIdQueryable(UserId userId,DateTimeOffset initialTimestamp)
+  public IQueryable<UserNotification> GetNotificationsByUserIdQueryable(UserId userId)
   {
-    return DbContext.UserNotifications.Where(x => x.UserId == userId && x.Created
-     <= initialTimestamp).Include(user => user.Notification).AsQueryable();
+    return DbContext.UserNotifications.Where(x => x.UserId == userId).Include(user => user.Notification).AsQueryable();
   }
 
   public async Task<int> GetUnreadNotificationCountByUserIdAsync(UserId userId)

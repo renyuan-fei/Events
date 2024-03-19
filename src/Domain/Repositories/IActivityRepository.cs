@@ -8,6 +8,8 @@ public interface IActivityRepository
 
   Task<List<UserId>> GetAllAttendeeIdsByActivityIdAsync(ActivityId activityId, CancellationToken cancellationToken = default);
 
+  IQueryable<Attendee> GetAttendeeByActivityIdQueryable(ActivityId activityId);
+
   Task<Activity?> GetByIdAsync(
       ActivityId        id,
       CancellationToken cancellationToken = default);

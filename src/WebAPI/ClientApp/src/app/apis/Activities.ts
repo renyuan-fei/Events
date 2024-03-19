@@ -4,6 +4,7 @@ import {ApiResponse} from "@type/ApiResponse.ts";
 import {Activity} from "@type/Activity.ts";
 import {Item, PaginatedResponse} from "@type/PaginatedResponse.ts";
 import {NewActivity} from "@type/NewActivity.ts";
+import {Attendee} from "@type/Attendee.ts";
 
 export const GetPaginatedActivities = async (
     pageNumber: number = 1,
@@ -34,6 +35,23 @@ export const AddAttendee = async (activityId: string): Promise<any> => {
 
 export const RemoveAttendee = async (activityId: string): Promise<any> => {
     const response = await apiClient.delete<ApiResponse<any>>(`/api/Activities/${activityId}/attendee`);
+    return handleResponse(response);
+}
+
+export const GetPaginatedAttendee = async (
+    activityId: string,
+    pageNumber: number,
+    pageSize: number,
+    initialTimestamp: string
+): Promise<PaginatedResponse<Attendee>> => {
+    const response = await apiClient.get<ApiResponse<PaginatedResponse<Attendee>>>(`/api/Activities/${activityId}/attendees`, {
+        params: {
+            pageNumber,
+            pageSize,
+            initialTimestamp
+        }
+    });
+
     return handleResponse(response);
 }
 

@@ -30,7 +30,7 @@ const Intro = () => {
                     }}>
                         Whatever your interest, from hiking and reading to networking and
                         skill sharing, there are thousands of people who share it on
-                        Meetup.
+                        Events.
                         Events are happening every day—sign up to join the fun.
                     </Typography>
                     <Button variant='contained'

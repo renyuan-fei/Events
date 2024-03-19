@@ -14,8 +14,7 @@ import DetailAttendees from "@features/activity/DetailAttendees.tsx";
 import DetailComments from "@features/activity/DetailComments.tsx";
 import DetailSidebar from "@features/activity/DetailSidebar.tsx";
 import useTopPhotosQuery from "@features/profile/hooks/useTopPhotosQuery.ts";
-import useUploadActivityMainPhotoMutation
-    from "@hooks/useUploadActivityMainPhotoMutation.ts";
+import useUploadActivityMainPhotoMutation from "@hooks/useUploadActivityMainPhotoMutation.ts";
 
 const ActivityDetailPage = () => {
     const theme = useTheme();
@@ -37,7 +36,6 @@ const ActivityDetailPage = () => {
         hostUser,
         imageUrl,
         description,
-        attendees
     } = activityDetail!;
 
     const {
@@ -66,9 +64,7 @@ const ActivityDetailPage = () => {
                                     description={description}
                                     isCurrentUser={isCurrentUser}
                                     uploadHook={updateHook}/>
-                        <DetailAttendees
-                            id={activityId!}
-                            attendees={attendees}/>
+                        <DetailAttendees id={activityId!}/>
                         <PhotoGallery uploadHook={uploadHook}
                                       deleteHook={deleteHook}
                                       photos={photos}
@@ -81,6 +77,7 @@ const ActivityDetailPage = () => {
                     <Grid item xs={12} md={4.5} sx={{display: {xs: 'none', md: 'block'}}}>
                         <DetailSidebar activityId={activityId!}/>
                     </Grid>
+
                 </Grid>
             </Box>
         </Box>

@@ -4,29 +4,38 @@ import useGetPaginatedFollowersQuery
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {ListContainer} from "@features/follow/ListContainer.tsx";
 import {Follower} from "@features/follow/Follower.tsx";
-import {Divider, Typography } from "@mui/material";
+import {CircularProgress, Divider, Typography} from "@mui/material";
+import useInfiniteScroll from "@hooks/useInfiniteScroll.ts";
 
 interface FollowerListProps {
     userId: string;
-    page: number;
     pageSize: number;
 }
 
-export const FollowerList: React.FC<FollowerListProps> = ({userId, page, pageSize}) => {
+export const FollowerList: React.FC<FollowerListProps> = ({userId, pageSize}) => {
 
     //TODO user can follow user when view other user's Following list
     const {
         followers,
-        isFollowersLoading
-    } = useGetPaginatedFollowersQuery(userId, pageSize, page);
+        isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage
+    } = useGetPaginatedFollowersQuery(userId, pageSize);
 
-    if (isFollowersLoading) {
+    const loadMoreRef = useInfiniteScroll(
+        fetchNextPage,
+        hasNextPage!,
+        isFetchingNextPage
+    );
+
+
+    if (isFetchingNextPage) {
         return <LoadingComponent/>
     }
 
-    if (followers?.items.length === 0) {
+    if (followers?.length === 0) {
         return (
-            <Typography sx={{ margin: 2 }} variant="subtitle1">
+            <Typography sx={{margin: 2}} variant='subtitle1'>
                 No followers yet
             </Typography>
         );
@@ -35,18 +44,22 @@ export const FollowerList: React.FC<FollowerListProps> = ({userId, page, pageSiz
 
     return (
         <ListContainer>
-            {followers?.items.map((follower,index) => (
+            {followers?.map((follower, index) => (
                 <React.Fragment key={follower.userId}>
                     <Follower
-                             userId={follower.userId}
-                             userName={follower.userName}
-                             displayName={follower.displayName}
-                             image={follower.image}
-                             bio={follower.bio}
-                />
-                    {index < followers.items.length - 1 && <Divider variant="inset" component="li" />}
+                        userId={follower.userId}
+                        userName={follower.userName}
+                        displayName={follower.displayName}
+                        image={follower.image}
+                        bio={follower.bio}
+                    />
+                    {index < followers.length - 1 &&
+                        <Divider variant='inset' component='li'/>}
                 </React.Fragment>
             ))}
+            <div ref={loadMoreRef}>
+                {isFetchingNextPage && <CircularProgress />}
+            </div>
         </ListContainer>
     );
 };

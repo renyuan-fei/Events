@@ -50,8 +50,12 @@ public class GetPaginatedFollowingHandler : IRequestHandler<GetFollowingQuery,
       var id = new UserId(request.UserId);
       var pageNumber = request.PaginatedListParams.PageNumber;
       var pageSize = request.PaginatedListParams.PageSize;
+      var initialTimestamp = request.PaginatedListParams.InitialTimestamp;
 
       var query = _followingRepository.GetFollowingsByIdQueryable(id);
+
+      query = query.Where(x => x.Created < initialTimestamp);
+
       var paginatedFollowingDto = await query
                                         .ProjectTo<FollowingDto>(_mapper.ConfigurationProvider)
                                         .PaginatedListAsync(pageNumber, pageSize);

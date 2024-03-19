@@ -2,6 +2,7 @@ using Application.common.DTO;
 using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
+using Application.common.Mappings;
 using Application.common.Models;
 
 using AutoMapper.Internal;
@@ -28,8 +29,8 @@ public class GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
   private readonly IActivityRepository _activityRepository;
   private readonly ILogger<GetActivityAttendeesWithPaginationQueryHandler> _logger;
   private readonly IMapper _mapper;
-  private readonly IPhotoRepository                     _photoRepository;
-  private readonly IUserService                         _userService;
+  private readonly IPhotoRepository _photoRepository;
+  private readonly IUserService _userService;
 
   public GetActivityAttendeesWithPaginationQueryHandler(
       IMapper                                                 mapper,
@@ -54,38 +55,42 @@ public class GetActivityAttendeesWithPaginationQueryHandler : IRequestHandler<
       var activityId = new ActivityId(request.ActivityId);
       var pageNumber = request.PaginatedListParams.PageNumber;
       var pageSize = request.PaginatedListParams.PageSize;
+      var initialTimestamp = request.PaginatedListParams.InitialTimestamp;
 
-      var activity = await _activityRepository.GetActivityWithAttendeesByIdAsync(activityId, cancellationToken);
+      var attendees = _activityRepository.GetAttendeeByActivityIdQueryable(activityId);
 
-      GuardValidation.AgainstNull(activity, $"Activity with Id {request.ActivityId} not found");
+      var attendeesBeforeTimestamp = attendees.Where(attendee => attendee.Created < initialTimestamp);
 
-      if (!activity!.Attendees.Any())
-      {
-        _logger.LogInformation("No attendees found for activity with Id {ActivityId}", request.ActivityId);
-        return new PaginatedList<AttendeeDto>();
-      }
+      if (!attendeesBeforeTimestamp.Any()) { return new PaginatedList<AttendeeDto>(); }
 
-      var userIds = activity!.Attendees.Select(attendee => attendee.Identity.UserId.Value).ToList();;
+      var userIds = attendeesBeforeTimestamp.Select(attendee => attendee.Identity.UserId.Value).ToList();
+      ;
 
       var usersTask = _userService.GetUsersByIdsAsync(userIds, cancellationToken);
-      var photosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+
+      var photosTask =
+          _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
       await Task.WhenAll(usersTask, photosTask);
 
-      GuardValidation.AgainstNullOrEmpty(usersTask.Result, "User information for attendees not found");
+      GuardValidation.AgainstNullOrEmpty(usersTask.Result,
+                                         "User information for attendees not found");
 
       var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
       var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
 
-      var result = _mapper.Map<PaginatedList<AttendeeDto>>(activity!.Attendees);
+      var paginatedList = await attendeesBeforeTimestamp
+                                .ProjectTo<AttendeeDto>(_mapper.ConfigurationProvider)
+                                .PaginatedListAsync(pageNumber, pageSize);
 
-      result.Items.ForAll(attendee =>
+      paginatedList.Items.ForAll(attendee =>
       {
-        UserHelper.FillWithPhotoAndUserDetail(attendee, usersDictionary, photosDictionary);
+        UserHelper.FillWithPhotoAndUserDetail(attendee,
+                                              usersDictionary,
+                                              photosDictionary);
       });
 
-      return result;
-
+      return paginatedList;
     }
     catch (Exception ex)
     {

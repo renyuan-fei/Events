@@ -1,12 +1,11 @@
 import { FollowerList } from "@features/follow/FollowerList.tsx";
-import { useParams, useSearchParams } from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {Box, Typography} from "@mui/material";
 
 export const FollowerPage = () => {
-    const [searchParams] = useSearchParams();
     const { userId } = useParams<{ userId: string }>();
-    const page = Number(searchParams.get("page")) || 1;
-    const pageSize = Number(searchParams.get("pageSize")) || 10;
+    const [searchParams] = useSearchParams();
+    const pageSize = Number(searchParams.get("pageSize")) || 1;
 
     return (
         <>
@@ -16,7 +15,7 @@ export const FollowerPage = () => {
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <FollowerList userId={userId!} page={page} pageSize={pageSize} />
+                <FollowerList userId={userId!} pageSize={pageSize} />
             </Box>
         </>
     );

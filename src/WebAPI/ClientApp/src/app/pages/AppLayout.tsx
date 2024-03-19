@@ -13,6 +13,10 @@ import PageContainer from "@ui/PageContainer.tsx";
 const AppLayout = () => {
     const {isLoading, alertInfo} = useSelector((state: RootState) => state.common);
 
+    // const location = useLocation();
+    // const hideFooterRoutes = ['/notification', '/photos/:Id', '/following/:userId', '/follower/:userId','/activity/:activityId/attendees'];
+    // const showFooter = !hideFooterRoutes.some(path => new RegExp(`^${path.replace(/:[^\s/]+/g, '([\\w-]+)')}$`).test(location.pathname));
+
     if (isLoading) {
         return <LoadingComponent/>;
     }
@@ -39,6 +43,7 @@ const AppLayout = () => {
                 </PageContainer>
             </Box>
             <Footer />
+            {/*{showFooter && <Footer />}*/}
         </Box>
     );
 }

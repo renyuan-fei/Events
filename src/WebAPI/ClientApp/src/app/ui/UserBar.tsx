@@ -104,10 +104,6 @@ const UserBar = ({id ,displayName, image}: User) => {
                                 <Typography textAlign='center'>Profile</Typography>
                             </MenuItem>
 
-                            <MenuItem key={"setting"} onClick={handleCloseUserMenu}>
-                                <Typography textAlign='center'>setting</Typography>
-                            </MenuItem>
-
                             <MenuItem key={"Logout"} onClick={handleLogout}>
                                 <Typography textAlign='center'>Logout</Typography>
                             </MenuItem>

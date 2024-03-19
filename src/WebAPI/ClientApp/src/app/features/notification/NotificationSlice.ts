@@ -13,6 +13,7 @@ type NotificationState = {
     hasPreviousPage: boolean;
     hasNextPage: boolean;
     isConnection: boolean;
+    isLoading: boolean;
 };
 
 const initialState: NotificationState = {
@@ -25,7 +26,8 @@ const initialState: NotificationState = {
     totalCount: 0,
     hasPreviousPage: false,
     hasNextPage: false,
-    isConnection: false
+    isConnection: false,
+    isLoading: false,
 };
 
 const notificationSlice = createSlice({
@@ -91,6 +93,12 @@ const notificationSlice = createSlice({
             state.totalCount = 0;
             state.hasPreviousPage = false;
             state.hasNextPage = false;
+        },
+        startLoadingNotifications: (state) => {
+            state.isLoading = true;
+        },
+        stopLoadingNotifications: (state) => {
+            state.isLoading = false;
         }
     },
 });
@@ -106,7 +114,9 @@ export const {
     setPageNumber,
     setIsConnection,
     resetNotifications,
-    setNotificationStatusRead
+    setNotificationStatusRead,
+    startLoadingNotifications,
+    stopLoadingNotifications
 } = notificationSlice.actions;
 
 export type {NotificationState};
