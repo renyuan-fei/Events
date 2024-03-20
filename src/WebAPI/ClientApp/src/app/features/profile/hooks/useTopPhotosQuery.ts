@@ -9,9 +9,9 @@ const useTopPhotosQuery = (id: string) => {
         ["topPhotos",id],
         () => getTopPhotos(id),
         {
-            onError(error: AxiosError<ApiResponse<any>>) {
-                console.log(error);
-            }
+            // onError(error: AxiosError<ApiResponse<any>>) {
+            //     console.log(error);
+            // }
         }
     )
     return {data, isPhotosLoading:isLoading};

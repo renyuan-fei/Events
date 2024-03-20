@@ -54,20 +54,22 @@ const ChatHubSignalRMiddleware = (): Middleware => {
                         .build();
 
                     connection.on('LoadComments', (comments: PaginatedResponse<ChatComments>) => {
-                        store.dispatch(setInitialTimestamp( new Date().toISOString()));
-                        console.log("LoadComments:", comments);
+                        store.dispatch(setInitialTimestamp(new Date().toISOString()));
+                        // console.log("LoadComments:", comments);
                         // 确保分发的 action 和 payload 与 slice 中的定义匹配
                         store.dispatch(loadComments(comments));
                     });
 
                     connection.on('ReceiveComment', (message: string) => {
-                        console.log("ReceiveComment:", message);
+                        // console.log("ReceiveComment:", message);
                         // 假设 receiveMessage 期望的 payload 是一个字符串
                         store.dispatch(receiveComments(message));
                     });
 
                     connection.start()
-                        .then(() => console.log('Connection started'))
+                        .then(() => {
+                            // console.log('Connection started')
+                        })
                         .catch(err => console.error('Error while establishing connection', err));
                 }
                 break;
@@ -78,8 +80,8 @@ const ChatHubSignalRMiddleware = (): Middleware => {
 
                 console.log("LOAD_PAGINATED_COMMENTS:", pageNumber, pageSize, initialTimestamp);
 
-                if (connection!== null) {
-                    connection.invoke('LoadPaginatedComments',pageNumber,pageSize,initialTimestamp);
+                if (connection !== null) {
+                    connection.invoke('LoadPaginatedComments', pageNumber, pageSize, initialTimestamp);
                 }
                 break;
             case SignalRChatActionTypes.SEND_MESSAGE:
@@ -91,8 +93,12 @@ const ChatHubSignalRMiddleware = (): Middleware => {
             case SignalRChatActionTypes.STOP_CONNECTION:
                 if (connection) {
                     connection.stop()
-                        .then(() => console.log('Connection stopped'))
-                        .catch(err => console.error('Error while stopping connection', err));
+                        .then(() => {
+                            // console.log('Connection stopped')
+                        })
+                        .catch(err => {
+                            console.error('Error while stopping connection', err)
+                        });
                     store.dispatch(clearComments());
                     connection = null;
                 }

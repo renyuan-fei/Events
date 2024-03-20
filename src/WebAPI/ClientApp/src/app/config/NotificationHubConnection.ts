@@ -56,33 +56,35 @@ const NotificationHubSignalRMiddleware = (): Middleware => {
                         .build();
 
                     connection.on('UpdateUnreadNotificationNumber', (r) => {
-                        console.log(r);
+                        // console.log(r);
                         store.dispatch(updateUnreadNotificationCount(r))
                     })
 
                     connection.on("LoadUnreadNotificationNumber", (notificationNumber: number) => {
-                        console.log(notificationNumber);
+                        // console.log(notificationNumber);
                         store.dispatch(loadUnreadNotificationCount(notificationNumber))
                     });
 
                     // Define how to handle incoming notifications
                     connection.on('ReceiveNotificationMessage', (notification: NotificationMessage) => {
-                        console.log(notification);
+                        // console.log(notification);
                         store.dispatch(receiveNotification(notification));
                     });
 
                     connection.on('LoadPaginatedNotifications', (paginatedNotifications: PaginatedResponse<NotificationMessage>) => {
-                        console.log(paginatedNotifications);
+                        // console.log(paginatedNotifications);
                         store.dispatch(setPaginatedNotifications(paginatedNotifications));
                     })
 
                     // Start the connection
                     connection.start()
                         .then(() => {
-                            console.log('Notification Hub connection started')
+                            // console.log('Notification Hub connection started')
                             store.dispatch((setIsConnection(true)));
                         })
-                        .catch(err => console.error('Error while establishing Notification Hub connection:', err));
+                        .catch(err => {
+                            console.error('Error while establishing Notification Hub connection:', err)
+                        });
                 }
                 break;
             case SignalRNotificationActionTypes.UPDATE_NOTIFICATION_STATUS:

@@ -26,10 +26,7 @@ export const getCurrentUser = async (): Promise<AuthResponse> => {
 export const checkEmailRegistered = async (email: string) => {
     try {
         const response = await apiClient.get(`/api/Account/email`, {params: {email}});
-        console.log(response);
-        const result = response.status !== 200;
-        console.log(result);
-        return result;
+        return response.status !== 200;
     } catch (error) {
         console.error(error);
         return true; // 假设错误意味着电子邮件已注册

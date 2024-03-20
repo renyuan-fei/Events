@@ -38,8 +38,6 @@ const useRegisterMutation = () => {
                 navigate('/home');
             },
             onError: (error: AxiosError<ApiResponse<any>>) => {
-                console.log(error);
-                console.log(error.response);
                 dispatch(setAlertInfo({
                     open: true,
                     message: error.response?.data.message || 'Registration failed',

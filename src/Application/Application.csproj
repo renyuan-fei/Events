@@ -10,7 +10,7 @@
         <PackageReference Include="Ardalis.GuardClauses" Version="4.3.0"/>
         <PackageReference Include="AutoMapper" Version="10.1.1"/>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
         <PackageReference Include="MediatR" Version="12.2.0"/>
     </ItemGroup>
 

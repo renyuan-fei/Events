@@ -30,7 +30,6 @@ const CommentInput:React.FC<CommentInputProps> = ({activityId}) => {
 
     const handleSendComment = () => {
         if (comment.trim() !== '') {
-            console.log(comment);
             dispatch(sendMessage(comment));
             setComment(''); // Clear the input after sending
         }

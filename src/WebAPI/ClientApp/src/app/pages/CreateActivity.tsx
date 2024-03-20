@@ -13,8 +13,6 @@ export const CreateActivity = () => {
         return <LoadingComponent/>
     }
 
-    console.log(activityDetail);
-
     if (activityDetail) {
         return <ActivityForm
             title={activityDetail.title}

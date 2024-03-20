@@ -67,7 +67,7 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
     const {isUpdating, update} = useUpdateUserProfileMutation(currentUserId!);
 
     const updateUserInfo = async (data: UserProfile) => {
-        console.log(data);
+        // console.log(data);
         await update(data);
     }
 

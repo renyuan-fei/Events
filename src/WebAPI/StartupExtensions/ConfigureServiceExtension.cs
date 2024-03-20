@@ -61,9 +61,7 @@ public static class ConfigureServiceExtension
     if (configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value == "Development")
     {
       // services.AddControllersWithViews();
-      services.AddControllersWithViews(options =>
-                                           options.Filters
-                                                  .Add<ApiExceptionFilterAttribute>())
+      services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>())
               .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
     }
     else
@@ -71,10 +69,7 @@ public static class ConfigureServiceExtension
       services.AddControllersWithViews(options =>
                                            options.Filters
                                                   .Add<ApiExceptionFilterAttribute>())
-              .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
-
-      services.AddDataProtection()
-              .ProtectKeysWithCertificate("thumbprint");
+              .AddFluentValidation(x => x.AutomaticValidationEnabled = true);
     }
 
     // middleware
@@ -103,6 +98,8 @@ public static class ConfigureServiceExtension
                .WithMethods("GET",
                             "POST",
                             "PUT",
+                            "PATCH",
+                            "OPTION",
                             "DELETE");
       });
     });

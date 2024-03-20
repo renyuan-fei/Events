@@ -51,7 +51,7 @@ apiClient.interceptors.response.use(
 
         // 如果 refresh 返回 401 错误，清除本地 token
         if (error.response?.status === 401 && originalRequest.url === '/api/Account/refresh') {
-            console.log('refresh token expired');
+            // console.log('refresh token expired');
             localStorage.removeItem('jwt');
             window.location.reload();
         }
