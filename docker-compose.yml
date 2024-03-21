@@ -16,8 +16,6 @@ services:
       - Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME}
       - Cloudinary__ApiKey=${CLOUDINARY_API_KEY}
       - Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET}
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD} # Kestrel server certificate password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx # Kestrel server certificate path
     volumes:                                                # Volume mappings
       - ~/.aspnet/https:/https:ro
       - data_protection_keys:/root/.aspnet/DataProtection-Keys
