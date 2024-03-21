@@ -18,6 +18,8 @@ import useCancelAttendActivityMutation
     from "@features/activity/hooks/useCancelActivityMutation.ts";
 import useReactiveActivityMutation
     from "@features/activity/hooks/useReactiveActivityMutation.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
 
 interface DetailSidebarProps {
     activityId: string;
@@ -26,6 +28,7 @@ interface DetailSidebarProps {
 const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const isLogin = useSelector((state:RootState) => state.user.isLogin);
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const activity = queryClient.getQueryData<Activity>(['activity', activityId]);
     const isCurrentUserInActivity = activity?.attendees?.some((attendee) => attendee.userId === currentUserId) ?? false;
@@ -122,55 +125,56 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                     </Typography>
                 </Stack>
 
-                <Stack direction='row'
-                       alignItems='flex-start'
-                       spacing={2}
-                       justifyContent={"center"}>
-                    {isHost ?
-                        isCanceled ?
-                            <LoadingButton
-                                loading={isReactivate}
-                                variant={"contained"}
-                                color={"primary"}
-                                onClick={handleReactiveActivityClick}
-                            >
-                                Reactivate
-                            </LoadingButton> :
-                            <>
+                {isLogin && <Stack direction='row'
+                        alignItems='flex-start'
+                        spacing={2}
+                        justifyContent={"center"}>
+                    {
+                        isHost ?
+                            isCanceled ?
                                 <LoadingButton
-                                    loading={isCanceling}
+                                    loading={isReactivate}
                                     variant={"contained"}
                                     color={"primary"}
-                                    onClick={handelNavigateToManagePage}>
-                                    Manage your activity
-                                </LoadingButton>
+                                    onClick={handleReactiveActivityClick}
+                                >
+                                    Reactivate
+                                </LoadingButton> :
+                                <>
+                                    <LoadingButton
+                                        loading={isCanceling}
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        onClick={handelNavigateToManagePage}>
+                                        Manage your activity
+                                    </LoadingButton>
+                                    <LoadingButton
+                                        loading={isCanceling}
+                                        variant={"outlined"}
+                                        color={"secondary"}
+                                        onClick={handleCancelActivityClick}>
+                                        Cancel
+                                    </LoadingButton>
+                                </> :
+                            isCurrentUserInActivity ?
                                 <LoadingButton
-                                    loading={isCanceling}
+                                    loading={isRemovingAttendee}
+                                    disabled={isCanceled}
                                     variant={"outlined"}
+                                    color={"primary"}
+                                    onClick={handleRemoveAttendeeClick}>
+                                    Leave
+                                </LoadingButton> :
+                                <LoadingButton
+                                    loading={isAddingAttendee}
+                                    disabled={isCanceled}
+                                    variant={"contained"}
                                     color={"secondary"}
-                                    onClick={handleCancelActivityClick}>
-                                    Cancel
+                                    onClick={handleAddAttendeeClick}>
+                                    Attend
                                 </LoadingButton>
-                            </> :
-                        isCurrentUserInActivity ?
-                            <LoadingButton
-                                loading={isRemovingAttendee}
-                                disabled={isCanceled}
-                                variant={"outlined"}
-                                color={"primary"}
-                                onClick={handleRemoveAttendeeClick}>
-                                Leave
-                            </LoadingButton> :
-                            <LoadingButton
-                                loading={isAddingAttendee}
-                                disabled={isCanceled}
-                                variant={"contained"}
-                                color={"secondary"}
-                                onClick={handleAddAttendeeClick}>
-                                Attend
-                            </LoadingButton>
                     }
-                </Stack>
+                </Stack>}
             </Stack>
         </Paper>
     )

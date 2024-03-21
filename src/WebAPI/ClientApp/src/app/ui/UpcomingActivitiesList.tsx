@@ -4,11 +4,13 @@ import {Item} from "@type/PaginatedResponse.ts";
 import useGetPaginatedActivitiesQuery
     from "@features/activity/hooks/useGetPaginatedActivitiesQuery.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
+import {format} from "date-fns";
 
 const UpcomingActivitiesList = () => {
     const theme = useTheme();
 
-    const {isActivitiesLoading, activities} = useGetPaginatedActivitiesQuery(1,8,{"isCancelled":"false"});
+    const formattedDate = format(new Date(), 'yyyy-MM-dd');
+    const {isActivitiesLoading, activities} = useGetPaginatedActivitiesQuery(1,8,{"isCancelled":"false","startDate":formattedDate});
 
     if (isActivitiesLoading) return <LoadingComponent/>;
 

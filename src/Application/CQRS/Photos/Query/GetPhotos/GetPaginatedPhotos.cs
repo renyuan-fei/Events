@@ -54,6 +54,8 @@ public class GetPaginatedPhotosHandler : IRequestHandler<GetPaginatedPhotos,
 
       photos = photos.Where(x => x.Created < initialTimestamp);
 
+      photos = photos.OrderByDescending(x => x.Created);
+
       var paginatedList = await photos.ProjectTo<PhotoDto>(_mapper.ConfigurationProvider)
                                 .PaginatedListAsync(pageNumber,pageSize);
       return paginatedList;

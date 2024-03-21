@@ -6,12 +6,13 @@ import {UserStatItem} from "@features/profile/UserStatItem.tsx";
 import UserProfileButton from "@features/profile/UserProfileButton.tsx";
 import UserCardContext from "@features/profile/UserCardContext.tsx";
 import React from "react";
+import {useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
 
 interface UserCardProps {
     id: string;
     image: string;
     isCurrentUser: boolean;
-    isFollowed?: boolean;
     followers: number;
     following: number;
 }
@@ -20,11 +21,11 @@ const UserCard: React.FC<UserCardProps> = ({
                                                id,
                                                image,
                                                isCurrentUser,
-                                               isFollowed,
                                                following,
                                                followers
                                            }) => {
     const navigate = useNavigate();
+    const isLogin = useSelector((state:RootState) => state.user.isLogin);
 
     const handleNavigateToFollower = () => {
         navigate(`/follower/${id}`);
@@ -50,11 +51,10 @@ const UserCard: React.FC<UserCardProps> = ({
                         <UserStatItem label={'Events'} value={0}/>
                     </UserStats>
 
-                    <UserProfileButton
+                    {isLogin && <UserProfileButton
                         isCurrentUser={isCurrentUser}
-                        isFollowed={isFollowed!}
                         id={id}
-                    />
+                    />}
 
                 </UserCardContext>
             </UserCardContainer>

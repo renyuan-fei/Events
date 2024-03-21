@@ -91,7 +91,7 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
             aria-describedby='modal-modal-description'
         >
 
-            <Card sx={style} component='form' onSubmit={handleSubmit(onSubmit)}>
+            <Card sx={style}>
                 <IconButton
                     aria-label='close'
                     onClick={handleClose}
@@ -110,8 +110,7 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
                         Update your profile
                     </Typography>
                     <FormProvider {...methods}>
-
-                        <Box component={'form'} noValidate>
+                        <Box component={'form'}  onSubmit={handleSubmit(onSubmit)}>
                             <FormField name='displayName'
                                        label='Name'
                                        required/>

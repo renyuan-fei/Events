@@ -1,3 +1,4 @@
+using Application.common.DTO;
 using Application.common.Interfaces;
 using Application.common.Models;
 
@@ -8,14 +9,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.CreatePhoto;
 
-public record UploadUserPhotoCommand : IRequest<Result>
+public record UploadUserPhotoCommand : IRequest<PhotoDto>
 {
   public string    UserId { get; init; }
   public IFormFile File   { get; init; }
 }
 
-public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, Result>
+public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, PhotoDto>
 {
+  private readonly IMapper                     _mapper;
   private readonly IUserService                _userService;
   private readonly ILogger<CreatePhotoHandler> _logger;
   private readonly IPhotoService               _photoService;
@@ -23,14 +25,16 @@ public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, Result
   public CreatePhotoHandler(
       ILogger<CreatePhotoHandler> logger,
       IPhotoService               photoService,
-      IUserService                userService)
+      IUserService                userService,
+      IMapper                     mapper)
   {
     _logger = logger;
     _photoService = photoService;
     _userService = userService;
+    _mapper = mapper;
   }
 
-  public async Task<Result> Handle(
+  public async Task<PhotoDto> Handle(
       UploadUserPhotoCommand request,
       CancellationToken  cancellationToken)
   {
@@ -44,7 +48,11 @@ public class CreatePhotoHandler : IRequestHandler<UploadUserPhotoCommand, Result
       //                               $"User with Id {request.UserId} not found");
       // }
 
-      return await _photoService.AddPhotoAsync(request.File, request.UserId);
+      var photo = await _photoService.AddPhotoAsync(request.File, request.UserId);
+
+      var photoDto = _mapper.Map<PhotoDto>(photo);
+
+      return photoDto;
     }
     catch (Exception ex)
     {

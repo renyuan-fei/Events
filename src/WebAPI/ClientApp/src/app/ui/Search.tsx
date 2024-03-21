@@ -13,9 +13,6 @@ const SearchComponent = () => {
     const dispatch = useDispatch();
     const { search } = useSelector((state: RootState) => state.common);
     const navigate = useNavigate();
-    const hash = window.location.hash;
-    const queryString = hash.substring(hash.indexOf('?'));
-    const searchParams = new URLSearchParams(queryString);
 
     useEffect(() => {
         const hash = window.location.hash;
@@ -32,13 +29,15 @@ const SearchComponent = () => {
     const handleSearch = (event: React.FormEvent<HTMLDivElement>) => {
         event.preventDefault();
 
-        searchParams.set('title', encodeURIComponent(search));
+        const newSearchParams = new URLSearchParams();
+        newSearchParams.set('title', search);  // URLSearchParams 自动处理编码
 
-        searchParams.delete('isHost');
-        searchParams.delete('isGoing');
-        searchParams.delete('category');
+        // 清理不需要的参数
+        newSearchParams.delete('isHost');
+        newSearchParams.delete('isGoing');
+        newSearchParams.delete('category');
 
-        navigate({search: searchParams.toString()});
+        navigate(`/home?${newSearchParams.toString()}`);
     };
 
     const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

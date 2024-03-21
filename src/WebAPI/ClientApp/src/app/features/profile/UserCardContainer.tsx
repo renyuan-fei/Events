@@ -11,7 +11,7 @@ const UserCardContainer:React.FC<UserCardContainerProps> = ({children}) => {
     return (
         <Card sx={{
             width: 400,
-            height: 632,
+            height: 'auto',
             padding: theme.spacing(4),
             borderRadius: theme.shape.borderRadius,
             position: 'relative'

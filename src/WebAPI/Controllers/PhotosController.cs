@@ -70,12 +70,12 @@ public class PhotosController : BaseController
     })!;
 
     return StatusCode(StatusCodes.Status201Created,
-                      ApiResponse<Result>.Success(data:
-                                                  result,
-                                                  statusCode:
-                                                  StatusCodes.Status201Created,
-                                                  message:
-                                                  "Photo uploaded successfully."));
+                      ApiResponse<PhotoDto>.Success(data:
+                                                    result,
+                                                    statusCode:
+                                                    StatusCodes.Status201Created,
+                                                    message:
+                                                    "Photo uploaded successfully."));
   }
 
   [ HttpPost("activity/{id}") ]
@@ -91,7 +91,7 @@ public class PhotosController : BaseController
     })!;
 
     return StatusCode(StatusCodes.Status201Created,
-                      ApiResponse<Result>.Success(data: result,
+                      ApiResponse<PhotoDto>.Success(data: result,
                                                   statusCode:
                                                   StatusCodes.Status201Created,
                                                   message:

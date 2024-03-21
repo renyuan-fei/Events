@@ -14,6 +14,7 @@ import {useNavigate} from "react-router";
 import {useLocation} from "react-router-dom";
 import {useFilters} from "@hooks/useFilters.ts";
 import ActivityItem from "@features/activity/ActivitiyItem.tsx";
+import {format} from "date-fns";
 
 const HomePage = () => {
     const theme = useTheme();
@@ -30,6 +31,11 @@ const HomePage = () => {
         }
         if (!searchParams.get('pageSize')) {
             searchParams.set('pageSize', '8');
+        }
+        if (!searchParams.get('startDate'))
+        {
+            const formattedDate = format(new Date(), 'yyyy-MM-dd');
+            searchParams.set('startDate',formattedDate);
         }
         navigate({search: searchParams.toString()}, {replace: true});
     }, [navigate]);

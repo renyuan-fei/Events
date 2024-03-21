@@ -7,7 +7,6 @@ import {userInfo} from "@type/UserInfo.ts";
 import useUploadUserPhotoMutation from "@hooks/useUploadUserPhotoMutation.ts";
 import useDeleteUserPhotoMutation from "@hooks/useDeleteUserPhotoMutation.ts";
 import useGetUserProfileQuery from "@features/profile/hooks/useGetUserProfileQuery.ts";
-import useIsFollowingQuery from "@features/profile/hooks/useIsFollowingQuery.ts";
 import useTopPhotosQuery from "@features/profile/hooks/useTopPhotosQuery.ts";
 import UserInformation from "@features/profile/UserInformation.tsx";
 import PhotoGallery from "@ui/Custom/PhotoGallery.tsx";
@@ -26,12 +25,8 @@ const UserProfile = () => {
     const isCurrentUser = currentUserId === userId;
     const uploadHook = useUploadUserPhotoMutation(userId!)
     const deleteHook = useDeleteUserPhotoMutation(userId!);
-    const {
-        isLoading: isFollowingLoading,
-        isFollowing
-    } = useIsFollowingQuery(userId!, currentUserId!);
 
-    if (isUserProfileLoading || isPhotosLoading || (isFollowingLoading && !isCurrentUser)) {
+    if (isUserProfileLoading || isPhotosLoading) {
         return <LoadingComponent/>;
     }
 
@@ -68,7 +63,6 @@ const UserProfile = () => {
                     <UserCard id={id}
                               image={image}
                               isCurrentUser={isCurrentUser}
-                              isFollowed={isFollowing!}
                               followers={followers}
                               following={following}/>
                 </Grid>

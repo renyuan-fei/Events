@@ -12,7 +12,6 @@ const useUploadUserPhotoMutation = (userId: string) => {
         {
             onSuccess() {
                 queryClient.invalidateQueries(['topPhotos', userId]);
-                queryClient.refetchQueries(['paginatedPhotos', userId]);
 
                 dispatch(setAlertInfo({
                     open: true,

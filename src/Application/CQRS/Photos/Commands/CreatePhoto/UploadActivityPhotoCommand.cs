@@ -1,3 +1,4 @@
+using Application.common.DTO;
 using Application.Common.Helpers;
 using Application.common.Interfaces;
 using Application.Common.Interfaces;
@@ -16,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.CQRS.Photos.Commands.CreatePhoto;
 
-public record UploadActivityPhotoCommand : IRequest<Result>
+public record UploadActivityPhotoCommand : IRequest<PhotoDto>
 {
   public string    ActivityId { get; init; }
   public IFormFile File       { get; init; }
@@ -24,8 +25,9 @@ public record UploadActivityPhotoCommand : IRequest<Result>
 
 public class
     UploadActivityPhotoCommandHandler : IRequestHandler<UploadActivityPhotoCommand,
-    Result>
+    PhotoDto>
 {
+  private readonly IMapper _mapper;
   private readonly IActivityRepository                        _activityRepository;
   private readonly IPhotoRepository                           _photoRepository;
   private readonly IPhotoService                              _photoService;
@@ -35,23 +37,27 @@ public class
       ILogger<UploadActivityPhotoCommandHandler> logger,
       IPhotoService                              photoService,
       IPhotoRepository                           photoRepository,
-      IActivityRepository                        activityRepository)
+      IActivityRepository                        activityRepository,
+      IMapper                                    mapper)
   {
     _logger = logger;
     _photoService = photoService;
     _photoRepository = photoRepository;
     _activityRepository = activityRepository;
+    _mapper = mapper;
   }
 
-  public async Task<Result> Handle(
+  public async Task<PhotoDto> Handle(
       UploadActivityPhotoCommand request,
       CancellationToken          cancellationToken)
   {
     try
     {
-      var result = await _photoService.AddPhotoAsync(request.File, request.ActivityId);
+      var photo = await _photoService.AddPhotoAsync(request.File, request.ActivityId);
 
-      return result;
+      var photoDto = _mapper.Map<PhotoDto>(photo);
+
+      return photoDto;
     }
     catch (Exception ex)
     {

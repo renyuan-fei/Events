@@ -12,7 +12,6 @@ const useUploadActivityPhotoMutation = (id: string) => {
         {
             onSuccess() {
                 queryClient.invalidateQueries(['topPhotos', id]);
-                queryClient.invalidateQueries(['paginatedPhotos', id]);
 
                 dispatch(setAlertInfo({
                     open: true,
@@ -26,7 +25,7 @@ const useUploadActivityPhotoMutation = (id: string) => {
                     message: "Activity photo upload failed",
                     severity: "error"
                 }));
-            }
+            },
         });
     return {isUploading:isLoading, upload: mutateAsync};
 };

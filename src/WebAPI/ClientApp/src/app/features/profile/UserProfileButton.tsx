@@ -4,18 +4,26 @@ import {Box, useTheme} from "@mui/material";
 import useFollowMutation from "@features/follow/hooks/useFollowMutation.ts";
 import useUnfollowMutation from "@features/follow/hooks/useUnfollowMutation.ts";
 import UserUpdateModal from "@features/profile/UserUpdateModal.tsx";
+import useIsFollowingQuery from "@features/profile/hooks/useIsFollowingQuery.ts";
+import {queryClient} from "@apis/queryClient.ts";
+import {userInfo} from "@type/UserInfo.ts";
+import {Circle} from "@mui/icons-material";
 
 interface UserProfileButtonProps {
     isCurrentUser: boolean;
-    isFollowed: boolean;
     id: string;
 }
 
 const UserProfileButton: React.FC<UserProfileButtonProps> = ({
                                                                  isCurrentUser,
-                                                                 isFollowed,
                                                                  id
                                                              }) => {
+    const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
+
+    const {
+        isLoading: isFollowingLoading,
+        isFollowing: isFollowed
+    } = useIsFollowingQuery(id!, currentUserId!);
 
     const {isFollowing, follow} = useFollowMutation(id);
     const {isUnfollowing, unfollow} = useUnfollowMutation(id);
@@ -55,7 +63,7 @@ const UserProfileButton: React.FC<UserProfileButtonProps> = ({
                 alignItems: 'center',
                 marginTop: theme.spacing(1.5)
             }}>
-                {isCurrentUser ? (
+                {isFollowingLoading? <Circle/> : isCurrentUser ? (
                     <Button
                         variant='outlined'
                         color='primary'

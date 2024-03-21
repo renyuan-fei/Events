@@ -36,7 +36,7 @@ public class PhotoService : IPhotoService
     _unitOfWork = unitOfWork;
   }
 
-  public async Task<Result> AddPhotoAsync(IFormFile file, string ownerId)
+  public async Task<Photo?> AddPhotoAsync(IFormFile file, string ownerId)
   {
     PhotoUploadDto? uploadResult = null;
 
@@ -50,7 +50,7 @@ public class PhotoService : IPhotoService
       {
         await _transactionManager.RollbackTransactionAsync();
 
-        return Result.Failure(new[ ] { "Photo upload failed" });
+        throw new HttpRequestException("Failed to upload photo to the cloud service.");
       }
 
       var photo = Photo.Add(uploadResult.PublicId,
@@ -64,7 +64,7 @@ public class PhotoService : IPhotoService
 
       photo.AddDomainEvent(new PhotoAddedDomainEvent(photo));
 
-      return Result.Success();
+      return photo;
     }
     catch (Exception ex)
     {
@@ -78,7 +78,7 @@ public class PhotoService : IPhotoService
 
       _logger.LogError(ex, "Error occurred during photo addition");
 
-      return Result.Failure(new[ ] { ex.Message });
+      return null;
     }
   }
 

@@ -5,8 +5,7 @@ import Typography from "@mui/material/Typography";
 import React, {useState} from "react";
 import {User} from "@type/Account.ts";
 import SvgButton from "@ui/SvgButton.tsx";
-import {setLoginForm} from "@features/commonSlice.ts";
-import {RootState, useAppDispatch} from "@store/store.ts";
+import {RootState} from "@store/store.ts";
 import {useNavigate} from "react-router";
 import useLogoutMutation from "@features/user/hooks/useLogoutMutation.ts";
 import Button from "@mui/material/Button";
@@ -22,7 +21,6 @@ const svg = [
 
 
 const UserBar = ({id ,displayName, image}: User) => {
-    const dispatch = useAppDispatch()
     const navigate = useNavigate();
     const {mutateAsync: logoutMutation} = useLogoutMutation();
 
@@ -46,12 +44,7 @@ const UserBar = ({id ,displayName, image}: User) => {
     }
 
     async function handleLogout() {
-        await logoutMutation(undefined, {
-            onError: () => {
-                navigate('/');
-                dispatch(setLoginForm(false))
-            }
-        })
+        await logoutMutation()
     }
 
     return (

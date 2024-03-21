@@ -1,4 +1,4 @@
-import {createHashRouter, useLocation} from "react-router-dom";
+import {createHashRouter, Navigate, useLocation} from "react-router-dom";
 import AppLayout from "@pages/AppLayout.tsx";
 import MainPage from "@pages/MainPage.tsx";
 import {RequireAuth} from "@config/RequireAuth.tsx";
@@ -12,6 +12,8 @@ import {CreateActivity} from "@pages/CreateActivity.tsx";
 import {NotificationPage} from "@pages/NotificationPage.tsx";
 import AttendeePage from "@pages/AttendeesPage.tsx";
 import AllPhotosPage from "@pages/AllPhotosPage.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
 
 
 const ScrollToTop = () => {
@@ -24,6 +26,12 @@ const ScrollToTop = () => {
     return null;
 }
 
+const HomeRedirect = () => {
+    const isLogin = useSelector((state: RootState) => state.user.isLogin);
+
+    return isLogin ? <Navigate to="/home" /> : <MainPage />;
+};
+
 export const router = createHashRouter([
     {
         path: "/",
@@ -33,22 +41,22 @@ export const router = createHashRouter([
                 <AppLayout/>
             </>),
         children: [
-            {path: "/", element: <MainPage/>},
+            {path: "/", element: <HomeRedirect/>},
+            {path: "/home", element: <HomePage/>},
+            {path: "/user/:userId", element: <UserProfile/>},
+            {path: "/follower/:userId", element: <FollowerPage/>},
+            {path: "/following/:userId", element: <FollowingPage/>},
+            {path: "/photos/:id", element: <AllPhotosPage/>},
+            {path: "/activity/:activityId", element: <ActivityDetailPage/>},
+            {path: "/activity/:activityId/attendees", element: <AttendeePage/>},
             {
                 element: (
                     <RequireAuth>
                     </RequireAuth>
                 ),
                 children: [
-                    {path: "/home", element: <HomePage/>},
                     {path: "/activity/new", element: <CreateActivity/>},
                     {path: "/activity/new/:activityId", element: <CreateActivity/>},
-                    {path: "/activity/:activityId", element: <ActivityDetailPage/>},
-                    {path: "/activity/:activityId/attendees", element: <AttendeePage/>},
-                    {path: "/user/:userId", element: <UserProfile/>},
-                    {path: "/follower/:userId", element: <FollowerPage/>},
-                    {path: "/following/:userId", element: <FollowingPage/>},
-                    {path: "/photos/:id", element: <AllPhotosPage/>},
                     {path: "/notification", element: <NotificationPage/>},
                 ]
             },

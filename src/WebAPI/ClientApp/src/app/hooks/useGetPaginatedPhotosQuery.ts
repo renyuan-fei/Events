@@ -15,7 +15,7 @@ const useGetPaginatedPhotosQuery = (id: string, pageSize: number) => {
         {
             getNextPageParam: (lastPage) => {
                 return lastPage.pageNumber < lastPage.totalPages ? lastPage.pageNumber + 1 : undefined;
-            }
+            },
         }
     );
 
