@@ -9,7 +9,6 @@ import {Category} from "@type/Category.ts";
 import ImageField from "@ui/ImageField.tsx";
 import DatePickerField from "@ui/DatePickerField.tsx";
 import {LoadingButton} from "@mui/lab";
-import useCreateActivity from "@features/activity/hooks/useCreateActivity.ts";
 import {NewActivity} from "@type/NewActivity.ts";
 import {useNavigate} from "react-router";
 import React from "react";
@@ -22,6 +21,8 @@ import useUploadActivityInitialPhotoMutation
     from "@features/activity/hooks/useUploadActivityInitialPhotoMutation.ts";
 import useUpdateActivityMutation
     from "@features/activity/hooks/useUpdateActivityMutation.ts";
+import useCreateActivityMutation
+    from "@features/activity/hooks/useCreateActivityMutation.ts";
 
 const activitySchema = z.object({
     title: z.string().min(1, "Title is required"),
@@ -79,7 +80,7 @@ const ActivityForm: React.FC<ActivityFormProps> = (props) => {
     const {
         isCreating,
         create
-    } = useCreateActivity();
+    } = useCreateActivityMutation();
     const {isUploading, upload} = useUploadActivityInitialPhotoMutation();
     const {isUpdating, update} = useUpdateActivityMutation(props.id);
     const theme = useTheme();

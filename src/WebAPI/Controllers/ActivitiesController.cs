@@ -89,13 +89,20 @@ public class ActivitiesController : BaseController
     return Ok(ApiResponse<Result>.Success(result));
   }
 
-  //TODO cancel activity
   [ HttpPut("{id}/cancel") ]
   public async Task<IActionResult> CancelActivity(string id)
   {
     var result = await Mediator!.Send(new CancelActivityCommand { Id = id });
 
     return Ok(ApiResponse<Result>.Success(result));
+  }
+
+  [ HttpPut("{id}/reactive") ]
+  public async Task<IActionResult> ReactiveActivity(string id)
+  {
+      var result = await Mediator!.Send(new ReactiveActivityCommand { Id = id });
+
+      return Ok(ApiResponse<Result>.Success(result));
   }
 
   // POST: api/Activities

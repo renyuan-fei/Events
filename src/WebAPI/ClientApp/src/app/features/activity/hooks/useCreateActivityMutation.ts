@@ -4,7 +4,7 @@ import {useAppDispatch} from "@store/store.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 import {useMutation} from "react-query";
 
-const UseCreateActivity = () => {
+const UseCreateActivityMutation = () => {
     const dispatch = useAppDispatch();
 
     const {isLoading, data, mutateAsync} = useMutation(
@@ -27,4 +27,4 @@ const UseCreateActivity = () => {
     }
 }
 
-export default UseCreateActivity;
+export default UseCreateActivityMutation;

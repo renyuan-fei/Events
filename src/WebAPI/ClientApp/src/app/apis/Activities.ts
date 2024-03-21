@@ -60,6 +60,11 @@ export const cancelActivity = async (activityId: string): Promise<any> => {
     return handleResponse(response);
 }
 
+export const reactiveActivity = async (activityId: string): Promise<any> => {
+    const response = await apiClient.put<ApiResponse<any>>(`api/Activities/${activityId}/reactive`);
+    return handleResponse(response)
+}
+
 export const createActivity = async (activity: NewActivity): Promise<any> => {
     const response = await apiClient.post<ApiResponse<any>>(`/api/Activities`, activity);
     return handleResponse(response);

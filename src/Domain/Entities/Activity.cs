@@ -86,6 +86,13 @@ public class Activity : BaseAuditableEntity<ActivityId>
     AddDomainEvent(new ActivityCanceledDomainEvent(Id, Title));
   }
 
+  public void Reactive()
+  {
+    Status = ActivityStatus.Confirmed;
+
+    AddDomainEvent(new ActivityCanceledDomainEvent(Id, Title));
+  }
+
   public void AddAttendee(Attendee attendee)
   {
     _attendees.Add(attendee);

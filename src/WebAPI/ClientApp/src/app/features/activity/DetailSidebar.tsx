@@ -13,8 +13,11 @@ import {userInfo} from "@type/UserInfo.ts";
 import {Activity} from "@type/Activity.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import useFormatToLocalTimezone from "../../utils/useFormatToLocalTimezone.ts";
-import useCancelActivity from "@features/activity/hooks/useCancelActivity.ts";
 import {useNavigate} from "react-router";
+import useCancelAttendActivityMutation
+    from "@features/activity/hooks/useCancelActivityMutation.ts";
+import useReactiveActivityMutation
+    from "@features/activity/hooks/useReactiveActivityMutation.ts";
 
 interface DetailSidebarProps {
     activityId: string;
@@ -32,7 +35,7 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     const {
         isCanceling,
         cancelActivity
-    } = useCancelActivity(activityId);
+    } = useCancelAttendActivityMutation(activityId);
 
     const {
         isAddingAttendee,
@@ -44,15 +47,21 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
         removeAttendee
     } = useRemoveAttendeeMutation(activityId);
 
+    const {
+        isReactivate,
+        reactivateActivity
+    } = useReactiveActivityMutation(activityId);
+
     // TODO Refactor this component
-    // TODO implement hook useAttendEvent
-    // TODO according to different status of event and user, show different button
 
     const handelNavigateToManagePage = () => {
         navigate(`/activity/new/${activityId}`);
     }
     const handleCancelActivityClick = async () => {
         await cancelActivity();
+    }
+    const handleReactiveActivityClick = async () => {
+        await reactivateActivity();
     }
     const handleAddAttendeeClick = async () => {
         await addAttendee();
@@ -109,7 +118,7 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                         fontSize: '16px',
                         fontWeight: theme.typography.fontWeightBold
                     }}>
-                        {activity?.venue} - {} {activity?.city}
+                        {activity?.venue} - {activity?.city}
                     </Typography>
                 </Stack>
 
@@ -120,9 +129,11 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                     {isHost ?
                         isCanceled ?
                             <LoadingButton
-                                loading={isAddingAttendee}
+                                loading={isReactivate}
                                 variant={"contained"}
-                                color={"primary"}>
+                                color={"primary"}
+                                onClick={handleReactiveActivityClick}
+                            >
                                 Reactivate
                             </LoadingButton> :
                             <>

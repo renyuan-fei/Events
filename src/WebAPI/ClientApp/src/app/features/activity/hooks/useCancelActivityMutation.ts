@@ -5,7 +5,7 @@ import {queryClient} from "@apis/queryClient.ts";
 import {setAlertInfo} from "@features/commonSlice.ts";
 
 
-const CancelAttendActivity =  (activityId: string)=> {
+const useCancelAttendActivityMutation =  (activityId: string)=> {
     const dispatch = useDispatch();
 
     const {isLoading, mutateAsync} = useMutation(() => cancelActivity(activityId),{
@@ -29,4 +29,4 @@ const CancelAttendActivity =  (activityId: string)=> {
     return {isCanceling: isLoading, cancelActivity: mutateAsync}
 }
 
-export default CancelAttendActivity;
+export default useCancelAttendActivityMutation;
