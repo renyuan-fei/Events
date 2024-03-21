@@ -15,9 +15,9 @@ const Logo = () => {
     const onBoxClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
         const formattedDate = format(new Date(), 'yyyy-MM-dd');
-        ;
         if (isLogin) {
             navigate(`/home?page=1&pageSize=8&startDate=${formattedDate}`);
+
         } else {
             navigate('/');
         }

@@ -1,35 +1,26 @@
 import {Grid} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CustomSelect from "@ui/Custom/CustomSelect.tsx";
 import Divider from "@mui/material/Divider";
-import {Category} from "@type/Category.ts";
 import {useNavigate} from "react-router";
 import React from "react";
+import {useLocation} from "react-router-dom";
+import {format} from "date-fns";
+import {setCategory, setIsGoing, setIsHost, setStartDate} from "@features/commonSlice.ts";
+import {useDispatch} from "react-redux";
+import CategoriesSelect from "@features/activity/CategoriesSelect.tsx";
 
 const ActivityFilter = () => {
-    const initialCategoryValues = Object.values(Category);
+    const dispatch = useDispatch();
+    const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
 
-
-    const handleClear = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-
-        if (searchParams.has('page')) {
-            searchParams.set('page', '1');
-        }
-        if (searchParams.has('pageSize')) {
-            searchParams.set('pageSize', '8');
-        }
-        searchParams.delete('category');
-        searchParams.delete('startdate');
-
-        navigate({ search: searchParams.toString() });
-    }
-
     const handleHost = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
+
+        dispatch(setIsHost(false));
+        dispatch(setIsGoing(true));
 
         if (searchParams.has('page')) {
             searchParams.set('page', '1');
@@ -49,6 +40,9 @@ const ActivityFilter = () => {
     const handleGoing = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
+        dispatch(setIsHost(false));
+        dispatch(setIsGoing(true));
+
         if (searchParams.has('page')) {
             searchParams.set('page', '1');
         }
@@ -61,13 +55,38 @@ const ActivityFilter = () => {
         navigate({ search: searchParams.toString() });
     }
 
+    const handleReset = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+
+        const today = format(new Date(), 'yyyy-MM-dd');
+        dispatch(setStartDate(today)); // 使用默认日期，如今天
+        dispatch(setIsHost(false));
+        dispatch(setIsGoing(false));
+        dispatch(setCategory('')); // 假设''是category的默认值
+
+
+        if (searchParams.has('page')) {
+            searchParams.set('page', '1');
+        }
+        if (searchParams.has('pageSize')) {
+            searchParams.set('pageSize', '8');
+        }
+
+        searchParams.set('startDate', today);
+        searchParams.delete('isHost');
+        searchParams.delete('isGoing');
+        searchParams.delete('category'); // 或设置为默认category值
+
+        navigate({ search: searchParams.toString() });
+    };
+
     return (
         <Box sx={{
             width: '100%', // Ensures the container takes full width
         }}>
             <Grid container>
                 <Grid item xs={5}>
-                    <CustomSelect type={"category"} value={initialCategoryValues} defaultValue={''}/>
+                    <CategoriesSelect/>
                 </Grid>
                 <Grid item xs={2}>
                     <Button onClick={handleHost} variant={"text"} color={"primary"}>
@@ -80,7 +99,7 @@ const ActivityFilter = () => {
                     </Button>
                 </Grid>
                 <Grid item xs={3}>
-                    <Button onClick={handleClear} variant={"text"} color={"primary"}>
+                    <Button onClick={handleReset} variant={"text"} color={"primary"}>
                         Reset filters
                     </Button>
                 </Grid>

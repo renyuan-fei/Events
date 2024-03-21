@@ -3,22 +3,47 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
-import {useNavigate} from "react-router";
-import { useState } from 'react';
+import {useNavigate} from "react-router-dom";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@store/store";
+import {setSearch} from "@features/commonSlice";
 
 const SearchComponent = () => {
-    // TODO after search , navigate to activity display page
-    const [searchValue, setSearchValue] = useState<string>('');
-
+    const dispatch = useDispatch();
+    const { search } = useSelector((state: RootState) => state.common);
     const navigate = useNavigate();
-    // const searchParams = new URLSearchParams(location.search);
+    const hash = window.location.hash;
+    const queryString = hash.substring(hash.indexOf('?'));
+    const searchParams = new URLSearchParams(queryString);
+
+    useEffect(() => {
+        const hash = window.location.hash;
+        const queryString = hash.substring(hash.indexOf('?'));
+        const searchParams = new URLSearchParams(queryString);
+        const urlSearchTerm = searchParams.get('title');
+
+        if (urlSearchTerm !== null) {
+            dispatch(setSearch(urlSearchTerm));
+        }
+    }, []);
+
 
     const handleSearch = (event: React.FormEvent<HTMLDivElement>) => {
-        event.preventDefault(); // Prevent the default form submit action
-        // Assuming you want to navigate to '/home' and pass the search value as a URL parameter
-        navigate(`/home?title=${encodeURIComponent(searchValue)}`);
+        event.preventDefault();
+
+        searchParams.set('title', encodeURIComponent(search));
+
+        searchParams.delete('isHost');
+        searchParams.delete('isGoing');
+        searchParams.delete('category');
+
+        navigate({search: searchParams.toString()});
     };
 
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        dispatch(setSearch(e.target.value));
+    };
 
     return (
         <Box
@@ -33,44 +58,39 @@ const SearchComponent = () => {
                 boxShadow: 'none',
                 border: '1px solid #e0e0e0',
                 borderRadius: 3,
-                transition: 'box-shadow 0.3s', // 添加阴影动画效果
+                transition: 'box-shadow 0.3s',
                 '&:hover': {
-                    boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)', // 悬停时的阴影效果
+                    boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)',
                 },
             }}
-
         >
-
             <InputBase
                 sx={{ml: 1, flex: 1}}
                 placeholder="Search events"
+                value={search}
                 inputProps={{'aria-label': 'search events'}}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={handleOnChange}
             />
-
             <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-
             <IconButton
                 type="submit"
                 sx={{
                     p: '10px',
                     color: '#F65858',
-                    transition: 'transform 0.3s', // 添加点击动画效果
+                    transition: 'transform 0.3s',
                     '&:hover': {
-                        transform: 'scale(1.1)', // 悬停时放大按钮
-                        // backgroundColor: 'rgba(0,0,0,0.04)', // 悬停时的背景色
-                        color: '#3e8da0', // 悬停时的字体颜色
-                        backgroundColor: 'transparent', // 保持背景透明或设置您希望的颜色
+                        transform: 'scale(1.1)',
+                        color: '#3e8da0',
+                        backgroundColor: 'transparent',
                     },
                     '&:active': {
-                        transform: 'scale(0.9)', // 点击时缩小按钮
+                        transform: 'scale(0.9)',
                     },
                 }}
                 aria-label="search"
             >
                 <SearchIcon/>
             </IconButton>
-
         </Box>
     );
 }
