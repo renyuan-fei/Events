@@ -26,7 +26,6 @@
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0"/>
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.4.0"/>
         <PackageReference Include="Serilog.Sinks.Seq" Version="6.0.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
@@ -45,5 +44,70 @@
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-7A4xh6yS.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-jega9E_3.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-RfUuYca6.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-Scj1W492.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-vSD6FNlO.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-ytnabXPB.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\IntroImg-WI5Q0xUf.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\JoinEventsImg-FiMa4EsY.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\logo-kW8m42RH.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\previews-cWdLmEPZ.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\previews-eohuQMb8.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\previews-jXYm3EYy.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\previews-WLGBVfEm.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\previews-ZC6Lefp2.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-300-normal--po7MILF.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-300-normal-FF-TwrnM.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-400-normal-1Q02bZlk.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-400-normal-wkKjpXzZ.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-500-normal-EKVnmLHG.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-500-normal-wJGYTDoQ.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-700-normal-eWQSlgh7.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-700-normal-wCMcOcVz.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-300-normal-E82ViLoj.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-300-normal-uwBobgv-.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-400-normal-PiqLoFV_.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-400-normal-zkSvWxgI.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-500-normal-BvVvIYM0.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-500-normal-LK2sTP5U.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-700-normal-HQzrQ3OY.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-cyrillic-ext-700-normal-rKwhCSHC.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-300-normal-4G3vnZze.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-300-normal-J3YrlqhA.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-400-normal-UVhwlGKP.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-400-normal-ZxjWinlq.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-500-normal-AqREn8Hx.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-500-normal-lY3bHV_X.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-700-normal-nNk6vBVU.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-greek-700-normal-o7k6RnxP.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-300-normal-E4R60IWG.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-300-normal-JauzICV2.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-400-normal-JkyEVz-m.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-400-normal-VNUqCuId.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-500-normal-3Jvq4Vhd.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-500-normal-8Xcd2lzs.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-700-normal-njOYDr_M.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-700-normal-YeN9SxC4.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-300-normal-mlLlnqo5.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-300-normal-xLDXUQvh.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-400-normal-5aATcKHE.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-400-normal-OGy6Zcg4.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-500-normal-faQMfyR3.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-500-normal-VisukoF9.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-700-normal-8FF03k7w.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-latin-ext-700-normal-WBgqNxqO.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-300-normal-pz61bwbN.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-300-normal-zsQ2em1q.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-400-normal-JAkXt1WZ.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-400-normal-ZBATgFfY.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-500-normal-cIPA24el.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-500-normal-nIo0EVVo.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-700-normal-DHNHOqon.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-700-normal-EnpEoUH0.woff2" />
     </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@ namespace Domain.Events.Following;
 
 public sealed class FollowedDomainEvent : BaseEvent
 {
-  public FollowedDomainEvent(Entities.Following following) { Following = following; }
+  public FollowedDomainEvent(Entities.Follow follow) { Follow = follow; }
 
-  public Entities.Following Following { get; }
+  public Entities.Follow Follow { get; }
 }

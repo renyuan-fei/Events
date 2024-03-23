@@ -5,6 +5,7 @@ using Domain.ValueObjects.ActivityAttendee;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Configuration;
 

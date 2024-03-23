@@ -61,7 +61,7 @@ public class CreateFollowerCommandHandler : IRequestHandler<UpdateFollowerComman
 
       if (follower == null)
       {
-        var newFollowing = Following.Create(followerId, followingId);
+        var newFollowing = Follow.Create(followerId, followingId);
 
         await _followingRepository.AddAsync(newFollowing, cancellationToken);
       }

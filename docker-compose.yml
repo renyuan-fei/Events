@@ -2,41 +2,54 @@
 
 services:
   webapi:
-    image: arandomname/webapi                               # Image name to use
-    platform: linux/amd64                                   # Platform setting
-    build:                                                  # Build information
-      context: .                                            # Build context directory
-      dockerfile: src/WebAPI/Dockerfile                     # Path to the Dockerfile
-    environment:                                            # Environment variables
-      - UseInMemoryDatabase=false                           # Whether to use an in-memory database
-      - ConnectionStrings__EventsConnection=Server=db;Database=Events;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true
-      - ConnectionStrings__IdentityConnection=Server=db;Database=Identity;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true
-      - ASPNETCORE_ENVIRONMENT=Production                   # ASP.NET Core environment
-      - IdentityServer__Key__Type=Production                # IdentityServer key type
-      - Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME}
-      - Cloudinary__ApiKey=${CLOUDINARY_API_KEY}
-      - Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET}
-    volumes:                                                # Volume mappings
+    image: webapi                               # Image name to use
+    platform: linux/amd64                       # Platform setting
+    build:                                      # Build information
+      context: .                                # Build context directory
+      dockerfile: src/WebAPI/Dockerfile         # Path to the Dockerfile
+    environment:                                # Environment variables
+      - UseInMemoryDatabase=false               # Whether to use an in-memory database
+      - ConnectionStrings__EventsConnection=Server=db;Database=Events;User Id=sa;Password=Password123456789;MultipleActiveResultSets=true;TrustServerCertificate=true
+      - ConnectionStrings__IdentityConnection=Server=db;Database=Identity;User Id=sa;Password=Password123456789;MultipleActiveResultSets=true;TrustServerCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Development      # ASP.NET Core environment
+      - IdentityServer__Key__Type=Development   # IdentityServer key type for development
+      - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341 # Serilog logging configuration
+    volumes:                                    # Volume mappings
       - ~/.aspnet/https:/https:ro
       - data_protection_keys:/root/.aspnet/DataProtection-Keys
-    ports:                                                  # Port mappings
+    ports:                                      # Port mappings
       - "7095:443"
-    depends_on:                                             # Service dependencies
+    depends_on:                                 # Services dependencies
       - db
-    restart: unless-stopped                                 # Restart policy
+      - seq
+    restart: unless-stopped                     # Restart policy
 
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest       # SQL Server image
+    image: mcr.microsoft.com/mssql/server:2022-latest # SQL Server image
     platform: linux/amd64
-    environment:                                            # SQL Server environment variables
-      - SA_PASSWORD=${DB_PASSWORD}
+    environment:                                # SQL Server environment variables
+      - SA_PASSWORD=Password123456789
       - ACCEPT_EULA=Y
-    volumes:                                                # SQL Server data volumes
+    volumes:                                    # SQL Server data volumes
       - SQL_Server:/var/opt/mssql
-    ports:                                                  # SQL Server port mappings
+    ports:                                      # SQL Server port mappings
       - "1433:1433"
     restart: unless-stopped
 
+  seq:
+    image: datalust/seq                         # Seq logging system image
+    container_name: seqLog                      # Container name
+    environment:                                # Seq environment variables
+      - ACCEPT_EULA=Y
+      - SEQ_API_CANONICALURI=https://seq.example.com
+      - SEQ_FIRSTRUN_ADMINPASSWORDHASH=SeqFirstrunAdminPassword
+    volumes:                                    # Seq data volumes
+      - Seq:/data
+    ports:                                      # Seq port mappings
+      - "5341:5341"
+    restart: unless-stopped
+
 volumes:
-  SQL_Server: {}                                            # SQL Server volume definition
-  data_protection_keys: {}                                  # Data protection keys volume definition
+  SQL_Server: {}                                # SQL Server volume definition
+  Seq: {}                                       # Seq volume definition
+  data_protection_keys: {}                      # Data protection keys volume definition

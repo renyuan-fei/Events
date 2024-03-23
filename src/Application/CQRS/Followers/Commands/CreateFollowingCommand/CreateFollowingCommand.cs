@@ -52,7 +52,7 @@ public class CreateFollowingCommandHandler : IRequestHandler<CreateFollowingComm
         throw new InvalidOperationException("Cannot repeat follow");
       }
 
-      var newFollowing = Following.Create(userId, targetUserId);
+      var newFollowing = Follow.Create(userId, targetUserId);
       await _followingRepository.AddAsync(newFollowing, cancellationToken);
 
       var result = await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;

@@ -1,7 +1,6 @@
 using Application.common.DTO;
 using Application.common.Interfaces;
 
-using Infrastructure.Data.Migrations;
 
 using Microsoft.AspNetCore.SignalR;
 

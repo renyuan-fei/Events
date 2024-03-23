@@ -69,7 +69,6 @@ public static class DependencyInjection
     services.AddScoped<ICommentRepository, CommentRepository>();
     services.AddScoped<IUserNotificationRepository, UserNotificationRepository>();
     services.AddScoped<INotificationRepository, NotificationRepository>();
-
     #endregion
 
     // read and config all mapping settings that inherit from Class Profile
@@ -94,29 +93,26 @@ public static class DependencyInjection
       var eventsDbConnection = configuration.GetConnectionString("EventsConnection");
 
       GuardValidation.AgainstNull(eventsDbConnection,
-                         message: "Connection string 'EventsConnection' not found.");
+                                  message:
+                                  "Connection string 'EventsConnection' not found.");
 
       var identityDbConnection = configuration.GetConnectionString("IdentityConnection");
 
       GuardValidation.AgainstNull(identityDbConnection,
-                         message: "Connection string 'IdentityConnection' not found.");
+                                  message:
+                                  "Connection string 'IdentityConnection' not found.");
 
       services.AddDbContext<EventsDbContext>((sp, options) =>
       {
         options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
-        options.UseSqlServer(eventsDbConnection,
-                             b =>
-                                 b.MigrationsAssembly(typeof(EventsDbContext)
-                                                      .Assembly
-                                                      .FullName));
+        options.UseSqlServer(eventsDbConnection, b => b.MigrationsAssembly(typeof(EventsDbContext).Assembly.FullName));
       });
 
-      services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityDbConnection, b =>
-                                                                   b.MigrationsAssembly(typeof
-                                                                                (AppIdentityDbContext)
-                                                                            .Assembly
-                                                                            .FullName)));
+      services.AddDbContext<AppIdentityDbContext>(options =>
+      {
+        options.UseSqlServer(identityDbConnection, b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
+      });
     }
 
     // configuration for Identity
@@ -133,7 +129,6 @@ public static class DependencyInjection
             .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppIdentityDbContext
               , string>>()
             .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, string>>();
-
 
     return services;
   }

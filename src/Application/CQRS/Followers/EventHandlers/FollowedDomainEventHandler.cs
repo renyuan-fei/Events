@@ -39,7 +39,7 @@ public class FollowedDomainEventHandler : INotificationHandler<FollowedDomainEve
   {
     _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
 
-    var followingInfo = notification.Following;
+    var followingInfo = notification.Follow;
     var followerId = followingInfo.Relationship.FollowerId;
     var followingId = followingInfo.Relationship.FollowingId;
 

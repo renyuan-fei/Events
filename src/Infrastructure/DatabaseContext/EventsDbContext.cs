@@ -19,7 +19,7 @@ public class EventsDbContext : DbContext, IEventsDbContext, IUnitOfWork
 
   public DbSet<Photo> Photos => Set<Photo>();
 
-  public DbSet<Following> Following => Set<Following>();
+  public DbSet<Follow> Following => Set<Follow>();
 
   public DbSet<Comment> Comments => Set<Comment>();
 

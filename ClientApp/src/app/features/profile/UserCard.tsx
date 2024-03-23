@@ -48,7 +48,6 @@ const UserCard: React.FC<UserCardProps> = ({
                         <UserStatItem onClick={handleNavigateToFollowing}
                                       label={'Following'}
                                       value={following}/>
-                        <UserStatItem label={'Events'} value={0}/>
                     </UserStats>
 
                     {isLogin && <UserProfileButton

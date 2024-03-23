@@ -43,7 +43,7 @@ public interface IEventsDbContext
   ///   database.
   ///   DbSet provides functionality for querying, adding, modifying and deleting entities.
   /// </remarks>
-  DbSet<Following> Following { get; }
+  DbSet<Follow> Following { get; }
 
   /// <summary>
   ///   Gets the DbSet of comments.

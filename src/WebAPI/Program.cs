@@ -44,12 +44,15 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 
 // Map the SignalR hubs
 app.MapHub<ChatHub>("/chat");
 app.MapHub<NotificationHub>("/notifications");
-
+app.MapFallbackToController("Index","Fallback");
 // When running the application
 // Initialize the database.
 using (var scope = app.Services.CreateScope())

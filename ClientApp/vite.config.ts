@@ -19,11 +19,11 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
             strictPort: true,
         },
         build: {
+            outDir: '../src/WebAPI/wwwroot',
             rollupOptions: {
                 plugins: [
-                    // TODO ignore dev dir
-                    // ignore([PaletteTree])
-                ]
+                ],
+
             }
         },
         preview:

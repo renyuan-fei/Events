@@ -1,0 +1,42 @@
+version: "3.4"
+
+services:
+  webapi:
+    image: arandomname/webapi                               # Image name to use
+    platform: linux/amd64                                   # Platform setting
+    build:                                                  # Build information
+      context: .                                            # Build context directory
+      dockerfile: src/WebAPI/Dockerfile                     # Path to the Dockerfile
+    environment:                                            # Environment variables
+      - UseInMemoryDatabase=false                           # Whether to use an in-memory database
+      - ConnectionStrings__EventsConnection=Server=db;Database=Events;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true
+      - ConnectionStrings__IdentityConnection=Server=db;Database=Identity;User Id=sa;Password=${DB_PASSWORD};MultipleActiveResultSets=true;TrustServerCertificate=true
+      - ASPNETCORE_ENVIRONMENT=Production                   # ASP.NET Core environment
+      - IdentityServer__Key__Type=Production                # IdentityServer key type
+      - Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME}
+      - Cloudinary__ApiKey=${CLOUDINARY_API_KEY}
+      - Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET}
+    volumes:                                                # Volume mappings
+      - ~/.aspnet/https:/https:ro
+      - data_protection_keys:/root/.aspnet/DataProtection-Keys
+    ports:                                                  # Port mappings
+      - "7095:443"
+    depends_on:                                             # Service dependencies
+      - db
+    restart: unless-stopped                                 # Restart policy
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest       # SQL Server image
+    platform: linux/amd64
+    environment:                                            # SQL Server environment variables
+      - SA_PASSWORD=${DB_PASSWORD}
+      - ACCEPT_EULA=Y
+    volumes:                                                # SQL Server data volumes
+      - SQL_Server:/var/opt/mssql
+    ports:                                                  # SQL Server port mappings
+      - "1433:1433"
+    restart: unless-stopped
+
+volumes:
+  SQL_Server: {}                                            # SQL Server volume definition
+  data_protection_keys: {}                                  # Data protection keys volume definition

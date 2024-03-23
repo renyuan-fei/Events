@@ -9,5 +9,6 @@ public enum Category
   HealthAndWellbeing,
   Technology,
   ArtAndCulture,
+  FoodAndDrink,
   Games
 }

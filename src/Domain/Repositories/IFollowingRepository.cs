@@ -2,13 +2,13 @@ namespace Domain.Repositories;
 
 public interface IFollowingRepository
 {
-  public Task<Following?> IsFollowingAsync(UserId followerId, UserId followingId);
+  public Task<Follow?> IsFollowingAsync(UserId followerId, UserId followingId);
 
-  IQueryable<Following> GetFollowersByIdQueryable(UserId id);
+  IQueryable<Follow> GetFollowersByIdQueryable(UserId id);
 
-  IQueryable<Following> GetFollowingsByIdQueryable(UserId id);
+  IQueryable<Follow> GetFollowingsByIdQueryable(UserId id);
 
-  public Task AddAsync(Following entity, CancellationToken cancellationToken = default);
+  public Task AddAsync(Follow entity, CancellationToken cancellationToken = default);
 
-  public void Remove(Following entity);
+  public void Remove(Follow entity);
 }

@@ -9,25 +9,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class FollowingRepository : Repository<Following, FollowingId>,
+public class FollowingRepository : Repository<Follow, FollowId>,
                                    IFollowingRepository
 {
   public FollowingRepository(EventsDbContext dbContext) : base(dbContext) { }
 
-  public async Task<Following?> IsFollowingAsync(UserId followerId, UserId followingId)
+  public async Task<Follow?> IsFollowingAsync(UserId followerId, UserId followingId)
   {
     return await DbContext.Following.FirstOrDefaultAsync(
         f => f.Relationship.FollowerId == followerId &&
              f.Relationship.FollowingId == followingId);
   }
 
-  public IQueryable<Following> GetFollowersByIdQueryable(UserId id)
+  public IQueryable<Follow> GetFollowersByIdQueryable(UserId id)
   {
     return DbContext.Following.Where(follow => follow.Relationship.FollowingId ==
         id).AsQueryable();
   }
 
-  public IQueryable<Following> GetFollowingsByIdQueryable(UserId id)
+  public IQueryable<Follow> GetFollowingsByIdQueryable(UserId id)
   {
     return DbContext.Following.Where(follow => follow.Relationship.FollowerId ==
         id).AsQueryable();

@@ -154,28 +154,26 @@ public class
       categoryEnum = parsedCategory;
     }
 
-    if (filterParams.IsCancelled)
+    query = query.Where(activity => filterParams.IsCancelled
+                            ? activity.Status == ActivityStatus.Canceled
+                            : activity.Status != ActivityStatus.Canceled);
+
+    if (filterParams.StartDate.HasValue)
     {
-      Console.WriteLine(filterParams.IsCancelled);
-      Console.WriteLine(ActivityStatus.Canceled);
-      query = query.Where(activity => activity.Status == ActivityStatus.Canceled);
+      var startDateUtc = filterParams.StartDate.Value.ToUniversalTime();
+      query = query.Where(activity => activity.Date >= startDateUtc);
     }
-    else
+
+    if (filterParams.EndDate.HasValue)
     {
-      query = query.Where(activity => activity.Status != ActivityStatus.Canceled);
+      var endDateUtc = filterParams.EndDate.Value.ToUniversalTime();
+      query = query.Where(activity => activity.Date <= endDateUtc);
     }
 
     return query
-           .Where(activity => string.IsNullOrWhiteSpace(filterParams.Title)
-                           || activity.Title.Contains(filterParams.Title))
+           .Where(activity => string.IsNullOrWhiteSpace(filterParams.Title) || activity.Title.Contains(filterParams.Title))
            .Where(activity => categoryEnum == null || activity.Category == categoryEnum)
-           .Where(activity => string.IsNullOrWhiteSpace(filterParams.City)
-                           || activity.Location.City.Contains(filterParams.City))
-           .Where(activity => string.IsNullOrWhiteSpace(filterParams.Venue)
-                           || activity.Location.Venue.Contains(filterParams.Venue))
-           .Where(activity => !filterParams.StartDate.HasValue
-                           || activity.Date >= filterParams.StartDate.Value)
-           .Where(activity => !filterParams.EndDate.HasValue
-                           || activity.Date <= filterParams.EndDate.Value);
+           .Where(activity => string.IsNullOrWhiteSpace(filterParams.City) || activity.Location.City.Contains(filterParams.City))
+           .Where(activity => string.IsNullOrWhiteSpace(filterParams.Venue) || activity.Location.Venue.Contains(filterParams.Venue));
   }
 }

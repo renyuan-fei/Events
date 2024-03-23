@@ -1,4 +1,4 @@
-namespace Domain.ValueObjects.ActivityAttendee;
+namespace Domain.ValueObjects.Attendee;
 
 public class AttendeeIdentity : ValueObject
 {

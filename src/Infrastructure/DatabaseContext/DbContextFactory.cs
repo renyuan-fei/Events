@@ -18,8 +18,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<EventsDbC
   {
     var optionsBuilder = new DbContextOptionsBuilder<EventsDbContext>();
 
-    optionsBuilder
-        .UseSqlServer("Server=localhost; Database=Events; User Id=sa; Password=Password123456789;Encrypt=False;TrustServerCertificate=true");
+    optionsBuilder.UseSqlServer("Server=localhost; Database=Events; User Id=sa; Password=Password123456789;Encrypt=False;TrustServerCertificate=true");
 
     return new EventsDbContext(optionsBuilder.Options);
   }

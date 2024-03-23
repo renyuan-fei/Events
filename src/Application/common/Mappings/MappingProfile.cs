@@ -56,7 +56,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Bio, opt => opt.Ignore())         // fill in later
         .ForMember(dest => dest.Image, opt => opt.Ignore());      // fill in later
 
-    CreateMap<Following, FollowingDto>()
+    CreateMap<Follow, FollowingDto>()
         .ForMember(dest => dest.UserId,
                    opt => opt.MapFrom(src => src.Relationship
                                                 .FollowingId.Value))
@@ -73,7 +73,7 @@ public class MappingProfile : Profile
                    opt => opt
                        .Ignore()); // Assuming you don't have this in Following entity
 
-    CreateMap<Following, FollowerDto>()
+    CreateMap<Follow, FollowerDto>()
         .ForMember(dest => dest.UserId,
                    opt => opt.MapFrom(src => src.Relationship.FollowerId.Value))
         .ForMember(dest => dest.DisplayName,

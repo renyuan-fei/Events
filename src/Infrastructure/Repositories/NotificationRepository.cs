@@ -3,7 +3,6 @@ using Domain.Repositories;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Message;
 
-using Infrastructure.Data.Migrations;
 using Infrastructure.DatabaseContext;
 
 using Microsoft.EntityFrameworkCore;

@@ -3,10 +3,14 @@
   <component name="UserContentModel">
     <attachedFolders>
       <Path>.github</Path>
+      <Path>ClientApp</Path>
     </attachedFolders>
     <explicitIncludes>
+      <Path>.env</Path>
       <Path>.gitignore</Path>
+      <Path>ClientApp</Path>
       <Path>docker-compose.dev.yml</Path>
+      <Path>fly.toml</Path>
     </explicitIncludes>
     <explicitExcludes />
   </component>

@@ -3,22 +3,22 @@ using Domain.ValueObjects.Following;
 
 namespace Domain.Entities;
 
-public class Following : BaseAuditableEntity<FollowingId>
+public class Follow : BaseAuditableEntity<FollowId>
 {
-  private Following(FollowingId id,UserRelationship relationship)
+  private Follow(FollowId id,UserRelationship relationship)
   {
     Id = id;
     Relationship = relationship;
   }
 
-  private Following() { }
+  private Follow() { }
 
   public UserRelationship Relationship { get; private set; }
 
-  public static Following Create(UserId followerId, UserId followingId)
+  public static Follow Create(UserId followerId, UserId followingId)
   {
     var relationship = new UserRelationship(followerId, followingId);
-    var following = new Following(FollowingId.New(),relationship);
+    var following = new Follow(FollowId.New(),relationship);
 
     // 如果需要在创建时触发事件
     following.AddDomainEvent(new FollowedDomainEvent(following));

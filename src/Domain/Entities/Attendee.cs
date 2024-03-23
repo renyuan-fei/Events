@@ -1,5 +1,6 @@
 using Domain.ValueObjects.Activity;
 using Domain.ValueObjects.ActivityAttendee;
+using Domain.ValueObjects.Attendee;
 
 namespace Domain.Entities;
 

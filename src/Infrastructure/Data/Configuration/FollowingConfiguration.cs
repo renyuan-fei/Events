@@ -4,12 +4,13 @@ using Domain.ValueObjects.Following;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Configuration;
 
-public class FollowingConfiguration : IEntityTypeConfiguration<Following>
+public class FollowingConfiguration : IEntityTypeConfiguration<Follow>
 {
-  public void Configure(EntityTypeBuilder<Following> builder)
+  public void Configure(EntityTypeBuilder<Follow> builder)
   {
     builder.ToTable("Following");
 
@@ -17,7 +18,7 @@ public class FollowingConfiguration : IEntityTypeConfiguration<Following>
 
     builder.Property(following => following.Id)
            .HasConversion(followingId => followingId.Value,
-                          followingId => new FollowingId(followingId));
+                          followingId => new FollowId(followingId));
 
     // 配置 UserRelationship 作为 Owned Entity
     builder.OwnsOne(following => following.Relationship,
