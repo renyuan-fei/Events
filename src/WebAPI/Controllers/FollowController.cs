@@ -20,7 +20,6 @@ public class FollowController : BaseController
   ///   Retrieves a paginated list of followers for the current user.
   /// </summary>
   /// <returns>A paginated list of followers.</returns>
-  [ Authorize ]
   [ HttpGet("Follower/{id}") ]
   public async Task<IActionResult> GetFollower(
       string id,
@@ -39,7 +38,6 @@ public class FollowController : BaseController
   ///   Retrieves a paginated list of followee for the current user.
   /// </summary>
   /// <returns>A paginated list of followee.</returns>
-  [ Authorize ]
   [ HttpGet("Following/{id}") ]
   public async Task<IActionResult> GetFollowing(
       string id,

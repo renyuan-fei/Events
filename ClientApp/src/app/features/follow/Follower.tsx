@@ -25,6 +25,7 @@ export const Follower: React.FC<FollowerProps> = ({
                                                       bio
                                                   }) => {
     const navigate = useNavigate();
+
     const {isUnfollowing, unfollow} = useUnfollowMutation(userId);
     const handleNavigateToUserDetail = () => {
         navigate(`/user/${userId}`);

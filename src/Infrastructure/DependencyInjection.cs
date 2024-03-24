@@ -37,10 +37,6 @@ public static class DependencyInjection
     services.AddScoped<IEventsDbContext>(provider => provider
                                              .GetRequiredService<EventsDbContext>());
 
-    // services.AddScoped<IAppIdentityDbContext>(provider => provider
-    //                                               .GetRequiredService<
-    //                                                   AppIdentityDbContext>());
-
     services.AddScoped<IAppIdentityDbContext>(provider => provider
                                                   .GetRequiredService<
                                                       EventsDbContext>());
@@ -87,10 +83,6 @@ public static class DependencyInjection
       services.AddDbContext<EventsDbContext>(options =>
                                                  options
                                                      .UseInMemoryDatabase("Events"));
-
-      // services.AddDbContext<AppIdentityDbContext>(options =>
-      //                                                 options
-      //                                                     .UseInMemoryDatabase("Identity"));
     }
     else
     {
@@ -132,27 +124,7 @@ public static class DependencyInjection
 
         options.UseNpgsql(eventsDbConnection, b => b.MigrationsAssembly(typeof(EventsDbContext).Assembly.FullName));
       });
-
-      // services.AddDbContext<AppIdentityDbContext>(options =>
-      // {
-      //   options.UseNpgsql(identityDbConnection, b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
-      // });
     }
-
-    // configuration for Identity
-    // services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-    //         {
-    //           options.Password.RequiredLength = 10;
-    //           options.Password.RequireNonAlphanumeric = false;
-    //           options.Password.RequireUppercase = false;
-    //           options.Password.RequireLowercase = true;
-    //           options.Password.RequireDigit = true;
-    //         })
-    //         .AddEntityFrameworkStores<AppIdentityDbContext>()
-    //         .AddDefaultTokenProviders()
-    //         .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppIdentityDbContext
-    //           , string>>()
-    //         .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, string>>();
 
     services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {

@@ -16,30 +16,6 @@ import LoadingComponent from "@ui/LoadingComponent.tsx";
 
 
 function App() {
-    // const theme = useTheme();
-    // const matchesXS = useMediaQuery(theme.breakpoints.down('xs'));
-    // const matchesSM = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-    // const matchesMD = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-    // const matchesLG = useMediaQuery(theme.breakpoints.between('lg', 'xl'));
-    // const matchesXL = useMediaQuery(theme.breakpoints.up('xl'));
-
-    // useEffect(() => {
-    //     if (matchesXS) {
-    //         console.log('Current breakpoint: xs');
-    //     }
-    //     if (matchesSM) {
-    //         console.log('Current breakpoint: sm');
-    //     }
-    //     if (matchesMD) {
-    //         console.log('Current breakpoint: md');
-    //     }
-    //     if (matchesLG) {
-    //         console.log('Current breakpoint: lg');
-    //     }
-    //     if (matchesXL) {
-    //         console.log('Current breakpoint: xl');
-    //     }
-    // }, [matchesXS, matchesSM, matchesMD, matchesLG, matchesXL]);
 
     const dispatch = useDispatch();
 
