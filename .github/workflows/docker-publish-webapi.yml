@@ -27,7 +27,7 @@ jobs:
           push: true
           tags: arandomname/events-website:latest
   deploy:
-    needs: docker
+    needs: build
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
