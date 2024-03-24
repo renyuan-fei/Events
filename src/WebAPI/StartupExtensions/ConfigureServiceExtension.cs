@@ -47,7 +47,8 @@ public static class ConfigureServiceExtension
 
     // AppIdentityDbContext
     services.AddScoped<IEventsDbContext, EventsDbContext>();
-    services.AddScoped<IAppIdentityDbContext, AppIdentityDbContext>();
+    // services.AddScoped<IAppIdentityDbContext, AppIdentityDbContext>();
+    services.AddScoped<IAppIdentityDbContext, EventsDbContext>();
 
     // Token
     services.AddTransient<IJwtTokenService, JwtTokenService>();

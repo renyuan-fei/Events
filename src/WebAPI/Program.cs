@@ -64,15 +64,15 @@ using (var scope = app.Services.CreateScope())
   {
     // Get all the services
     var eventsContext = services.GetRequiredService<EventsDbContext>();
-    var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+    // var identityContext = services.GetRequiredService<AppIdentityDbContext>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
     // Run the migrations
     await eventsContext.Database.MigrateAsync();
-    await identityContext.Database.MigrateAsync();
+    // await identityContext.Database.MigrateAsync();
 
     // Use the seed data
-    await Seed.SeedData(identityContext, eventsContext, userManager);
+    await Seed.SeedData(eventsContext, userManager);
   }
   catch (Exception e)
   {

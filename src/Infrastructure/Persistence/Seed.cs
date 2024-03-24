@@ -13,7 +13,6 @@ namespace Infrastructure.Persistence;
 public static class Seed
 {
   public async static Task SeedData(
-      AppIdentityDbContext         appIdentityContext,
       EventsDbContext              eventsContext,
       UserManager<ApplicationUser> userManager)
   {

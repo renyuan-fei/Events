@@ -37,9 +37,13 @@ public static class DependencyInjection
     services.AddScoped<IEventsDbContext>(provider => provider
                                              .GetRequiredService<EventsDbContext>());
 
+    // services.AddScoped<IAppIdentityDbContext>(provider => provider
+    //                                               .GetRequiredService<
+    //                                                   AppIdentityDbContext>());
+
     services.AddScoped<IAppIdentityDbContext>(provider => provider
                                                   .GetRequiredService<
-                                                      AppIdentityDbContext>());
+                                                      EventsDbContext>());
 
     // unit of work
     services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
@@ -84,9 +88,9 @@ public static class DependencyInjection
                                                  options
                                                      .UseInMemoryDatabase("Events"));
 
-      services.AddDbContext<AppIdentityDbContext>(options =>
-                                                      options
-                                                          .UseInMemoryDatabase("Identity"));
+      // services.AddDbContext<AppIdentityDbContext>(options =>
+      //                                                 options
+      //                                                     .UseInMemoryDatabase("Identity"));
     }
     else
     {
@@ -102,10 +106,6 @@ public static class DependencyInjection
         eventsDbConnection = configuration.GetConnectionString("EventsConnection");
 
         GuardValidation.AgainstNull(eventsDbConnection, message: "Connection string 'EventsConnection' not found.");
-
-        identityDbConnection = configuration.GetConnectionString("IdentityConnection");
-
-        GuardValidation.AgainstNull(identityDbConnection, message: "Connection string 'IdentityConnection' not found.");
       }
       else
       {
@@ -119,17 +119,13 @@ public static class DependencyInjection
         var pgUserPass = connUrl.Split("@")[0];
         var pgHostPortDb = connUrl.Split("@")[1];
         var pgHostPort = pgHostPortDb.Split("/")[0];
-        // var pgDb = pgHostPortDb.Split("/")[1];
+        var pgDb = pgHostPortDb.Split("/")[1];
         var pgUser = pgUserPass.Split(":")[0];
         var pgPass = pgUserPass.Split(":")[1];
         var pgHost = pgHostPort.Split(":")[0];
         var pgPort = pgHostPort.Split(":")[1];
 
-        const string eventsDb = "Events";
-        const string identityDb = "Identity";
-
-        identityDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={eventsDb};";
-        eventsDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={identityDb};";
+        eventsDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
       }
 
       services.AddDbContext<EventsDbContext>((sp, options) =>
@@ -139,13 +135,27 @@ public static class DependencyInjection
         options.UseNpgsql(eventsDbConnection, b => b.MigrationsAssembly(typeof(EventsDbContext).Assembly.FullName));
       });
 
-      services.AddDbContext<AppIdentityDbContext>(options =>
-      {
-        options.UseNpgsql(identityDbConnection, b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
-      });
+      // services.AddDbContext<AppIdentityDbContext>(options =>
+      // {
+      //   options.UseNpgsql(identityDbConnection, b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
+      // });
     }
 
     // configuration for Identity
+    // services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+    //         {
+    //           options.Password.RequiredLength = 10;
+    //           options.Password.RequireNonAlphanumeric = false;
+    //           options.Password.RequireUppercase = false;
+    //           options.Password.RequireLowercase = true;
+    //           options.Password.RequireDigit = true;
+    //         })
+    //         .AddEntityFrameworkStores<AppIdentityDbContext>()
+    //         .AddDefaultTokenProviders()
+    //         .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppIdentityDbContext
+    //           , string>>()
+    //         .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, string>>();
+
     services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
               options.Password.RequiredLength = 10;
@@ -154,11 +164,12 @@ public static class DependencyInjection
               options.Password.RequireLowercase = true;
               options.Password.RequireDigit = true;
             })
-            .AddEntityFrameworkStores<AppIdentityDbContext>()
+            .AddEntityFrameworkStores<EventsDbContext>()
             .AddDefaultTokenProviders()
-            .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppIdentityDbContext
+            .AddUserStore<UserStore<ApplicationUser, ApplicationRole, EventsDbContext
               , string>>()
-            .AddRoleStore<RoleStore<ApplicationRole, AppIdentityDbContext, string>>();
+            .AddRoleStore<RoleStore<ApplicationRole, EventsDbContext, string>>();
+
 
     return services;
   }
