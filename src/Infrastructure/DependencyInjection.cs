@@ -96,39 +96,35 @@ public static class DependencyInjection
     {
       string eventsDbConnection;
 
-      eventsDbConnection = configuration.GetConnectionString("EventsConnection");
+      var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+      // Depending on if in development or production, use either FlyIO
+      // connection string, or development connection string from env var.
+      if (env == "Development")
+      {
+        eventsDbConnection = configuration.GetConnectionString("EventsConnection");
 
-      GuardValidation.AgainstNull(eventsDbConnection, message: "Connection string 'EventsConnection' not found.");
+        GuardValidation.AgainstNull(eventsDbConnection, message: "Connection string 'EventsConnection' not found.");
+      }
+      else
+      {
+        // Use connection string provided at runtime by Flyio.
+        var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-      // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-      // // Depending on if in development or production, use either FlyIO
-      // // connection string, or development connection string from env var.
-      // if (env == "Development")
-      // {
-      //   eventsDbConnection = configuration.GetConnectionString("EventsConnection");
-      //
-      //   GuardValidation.AgainstNull(eventsDbConnection, message: "Connection string 'EventsConnection' not found.");
-      // }
-      // else
-      // {
-      //   // Use connection string provided at runtime by Flyio.
-      //   var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-      //
-      //   GuardValidation.AgainstNull(connUrl, message: "Connection string 'connUrl' not found.");
-      //
-      //   // Parse connection URL to connection string for Npgsql
-      //   connUrl = connUrl!.Replace("postgres://", string.Empty);
-      //   var pgUserPass = connUrl.Split("@")[0];
-      //   var pgHostPortDb = connUrl.Split("@")[1];
-      //   var pgHostPort = pgHostPortDb.Split("/")[0];
-      //   var pgDb = pgHostPortDb.Split("/")[1];
-      //   var pgUser = pgUserPass.Split(":")[0];
-      //   var pgPass = pgUserPass.Split(":")[1];
-      //   var pgHost = pgHostPort.Split(":")[0];
-      //   var pgPort = pgHostPort.Split(":")[1];
-      //
-      //   eventsDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Disable";
-      // }
+        GuardValidation.AgainstNull(connUrl, message: "Connection string 'connUrl' not found.");
+
+        // Parse connection URL to connection string for Npgsql
+        connUrl = connUrl!.Replace("postgres://", string.Empty);
+        var pgUserPass = connUrl.Split("@")[0];
+        var pgHostPortDb = connUrl.Split("@")[1];
+        var pgHostPort = pgHostPortDb.Split("/")[0];
+        var pgDb = pgHostPortDb.Split("/")[1];
+        var pgUser = pgUserPass.Split(":")[0];
+        var pgPass = pgUserPass.Split(":")[1];
+        var pgHost = pgHostPort.Split(":")[0];
+        var pgPort = pgHostPort.Split(":")[1];
+
+        eventsDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Disable";
+      }
 
       services.AddDbContext<EventsDbContext>((sp, options) =>
       {
