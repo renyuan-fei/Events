@@ -29,5 +29,17 @@ public class UserNotificationConfiguration : IEntityTypeConfiguration<UserNotifi
     builder.Property(un => un.Id)
            .HasConversion(userNotificationId => userNotificationId.Value,
                           value => new UserNotificationId(value));
+
+    var dateTimeOffsetConverter = new ValueConverter<DateTimeOffset, DateTimeOffset>(
+       v => v.ToUniversalTime(),
+       v => v
+      );
+
+    builder.Property(e => e.Created)
+           .HasConversion(dateTimeOffsetConverter);
+
+    builder.Property(e => e.LastModified)
+           .HasConversion(dateTimeOffsetConverter);
+
   }
 }

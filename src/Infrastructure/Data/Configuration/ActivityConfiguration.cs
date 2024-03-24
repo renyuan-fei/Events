@@ -36,5 +36,26 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
                       navigationBuilder.Property(location => location.Venue)
                                        .HasColumnName("Venue");
                     });
+
+    var dateTimeConverter = new ValueConverter<DateTime, DateTimeOffset>(
+       date => new DateTimeOffset(DateTime.SpecifyKind(date, DateTimeKind.Utc)),
+       dateOffset => dateOffset.DateTime
+      );
+
+    // Apply the converter to the Date property
+    builder.Property(activity => activity.Date)
+           .HasConversion(dateTimeConverter);
+
+    var dateTimeOffsetConverter = new ValueConverter<DateTimeOffset, DateTimeOffset>(
+       v => v.ToUniversalTime(),
+       v => v
+      );
+
+    builder.Property(e => e.Created)
+           .HasConversion(dateTimeOffsetConverter);
+
+    builder.Property(e => e.LastModified)
+           .HasConversion(dateTimeOffsetConverter);
+
   }
 }

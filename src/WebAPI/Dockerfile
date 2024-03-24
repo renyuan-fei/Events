@@ -10,6 +10,8 @@ COPY ["src/WebAPI/WebAPI.csproj", "src/WebAPI/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["ClientApp","/"]
+
 RUN dotnet restore "src/WebAPI/WebAPI.csproj"
 COPY . .
 WORKDIR "/src/src/WebAPI"

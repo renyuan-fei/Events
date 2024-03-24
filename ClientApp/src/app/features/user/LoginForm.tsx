@@ -23,7 +23,6 @@ import {FormProvider, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useLoginMutation from "@features/user/hooks/useLoginMutation.ts";
 import FormField from "@ui/FormField.tsx";
-import FormCheckbox from "@ui/FormCheckbox.tsx";
 import ImageComponent from "@ui/Image.tsx";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import useDynamicFormHeight from "@hooks/useDynamicFormHeight.ts";
@@ -48,11 +47,8 @@ const LoginForm: React.FC = () => {
     const methods = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
-            // email: '',
-            // password: '',
-            email: 'TestEmail@example.com',
-            password: 'TestPassword123456789',
-            keepSignedIn: false,
+            email: '',
+            password: '',
         }
     });
     const {
@@ -151,11 +147,6 @@ const LoginForm: React.FC = () => {
                         <FormField name='password'
                                    label='Password'
                                    type='password'
-                        />
-
-                        <FormCheckbox
-                            label={'Keep me signed in'}
-                            name={'keepSignedIn'}
                         />
 
                         <Button

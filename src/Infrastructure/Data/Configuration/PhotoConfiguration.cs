@@ -25,5 +25,17 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 
     builder.Property(photo => photo.Id)
            .HasConversion(photoId => photoId.Value, value => new PhotoId(value));
+
+    var dateTimeOffsetConverter = new ValueConverter<DateTimeOffset, DateTimeOffset>(
+       v => v.ToUniversalTime(),
+       v => v
+      );
+
+    builder.Property(e => e.Created)
+           .HasConversion(dateTimeOffsetConverter);
+
+    builder.Property(e => e.LastModified)
+           .HasConversion(dateTimeOffsetConverter);
+
   }
 }

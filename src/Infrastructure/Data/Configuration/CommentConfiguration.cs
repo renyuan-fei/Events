@@ -32,5 +32,17 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
            .WithMany(activity => activity.Comments)
            .HasForeignKey(comment => comment.ActivityId)
            .OnDelete(DeleteBehavior.Cascade);
+
+    var dateTimeOffsetConverter = new ValueConverter<DateTimeOffset, DateTimeOffset>(
+       v => v.ToUniversalTime(),
+       v => v
+      );
+
+    builder.Property(e => e.Created)
+           .HasConversion(dateTimeOffsetConverter);
+
+    builder.Property(e => e.LastModified)
+           .HasConversion(dateTimeOffsetConverter);
+
   }
 }

@@ -33,9 +33,7 @@ public class JwtTokenService : IJwtTokenService
         new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
         //Issued at (date and time of token generation)
-        new(JwtRegisteredClaimNames.Iat,
-            DateTime.UtcNow
-                    .ToString()),
+        new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
 
         //Unique name identifier of the user (Email)
         new(ClaimTypes.NameIdentifier,
@@ -78,7 +76,7 @@ public class JwtTokenService : IJwtTokenService
           Expiration = expiration,
           RefreshToken = GenerateRefreshToken(),
           RefreshTokenExpirationDateTime =
-              DateTime.Now.AddMinutes(Convert.ToInt32(_configuration
+              DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration
                                                           ["RefreshToken:EXPIRATION_MINUTES"]))
       };
     }

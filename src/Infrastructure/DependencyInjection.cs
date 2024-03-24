@@ -106,12 +106,13 @@ public static class DependencyInjection
       {
         options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
-        options.UseSqlServer(eventsDbConnection, b => b.MigrationsAssembly(typeof(EventsDbContext).Assembly.FullName));
+        options.UseNpgsql(eventsDbConnection, b => b.MigrationsAssembly(typeof
+            (EventsDbContext).Assembly.FullName));
       });
 
       services.AddDbContext<AppIdentityDbContext>(options =>
       {
-        options.UseSqlServer(identityDbConnection, b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
+        options.UseNpgsql(identityDbConnection, b => b.MigrationsAssembly(typeof(AppIdentityDbContext).Assembly.FullName));
       });
     }
 

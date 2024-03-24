@@ -36,5 +36,17 @@ public class FollowingConfiguration : IEntityTypeConfiguration<Follow>
                                                       followeeId =>
                                                           new UserId(followeeId));
                     });
+
+    var dateTimeOffsetConverter = new ValueConverter<DateTimeOffset, DateTimeOffset>(
+       v => v.ToUniversalTime(),
+       v => v
+      );
+
+    builder.Property(e => e.Created)
+           .HasConversion(dateTimeOffsetConverter);
+
+    builder.Property(e => e.LastModified)
+           .HasConversion(dateTimeOffsetConverter);
+
   }
 }
