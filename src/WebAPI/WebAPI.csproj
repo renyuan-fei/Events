@@ -31,7 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ClientApp\tests\"/>
         <Folder Include="wwwroot\"/>
     </ItemGroup>
 
@@ -109,5 +108,7 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-500-normal-nIo0EVVo.woff2" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-700-normal-DHNHOqon.woff" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\roboto-vietnamese-700-normal-EnpEoUH0.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-H4w4j7Gw.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\previews-fGvxa7Qk.js" />
     </ItemGroup>
 </Project>

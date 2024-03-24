@@ -1,6 +1,5 @@
 docker-compose.prod.yml
 src/WebAPI/ClientApp/.env.production
-src/WebAPI/appsettings.Production.json
 ClientApp/node_modules
 # Logs
 logs
