@@ -125,7 +125,7 @@ public static class DependencyInjection
         var pgHost = pgHostPort.Split(":")[0];
         var pgPort = pgHostPort.Split(":")[1];
 
-        eventsDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}; SSL Mode=Require";
+        eventsDbConnection = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Disable";
       }
 
       services.AddDbContext<EventsDbContext>((sp, options) =>
