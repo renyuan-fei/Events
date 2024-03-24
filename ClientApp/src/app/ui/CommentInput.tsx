@@ -10,6 +10,7 @@ import {Activity} from "@type/Activity.ts";
 import Button from "@mui/material/Button";
 import useAddAttendeeMutation from "@features/activity/hooks/useAddAttendeeMutation.ts";
 import {LoadingButton} from "@mui/lab";
+import {setLoginForm} from "@features/commonSlice.ts";
 
 interface CommentInputProps {
     activityId: string;
@@ -34,6 +35,10 @@ const CommentInput:React.FC<CommentInputProps> = ({activityId}) => {
             setComment(''); // Clear the input after sending
         }
     };
+
+    const handleOpenLogin = () => {
+        dispatch(setLoginForm(true));
+    }
 
     const {
         isAddingAttendee,
@@ -66,7 +71,7 @@ const CommentInput:React.FC<CommentInputProps> = ({activityId}) => {
                     endAdornment: (
                         <InputAdornment position="end">
                             {!isLogin ? (
-                                <Button color="primary" size="small">
+                                <Button color="primary" size="small" onClick={handleOpenLogin}>
                                     Login
                                 </Button>
                             ) : (!isCurrentUserInActivity ? (

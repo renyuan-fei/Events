@@ -12,6 +12,14 @@ namespace Infrastructure.Persistence;
 
 public static class Seed
 {
+  private static string GenerateRandomAustralianPhoneNumber()
+  {
+    var rnd = new Random();
+    // 生成一个随机的8位数
+    var randomNumber = rnd.Next(10000000, 99999999);
+    // 将它格式化成一个澳大利亚手机号码格式
+    return $"04{randomNumber}";
+  }
   public async static Task SeedData(
       EventsDbContext              eventsContext,
       UserManager<ApplicationUser> userManager)
@@ -320,6 +328,8 @@ public static class Seed
 
       for (var i = 0; i < users.Count; i++)
       {
+        users[i].PhoneNumber = GenerateRandomAustralianPhoneNumber();
+
         var result = await userManager.CreateAsync(users[i], "Password123!");
 
         if (!result.Succeeded) continue;

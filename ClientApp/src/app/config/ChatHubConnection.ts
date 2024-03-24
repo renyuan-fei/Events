@@ -33,7 +33,7 @@ const loadPaginatedComments = () => ({
     type: SignalRChatActionTypes.LOAD_PAGINATED_COMMENTS,
 });
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 // 创建 SignalR 中间件
 const ChatHubSignalRMiddleware = (): Middleware => {
