@@ -83,9 +83,9 @@ public class ChatHub : Hub
   }
 
   public async Task LoadPaginatedComments(
-      int             pageNumber,
-      int             pageSize,
-      DateTimeOffset initialTimestamp)
+      int      pageNumber,
+      int      pageSize,
+      DateTime initialTimestamp)
   {
     var httpContext = Context.GetHttpContext();
     var activityId = httpContext!.Request.Query["activityId"];
@@ -122,10 +122,7 @@ public class ChatHub : Hub
         PaginatedListParams =
             new PaginatedListParams
             {
-                InitialTimestamp =
-                    DateTimeOffset.MaxValue,
-                PageNumber = 1,
-                PageSize = 15,
+                InitialTimestamp = DateTime.MaxValue, PageNumber = 1, PageSize = 15,
             }
     });
 

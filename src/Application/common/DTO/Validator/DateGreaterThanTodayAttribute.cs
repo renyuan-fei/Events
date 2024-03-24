@@ -19,7 +19,7 @@ public class DateGreaterThanTodayAttribute : ValidationAttribute
       case DateTime dateTime :
       {
         // if value is date and time not greater than today, return an error message
-        if (dateTime < DateTime.Now.AddDays(1))
+        if (dateTime < DateTime.UtcNow.AddDays(1))
         {
           return new ValidationResult(ErrorMessage
                                    ?? "Date must be at least one day after the current date.");

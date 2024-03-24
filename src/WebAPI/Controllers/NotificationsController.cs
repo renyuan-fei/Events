@@ -21,7 +21,7 @@ public class NotificationsController : BaseController
   public async Task<IActionResult> GetPaginatedNotifications(
       [ FromQuery ] int             pageNumber,
       [ FromQuery ] int             pageSize,
-      [ FromQuery ] DateTimeOffset? initialTimestamp)
+      [ FromQuery ] DateTime? initialTimestamp)
   {
     var userId = CurrentUserService!.Id!;
 
@@ -30,7 +30,7 @@ public class NotificationsController : BaseController
         UserId = userId,
         PaginatedListParams = new PaginatedListParams
         {
-            InitialTimestamp = initialTimestamp ?? DateTimeOffset.MaxValue,
+            InitialTimestamp = initialTimestamp ?? DateTime.MaxValue,
             PageNumber = pageNumber,
             PageSize = pageSize
         }

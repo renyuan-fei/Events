@@ -11,8 +11,8 @@ primary_region = 'syd'
 
 [env]
 ASPNETCORE_URLS="http://+:8080"
-Cloudinary__CloudName="dj3wmuy3l"
-Cloudinary__ApiKey="895484589483755"
+Cloudinary__CloudName="dxwtrnpqi"
+Cloudinary__ApiKey="716378532247242"
 
 [experimental]
 allowed_public_ports = []

@@ -74,18 +74,19 @@ public class GetFollowerQueryHandler : IRequestHandler<GetFollowerQuery,
       var followingsId =
           paginatedFollowerDto.Items.Select(following => following.UserId).ToList();
 
-      var followingsTask = _userService.GetUsersByIdsAsync(followingsId, cancellationToken);
+      var followingsTask = await _userService.GetUsersByIdsAsync(followingsId,
+          cancellationToken);
 
-      var mainPhotoTask = _photoRepository.GetMainPhotosByOwnerIdAsync(followingsId
+      var mainPhotoTask = await _photoRepository.GetMainPhotosByOwnerIdAsync(followingsId
             .Select(userId => userId),
         cancellationToken);
 
       var userDictionary =
-          followingsTask.Result.ToDictionary(following => following.Id,
+          followingsTask.ToDictionary(following => following.Id,
                                              following => following);
 
       var photosDictionary =
-          mainPhotoTask.Result.ToDictionary(photo => photo.OwnerId, photo => photo);
+          mainPhotoTask.ToDictionary(photo => photo.OwnerId, photo => photo);
 
       return paginatedFollowerDto.UpdateItems(follower => UserHelper.FillWithPhotoAndUserDetail(follower, userDictionary, photosDictionary));
     }

@@ -35,7 +35,7 @@ public class
     {
       var activityIds = await _activityRepository.GetAllActivitiesQueryable()
                                           .Where(activity => activity.Attendees.Any(attendee => attendee.Identity.UserId == new UserId(request.UserId)))
-                                          .Where(activity => activity.Date >= DateTime.Now)
+                                          .Where(activity => activity.Date >= DateTime.UtcNow)
                                           .Select(activity => activity.Id.Value)
                                           .ToListAsync(cancellationToken: cancellationToken);
       return activityIds;

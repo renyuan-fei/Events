@@ -52,7 +52,7 @@ public class
 
       var notificationsQuery = _userNotificationRepository.GetNotificationsByUserIdQueryable(userId);
 
-      notificationsQuery = notificationsQuery.Where(x => x.Created <= initialTimestamp);
+      notificationsQuery = notificationsQuery.Where(x => x.Created.DateTime <= initialTimestamp);
 
       var orderedQueryable = notificationsQuery.OrderByDescending(notification => notification.Created);
 

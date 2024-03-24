@@ -237,7 +237,7 @@ public class AccountController : BaseController
     var user = await _userManager.FindByEmailAsync(email);
 
     // 验证刷新令牌和过期时间
-    if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpirationDateTime <= DateTime.Now)
+    if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpirationDateTime <= DateTime.UtcNow)
     {
       Response.Cookies.Delete("RefreshToken");
       return Unauthorized(ApiResponse<Result>.Failure("Invalid refresh token"));

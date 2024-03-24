@@ -65,18 +65,13 @@ public class
       }
 
       var userIds = activity.Attendees.Select(a => a.Identity.UserId.Value).ToList();
-      var usersTask = _userService.GetUsersByIdsAsync(userIds, cancellationToken);
+      var users = await _userService.GetUsersByIdsAsync(userIds, cancellationToken);
+      var photos = await _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
 
-      var photosTask =
-          _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+      GuardValidation.AgainstNullOrEmpty(users, "User information for attendees not found");
 
-      await Task.WhenAll(usersTask, photosTask);
-
-      GuardValidation.AgainstNullOrEmpty(usersTask.Result,
-                                         "User information for attendees not found");
-
-      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
-      var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
+      var usersDictionary = users.ToDictionary(u => u.Id);
+      var photosDictionary = photos.ToDictionary(p => p.OwnerId);
 
       var activityPhotos =
           await _photoRepository.GetPhotosByOwnerIdAsync(activityId.Value,

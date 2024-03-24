@@ -84,7 +84,7 @@ public class NotificationHub : Hub
 
     await Clients.Caller.SendAsync("UpdateUnreadNotificationNumber", -1);
   }
-  public async Task GetPaginatedNotifications(int pageNumber, int pageSize, DateTimeOffset? initialTimestamp)
+  public async Task GetPaginatedNotifications(int pageNumber, int pageSize, DateTime? initialTimestamp)
   {
     var userId = _currentUserService.Id!;
 
@@ -93,7 +93,7 @@ public class NotificationHub : Hub
         UserId = userId,
         PaginatedListParams = new PaginatedListParams
         {
-            InitialTimestamp = initialTimestamp ?? DateTimeOffset.MaxValue,
+            InitialTimestamp = initialTimestamp ?? DateTime.MaxValue,
             PageNumber = pageNumber,
             PageSize = pageSize
         }

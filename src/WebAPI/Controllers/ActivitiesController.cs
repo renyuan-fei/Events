@@ -158,7 +158,7 @@ public class ActivitiesController : BaseController
       string                      activityId,
       [FromQuery] int             pageNumber,
       [FromQuery] int             pageSize,
-      [FromQuery] DateTimeOffset initialTimestamp)
+      [FromQuery] DateTime initialTimestamp)
   {
     var result = await Mediator!.Send(new GetPaginatedListAttendeesQuery
     {
