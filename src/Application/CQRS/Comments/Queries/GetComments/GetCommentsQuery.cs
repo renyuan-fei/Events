@@ -57,17 +57,16 @@ public class GetCommentsQueryHandler : IRequestHandler<GetCommentsQuery, List<Co
 
       var userIds = orderByDescending.Select(c => c.UserId.Value).ToList();
 
-      var usersTask = _userService.GetUsersByIdsAsync(userIds,cancellationToken);
+      var usersTask = await _userService.GetUsersByIdsAsync(userIds,cancellationToken);
 
-      var photosTask = _photoRepository.GetMainPhotosByOwnerIdAsync(userIds, cancellationToken);
+      var photosTask = await _photoRepository.GetMainPhotosByOwnerIdAsync(userIds,
+          cancellationToken);
 
-      await Task.WhenAll(usersTask, photosTask);
-
-      GuardValidation.AgainstNullOrEmpty(usersTask.Result,
+      GuardValidation.AgainstNullOrEmpty(usersTask,
                                          "User information for attendees not found");
 
-      var usersDictionary = usersTask.Result.ToDictionary(u => u.Id);
-      var photosDictionary = photosTask.Result.ToDictionary(p => p.OwnerId);
+      var usersDictionary = usersTask.ToDictionary(u => u.Id);
+      var photosDictionary = photosTask.ToDictionary(p => p.OwnerId);
 
       var result = _mapper.Map<List<CommentDto>>(orderByDescending);
 
