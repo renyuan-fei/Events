@@ -4,7 +4,7 @@ export interface ChatComments {
     displayName?: string; // '?' 表示该属性是可选的
     userName?: string;
     bio?: string;
-    createdAt: Date;
+    created: Date;
     body: string;
     image: string;
 }

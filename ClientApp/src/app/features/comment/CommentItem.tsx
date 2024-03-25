@@ -46,7 +46,7 @@ const CommentItem:React.FC<CommentItemProps> = ({comment}) => {
                                 {comment.displayName}
                             </Typography>
                             <Typography variant="body2" component="span" sx={{ color: 'text.secondary', marginLeft: '8px' }}>
-                                &bull; {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                &bull; {new Date(comment.created).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'short',
                                 day: 'numeric',
