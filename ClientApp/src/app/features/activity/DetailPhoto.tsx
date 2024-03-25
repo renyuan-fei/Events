@@ -1,4 +1,4 @@
-import {useTheme} from "@mui/material";
+import {useMediaQuery, useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {PhotoCamera} from "@mui/icons-material";
@@ -18,6 +18,7 @@ interface DetailHeaderProps {
 
 const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser, uploadHook}) => {
     const theme = useTheme();
+    const isMd = useMediaQuery(theme.breakpoints.down("lg"));
     const [isUploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
 
     const handleAddPhotoClick = () => {
@@ -50,28 +51,29 @@ const DetailPhoto: React.FC<DetailHeaderProps> = ({src, isCurrentUser, uploadHoo
                         borderRadius: theme.shape.borderRadius,
                     }}
                 />
-                {isCurrentUser && <Button
-                    variant='contained'
-                    startIcon={<PhotoCamera/>}
-                    onClick={handleAddPhotoClick}
-                    sx={{
-                        position: "absolute",
-                        bottom: theme.spacing(2),
-                        left: "71%",
-                        minWidth: 0,
-                        padding: "6px 16px",
-                        fontSize: "0.875rem",
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                        color: "#fff",
-                        "&:hover": {
-                            backgroundColor: "rgba(0,0,0,0.55)",
-                        },
-                        textTransform: "none",
-                        borderRadius: theme.shape.borderRadius,
-                    }}
-                >
-                  Change profile photo
-                </Button>}
+                {isCurrentUser &&
+                    <Button
+                        variant='contained'
+                        startIcon={<PhotoCamera/>}
+                        onClick={handleAddPhotoClick}
+                        sx={{
+                            position: "absolute",
+                            bottom: theme.spacing(2),
+                            right: theme.spacing(2),
+                            minWidth: 0,
+                            padding: "6px 16px",
+                            fontSize: "0.875rem",
+                            backgroundColor: "rgba(0,0,0,0.5)",
+                            color: "#fff",
+                            "&:hover": {
+                                backgroundColor: "rgba(0,0,0,0.55)",
+                            },
+                            textTransform: "none",
+                            borderRadius: theme.shape.borderRadius,
+                        }}
+                    >
+                        {isMd ? 'Change' : 'Change profile photo'}
+                    </Button>}
             </Box>
         </>);
 }

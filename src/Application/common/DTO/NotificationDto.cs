@@ -9,6 +9,6 @@ public class NotificationDto
   public string RelatedId { get; set; } = string.Empty;
   public string Type { get; set; } = "Default";
 
-  public DateTime Created { get; set; } = DateTime.MaxValue;
+  public DateTime Created { get; set; }
   public bool Status { get; set; }
 }

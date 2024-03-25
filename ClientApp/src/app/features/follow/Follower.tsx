@@ -54,31 +54,32 @@ export const Follower: React.FC<FollowerProps> = ({
                 />
             </ListItemAvatar>
             <ListItemText
-                primary={<Typography variant="h6" component="span" sx={{
-                    fontWeight: 'bold',
-                    display: 'block', // 或者 'inline-block' 都可以，取决于布局需求
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: '100%', // 可以调整为实际需要的宽度
-                    marginTop:0.5
-                }}>{displayName}</Typography>}
+                primary={
+                    <Typography variant='h6' component='span' sx={{
+                        fontWeight: 'bold',
+                        display: 'block', // 或者 'inline-block' 都可以，取决于布局需求
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        width: '100%', // 可以调整为实际需要的宽度
+                        marginTop: 0.5
+                    }}>{displayName}</Typography>
+                }
                 secondary={
-                    <>
                         <Typography
                             component='span'
                             variant='body1'
                             color='text.primary'
                             sx={{
-                                display: 'inline',
+                                display: 'block',
                                 overflow: 'hidden',
+                                width:'80%',
                                 textOverflow: 'ellipsis',
                                 wordWrap: 'break-word', // Ensures that long words will break and wrap onto the next line
                             }}
                         >
                             {bio}
                         </Typography>
-                    </>
                 }
             />
             {isCurrentUser && isFollowing && <ListItemSecondaryAction>

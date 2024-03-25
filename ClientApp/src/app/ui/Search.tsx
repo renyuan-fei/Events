@@ -52,7 +52,7 @@ const SearchComponent = () => {
                 p: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
-                width: {xs: '100%', sm: '300px', md: '400px', lg: '600px'},
+                width: {xs: '100%', sm: '300px', md: '350px', lg: '600px',xl:'700px'},
                 height: {xs: 40, sm: 45},
                 boxShadow: 'none',
                 border: '1px solid #e0e0e0',

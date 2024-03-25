@@ -34,13 +34,9 @@ const activitySchema = z.object({
 }).refine((data) => {
 
     const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    return data.date >= tomorrow;
 
-    const inputDate = new Date(data.date);
-
-    return inputDate >= tomorrow;
 }, {
     message: "Date must be at least one day after the current date and time",
     path: ["date"],

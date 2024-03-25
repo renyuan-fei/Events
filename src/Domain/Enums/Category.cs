@@ -10,5 +10,4 @@ public enum Category
   Technology,
   ArtAndCulture,
   FoodAndDrink,
-  Games
 }

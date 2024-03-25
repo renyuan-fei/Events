@@ -1,4 +1,4 @@
-import {Grid} from "@mui/material";
+import {Grid, useMediaQuery, useTheme} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -15,7 +15,8 @@ const ActivityFilter = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
-
+    const theme = useTheme();
+    const isMd = useMediaQuery(theme.breakpoints.down("lg"));
     const handleHost = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
@@ -32,7 +33,9 @@ const ActivityFilter = () => {
         searchParams.delete('category');
         searchParams.delete('startdate');
 
-        searchParams.set('ishost', 'true');
+        searchParams.delete('isGoing');
+        searchParams.set('isHost', 'true');
+        searchParams.set('isCancelled', 'true');
 
         navigate({ search: searchParams.toString() });
     }
@@ -49,8 +52,9 @@ const ActivityFilter = () => {
         if (searchParams.has('pageSize')) {
             searchParams.set('pageSize', '8');
         }
-
+        searchParams.delete('isHost');
         searchParams.set('isGoing', 'true');
+        searchParams.set('isCancelled', 'true');
 
         navigate({ search: searchParams.toString() });
     }
@@ -75,6 +79,7 @@ const ActivityFilter = () => {
         searchParams.set('startDate', today);
         searchParams.delete('isHost');
         searchParams.delete('isGoing');
+        searchParams.delete('isCancelled')
         searchParams.delete('category'); // 或设置为默认category值
 
         navigate({ search: searchParams.toString() });
@@ -85,26 +90,29 @@ const ActivityFilter = () => {
             width: '100%', // Ensures the container takes full width
         }}>
             <Grid container>
-                <Grid item xs={5}>
+                <Grid item md={6} lg={5}>
                     <CategoriesSelect/>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item md={2} lg={2}>
                     <Button onClick={handleHost} variant={"text"} color={"primary"}>
                         Host
                     </Button>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item md={2} lg={2}>
                     <Button onClick={handleGoing} variant={"text"} color={"primary"}>
                         Going
                     </Button>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item md={2} lg={3}>
                     <Button onClick={handleReset} variant={"text"} color={"primary"}>
-                        Reset filters
+                        {isMd ? 'Reset' :'Reset filters'}
                     </Button>
                 </Grid>
             </Grid>
-            <Divider sx={{ borderWidth: 1.2, borderColor: 'rgb(162,162,162)' }} />
+            <Divider sx={{ borderWidth: 1.2, borderColor: 'rgb(162,162,162)' ,marginY:{
+                md:theme.spacing(0.5),
+                lg:theme.spacing(1.5),
+                }}} />
         </Box>
     );
 }

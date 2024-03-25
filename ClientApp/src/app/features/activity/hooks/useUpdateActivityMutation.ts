@@ -1,8 +1,8 @@
 import {updateActivity} from "@apis/Activities.ts";
 import {NewActivity} from "@type/NewActivity.ts";
 import {useDispatch} from "react-redux";
-import {setAlertInfo} from "../../commonSlice";
 import {useMutation} from "react-query";
+import {setAlertInfo} from "@features/commonSlice.ts";
 
 const useUpdateActivityMutation = (id: string) => {
     const dispatch = useDispatch();

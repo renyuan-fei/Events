@@ -4,7 +4,5 @@ namespace Domain.Repositories;
 
 public interface ICommentRepository
 {
-  List<Comment> GetCommentsByActivityId(ActivityId activityId);
-
-  IQueryable<Comment> GetCommentsByActivityId(ActivityId activityId, DateTimeOffset initialTimestamp);
+  IQueryable<Comment> GetCommentsByActivityId(ActivityId activityId);
 }

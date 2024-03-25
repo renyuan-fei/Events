@@ -25,7 +25,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 450,
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
@@ -46,7 +46,7 @@ const UserUpdateModal: React.FC<UserUpdateModalProps> = ({
         displayName: z.string().min(1, "This field is required"),
         email: z.string().email("Email address is invalid"),
         phoneNumber: z.string().regex(/^04\d{8}$/, "Phone number must be 04xxxxxxx"),
-        bio: z.string().optional(), // 富文本编辑器的内容可能是可选的
+        bio: z.string().max(50, "Bio must be at most 50 words").optional(),
     }).refine(async (data) => {
         if (!emailRegex.test(data.email) || data.email === userInfo.email) {
             return true;

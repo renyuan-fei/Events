@@ -6,6 +6,5 @@ export enum Category {
     HealthAndWellbeing = "HealthAndWellbeing",
     Technology = "Technology",
     ArtAndCulture = "ArtAndCulture",
-    Games = "Games",
     FoodAndDrink = "FoodAndDrink",
 }

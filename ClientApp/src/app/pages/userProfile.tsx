@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router";
 import Box from "@mui/material/Box";
-import {Grid, Stack, useTheme} from "@mui/material";
+import {Grid, Stack, useMediaQuery, useTheme} from "@mui/material";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 import {queryClient} from "@apis/queryClient.ts";
 import {userInfo} from "@type/UserInfo.ts";
@@ -25,6 +25,8 @@ const UserProfile = () => {
     const isCurrentUser = currentUserId === userId;
     const uploadHook = useUploadUserPhotoMutation(userId!)
     const deleteHook = useDeleteUserPhotoMutation(userId!);
+
+    const isMd = useMediaQuery(theme.breakpoints.down("lg"));
 
     if (isUserProfileLoading || isPhotosLoading) {
         return <LoadingComponent/>;
@@ -58,15 +60,18 @@ const UserProfile = () => {
 
     return (
         <Box>
-            <Grid container spacing={theme.spacing(8)}>
-                <Grid item lg={4}>
+            <Grid container spacing={
+                isMd ? theme.spacing(1)
+                    : theme.spacing(8)
+            }>
+                <Grid item md={6} lg={4}>
                     <UserCard id={id}
                               image={image}
                               isCurrentUser={isCurrentUser}
                               followers={followers}
                               following={following}/>
                 </Grid>
-                <Grid item lg={8}>
+                <Grid item md={6} lg={8}>
                     <Stack spacing={2}>
 
                         <UserInformation name={displayName}

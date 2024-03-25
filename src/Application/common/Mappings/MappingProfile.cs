@@ -119,7 +119,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.Value)) // 假设 Id 是一个包装类型
         .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId.Value)) // 同上
         .ForMember(dest => dest.Body, opt => opt.MapFrom(src => src.Body))
-        .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.Created.UtcDateTime))
+        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.DateTime))
         .ForMember(dest => dest.DisplayName, opt => opt.Ignore())
         .ForMember(dest => dest.UserName, opt => opt.Ignore())
         .ForMember(dest => dest.Bio, opt => opt.Ignore())
@@ -148,7 +148,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.RelatedId))
         .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.UserNotifications.First().IsRead))
         .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
-        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.UtcDateTime))
+        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.DateTime))
         .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()));
 
     CreateMap<UserNotification,NotificationDto>()
@@ -156,7 +156,7 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.Notification.Id))
         .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.IsRead))
         .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Notification.Content))
-        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.UtcDateTime))
+        .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created.DateTime))
         .ForMember(dest => dest.RelatedId, opt => opt.MapFrom(src => src.Notification.RelatedId))
         .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Notification.Type.ToString()));
   }

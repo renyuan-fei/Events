@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { DateCalendar } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { Paper, useTheme } from "@mui/material";
-import { useNavigate } from "react-router";
-import { format, parseISO } from 'date-fns';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@store/store.ts";
+import React, {useEffect} from "react";
+import {DateCalendar} from "@mui/x-date-pickers";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {Paper, useTheme} from "@mui/material";
+import {useNavigate} from "react-router";
+import {format, parseISO} from 'date-fns';
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@store/store.ts";
 import {setStartDate} from "@features/commonSlice.ts";
 
 const ActivitiesCalendar: React.FC = () => {
@@ -38,7 +38,7 @@ const ActivitiesCalendar: React.FC = () => {
             searchParams.set('pageSize', '8');
         }
         searchParams.set('startDate', date);
-        navigate({ search: searchParams.toString() });
+        navigate({search: searchParams.toString()});
     };
 
     useEffect(() => {
@@ -50,7 +50,12 @@ const ActivitiesCalendar: React.FC = () => {
     }, [navigate, reduxDate, searchParams, dispatch]);
 
     return (
-        <Paper sx={{ padding: theme.spacing(2), margin: theme.spacing(2), height: '362px', width: '368px' }}>
+        <Paper sx={{
+            padding: theme.spacing(2),
+            margin: theme.spacing(2),
+            height: {md:350,lg:362},
+            width: {md:320,lg:368}
+        }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateCalendar
                     value={selectedDate}
@@ -58,7 +63,7 @@ const ActivitiesCalendar: React.FC = () => {
                     displayWeekNumber
                     sx={{
                         width: '100%',
-                        height: '362',
+                        height: 362,
                     }}
                     slotProps={{
                         leftArrowIcon: {

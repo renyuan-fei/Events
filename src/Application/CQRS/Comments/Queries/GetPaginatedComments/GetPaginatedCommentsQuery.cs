@@ -56,9 +56,11 @@ public class GetPaginatedCommentsQueryHandler : IRequestHandler<GetPaginatedComm
       var initialTimestamp = request.PaginatedListParams.InitialTimestamp;
 
       var comments =
-          _commentRepository.GetCommentsByActivityId(activityId, initialTimestamp);
+          _commentRepository.GetCommentsByActivityId(activityId);
 
       if (!comments.Any()) { return new PaginatedList<CommentDto>(); }
+
+      comments = comments.Where(comment => comment.Created <= initialTimestamp);
 
       var orderByDescending = comments!.OrderByDescending(comment => comment.Created);
 

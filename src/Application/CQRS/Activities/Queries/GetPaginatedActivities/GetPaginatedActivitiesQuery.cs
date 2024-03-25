@@ -154,9 +154,7 @@ public class
       categoryEnum = parsedCategory;
     }
 
-    query = query.Where(activity => filterParams.IsCancelled
-                            ? activity.Status == ActivityStatus.Canceled
-                            : activity.Status != ActivityStatus.Canceled);
+    query = query.Where(activity => !filterParams.IsCancelled && activity.Status != ActivityStatus.Canceled);
 
     if (filterParams.StartDate.HasValue)
     {

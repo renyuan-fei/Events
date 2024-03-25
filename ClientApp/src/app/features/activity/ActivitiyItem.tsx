@@ -43,7 +43,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({
     return (
         <Box component={"div"}
              sx={{
-                 height: '162px',
+                 height: 162,
                  width: '90%',
                  paddingTop: theme.spacing(2),
                  paddingBottom: theme.spacing(2),
@@ -61,7 +61,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({
                     <Box component={"img"}
                          src={imageUrl}
                          sx={{
-                             height: '80%',
+                             height: 100,
                              width: '80%',
                              objectFit: 'scale-up',
                              borderRadius: theme.shape.borderRadius,

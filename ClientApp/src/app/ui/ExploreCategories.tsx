@@ -13,7 +13,7 @@ const categories = [
     {name: 'Health and Wellbeing', icon: 'spa', color: '#388072'},
     {name: 'Technology', icon: 'computer', color: '#44755c'},
     {name: 'Art and Culture', icon: 'theater_comedy', color: '#8d5b74'},
-    {name: 'Games', icon: 'videogame_asset', color: '#f37558'},
+    {name: 'Food And Drink', icon: 'fastfood', color: '#e04209'},
 ];
 
 const ExploreCategories = () => {

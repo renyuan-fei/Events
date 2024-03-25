@@ -11,15 +11,9 @@ public class CommentRepository : Repository<Comment, CommentId>, ICommentReposit
 {
   public CommentRepository(EventsDbContext dbContext) : base(dbContext) { }
 
-  public List<Comment> GetCommentsByActivityId(ActivityId activityId)
-  {
-    return DbContext.Comments.Where(comment => comment.ActivityId == activityId).ToList();
-  }
-
   public IQueryable<Comment> GetCommentsByActivityId(
-      ActivityId     activityId,
-      DateTimeOffset initialTimestamp)
+      ActivityId activityId)
   {
-    return DbContext.Comments.Where(comment => comment.ActivityId == activityId && comment.Created < initialTimestamp);
+    return DbContext.Comments.Where(comment => comment.ActivityId == activityId).AsQueryable();
   }
 }

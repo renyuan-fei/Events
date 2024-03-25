@@ -62,16 +62,16 @@ export function NavBar() {
                 ) : (
                     isLogin ? (
                             <Grid container alignItems='center' justifyContent='flex-end'>
-                                <Grid item xs={6} sm={3} md={2.5} lg={2.2} xl={2.4}>
+                                <Grid item xs={6} sm={3} md={3} lg={2.2} xl={2.4}>
                                     <Logo/>
                                 </Grid>
 
-                                <Grid item xs={12} sm={5} md={5} lg={6.2} xl={7.6}
+                                <Grid item xs={12} sm={5} md={5} lg={6.2} xl={6.8}
                                       order={{xs: 3, sm: 2}}>
                                     <SearchComponent/>
                                 </Grid>
 
-                                <Grid item xs={6} sm={4} md={4.5} lg={3.6} xl={2}
+                                <Grid item xs={6} sm={4} md={4} lg={3.6} xl={2.8}
                                       order={{xs: 2, sm: 3}}>
                                     <UserBar id={id} displayName={displayName} image={image}/>
                                 </Grid>
@@ -91,7 +91,7 @@ export function NavBar() {
 
                                 <Grid item xs={6} sm={3} md={3} lg={2.2}
                                       order={{xs: 2, sm: 3}}>
-                                    {<AuthLanguageControl/>}
+                                    <AuthLanguageControl/>
                                 </Grid>
                             </Grid>
                         ))}

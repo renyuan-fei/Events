@@ -4,7 +4,7 @@ export interface Comment {
     displayName?: string;
     userName?: string;
     bio?: string;
-    createdAt: Date;
+    created: Date;
     body: string;
     image: string;
 }

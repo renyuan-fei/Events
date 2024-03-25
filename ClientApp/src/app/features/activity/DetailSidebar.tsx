@@ -1,4 +1,4 @@
-import {Paper, Typography, Stack, useTheme} from '@mui/material';
+import {Paper, Typography, Stack, useTheme, useMediaQuery} from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -28,6 +28,7 @@ interface DetailSidebarProps {
 const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const isMd = useMediaQuery(theme.breakpoints.down("lg"));
     const isLogin = useSelector((state:RootState) => state.user.isLogin);
     const currentUserId = queryClient.getQueryData<userInfo>("userInfo")?.id;
     const activity = queryClient.getQueryData<Activity>(['activity', activityId]);
@@ -146,7 +147,7 @@ const DetailSidebar: React.FC<DetailSidebarProps> = ({activityId}) => {
                                         variant={"contained"}
                                         color={"primary"}
                                         onClick={handelNavigateToManagePage}>
-                                        Manage your activity
+                                        {isMd ? 'Manage' : 'Manage your activity'}
                                     </LoadingButton>
                                     <LoadingButton
                                         loading={isCanceling}
