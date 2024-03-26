@@ -44,8 +44,8 @@ const AttendeeItem: React.FC<AttendeeItemProps> = ({attendee}) => {
                     invisible={!isHost}
                     sx={{
                         '& .MuiBadge-dot': {
-                            width: 18,  // Increase the dot size
-                            height: 18, // Increase the dot size
+                            width: 15,  // Increase the dot size
+                            height: 15, // Increase the dot size
                             borderRadius: '50%',
                         }
                     }}

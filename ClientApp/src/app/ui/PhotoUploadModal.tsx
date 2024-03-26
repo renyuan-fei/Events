@@ -52,6 +52,9 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({open, onClose, uploa
 
     const handleClose = useCallback(() => {
         if (!fileError && !isUploading) {
+            setFile(null);
+            setFileError(false);
+            setPreview(null);
             onClose();
         }
     }, [onClose, fileError, isUploading]);
@@ -89,6 +92,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({open, onClose, uploa
             onSuccess() {
                 setFile(null);
                 setFileError(false);
+                setPreview(null);
                 onClose();
             }
         });
