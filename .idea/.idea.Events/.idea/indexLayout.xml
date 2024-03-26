@@ -4,6 +4,7 @@
     <attachedFolders>
       <Path>.github</Path>
       <Path>ClientApp</Path>
+      <Path>devcerts</Path>
     </attachedFolders>
     <explicitIncludes>
       <Path>.env</Path>

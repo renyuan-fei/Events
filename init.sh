@@ -1,26 +1,21 @@
 #!/bin/bash
 
-# 创建 .env 文件
-touch .env
+# Check if .env file already exists
+if [ -f ".env" ]; then
+    echo ".env file already exists. Please update it manually if needed."
+    exit 1
+fi
 
-# 询问并读取数据库密码
-echo "Database Password："
-read -s DB_PASSWORD
+echo "Please visit [Cloudinary](https://cloudinary.com/users/register/free) to obtain your API key."
+read -p "Enter your Cloudinary API key: " api_key
 
-# 询问并读取证书密码
-echo "certificate Password："
-read -s CERT_PASSWORD
+# Validate input
+if [ -z "$api_key" ]; then
+    echo "API key cannot be empty. Please try again."
+    exit 1
+fi
 
-# 询问并读取 Seq 管理员密码，然后使用 Docker 命令生成其哈希值
-echo "Seq Password："
-read -s SEQ_ADMIN_INPUT
-SEQ_ADMIN_PASSWORD=$(echo "$SEQ_ADMIN_INPUT" | docker run --rm -i datalust/seq config hash)
+# Create .env file and write API key
+echo "CLOUDINARY_API_KEY=$api_key" > .env
+echo ".env file created successfully."
 
-# 将环境变量写入 .env 文件
-echo "DB_PASSWORD=$DB_PASSWORD" > .env
-echo "CERT_PASSWORD=$CERT_PASSWORD" >> .env
-echo "SEQ_ADMIN_PASSWORD=$SEQ_ADMIN_PASSWORD" >> .env
-
-# 输出结果以验证
-echo "Created .env"
-#cat .env

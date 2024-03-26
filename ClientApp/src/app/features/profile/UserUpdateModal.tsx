@@ -28,6 +28,7 @@ const style = {
     width: 450,
     bgcolor: 'background.paper',
     boxShadow: 24,
+    borderRadius:2,
     p: 4,
 };
 

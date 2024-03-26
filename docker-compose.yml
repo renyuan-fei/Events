@@ -2,54 +2,45 @@
 
 services:
   webapi:
-    image: webapi                               # Image name to use
-    platform: linux/amd64                       # Platform setting
-    build:                                      # Build information
-      context: .                                # Build context directory
-      dockerfile: src/WebAPI/Dockerfile         # Path to the Dockerfile
-    environment:                                # Environment variables
-      - UseInMemoryDatabase=false               # Whether to use an in-memory database
-      - ConnectionStrings__EventsConnection=Server=db;Database=Events;User Id=sa;Password=Password123456789;MultipleActiveResultSets=true;TrustServerCertificate=true
-      - ConnectionStrings__IdentityConnection=Server=db;Database=Identity;User Id=sa;Password=Password123456789;MultipleActiveResultSets=true;TrustServerCertificate=true
-      - ASPNETCORE_ENVIRONMENT=Development      # ASP.NET Core environment
-      - IdentityServer__Key__Type=Development   # IdentityServer key type for development
-      - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341 # Serilog logging configuration
-    volumes:                                    # Volume mappings
-      - ~/.aspnet/https:/https:ro
-      - data_protection_keys:/root/.aspnet/DataProtection-Keys
-    ports:                                      # Port mappings
+    image: arandomname/webapi                               # Image name to use
+    platform: linux/amd64                                   # Platform setting
+    build:                                                  # Build information
+      context: .                                            # Build context directory
+      dockerfile: src/WebAPI/Dockerfile                     # Path to the Dockerfile
+    environment:                                            # Environment variables
+      - UseInMemoryDatabase=false                           # Whether to use an in-memory database
+      - ConnectionStrings__EventsConnection=Server=db;Port=5432;Database=Events;User Id=postgres;Password=Password123456789;SSL Mode=Prefer;Trust Server Certificate=true
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_ENVIRONMENT=Development                   # ASP.NET Core environment
+      - IdentityServer__Key__Type=Development                # IdentityServer key type
+      - Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME}
+      - Cloudinary__ApiKey=${CLOUDINARY_API_KEY}
+      - Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET}
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=EDvevf5A7VSRViogp3gUaVeoPmfdVe8K5o2b71WeIRiWVHK2Av
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/events.club.pfx
+    ports:                                                  # Port mappings
       - "7095:443"
-    depends_on:                                 # Services dependencies
+      - "7096:80"
+    volumes:
+      - ./devcerts/:/root/.aspnet/https:ro
+    depends_on:                                             # Service dependencies
       - db
-      - seq
-    restart: unless-stopped                     # Restart policy
+    restart: unless-stopped                                 # Restart policy
 
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest # SQL Server image
+    image: postgres:latest                                  # PostgreSQL image
     platform: linux/amd64
-    environment:                                # SQL Server environment variables
-      - SA_PASSWORD=Password123456789
-      - ACCEPT_EULA=Y
-    volumes:                                    # SQL Server data volumes
-      - SQL_Server:/var/opt/mssql
-    ports:                                      # SQL Server port mappings
-      - "1433:1433"
-    restart: unless-stopped
-
-  seq:
-    image: datalust/seq                         # Seq logging system image
-    container_name: seqLog                      # Container name
-    environment:                                # Seq environment variables
-      - ACCEPT_EULA=Y
-      - SEQ_API_CANONICALURI=https://seq.example.com
-      - SEQ_FIRSTRUN_ADMINPASSWORDHASH=SeqFirstrunAdminPassword
-    volumes:                                    # Seq data volumes
-      - Seq:/data
-    ports:                                      # Seq port mappings
-      - "5341:5341"
+    environment:                                            # PostgreSQL environment variables
+      - POSTGRES_PASSWORD=Password123456789
+      - POSTGRES_DB=Events
+      - POSTGRES_USER=postgres
+    volumes:                                                # PostgreSQL data volumes
+      - postgres_data:/var/lib/postgresql/data
+    ports:                                                  # PostgreSQL port mappings
+      - "5432:5432"
     restart: unless-stopped
 
 volumes:
-  SQL_Server: {}                                # SQL Server volume definition
-  Seq: {}                                       # Seq volume definition
-  data_protection_keys: {}                      # Data protection keys volume definition
+  postgres_data: {}                                         # PostgreSQL volume definition
+  data_protection_keys: {}                                  # Data protection keys volume definition
