@@ -57,8 +57,6 @@ public class
 
       var orderedQueryable = notificationsQuery.OrderByDescending(notification => notification.Created);
 
-      var tmp = await orderedQueryable.ToListAsync(cancellationToken: cancellationToken);
-
       var paginatedList = await orderedQueryable
                                 .ProjectTo<NotificationDto>(_mapper.ConfigurationProvider)
                                 .PaginatedListAsync(pageNumber, pageSize);

@@ -54,8 +54,7 @@ public class
     const string methodName = "ReceiveNotificationMessage";
 
     var message =
-        $"New Activity Alert: '{activity.Title}' is scheduled for {activity.Date:yyyy-MM-dd HH:mm} at '{activity.Location}'. "
-      + $"Hosted by {host?.DisplayName}.";
+        $"New Activity Alert: '{activity.Title}' is scheduled for {activity.Date:yyyy-MM-dd HH:mm} at {activity.Location.City}-{activity.Location.Venue}. Hosted by {host?.DisplayName}.";
 
     // get all user
     var userIds = await _mediator.Send(new GetFollowersIdQuery { UserId = userId.Value },
