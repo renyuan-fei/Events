@@ -10,7 +10,6 @@ import {useEffect} from "react";
 import {
     setIsMobile, setLoginForm
 } from "@features/commonSlice.ts";
-// import {useMediaQuery, useTheme} from "@mui/material";
 import useGetCurrentUserQuery from "@features/user/hooks/useGetCurrentUserQuery.ts";
 import LoadingComponent from "@ui/LoadingComponent.tsx";
 

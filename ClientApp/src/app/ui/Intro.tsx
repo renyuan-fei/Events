@@ -30,8 +30,8 @@ const Intro = () => {
                     }}>
                         Whatever your interest, from hiking and reading to networking and
                         skill sharing, there are thousands of people who share it on
-                        Events.
-                        Events are happening every day—sign up to join the fun.
+                        Events Harbor.
+                        Events Harbor are happening every day—sign up to join the fun.
                     </Typography>
                     <Button variant='contained'
                             onClick={handleOpenSignUpModal}
@@ -49,7 +49,7 @@ const Intro = () => {
                                     transform: 'scale(0.9)',
                                 },
                             }}>
-                        Join Events
+                        Join Events Harbor
                     </Button>
                 </Grid>
 

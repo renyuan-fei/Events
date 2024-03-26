@@ -15,7 +15,7 @@ const HomePageTitle = () => {
             </Typography>
 
             <Typography variant="h2" component={"h2"} sx={{font:'24px', fontWeight: theme.typography.fontWeightBold}}>
-                Explore the events!
+                Explore the events harbor!
             </Typography>
         </Box>
     );

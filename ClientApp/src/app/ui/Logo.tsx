@@ -1,6 +1,6 @@
 import LogoImg from "@assets/logo.png";
 import Typography from "@mui/material/Typography";
-import { Box, Grid, useMediaQuery } from "@mui/material";
+import {Box, Grid, useMediaQuery} from "@mui/material";
 import { useNavigate } from "react-router";
 import React, { useCallback } from "react";
 import {useSelector} from "react-redux";
@@ -35,7 +35,7 @@ const Logo = () => {
         },
         '& .MuiTypography-root': { // 使用Mui的类选择器
             fontFamily: '"Marker Felt", sans-serif',
-            fontSize: '1.25rem', // 相当于25px
+            fontSize: '1rem', // 相当于25px
         },
     };
 
@@ -50,7 +50,7 @@ const Logo = () => {
         },
         '& .MuiTypography-root': {
             fontFamily: '"Marker Felt", sans-serif',
-            fontSize: '2.25rem',
+            fontSize: '1.75rem',
         },
     };
 
@@ -61,8 +61,8 @@ const Logo = () => {
                     <img src={LogoImg} alt="Logo"/>
                 </Grid>
                 <Grid item xs={6}>
-                    <Typography variant='h6' component='div'>
-                        Events
+                    <Typography variant='h6' component='div' style={{ lineHeight: 1 }}>
+                        Events Harbor
                     </Typography>
                 </Grid>
             </Grid>
