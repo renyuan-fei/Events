@@ -33,6 +33,8 @@ Here're some of the project's best features:
 
 **Server:** ASP .NET Core, .NET 6, PostgreSQL,EF Core
 
+**CI/CD** GitHub Action
+
 ## Prerequisites
 
 ### Client:
@@ -82,9 +84,6 @@ Here're some of the project's best features:
 ```sh
 git clone https://github.com/renyuan-fei/Events.git
 ```
-
-## Deployment
-
 create .env variable for Docker(if you want
 upload your image,please run follow bash script,
 it will let your fill cloudinary apikey and create a .env file)
@@ -109,6 +108,10 @@ The `down` command is used to stop and remove containers.
 docker compose down
 ```
 
+View website
+```http request
+https://localhost:7095
+```
 <h2>Project Screenshots:</h2>
 
 **Main page:**
