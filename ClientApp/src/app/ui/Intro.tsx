@@ -49,7 +49,7 @@ const Intro = () => {
                                     transform: 'scale(0.9)',
                                 },
                             }}>
-                        Join Events Harbor
+                        Join us
                     </Button>
                 </Grid>
 

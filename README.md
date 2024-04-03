@@ -91,6 +91,13 @@ it will let your fill cloudinary apikey and create a .env file)
 Obtain Your Cloudinary API Key:
 If you haven't already, register for an account and generate an API key on 
 [Cloudinary](https://cloudinary.com).
+
+* Windows
+```shell
+bash init.sh
+```
+
+* Linux or MacOS
 ``` sh
 chmod +x init.sh
 ./init.sh
