@@ -37,6 +37,7 @@ public class FollowedDomainEventHandler : INotificationHandler<FollowedDomainEve
       FollowedDomainEvent notification,
       CancellationToken   cancellationToken)
   {
+      // TODO when user follow another user, let user join the group of the user
     _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
 
     var followingInfo = notification.Follow;

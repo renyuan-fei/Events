@@ -38,6 +38,7 @@ public class
       AttendeeAddedDomainEvent notification,
       CancellationToken        cancellationToken)
   {
+    // TODO when user attend an activity, let user join the group of the activity
     var attendee = notification.Attendee;
     var activity = notification.Activity;
 
@@ -67,10 +68,7 @@ public class
                                                    NotificationType =
                                                        NotificationType.AttendeeAdded,
                                                    UserIds =
-                                                       new List<UserId>
-                                                       {
-                                                           hostId
-                                                       }
+                                                       new List<UserId> { hostId }
                                                },
                                                cancellationToken);
 
