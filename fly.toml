@@ -1,21 +1,20 @@
-# fly.toml app configuration file generated for events-harbour on 2024-03-24T14:25:30+10:30
+# fly.toml app configuration file generated for events-harbor on 2024-04-30T19:06:34+09:30
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'events-harbour'
+app = 'events-harbor'
 primary_region = 'syd'
 
 [build]
   image = 'arandomname/events-website:latest'
 
 [env]
-ASPNETCORE_URLS="http://+:8080"
-Cloudinary__CloudName="dxwtrnpqi"
-Cloudinary__ApiKey="722555612845155"
+ASPNETCORE_URLS = 'http://+:8080'
+Cloudinary__ApiKey = '722555612845155'
+Cloudinary__CloudName = 'dxwtrnpqi'
 
 [experimental]
-allowed_public_ports = []
 auto_rollback = true
 
 [http_service]
@@ -27,4 +26,6 @@ auto_rollback = true
   processes = ['app']
 
 [[vm]]
-  size = 'shared-cpu-1x'
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
