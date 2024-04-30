@@ -17,6 +17,7 @@ public class UnfollowedDomainEventHandler : INotificationHandler<UnfollowedDomai
       UnfollowedDomainEvent                 notification,
       CancellationToken cancellationToken)
   {
+    // TODO when user unfollow another user, let user leave the group of the user
     _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
 
     //TODO
